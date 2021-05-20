@@ -104,6 +104,7 @@ def test_parse_release_date(string, expected):
         ("24 Hours", (None, None, "24 Hours")),
         ("Some tune (Someone's Remix)", (None, None, "Some tune (Someone's Remix)")),
         ("19.85 - Colapso Inevitable", (None, "19.85", "Colapso Inevitable")),
+        ("19.85 - Colapso Inevitable (FREE)", (None, "19.85", "Colapso Inevitable")),
     ],
 )
 def test_parse_track_name(name, expected):

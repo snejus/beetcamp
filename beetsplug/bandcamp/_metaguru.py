@@ -93,6 +93,7 @@ class Helpers:
 
     @staticmethod
     def parse_track_name(name: str) -> JSONDict:
+        name = re.sub(r" \(free[^)]*\)", "", name, flags=re.IGNORECASE)
         match = re.search(PATTERNS["track_name"], name)
         try:
             return match.groupdict()  # type: ignore

@@ -1,3 +1,9 @@
+## [0.8.1] 2021-05-20
+
+### Updated
+- Removing `(FREE)`, `(free download)`-like strings from the track names.
+
+
 ## [0.8.0] 2021-04-20
 
 ### Fixed
