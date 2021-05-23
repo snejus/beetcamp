@@ -1,0 +1,391 @@
+{
+  "@context": "https://schema.org",
+  "@id": "https://fallingapart.bandcamp.com/album/fa010-kickdown-vienna",
+  "@type": "MusicAlbum",
+  "additionalProperty": [
+    {
+      "@type": "PropertyValue",
+      "name": "art_id",
+      "value": 3742084072
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "featured_track_num",
+      "value": 1
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "license_name",
+      "value": "all_rights_reserved"
+    }
+  ],
+  "albumRelease": [
+    {
+      "@id": "https://fallingapart.bandcamp.com/album/fa010-kickdown-vienna#a4190194561",
+      "@type": [
+        "MusicRelease",
+        "Product"
+      ],
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "item_id",
+          "value": 4190194561
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "item_type",
+          "value": "a"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_name",
+          "value": "Digital"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "art_id",
+          "value": 3742084072
+        }
+      ],
+      "description": "Includes high-quality download in MP3, FLAC and more. Paying supporters also get unlimited streaming via the free Bandcamp app.",
+      "image": [
+        "https://f4.bcbits.com/img/a3742084072_10.jpg"
+      ],
+      "musicReleaseFormat": "DigitalFormat",
+      "name": "fa010 | Kickdown Vienna"
+    },
+    {
+      "@id": "https://fallingapart.bandcamp.com/album/fa010-kickdown-vienna#p2928220301",
+      "@type": [
+        "MusicRelease",
+        "Product"
+      ],
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "item_id",
+          "value": 2928220301
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "item_type",
+          "value": "p"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_name",
+          "value": "Vinyl LP"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "image_ids",
+          "value": [
+            23869838,
+            23869839
+          ]
+        }
+      ],
+      "description": "artist: jeånne, DJ Disrespect\nrelease name: Kickdown Vienna\ncatalog: fa010\nbandcamp release date: 09.10.20\nofficial release date: 16.10.20\nformat: vinyl (+ digital only at bandcamp)\n\ntrack info:\nA1 jeånne - the devil's not ås blåck ås he is påinted (hård mix)\nA2 jeånne - the påth to pårådise begins in hell\nB1 DJ DISRESPECT - VIENNA (WARM UP MIX)\nB2 DJ DISRESPECT - TRANSITION (ATHLETIC MIX)\n\nrelease description:\nvienna based artist jeånne maintaining ancient aesthetics on A side. fast pacing acid structures under aggressive beats, enveloped in melancholic strings and melodies.\nDJ DISRESPECT aka Toni Moralez already proven his strong production skills on this and also other labels. He is now delivering two adrenalin kicking, schranz-like dancefloor destroyers out of the depths of Frankfurt am Main.",
+      "image": [
+        "https://f4.bcbits.com/img/0023869838_10.jpg",
+        "https://f4.bcbits.com/img/0023869839_10.jpg"
+      ],
+      "musicReleaseFormat": "VinylFormat",
+      "name": "12\" Vinyl",
+      "offers": {
+        "@type": "Offer",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "min_price",
+            "value": 10
+          }
+        ],
+        "availability": "InStock",
+        "price": 10,
+        "priceCurrency": "EUR",
+        "priceSpecification": {
+          "minPrice": 10
+        },
+        "url": "https://fallingapart.bandcamp.com/album/fa010-kickdown-vienna#p2928220301-buy"
+      }
+    },
+    {
+      "@id": "https://fallingapart.bandcamp.com/track/je-nne-the-devils-not-s-bl-ck-s-he-is-p-inted-h-rd-mix#t1568631558",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://fallingapart.bandcamp.com/track/je-nne-the-p-th-to-p-r-dise-begins-in-hell#t1365259276",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://fallingapart.bandcamp.com/track/dj-disrespect-vienna-warm-up-mix#t2270629014",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://fallingapart.bandcamp.com/track/dj-disrespect-transition-athletic-mix#t1411519787",
+      "@type": "MusicRelease"
+    }
+  ],
+  "albumReleaseType": "AlbumRelease",
+  "byArtist": {
+    "@type": "MusicGroup",
+    "name": "jeånne, DJ DISRESPECT"
+  },
+  "copyrightNotice": "All Rights Reserved",
+  "dateModified": "27 Feb 2021 11:20:21 GMT",
+  "datePublished": "07 Sep 2020 16:18:04 GMT",
+  "image": "https://f4.bcbits.com/img/a3742084072_10.jpg",
+  "keywords": [
+    "Chicago",
+    "Electronic",
+    "Experimental",
+    "Techno",
+    "acid",
+    "Frankfurt"
+  ],
+  "name": "fa010 | Kickdown Vienna",
+  "numTracks": 4,
+  "publisher": {
+    "@id": "https://fallingapart.bandcamp.com",
+    "@type": "MusicGroup",
+    "additionalProperty": [
+      {
+        "@type": "PropertyValue",
+        "name": "band_id",
+        "value": 3963823236
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "currency",
+        "value": "EUR"
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_id",
+        "value": 15313255
+      }
+    ],
+    "description": "vinyl record label / disc-jockey\n\nbooking (masha): goldfishage@gmail.com",
+    "foundingLocation": {
+      "@type": "Place",
+      "name": "Frankfurt, Germany"
+    },
+    "genre": "https://bandcamp.com/tag/electronic",
+    "image": "https://f4.bcbits.com/img/0015313255_10.jpg",
+    "mainEntityOfPage": [
+      {
+        "@type": "WebPage",
+        "name": "Instagram",
+        "url": "https://www.instagram.com/fallingapart030/"
+      },
+      {
+        "@type": "WebPage",
+        "name": "discogs.com",
+        "url": "https://www.discogs.com/label/1018951-falling-apart"
+      },
+      {
+        "@type": "WebPage",
+        "name": "SoundCloud",
+        "url": "https://soundcloud.com/fallingapart030"
+      }
+    ],
+    "name": "falling apart",
+    "subjectOf": [
+      {
+        "@type": "WebPage",
+        "name": "music",
+        "url": "https://fallingapart.bandcamp.com/music"
+      },
+      {
+        "@type": "WebPage",
+        "name": "merch",
+        "url": "https://fallingapart.bandcamp.com/merch"
+      },
+      {
+        "@type": "WebPage",
+        "name": "community",
+        "url": "https://fallingapart.bandcamp.com/community"
+      }
+    ]
+  },
+  "track": {
+    "@type": "ItemList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://fallingapart.bandcamp.com/track/je-nne-the-devils-not-s-bl-ck-s-he-is-p-inted-h-rd-mix",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 1568631558
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 385.8
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "file_mp3-128",
+              "value": "https://t4.bcbits.com/stream/592a891a94b78e65b4735e3e8dead791/mp3-128/1568631558?p=0&ts=1621870141&t=ef98818fc1e071b8dc0ab98cd75fa469a2d10458&token=1621870141_022e2321ff233f602e3bc4875f56ccc33853b480"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 1
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H06M25S",
+          "name": "jeånne - the devil's not ås blåck ås he is påinted (hård mix)"
+        },
+        "position": 1
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://fallingapart.bandcamp.com/track/je-nne-the-p-th-to-p-r-dise-begins-in-hell",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 1365259276
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 333.5
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "file_mp3-128",
+              "value": "https://t4.bcbits.com/stream/7044ed6becaa0f0678f1edb6d923b79b/mp3-128/1365259276?p=0&ts=1621870141&t=12ebb58afb0f01624ab9dc4ac60a3c83db53c5fe&token=1621870141_ee8dc6c95fe98b9f677205dad5d563918420e966"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 2
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H05M33S",
+          "name": "jeånne - the påth to pårådise begins in hell"
+        },
+        "position": 2
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://fallingapart.bandcamp.com/track/dj-disrespect-vienna-warm-up-mix",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 2270629014
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 315.203
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "file_mp3-128",
+              "value": "https://t4.bcbits.com/stream/73166d349952242a827010b94a104398/mp3-128/2270629014?p=0&ts=1621870141&t=f62793518b4fee830bb9434c3700f40c3847b184&token=1621870141_98a0df6501c15f3f7eb60a18b869a8f5e22f431d"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 3
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H05M15S",
+          "name": "DJ DISRESPECT - VIENNA (WARM UP MIX"
+        },
+        "position": 3
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://fallingapart.bandcamp.com/track/dj-disrespect-transition-athletic-mix",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 1411519787
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 333.703
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "file_mp3-128",
+              "value": "https://t4.bcbits.com/stream/8f3138248312448c85b852fafb661ebb/mp3-128/1411519787?p=0&ts=1621870141&t=eecf5930f8d73a4a757c73b7145c19e764414145&token=1621870141_b2e9b547cd47e9324ecc347d8727a54e51aa30d0"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 4
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H05M33S",
+          "name": "DJ DISRESPECT - TRANSITION (ATHLETIC MIX)"
+        },
+        "position": 4
+      }
+    ],
+    "numberOfItems": 4
+  }
+}
