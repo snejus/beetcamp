@@ -21,7 +21,6 @@ import logging
 import re
 from functools import partial
 from html import unescape
-from itertools import chain
 from operator import attrgetter, truth
 from typing import Any, Callable, Dict, Iterator, List, Optional, Sequence, Set, Union
 
@@ -143,7 +142,7 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
     def guru(self, url: str, html: Optional[str] = None) -> Optional[Metaguru]:
         """Return cached guru. If there isn't one, fetch the url if html isn't
         already given, initialise guru and add it to the cache. This way they
-        be re-used by separate import stages.
+        can be re-used by separate import stages.
         """
         if url in self._gurucache:
             return self._gurucache[url]
@@ -204,14 +203,14 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
                     break
 
     def _cheat_mode(self, item: Item, name: str, _type: str) -> Optional[str]:
-        reimport_url = getattr(item, f"mb_{_type}id", "")
+        reimport_url: str = getattr(item, f"mb_{_type}id", "")
         if "bandcamp" in reimport_url:
             return reimport_url
 
         if "Visit" in item.comments:
             match = re.search(r"https:[/a-z.-]+com", item.comments)
             if match:
-                url = match.group() + "/" + _type + "/" + urlify(name)
+                url: str = "{}/{}/{}".format(match.group(), _type, urlify(name))
                 self._info("Trying our guess {} before searching", url)
                 return url
         return None
@@ -254,15 +253,8 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         """Return an AlbumInfo object for a bandcamp album page.
         If track url is given by mistake, find and fetch the album url instead.
         """
-        html = self._get(url)
-        if "/track/" in url:
-            match = re.search(ALBUM_URL_IN_TRACK, html)
-            if match:
-                url = match.groups()[0]
-                html = self._get(url)
-
         include_all = self.config["include_digital_only_tracks"]
-        guru = self.guru(url, html=html)
+        guru = self.guru(url, html=self._get(url))
         return self.handle(partial(guru.album, include_all), url) if guru else None
 
     def get_track_info(self, url: str) -> Optional[TrackInfo]:
@@ -274,7 +266,7 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         try:
             return call()
         except (KeyError, ValueError, AttributeError):
-            self._exc("Failed obtaining {}", _id)
+            self._info("Failed obtaining {}", _id)
             return None
 
     def _search(self, query: str, search_type: str = ALBUM_SEARCH) -> Iterator[str]:

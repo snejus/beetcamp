@@ -1,9 +1,10 @@
 """Module for tests related to parsing."""
 import json
+import re
 
 import pytest
-
 from beetsplug.bandcamp._metaguru import NEW_BEETS, Metaguru, urlify
+from pytest_lazyfixture import lazy_fixture
 
 pytestmark = pytest.mark.parsing
 
@@ -16,33 +17,22 @@ def check(actual, expected) -> None:
 
 
 @pytest.mark.parametrize(
-    ("meta", "expected"),
+    ("descr", "disctitle", "creds", "expected"),
     [
-        ({}, ""),
-        ({"description": "hello"}, "hello"),
-        ({"description": "Includes high-quality download"}, ""),
-        (
-            {
-                "description": "",
-                "albumRelease": [
-                    {"musicReleaseFormat": "VinylFormat", "description": "sick vinyl"}
-                ],
-            },
-            "sick vinyl",
-        ),
-        (
-            {
-                "description": "sickest vinyl",
-                "albumRelease": [
-                    {"musicReleaseFormat": "VinylFormat", "description": "sick vinyl"}
-                ],
-            },
-            "sickest vinyl",
-        ),
+        ("", "", "", ""),
+        ("hello", "", "", "\n - hello"),
+        ("", "Includes high-quality download", "Thanks", "\n - Credits: Thanks"),
+        ("", "sick vinyl", "", "\n - sick vinyl"),
+        ("sickest vinyl", "sick vinyl", "", "\n - sickest vinyl\n - sick vinyl"),
     ],
 )
-def test_description(meta, expected):
-    meta.update(datePublished="doesntmatter")
+def test_description(descr, disctitle, creds, expected):
+    meta = dict(
+        description=descr,
+        albumRelease=[{"musicReleaseFormat": "VinylFormat", "description": disctitle}],
+        creditText=creds,
+        datePublished="doesntmatter",
+    )
     guru = Metaguru(json.dumps(meta), media="Vinyl")
     guru._media = meta.get("albumRelease", [{}])[0]
     assert guru.description == expected, vars(guru)
@@ -222,15 +212,35 @@ def test_clean_up_album_name(album, extras, expected):
     assert Metaguru.clean_up_album_name(album, *extras) == expected
 
 
-def test_parse_single_track_release(single_track_release):
-    html, expected = single_track_release
+@pytest.fixture(name="release")
+def _release(request):
+    """Read the json data and make it span a single line - same like it's found in htmls.
+    Include the release date too - we still need to get it directly.
+    Fixture names map to the testfiles (minus the extension).
+    """
+    info = request.param
+    prepend = info.html_release_date + "\n"
+    fixturename = next(iter(request._parent_request._fixture_defs.keys()))
+    filename = "tests/json/{}.json".format(fixturename)
+    return prepend + re.sub(r"\n *", "", open(filename).read()), info
+
+
+@pytest.mark.parametrize(
+    "release", [lazy_fixture("single_track_release")], indirect=["release"]
+)
+def test_parse_single_track_release(release):
+    html, expected = release
     guru = Metaguru(html)
 
     check(guru.singleton, expected.singleton)
 
 
-def test_parse_album_or_comp(multitracks):
-    html, expected_release = multitracks
+CASES = ["album", "album_with_track_alt", "compilation", "ep", "artist_mess"]
+
+
+@pytest.mark.parametrize("release", map(lazy_fixture, CASES), indirect=["release"])
+def test_parse_various_types(release):
+    html, expected_release = release
     guru = Metaguru(html, expected_release.media)
     include_all = False
 

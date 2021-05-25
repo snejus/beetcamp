@@ -1,29 +1,34 @@
-#!/bin/sh
+#!/bin/bash
 #
 # url2json [-h] <bandcamp-url>
 #
 #       Parse given bandcamp url and print the resulting json.
-#       Default output is a single-line JSON string used in tests.
-#       (It was used for obtaining test cases).
-#       Ensure you have curl, grep and jq on your system.
+#       By default, it outputs an indented/prettified json string
+#       (which is used by the tests).
+#       Use (human) flag -h to include colors and page it.
+#       Ensure you have curl, and jq on your system.
 #
 # url2json https://hello.bandcamp.com/album/hi > ./tests/testcase.json
-#
-#       Add flag -h (human) to have it newlined and indented.
-#
-# url2json -h https://hello.bandcamp.com/album/hi | less
+# url2json -h https://hello.bandcamp.com/album/hi
 #
 #       Note: Some lengthy fields are removed since they aren't currently parsed.
 #             Feel free to adjust.
 #
 
-if [ -z "$1" ]; then
-    sed -n '2,$s/^#/ /p' "$0"
-    exit 0
+if [[ -z "$1" ]]; then
+  sed -n '2,$s/^#/ /p' "$0"
 else
-    jqflag=--compact-output
-    [ "$1" = -h ] && jqflag= && shift
+  if [[ $1 == -h ]]; then
+    help=1
+    shift
+  fi
 
-    curl -s "$1" | grep datePubl |
-        jq $jqflag 'del(.sponsor, .albumRelease[0].offers)'
+  jqargs=(--sort-keys 'del(.comment, .sponsor, .albumRelease[0].offers)')
+  curl -s "$1" | grep datePubl | {
+    if (( help )); then
+      jq -C "${jqargs[@]}" | less -R
+    else
+      jq "${jqargs[@]}"
+    fi
+  }
 fi
