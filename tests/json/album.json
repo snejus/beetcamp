@@ -216,11 +216,6 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "file_mp3-128",
-              "value": "https://t4.bcbits.com/stream/6c385b1b5aa5e6a5af1b8974b8416968/mp3-128/2780084730?p=0&ts=1621870138&t=4b6b8bd772f98442befe0bf504a2f53c9221f33c&token=1621870138_34e3fa329ac04260a2d718ec4239a4e1afa2d2a0"
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
             },
@@ -256,11 +251,6 @@
               "@type": "PropertyValue",
               "name": "duration_secs",
               "value": 487.471
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "file_mp3-128",
-              "value": "https://t4.bcbits.com/stream/d3367f6729cd94b3f35da51238144cc7/mp3-128/4132926702?p=0&ts=1621870138&t=798a835b7bd29ba728b3be3e42539543b9832d4a&token=1621870138_154a0779db09739fdbd8b0c0c3bc95cc6f443f0d"
             },
             {
               "@type": "PropertyValue",
@@ -302,11 +292,6 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "file_mp3-128",
-              "value": "https://t4.bcbits.com/stream/4c7550d8eb874d371cb9eb3aaec64a3e/mp3-128/2058726302?p=0&ts=1621870138&t=d7406d3c0b5e99f4aa78808751fffedb3af0acec&token=1621870138_535299727858405b5f595b0b81379055a519d396"
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
             },
@@ -342,11 +327,6 @@
               "@type": "PropertyValue",
               "name": "duration_secs",
               "value": 421.233
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "file_mp3-128",
-              "value": "https://t4.bcbits.com/stream/34729b7304cde2a79f3a9a8e6f796195/mp3-128/3564730108?p=0&ts=1621870138&t=3140db4d7b3ef08876a951813f00794d06c6e45b&token=1621870138_53d0f8213f02fe28d3576a6a90a98fc2363134e7"
             },
             {
               "@type": "PropertyValue",

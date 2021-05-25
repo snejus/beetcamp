@@ -231,11 +231,6 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "file_mp3-128",
-              "value": "https://t4.bcbits.com/stream/592a891a94b78e65b4735e3e8dead791/mp3-128/1568631558?p=0&ts=1621870141&t=ef98818fc1e071b8dc0ab98cd75fa469a2d10458&token=1621870141_022e2321ff233f602e3bc4875f56ccc33853b480"
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
             },
@@ -271,11 +266,6 @@
               "@type": "PropertyValue",
               "name": "duration_secs",
               "value": 333.5
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "file_mp3-128",
-              "value": "https://t4.bcbits.com/stream/7044ed6becaa0f0678f1edb6d923b79b/mp3-128/1365259276?p=0&ts=1621870141&t=12ebb58afb0f01624ab9dc4ac60a3c83db53c5fe&token=1621870141_ee8dc6c95fe98b9f677205dad5d563918420e966"
             },
             {
               "@type": "PropertyValue",
@@ -317,11 +307,6 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "file_mp3-128",
-              "value": "https://t4.bcbits.com/stream/73166d349952242a827010b94a104398/mp3-128/2270629014?p=0&ts=1621870141&t=f62793518b4fee830bb9434c3700f40c3847b184&token=1621870141_98a0df6501c15f3f7eb60a18b869a8f5e22f431d"
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
             },
@@ -357,11 +342,6 @@
               "@type": "PropertyValue",
               "name": "duration_secs",
               "value": 333.703
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "file_mp3-128",
-              "value": "https://t4.bcbits.com/stream/8f3138248312448c85b852fafb661ebb/mp3-128/1411519787?p=0&ts=1621870141&t=eecf5930f8d73a4a757c73b7145c19e764414145&token=1621870141_b2e9b547cd47e9324ecc347d8727a54e51aa30d0"
             },
             {
               "@type": "PropertyValue",

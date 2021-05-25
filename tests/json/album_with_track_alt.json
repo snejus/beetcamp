@@ -232,11 +232,6 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "file_mp3-128",
-              "value": "https://t4.bcbits.com/stream/c15c53df0b7f48cf3b85f5f7e75fde1d/mp3-128/2847020791?p=0&ts=1621870145&t=c2552f241f9d6b4443907e597ad437e8ce809c0c&token=1621870145_93256819bf0a0fd1ac7837caf9e5617fdca61e62"
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
             },
@@ -272,11 +267,6 @@
               "@type": "PropertyValue",
               "name": "duration_secs",
               "value": 351.961
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "file_mp3-128",
-              "value": "https://t4.bcbits.com/stream/f1c26d28f21f7942082d3b5a6061437d/mp3-128/1382985841?p=0&ts=1621870145&t=e091ed2c1aa691e31a8cb6564873f708a338aa23&token=1621870145_69747897f35a0e94a80bb71ff2c82304fbe35b2c"
             },
             {
               "@type": "PropertyValue",
@@ -318,11 +308,6 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "file_mp3-128",
-              "value": "https://t4.bcbits.com/stream/fe52200e19eb5147da3d2f3a52e49bbd/mp3-128/2410206971?p=0&ts=1621870145&t=4d784748c94d162606194ea5795e14a24ade91b7&token=1621870145_b56fa5850eeb7828dc7d248e7a58aed9ffc2d0f5"
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
             },
@@ -358,11 +343,6 @@
               "@type": "PropertyValue",
               "name": "duration_secs",
               "value": 315.224
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "file_mp3-128",
-              "value": "https://t4.bcbits.com/stream/bd0a09bc14c8012da0488540ba3faadf/mp3-128/2674898874?p=0&ts=1621870145&t=0284beb2721c1fea035e0fdc969b328281b58d19&token=1621870145_dfd50c0ca523afe6d72370688f6f69373ede8918"
             },
             {
               "@type": "PropertyValue",
@@ -404,11 +384,6 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "file_mp3-128",
-              "value": "https://t4.bcbits.com/stream/0f39394a137a91eda093c65393365056/mp3-128/276309811?p=0&ts=1621870145&t=7a1d2d331c0c1269f641e562f7828991228bfc99&token=1621870145_92cec78dc82892eceb5e452c7d562cc80678d76b"
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
             },
@@ -444,11 +419,6 @@
               "@type": "PropertyValue",
               "name": "duration_secs",
               "value": 20
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "file_mp3-128",
-              "value": "https://t4.bcbits.com/stream/4375f6014dc2f2c5646eb8e312d13312/mp3-128/1813148828?p=0&ts=1621870145&t=306fd82f141be47d967589e9f9bd794468a3d030&token=1621870145_18b57514d5c2d6a853e2a095c209543ff0aa059b"
             },
             {
               "@type": "PropertyValue",

@@ -1,10 +1,10 @@
-## [0.8.1] 2021-05-20
+## [0.8.1] 2021-05-25
 
 ### Updated
 
 - Removing `(FREE)`, `(free download)`-like strings from the track names.
 - All testcases are now pretty JSON files - this should bring more transparency around
-  the adjustments that Bandcamp make in the future.
+  the adjustments that Bandcamp make in the future (once they get updated).
 
 ## [0.8.0] 2021-04-20
 
