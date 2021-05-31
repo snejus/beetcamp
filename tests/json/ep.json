@@ -95,13 +95,6 @@
       "name": "12\" Vinyl",
       "offers": {
         "@type": "Offer",
-        "additionalProperty": [
-          {
-            "@type": "PropertyValue",
-            "name": "min_price",
-            "value": 10
-          }
-        ],
         "availability": "InStock",
         "price": 10,
         "priceCurrency": "EUR",

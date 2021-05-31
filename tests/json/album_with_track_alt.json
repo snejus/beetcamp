@@ -99,13 +99,6 @@
       "name": "FLD001 - Common Assault EP",
       "offers": {
         "@type": "Offer",
-        "additionalProperty": [
-          {
-            "@type": "PropertyValue",
-            "name": "min_price",
-            "value": 12
-          }
-        ],
         "availability": "InStock",
         "price": 12,
         "priceCurrency": "GBP",

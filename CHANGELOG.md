@@ -1,15 +1,22 @@
 ## [0.8.1] 2021-05-25
 
-### Updated
+### Fixed
 
-- Parsing
-  - `(FREE)`, `(free download)`-like strings are now removed from the track names.
-  - `[Vinyl]` is excluded from the album names.
-  - Parse cases like `Catalogue:CAT-000` from the description correctly when the space is missing.
+- Parse cases like `Catalogue:CAT-000` from the description correctly when the space is missing.
+
+### Added
+
+- The `comments` field now includes the media description and credits.
+
+### Updated
 
 - All testcases are now pretty JSON files - this should bring more transparency around
   the adjustments that Bandcamp make in the future (once they get updated).
-- The `comments` field now includes the media description and credits.
+
+- Parsing
+
+  - `(FREE)`, `(free download)`-like strings are now removed from the track names.
+  - `[Vinyl]` is excluded from album names.
 
 ## [0.8.0] 2021-04-20
 

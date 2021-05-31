@@ -89,11 +89,6 @@
               "@type": "PropertyValue",
               "name": "max_price",
               "value": 7000
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "min_price",
-              "value": 12
             }
           ],
           "availability": "OnlineOnly",
