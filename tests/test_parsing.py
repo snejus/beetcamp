@@ -9,13 +9,6 @@ from pytest_lazyfixture import lazy_fixture
 pytestmark = pytest.mark.parsing
 
 
-def check(actual, expected) -> None:
-    if NEW_BEETS:
-        assert actual == expected
-    else:
-        assert vars(actual) == vars(expected)
-
-
 @pytest.mark.parametrize(
     ("descr", "disctitle", "creds", "expected"),
     [
@@ -107,17 +100,16 @@ def test_parse_track_name(name, expected):
     [
         ("Artist - Track [Digital Bonus]", True, "Artist - Track"),
         ("DIGI 11. Track", True, "Track"),
-        ("Digital Life", False, None),
+        ("Digital Life", False, "Digital Life"),
         ("Messier 33 (Bandcamp Digital Exclusive)", True, "Messier 33"),
         ("33 (bandcamp exclusive)", True, "33"),
         ("Tune (Someone's Remix) [Digital Bonus]", True, "Tune (Someone's Remix)"),
     ],
 )
 def test_check_digital_only(name, expected_digital_only, expected_name):
-    expected = dict(digital_only=expected_digital_only)
-    if expected_name:
-        expected.update(name=expected_name)
-    assert Metaguru.check_digital_only(name) == expected
+    actual_name, actual_digi_only = Metaguru.clean_digital_only_track(name)
+    assert actual_digi_only == expected_digital_only
+    assert actual_name == expected_name
 
 
 @pytest.mark.parametrize(
@@ -172,6 +164,7 @@ def test_parse_country(name, expected):
         ("Catalogue: CTU-300", "UTC-003", "CTU-300"),
         ("Cat No: TE0029", "UTC-003", "TE0029"),
         ("Cat Nr.: TE0029", "UTC-003", "TE0029"),
+        ("Catalogue:CTU-300", "UTC-003", "CTU-300"),
     ],
 )
 def test_parse_catalognum(description, album, expected):
@@ -206,6 +199,7 @@ def test_parse_catalognum(description, album, expected):
         ("Some feat. Some ONE - Album", ["Some feat. Some ONE"], "Album"),
         ("Healing Noise (EP) (Free Download)", [], "Healing Noise"),
         ("[MCVA003] - VARIOUS ARTISTS", ["MCVA003"], "MCVA003"),
+        ("Drepa Mann [Vinyl]", [], "Drepa Mann"),
     ],
 )
 def test_clean_up_album_name(album, extras, expected):
@@ -223,6 +217,13 @@ def _release(request):
     fixturename = next(iter(request._parent_request._fixture_defs.keys()))
     filename = "tests/json/{}.json".format(fixturename)
     return prepend + re.sub(r"\n *", "", open(filename).read()), info
+
+
+def check(actual, expected) -> None:
+    if NEW_BEETS:
+        assert actual == expected
+    else:
+        assert vars(actual) == vars(expected)
 
 
 @pytest.mark.parametrize(
