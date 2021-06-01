@@ -1,0 +1,805 @@
+{
+  "@context": "https://schema.org",
+  "@id": "https://psykovsky.bandcamp.com/album/ksolntsu",
+  "@type": "MusicAlbum",
+  "additionalProperty": [
+    {
+      "@type": "PropertyValue",
+      "name": "art_id",
+      "value": 1199755283
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "featured_track_num",
+      "value": 1
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "license_name",
+      "value": "various"
+    }
+  ],
+  "albumRelease": [
+    {
+      "@id": "https://psykovsky.bandcamp.com/album/ksolntsu#a134886448",
+      "@type": [
+        "MusicRelease",
+        "Product"
+      ],
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "item_id",
+          "value": 134886448
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "item_type",
+          "value": "a"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_name",
+          "value": "Digital"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "art_id",
+          "value": 1199755283
+        }
+      ],
+      "description": "Includes high-quality download in MP3, FLAC and more. Paying supporters also get unlimited streaming via the free Bandcamp app.",
+      "image": [
+        "https://f4.bcbits.com/img/a1199755283_10.jpg"
+      ],
+      "musicReleaseFormat": "DigitalFormat",
+      "name": "Ksolntsu"
+    },
+    {
+      "@id": "https://psykovsky.bandcamp.com/track/ela-na-pame#t3936209160",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://psykovsky.bandcamp.com/track/stone-sea#t1697462790",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://psykovsky.bandcamp.com/track/so-we-sailed-till-we-found#t100558700",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://psykovsky.bandcamp.com/track/doors-of-perception#t64137153",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://psykovsky.bandcamp.com/track/variant-on-the-right#t2945940491",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://psykovsky.bandcamp.com/track/call-of-beauty#t249961523",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://psykovsky.bandcamp.com/track/many-many-krishnas#t1039297523",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://psykovsky.bandcamp.com/track/prem-i-um#t2584951270",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://psykovsky.bandcamp.com/track/now-here-nowhere#t1788081328",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://psykovsky.bandcamp.com/track/holy-black-little-lark#t3407782947",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://psykovsky.bandcamp.com/track/worlds-of-wisdom#t386177510",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://psykovsky.bandcamp.com/track/pc-transmission#t1401461526",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://psykovsky.bandcamp.com/track/rs-lightmusic#t3234798938",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://psykovsky.bandcamp.com/track/ksolntsu#t1634779854",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://psykovsky.bandcamp.com/track/dadme-albricios-hijos-deva#t1223215058",
+      "@type": "MusicRelease"
+    }
+  ],
+  "albumReleaseType": "AlbumRelease",
+  "byArtist": {
+    "@type": "MusicGroup",
+    "name": "Psykovsky & Friends"
+  },
+  "copyrightNotice": "Various",
+  "dateModified": "12 Jul 2018 19:50:45 GMT",
+  "datePublished": "12 Feb 2015 14:58:55 GMT",
+  "image": "https://f4.bcbits.com/img/a1199755283_10.jpg",
+  "keywords": [
+    "Electronic",
+    "Experimental",
+    "Nanotech",
+    "psytrance",
+    "Niue"
+  ],
+  "name": "Ksolntsu",
+  "numTracks": 15,
+  "publisher": {
+    "@id": "https://psykovsky.bandcamp.com",
+    "@type": "MusicGroup",
+    "additionalProperty": [
+      {
+        "@type": "PropertyValue",
+        "name": "band_id",
+        "value": 250137266
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "currency",
+        "value": "USD"
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_id",
+        "value": 21724693
+      }
+    ],
+    "description": "a maverick electronic music producer, since 2000 Psykovsky has worked with a number of different solo and collaborative projects, and is nowadays acknowledged as one of the most auspicious psytrance artists - check out Psykovsky's alternative digital audio-visual releases at https://foundation.app/Psykovsky and https://www.youtube.com/channel/UCu1BnVhnFn0pcVZnkwmOAZQ",
+    "foundingLocation": {
+      "@type": "Place",
+      "name": "Niue"
+    },
+    "genre": "https://bandcamp.com/tag/electronic",
+    "image": "https://f4.bcbits.com/img/0021724693_10.jpg",
+    "name": "Psykovsky",
+    "subjectOf": [
+      {
+        "@type": "WebPage",
+        "name": "music",
+        "url": "https://psykovsky.bandcamp.com/music"
+      },
+      {
+        "@type": "WebPage",
+        "name": "community",
+        "url": "https://psykovsky.bandcamp.com/community"
+      }
+    ]
+  },
+  "track": {
+    "@type": "ItemList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://psykovsky.bandcamp.com/track/ela-na-pame",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 3936209160
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 518.488
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 1
+            }
+          ],
+          "byArtist": {
+            "@type": "MusicGroup",
+            "name": "Psykovsky & Orestis"
+          },
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H08M38S",
+          "name": "Ela Na Pame"
+        },
+        "position": 1
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://psykovsky.bandcamp.com/track/stone-sea",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 1697462790
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 673.161
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 2
+            }
+          ],
+          "byArtist": {
+            "@type": "MusicGroup",
+            "name": "Psykovsky & Luuli"
+          },
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H11M13S",
+          "name": "Stone Sea"
+        },
+        "position": 2
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://psykovsky.bandcamp.com/track/so-we-sailed-till-we-found",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 100558700
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 454.736
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 3
+            }
+          ],
+          "byArtist": {
+            "@type": "MusicGroup",
+            "name": "Psykovsky & Spiral"
+          },
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H07M34S",
+          "name": "So We Sailed Till We Found"
+        },
+        "position": 3
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://psykovsky.bandcamp.com/track/doors-of-perception",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 64137153
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 473.863
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 4
+            }
+          ],
+          "byArtist": {
+            "@type": "MusicGroup",
+            "name": "Psykovsky & Kasatka"
+          },
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H07M53S",
+          "name": "Doors Of Perception"
+        },
+        "position": 4
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://psykovsky.bandcamp.com/track/variant-on-the-right",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 2945940491
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 736.543
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 5
+            }
+          ],
+          "byArtist": {
+            "@type": "MusicGroup",
+            "name": "Psykovsky & Spiral & Seeasound"
+          },
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H12M16S",
+          "name": "Variant On The Right"
+        },
+        "position": 5
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://psykovsky.bandcamp.com/track/call-of-beauty",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 249961523
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 769.609
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "attribution_non_commercial_share_alike"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 6
+            }
+          ],
+          "copyrightNotice": "Attribution Non Commercial Share Alike",
+          "duration": "P00H12M49S",
+          "name": "Call Of Beauty"
+        },
+        "position": 6
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://psykovsky.bandcamp.com/track/many-many-krishnas",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 1039297523
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 729.883
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 7
+            }
+          ],
+          "byArtist": {
+            "@type": "MusicGroup",
+            "name": "Psykovsky & Orestis & Jobaba"
+          },
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H12M09S",
+          "name": "Many Many Krishnas"
+        },
+        "position": 7
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://psykovsky.bandcamp.com/track/prem-i-um",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 2584951270
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 409.205
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 8
+            }
+          ],
+          "byArtist": {
+            "@type": "MusicGroup",
+            "name": "Psykovsky & Kashyyyk & Arcek"
+          },
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H06M49S",
+          "name": "Prem I Um"
+        },
+        "position": 8
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://psykovsky.bandcamp.com/track/now-here-nowhere",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 1788081328
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 557.82
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 9
+            }
+          ],
+          "byArtist": {
+            "@type": "MusicGroup",
+            "name": "Psykovsky & Arcek"
+          },
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H09M17S",
+          "name": "Now Here Nowhere"
+        },
+        "position": 9
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://psykovsky.bandcamp.com/track/holy-black-little-lark",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 3407782947
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 1087.81
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "attribution_non_commercial_share_alike"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 10
+            }
+          ],
+          "byArtist": {
+            "@type": "MusicGroup",
+            "name": "Psykovsky & Maleficium & Seeasound"
+          },
+          "copyrightNotice": "Attribution Non Commercial Share Alike",
+          "duration": "P00H18M07S",
+          "name": "Holy Black / Little Lark",
+          "recordingOf": {
+            "@type": "MusicComposition",
+            "lyrics": {
+              "@type": "CreativeWork",
+              "text": "Little lark\r\n\r\nall alone\r\n\r\ncannot find his way\r\n\r\nThrough the wheat fields\r\n\r\nhe will wander\r\n\r\nsearching all the day\r\n\r\n\"Oh mother!\r\n\r\nPlease come find me!”\r\n\r\nHe calls to the sky\r\n\r\nThe wheat\r\n\r\nrustling ‘round him\r\n\r\nis the only reply\r\n\r\nHe’s forgotten\r\n\r\nhow to find his way\r\n\r\nback to the nest\r\n\r\nLittle lark\r\n\r\nall alone now\r\n\r\nin the fields he rests\r\n\r\nThrough the dark\r\n\r\nthe fox hounding\r\n\r\nin the moonlight\r\n\r\nAfter sunset\r\n\r\nall that’s left is\r\n\r\nforlorn twilight"
+            }
+          }
+        },
+        "position": 10
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://psykovsky.bandcamp.com/track/worlds-of-wisdom",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 386177510
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 408.473
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 11
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H06M48S",
+          "name": "Worlds Of Wisdom"
+        },
+        "position": 11
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://psykovsky.bandcamp.com/track/pc-transmission",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 1401461526
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 561.487
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 12
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H09M21S",
+          "name": "PC Transmission"
+        },
+        "position": 12
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://psykovsky.bandcamp.com/track/rs-lightmusic",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 3234798938
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 411.157
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "attribution_non_commercial_share_alike"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 13
+            }
+          ],
+          "copyrightNotice": "Attribution Non Commercial Share Alike",
+          "duration": "P00H06M51S",
+          "name": "RS Lightmusic"
+        },
+        "position": 13
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://psykovsky.bandcamp.com/track/ksolntsu",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 1634779854
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 555.756
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 14
+            }
+          ],
+          "byArtist": {
+            "@type": "MusicGroup",
+            "name": "Psykovsky & Quip Tone Beatz & Flish"
+          },
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H09M15S",
+          "name": "Ksolntsu"
+        },
+        "position": 14
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://psykovsky.bandcamp.com/track/dadme-albricios-hijos-deva",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 1223215058
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 623.999
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 15
+            }
+          ],
+          "byArtist": {
+            "@type": "MusicGroup",
+            "name": "Birds Of Praise"
+          },
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H10M23S",
+          "name": "Dadme albricios hijos d'Eva"
+        },
+        "position": 15
+      }
+    ],
+    "numberOfItems": 15
+  }
+}

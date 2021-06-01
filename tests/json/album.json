@@ -1,0 +1,349 @@
+{
+  "@context": "https://schema.org",
+  "@id": "https://ute-rec.bandcamp.com/album/ute004",
+  "@type": "MusicAlbum",
+  "additionalProperty": [
+    {
+      "@type": "PropertyValue",
+      "name": "art_id",
+      "value": 1035657740
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "featured_track_num",
+      "value": 1
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "license_name",
+      "value": "all_rights_reserved"
+    }
+  ],
+  "albumRelease": [
+    {
+      "@id": "https://ute-rec.bandcamp.com/album/ute004#a2990976741",
+      "@type": [
+        "MusicRelease",
+        "Product"
+      ],
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "item_id",
+          "value": 2990976741
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "item_type",
+          "value": "a"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_name",
+          "value": "Digital"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "art_id",
+          "value": 1035657740
+        }
+      ],
+      "description": "Includes high-quality download in MP3, FLAC and more. Paying supporters also get unlimited streaming via the free Bandcamp app.",
+      "image": [
+        "https://f4.bcbits.com/img/a1035657740_10.jpg"
+      ],
+      "musicReleaseFormat": "DigitalFormat",
+      "name": "UTE004"
+    },
+    {
+      "@id": "https://ute-rec.bandcamp.com/album/ute004#p122109000",
+      "@type": [
+        "MusicRelease",
+        "Product"
+      ],
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "item_id",
+          "value": 122109000
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "item_type",
+          "value": "p"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_name",
+          "value": "Vinyl LP"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "image_ids",
+          "value": [
+            22500386,
+            22500378
+          ]
+        }
+      ],
+      "image": [
+        "https://f4.bcbits.com/img/0022500386_10.jpg",
+        "https://f4.bcbits.com/img/0022500378_10.jpg"
+      ],
+      "musicReleaseFormat": "VinylFormat",
+      "name": "12\" Vinyl",
+      "offers": {
+        "@type": "Offer",
+        "availability": "SoldOut",
+        "price": 12,
+        "priceCurrency": "EUR",
+        "priceSpecification": {
+          "minPrice": 12
+        },
+        "url": "https://ute-rec.bandcamp.com/album/ute004#p122109000-buy"
+      }
+    },
+    {
+      "@id": "https://ute-rec.bandcamp.com/track/the-human-experience-empathy-mix#t2780084730",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://ute-rec.bandcamp.com/track/parallell#t4132926702",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://ute-rec.bandcamp.com/track/formulae#t2058726302",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://ute-rec.bandcamp.com/track/biotope#t3564730108",
+      "@type": "MusicRelease"
+    }
+  ],
+  "albumReleaseType": "AlbumRelease",
+  "byArtist": {
+    "@type": "MusicGroup",
+    "name": "Mikkel Rev"
+  },
+  "copyrightNotice": "All Rights Reserved",
+  "creditText": "Production: Mikkel Haraldstad\r\nMaster: Joel Krozer, 6bitdeep\r\nGraphics: Haider Ahmed",
+  "dateModified": "22 Feb 2021 10:59:51 GMT",
+  "datePublished": "07 May 2020 17:30:22 GMT",
+  "description": "Our dear Mikkel serving four emotional and warm trancers focused on the journey within.",
+  "image": "https://f4.bcbits.com/img/a1035657740_10.jpg",
+  "keywords": [
+    "Oslo"
+  ],
+  "name": "UTE004",
+  "numTracks": 4,
+  "publisher": {
+    "@id": "https://ute-rec.bandcamp.com",
+    "@type": "MusicGroup",
+    "additionalProperty": [
+      {
+        "@type": "PropertyValue",
+        "name": "band_id",
+        "value": 788052312
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "currency",
+        "value": "EUR"
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_id",
+        "value": 23711597
+      }
+    ],
+    "description": "✣ Label\n✣ Club nights\n✣ Forest raves",
+    "foundingLocation": {
+      "@type": "Place",
+      "name": "Oslo, Norway"
+    },
+    "image": "https://f4.bcbits.com/img/0023711597_10.jpg",
+    "mainEntityOfPage": [
+      {
+        "@type": "WebPage",
+        "name": "SoundCloud",
+        "url": "https://soundcloud.com/ute-rec"
+      }
+    ],
+    "name": "Ute.Rec",
+    "subjectOf": [
+      {
+        "@type": "WebPage",
+        "name": "Sub-labels",
+        "url": "https://ute-rec.bandcamp.com/artists"
+      },
+      {
+        "@type": "WebPage",
+        "name": "Releases",
+        "url": "https://ute-rec.bandcamp.com/music"
+      },
+      {
+        "@type": "WebPage",
+        "name": "Merch",
+        "url": "https://ute-rec.bandcamp.com/merch"
+      }
+    ]
+  },
+  "track": {
+    "@type": "ItemList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://ute-rec.bandcamp.com/track/the-human-experience-empathy-mix",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 2780084730
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 504.014
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 1
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H08M24S",
+          "name": "The Human Experience (Empathy Mix)"
+        },
+        "position": 1
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://ute-rec.bandcamp.com/track/parallell",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 4132926702
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 487.471
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 2
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H08M07S",
+          "name": "Parallell"
+        },
+        "position": 2
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://ute-rec.bandcamp.com/track/formulae",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 2058726302
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 431.483
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 3
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H07M11S",
+          "name": "Formulae"
+        },
+        "position": 3
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://ute-rec.bandcamp.com/track/biotope",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 3564730108
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 421.233
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 4
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H07M01S",
+          "name": "Biotope"
+        },
+        "position": 4
+      }
+    ],
+    "numberOfItems": 4
+  }
+}

@@ -1,3 +1,28 @@
+## [0.9.0] 2021-06-01
+
+### Fixed
+
+- If track artist is given in the `byArtist` field of the track JSON resource, it is used.
+  (Fixes #13, thanks @xeroxcat).
+- Parse cases like `Catalogue:CAT-000` from the description correctly when the space is missing.
+
+### Added
+
+- The `comments` field now includes the media description and credits.
+- The description is searched for artist and album names in addition to the catalogue
+  number.
+
+### Updated
+
+- All testcases are now pretty JSON files - this should bring more transparency around
+  the adjustments that Bandcamp make in the future (once they get updated). The `url2json`
+  tool has `-u` flag that updates them automatically.
+
+- Parsing
+
+  - `(FREE)`, `(free download)`-like strings are now removed from the track names.
+  - `[Vinyl]` is excluded from album names.
+
 ## [0.8.0] 2021-04-20
 
 ### Fixed

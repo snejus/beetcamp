@@ -1,0 +1,689 @@
+{
+  "@context": "https://schema.org",
+  "@id": "https://ismusberlin.bandcamp.com/album/ismva0033",
+  "@type": "MusicAlbum",
+  "additionalProperty": [
+    {
+      "@type": "PropertyValue",
+      "name": "art_id",
+      "value": 4292881830
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "featured_track_num",
+      "value": 13
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "has_discounts",
+      "value": true
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "license_name",
+      "value": "all_rights_reserved"
+    }
+  ],
+  "albumRelease": [
+    {
+      "@id": "https://ismusberlin.bandcamp.com/album/ismva0033#a1149529108",
+      "@type": [
+        "MusicRelease",
+        "Product"
+      ],
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "item_id",
+          "value": 1149529108
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "item_type",
+          "value": "a"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_name",
+          "value": "Digital"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "art_id",
+          "value": 4292881830
+        }
+      ],
+      "description": "Includes high-quality download in MP3, FLAC and more. Paying supporters also get unlimited streaming via the free Bandcamp app.",
+      "image": [
+        "https://f4.bcbits.com/img/a4292881830_10.jpg"
+      ],
+      "musicReleaseFormat": "DigitalFormat",
+      "name": "ISMVA003.3"
+    },
+    {
+      "@id": "https://ismusberlin.bandcamp.com/track/zebar-zimo-wish-granter-original-mix#t2573934244",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://ismusberlin.bandcamp.com/track/alpha-tracks-valimba-original-mix#t2486903435",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://ismusberlin.bandcamp.com/track/less-distress-wheres-my-arc-paulie-original-mix#t283685132",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://ismusberlin.bandcamp.com/track/lucas-martins-south-original-mix#t2033411417",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://ismusberlin.bandcamp.com/track/pro-athlete-floorcrusher-original-mix#t2012833122",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://ismusberlin.bandcamp.com/track/zwyrg-point-of-no-return-original-mix#t650634565",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://ismusberlin.bandcamp.com/track/ndym-succession-original-mix#t1306777172",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://ismusberlin.bandcamp.com/track/kl-ne-woke-up-in-a-broken-world-original-mix#t571350648",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://ismusberlin.bandcamp.com/track/i-e-diva-plavalaguna-original-mix#t3160434405",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://ismusberlin.bandcamp.com/track/dj-g2g-darkbreak-escape-original-mix#t2384179591",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://ismusberlin.bandcamp.com/track/mr-free-the-4th-room-original-mix#t3204960381",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://ismusberlin.bandcamp.com/track/abem-black-powder-original-mix#t2339272420",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://ismusberlin.bandcamp.com/track/dj-reiz-plan-9-from-outer-space-original-mix#t359530111",
+      "@type": "MusicRelease"
+    }
+  ],
+  "albumReleaseType": "AlbumRelease",
+  "byArtist": {
+    "@id": "https://ismusberlin.bandcamp.com",
+    "@type": "MusicGroup",
+    "name": "Ismus"
+  },
+  "copyrightNotice": "All Rights Reserved",
+  "dateModified": "15 Dec 2020 12:25:06 GMT",
+  "datePublished": "29 Nov 2020 10:44:02 GMT",
+  "description": "Mastering by Eric Reivolp, Artwork by Nick Cocozza",
+  "image": "https://f4.bcbits.com/img/a4292881830_10.jpg",
+  "keywords": [
+    "Electronic",
+    "acid",
+    "techno",
+    "trance",
+    "Berlin"
+  ],
+  "name": "ISMVA003.3",
+  "numTracks": 13,
+  "publisher": {
+    "@id": "https://ismusberlin.bandcamp.com",
+    "@type": "MusicGroup",
+    "additionalProperty": [
+      {
+        "@type": "PropertyValue",
+        "name": "band_id",
+        "value": 2663533860
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "currency",
+        "value": "EUR"
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_id",
+        "value": 17543303
+      }
+    ],
+    "description": "-ism\nɪz(ə)m\n\n.a distinctive practice, system, or philosophy, typically a political ideology or an artistic movement.",
+    "foundingLocation": {
+      "@type": "Place",
+      "name": "Berlin, Germany"
+    },
+    "genre": "https://bandcamp.com/tag/electronic",
+    "image": "https://f4.bcbits.com/img/0017543303_10.jpg",
+    "mainEntityOfPage": [
+      {
+        "@type": "WebSite",
+        "name": "ismusberlin.com",
+        "url": "http://www.ismusberlin.com"
+      }
+    ],
+    "name": "Ismus",
+    "subjectOf": [
+      {
+        "@type": "WebPage",
+        "name": "music",
+        "url": "https://ismusberlin.bandcamp.com/music"
+      },
+      {
+        "@type": "WebPage",
+        "name": "merch",
+        "url": "https://ismusberlin.bandcamp.com/merch"
+      },
+      {
+        "@type": "WebPage",
+        "name": "community",
+        "url": "https://ismusberlin.bandcamp.com/community"
+      }
+    ]
+  },
+  "track": {
+    "@type": "ItemList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://ismusberlin.bandcamp.com/track/zebar-zimo-wish-granter-original-mix",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 2573934244
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 414
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 1
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H06M54S",
+          "name": "Zebar & Zimo - Wish Granter (Original Mix)"
+        },
+        "position": 1
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://ismusberlin.bandcamp.com/track/alpha-tracks-valimba-original-mix",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 2486903435
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 361.558
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 2
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H06M01S",
+          "name": "Alpha Tracks - Valimba (Original Mix)"
+        },
+        "position": 2
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://ismusberlin.bandcamp.com/track/less-distress-wheres-my-arc-paulie-original-mix",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 283685132
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 313.6
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 3
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H05M13S",
+          "name": "Less Distress - Where's My Arc, Paulie? (Original Mix)"
+        },
+        "position": 3
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://ismusberlin.bandcamp.com/track/lucas-martins-south-original-mix",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 2033411417
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 388
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 4
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H06M28S",
+          "name": "Lucas Martins - South (Original Mix)"
+        },
+        "position": 4
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://ismusberlin.bandcamp.com/track/pro-athlete-floorcrusher-original-mix",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 2012833122
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 330
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 5
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H05M30S",
+          "name": "Pro Athlete - Floorcrusher (Original Mix)"
+        },
+        "position": 5
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://ismusberlin.bandcamp.com/track/zwyrg-point-of-no-return-original-mix",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 650634565
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 426
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 6
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H07M06S",
+          "name": "zwyrg - Point Of No Return (Original Mix)"
+        },
+        "position": 6
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://ismusberlin.bandcamp.com/track/ndym-succession-original-mix",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 1306777172
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 414.247
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 7
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H06M54S",
+          "name": "ΣNDYM  - Succession (Original Mix)"
+        },
+        "position": 7
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://ismusberlin.bandcamp.com/track/kl-ne-woke-up-in-a-broken-world-original-mix",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 571350648
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 390
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 8
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H06M30S",
+          "name": "KLØNE - Woke Up In A Broken World (Original Mix)"
+        },
+        "position": 8
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://ismusberlin.bandcamp.com/track/i-e-diva-plavalaguna-original-mix",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 3160434405
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 370.75
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 9
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H06M10S",
+          "name": "I.E - Diva Plavalaguna (Original Mix)"
+        },
+        "position": 9
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://ismusberlin.bandcamp.com/track/dj-g2g-darkbreak-escape-original-mix",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 2384179591
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 374.75
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 10
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H06M14S",
+          "name": "DJ G2G - Darkbreak Escape (Original Mix)"
+        },
+        "position": 10
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://ismusberlin.bandcamp.com/track/mr-free-the-4th-room-original-mix",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 3204960381
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 344.022
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 11
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H05M44S",
+          "name": "Mr. Free - The 4th Room (Original Mix)"
+        },
+        "position": 11
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://ismusberlin.bandcamp.com/track/abem-black-powder-original-mix",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 2339272420
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 465
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 12
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H07M45S",
+          "name": "ABEM - Black Powder (Original Mix)"
+        },
+        "position": 12
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://ismusberlin.bandcamp.com/track/dj-reiz-plan-9-from-outer-space-original-mix",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 359530111
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 408.649
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 13
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H06M48S",
+          "name": "DJ Reiz - Plan 9 From Outer Space (Original Mix)"
+        },
+        "position": 13
+      }
+    ],
+    "numberOfItems": 13
+  }
+}

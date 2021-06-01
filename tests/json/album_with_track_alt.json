@@ -1,0 +1,441 @@
+{
+  "@context": "https://schema.org",
+  "@id": "https://foldrecords.bandcamp.com/album/fld001-gareth-wild-common-assault-ep",
+  "@type": "MusicAlbum",
+  "additionalProperty": [
+    {
+      "@type": "PropertyValue",
+      "name": "art_id",
+      "value": 2798384948
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "featured_track_num",
+      "value": 4
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "license_name",
+      "value": "all_rights_reserved"
+    }
+  ],
+  "albumRelease": [
+    {
+      "@id": "https://foldrecords.bandcamp.com/album/fld001-gareth-wild-common-assault-ep#a3710011613",
+      "@type": [
+        "MusicRelease",
+        "Product"
+      ],
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "item_id",
+          "value": 3710011613
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "item_type",
+          "value": "a"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_name",
+          "value": "Digital"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "art_id",
+          "value": 2798384948
+        }
+      ],
+      "description": "Includes high-quality download in MP3, FLAC and more. Paying supporters also get unlimited streaming via the free Bandcamp app.",
+      "image": [
+        "https://f4.bcbits.com/img/a2798384948_10.jpg"
+      ],
+      "musicReleaseFormat": "DigitalFormat",
+      "name": "FLD001 // Gareth Wild - Common Assault EP"
+    },
+    {
+      "@id": "https://foldrecords.bandcamp.com/album/fld001-gareth-wild-common-assault-ep#p2171282163",
+      "@type": [
+        "MusicRelease",
+        "Product"
+      ],
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "item_id",
+          "value": 2171282163
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "item_type",
+          "value": "p"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_name",
+          "value": "Other Vinyl"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "image_ids",
+          "value": [
+            21656549,
+            21712017,
+            21712022,
+            21712024
+          ]
+        }
+      ],
+      "description": "For the inaugural EP, FOLD resident Gareth Wild presents ‘Common Assault’. With metallic tubular synthesis, cut-throat percussion and rolling rhythms, this EP is an effective and essential piece of material demonstrating all angles of Techno, immersive to peak-time.\n\nThe release features three original tracks and two locked grooves from Gareth with stripped back, dark-side remix work from Madrid’s very own Roll Dann.",
+      "image": [
+        "https://f4.bcbits.com/img/0021656549_10.jpg",
+        "https://f4.bcbits.com/img/0021712017_10.jpg",
+        "https://f4.bcbits.com/img/0021712022_10.jpg",
+        "https://f4.bcbits.com/img/0021712024_10.jpg"
+      ],
+      "musicReleaseFormat": "VinylFormat",
+      "name": "FLD001 - Common Assault EP",
+      "offers": {
+        "@type": "Offer",
+        "availability": "InStock",
+        "price": 12,
+        "priceCurrency": "GBP",
+        "priceSpecification": {
+          "minPrice": 12
+        },
+        "url": "https://foldrecords.bandcamp.com/album/fld001-gareth-wild-common-assault-ep#p2171282163-buy"
+      }
+    },
+    {
+      "@id": "https://foldrecords.bandcamp.com/track/a1-gareth-wild-live-wire#t2847020791",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://foldrecords.bandcamp.com/track/a2-gareth-wild-live-wire-roll-dann-remix#t1382985841",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://foldrecords.bandcamp.com/track/a3-gareth-wild-dds-locked-groove#t2410206971",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://foldrecords.bandcamp.com/track/aa1-gareth-wild-common-assault#t2674898874",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://foldrecords.bandcamp.com/track/aa2-gareth-wild-saturn-storm#t276309811",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://foldrecords.bandcamp.com/track/aa3-gareth-wild-quadrant-locked-groove#t1813148828",
+      "@type": "MusicRelease"
+    }
+  ],
+  "albumReleaseType": "AlbumRelease",
+  "byArtist": {
+    "@type": "MusicGroup",
+    "name": "Gareth Wild"
+  },
+  "copyrightNotice": "All Rights Reserved",
+  "dateModified": "07 Nov 2020 14:18:05 GMT",
+  "datePublished": "17 Sep 2020 15:07:33 GMT",
+  "image": "https://f4.bcbits.com/img/a2798384948_10.jpg",
+  "keywords": [
+    "London"
+  ],
+  "name": "FLD001 // Gareth Wild - Common Assault EP",
+  "numTracks": 6,
+  "publisher": {
+    "@id": "https://foldrecords.bandcamp.com",
+    "@type": "MusicGroup",
+    "additionalProperty": [
+      {
+        "@type": "PropertyValue",
+        "name": "band_id",
+        "value": 1614229409
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "currency",
+        "value": "GBP"
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_id",
+        "value": 21655804
+      }
+    ],
+    "description": "The institution of arts based in the heart of East London's, Canning Town. Home to music and creative studios and a 500 capacity state-of-the-art performance space.",
+    "foundingLocation": {
+      "@type": "Place",
+      "name": "London, UK"
+    },
+    "image": "https://f4.bcbits.com/img/0021655804_10.jpg",
+    "mainEntityOfPage": [
+      {
+        "@type": "WebSite",
+        "name": "fold.london",
+        "url": "http://www.fold.london"
+      }
+    ],
+    "name": "FOLD RECORDS",
+    "subjectOf": [
+      {
+        "@type": "WebPage",
+        "name": "artists",
+        "url": "https://foldrecords.bandcamp.com/artists"
+      },
+      {
+        "@type": "WebPage",
+        "name": "music",
+        "url": "https://foldrecords.bandcamp.com/music"
+      },
+      {
+        "@type": "WebPage",
+        "name": "merch",
+        "url": "https://foldrecords.bandcamp.com/merch"
+      },
+      {
+        "@type": "WebPage",
+        "name": "community",
+        "url": "https://foldrecords.bandcamp.com/community"
+      }
+    ]
+  },
+  "track": {
+    "@type": "ItemList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://foldrecords.bandcamp.com/track/a1-gareth-wild-live-wire",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 2847020791
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 357.372
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 1
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H05M57S",
+          "name": "A1. Gareth Wild - Live Wire"
+        },
+        "position": 1
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://foldrecords.bandcamp.com/track/a2-gareth-wild-live-wire-roll-dann-remix",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 1382985841
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 351.961
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 2
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H05M51S",
+          "name": "A2. Gareth Wild - Live Wire ( Roll Dann Remix )"
+        },
+        "position": 2
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://foldrecords.bandcamp.com/track/a3-gareth-wild-dds-locked-groove",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 2410206971
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 20.8
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 3
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H00M20S",
+          "name": "A3. Gareth Wild - DDS [Locked Groove]"
+        },
+        "position": 3
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://foldrecords.bandcamp.com/track/aa1-gareth-wild-common-assault",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 2674898874
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 315.224
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 4
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H05M15S",
+          "name": "AA1. Gareth Wild - Common Assault"
+        },
+        "position": 4
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://foldrecords.bandcamp.com/track/aa2-gareth-wild-saturn-storm",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 276309811
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 365.373
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 5
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H06M05S",
+          "name": "AA2. Gareth Wild - Saturn Storm"
+        },
+        "position": 5
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://foldrecords.bandcamp.com/track/aa3-gareth-wild-quadrant-locked-groove",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 1813148828
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 20
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 6
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H00M20S",
+          "name": "AA3. Gareth Wild - Quadrant [Locked Groove]"
+        },
+        "position": 6
+      }
+    ],
+    "numberOfItems": 6
+  }
+}

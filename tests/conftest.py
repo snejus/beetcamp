@@ -1,17 +1,17 @@
 """Data prep / fixtures for tests."""
-import codecs
 from dataclasses import dataclass
 from datetime import date
+from datetime import datetime as dt
 from typing import Optional, Tuple
 
 import pytest
 from beets.autotag.hooks import AlbumInfo, TrackInfo
-
 from beetsplug.bandcamp._metaguru import DATA_SOURCE, NEW_BEETS, OFFICIAL
 
 
 @dataclass  # pylint: disable=too-many-instance-attributes
 class ReleaseInfo:
+    html_release_date = ""
     image: str
     album_id: str
     artist_id: str
@@ -20,6 +20,11 @@ class ReleaseInfo:
     disctitle: Optional[str]
     singleton = None  # type: TrackInfo
     albuminfo = None  # type: AlbumInfo
+
+    def set_html_release_date(self, _date: date):
+        self.html_release_date = "released {:0>2d} {} {}".format(
+            _date.day, dt.strftime(dt.strptime(str(_date.month), "%m"), "%B"), _date.year
+        )
 
     def track_data(self, **kwargs) -> TrackInfo:
         kget = kwargs.get
@@ -52,6 +57,7 @@ class ReleaseInfo:
         if NEW_BEETS:
             data.update(**kwargs)
         self.singleton = TrackInfo(**data)
+        self.set_html_release_date(date(kwargs["year"], kwargs["month"], kwargs["day"]))
 
     def set_albuminfo(self, tracks, **kwargs):
         fields = ["index", "title_id", "artist", "title", "length", "alt"]
@@ -76,12 +82,12 @@ class ReleaseInfo:
             data_source=DATA_SOURCE,
             tracks=[TrackInfo(**self.track_data(**dict(t))) for t in iter_tracks],
         )
+        self.set_html_release_date(kwargs["release_date"])
 
 
 @pytest.fixture
-def single_track_release() -> Tuple[str, ReleaseInfo]:
+def single_track_release() -> ReleaseInfo:
     """Single track as a release on its own."""
-    test_html_file = "tests/single.html"
     info = ReleaseInfo(
         image="https://f4.bcbits.com/img/a2036476476_10.jpg",
         artist_id="https://mega-tech.bandcamp.com",
@@ -105,7 +111,7 @@ def single_track_release() -> Tuple[str, ReleaseInfo]:
         day=9,
         country="SE",
     )
-    return codecs.open(test_html_file).read(), info
+    return info
 
 
 @pytest.fixture
@@ -140,9 +146,9 @@ def single_track_album_search() -> Tuple[str, ReleaseInfo]:
     return track_url, info
 
 
-def album() -> Tuple[str, ReleaseInfo]:
+@pytest.fixture
+def album() -> ReleaseInfo:
     """An album with a single artist."""
-    test_html_file = "tests/album.html"
     album_artist = "Mikkel Rev"
     info = ReleaseInfo(
         image="https://f4.bcbits.com/img/a1035657740_10.jpg",
@@ -176,12 +182,12 @@ def album() -> Tuple[str, ReleaseInfo]:
         country="NO",
         mediums=1,
     )
-    return codecs.open(test_html_file).read(), info
+    return info
 
 
-def album_with_track_alt() -> Tuple[str, ReleaseInfo]:
+@pytest.fixture
+def album_with_track_alt() -> ReleaseInfo:
     """An album with alternative track indexes."""
-    test_html_file = "tests/track_alt.html"
     artist_id = "https://foldrecords.bandcamp.com"
     info = ReleaseInfo(
         image="https://f4.bcbits.com/img/a2798384948_10.jpg",
@@ -247,12 +253,12 @@ def album_with_track_alt() -> Tuple[str, ReleaseInfo]:
         country="GB",
         mediums=1,
     )
-    return codecs.open(test_html_file).read(), info
+    return info
 
 
-def compilation() -> Tuple[str, ReleaseInfo]:
+@pytest.fixture
+def compilation() -> ReleaseInfo:
     """An album with various artists."""
-    test_html_file = "tests/compilation.html"
     info = ReleaseInfo(
         image="https://f4.bcbits.com/img/a4292881830_10.jpg",
         artist_id="https://ismusberlin.bandcamp.com",
@@ -289,12 +295,12 @@ def compilation() -> Tuple[str, ReleaseInfo]:
         country="DE",
         mediums=1,
     )
-    return codecs.open(test_html_file).read(), info
+    return info
 
 
-def json_album() -> Tuple[str, ReleaseInfo]:
+@pytest.fixture
+def artist_mess() -> ReleaseInfo:
     """An unusual album for testing some edge cases."""
-    json_data_file = "tests/ksointsu.json"
     info = ReleaseInfo(
         image="https://f4.bcbits.com/img/0021724693_10.jpg",
         artist_id="https://psykovsky.bandcamp.com",
@@ -325,23 +331,20 @@ def json_album() -> Tuple[str, ReleaseInfo]:
     info.set_albuminfo(
         tracks,
         album="Ksolntsu",
-        albumartist="Various Artists",
-        albumtype="compilation",
+        albumartist="Psykovsky & Friends",
+        albumtype="album",
         catalognum="",
         label="Psykovsky",
         release_date=date(2015, 2, 12),
-        va=True,
+        va=False,
         country="NU",
         mediums=1,
     )
-    dummy_html = "released 12 February 2015"
-    data = open(json_data_file).read()
-    return "\n".join([data, dummy_html]), info
+    return info
 
 
-def ep() -> Tuple[str, ReleaseInfo]:
-    """An EP with various artists."""
-    test_html_file = "tests/ep.html"
+@pytest.fixture
+def ep() -> ReleaseInfo:
     info = ReleaseInfo(
         image="https://f4.bcbits.com/img/a4292881830_10.jpg",
         artist_id="https://fallingapart.bandcamp.com",
@@ -392,14 +395,42 @@ def ep() -> Tuple[str, ReleaseInfo]:
         country="DE",
         mediums=1,
     )
-    return codecs.open(test_html_file).read(), info
+    return info
 
 
 @pytest.fixture
-def ep_album() -> Tuple[str, ReleaseInfo]:
-    return ep()
-
-
-@pytest.fixture(params=[album, album_with_track_alt, compilation, ep, json_album])
-def multitracks(request) -> Tuple[str, ReleaseInfo]:
-    return request.param()
+def description_meta() -> ReleaseInfo:
+    albumartist = "Francois Dillinger"
+    info = ReleaseInfo(
+        image="https://f4.bcbits.com/img/a0890773906_10.jpg",
+        artist_id="https://diffusereality.bandcamp.com",
+        album_id="https://diffusereality.bandcamp.com/album/francois-dillinger-icosahedrone-lp",  # noqa
+        track_count=10,
+        media="CD",
+        disctitle="Francois Dillinger - Icosahedrone [LP]",
+    )
+    tracks = [
+        ("count-to-infinity", albumartist, "Count To Infinity", 376, None),
+        ("navigating-the-swamp-2", albumartist, "Navigating The Swamp", 347, None),
+        ("sit-and-wait-2", albumartist, "Sit And Wait", 320, None),
+        ("the-cup-runneth-over", albumartist, "The Cup Runneth Over", 341, None),
+        ("clockroaches", albumartist, "Clockroaches", 335, None),
+        ("ego-purge", albumartist, "Ego Purge", 378, None),
+        ("giving-in", albumartist, "Giving In", 432, None),
+        ("ending-endlessly", albumartist, "Ending Endlessly", 353, None),
+        ("sing-the-pain-away", albumartist, "Sing The Pain Away", 320, None),
+        ("dream-thief", albumartist, "Dream Thief", 442, None),
+    ]
+    info.set_albuminfo(
+        tracks,
+        album="Icosahedrone",
+        albumartist=albumartist,
+        albumtype="album",
+        catalognum="DREA 005",
+        label="Diffuse Reality",
+        release_date=date(2021, 5, 5),
+        va=False,
+        country="SI",
+        mediums=1,
+    )
+    return info

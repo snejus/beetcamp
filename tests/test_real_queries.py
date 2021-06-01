@@ -1,10 +1,21 @@
 """End to end tests aimed at catching html updates on bandcamp side."""
 import pytest
 from beets.library import Item
-
 from beetsplug.bandcamp import BandcampPlugin
 
 pytestmark = pytest.mark.need_connection
+
+
+def check_album(actual, expected):
+    expected.tracks.sort(key=lambda t: t.index)
+    actual.tracks.sort(key=lambda t: t.index)
+
+    for actual_track, expected_track in zip(actual.tracks, expected.tracks):
+        assert vars(actual_track) == vars(expected_track)
+    actual.tracks = None
+    expected.tracks = None
+
+    assert vars(actual) == vars(expected)
 
 
 def test_get_html():
@@ -41,9 +52,8 @@ def test_search():
 
 
 def test_get_single_track_album(single_track_release):
-    _, expected = single_track_release
-    expected_track = expected.singleton
-    url = expected.album_id
+    expected_track = single_track_release.singleton
+    url = single_track_release.album_id
 
     plugin = BandcampPlugin()
     actual = plugin.get_track_info(url)
@@ -51,34 +61,8 @@ def test_get_single_track_album(single_track_release):
     assert vars(actual) == vars(expected_track)
 
 
-def check_album(actual, expected):
-    expected.tracks.sort(key=lambda t: t.index)
-    actual.tracks.sort(key=lambda t: t.index)
-
-    for actual_track, expected_track in zip(actual.tracks, expected.tracks):
-        assert vars(actual_track) == vars(expected_track)
-    actual.tracks = None
-    expected.tracks = None
-
-    assert vars(actual) == vars(expected)
-
-
-def test_track_url_while_searching_album(single_track_album_search):
-    """If a `track` url was given as the ID searching for an `album`, the
-    plugin handles it and returns the album.
-    """
-    track_url, expected_release = single_track_album_search
-    plugin = BandcampPlugin()
-
-    album = plugin.get_album_info(track_url)
-
-    assert album
-    check_album(album, expected_release.albuminfo)
-
-
-def test_candidates(ep_album):
-    _, expected_release = ep_album
-    expected_album = expected_release.albuminfo
+def test_candidates(ep):
+    expected_album = ep.albuminfo
     plugin = BandcampPlugin()
 
     albums = plugin.candidates([], expected_album.artist, expected_album.album, False)
@@ -89,8 +73,7 @@ def test_candidates(ep_album):
 
 def test_singleton_item_candidates(single_track_release):
     """Normally it takes ~10s to search and find a match."""
-    _, expected_release = single_track_release
-    expected = expected_release.singleton
+    expected = single_track_release.singleton
     pl = BandcampPlugin()
 
     candidates = pl.item_candidates(Item(), expected.artist, expected.title)
@@ -104,9 +87,9 @@ def test_singleton_item_candidates(single_track_release):
 
 def test_singleton_cheat_mode(single_track_release):
     """In the cheat mode it should take around 1-2s to match a singleton."""
-    _, expected_release = single_track_release
-    expected = expected_release.singleton
+    expected = single_track_release.singleton
     pl = BandcampPlugin()
+
     item = Item()
     item.comments = "Visit " + expected.artist_id
     item.title = expected.artist + " - " + expected.title

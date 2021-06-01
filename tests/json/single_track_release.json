@@ -1,0 +1,156 @@
+{
+  "@context": "https://schema.org",
+  "@id": "https://mega-tech.bandcamp.com/track/matriark-arangel",
+  "@type": "MusicRecording",
+  "additionalProperty": [
+    {
+      "@type": "PropertyValue",
+      "name": "track_id",
+      "value": 2868806546
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "art_id",
+      "value": 919724444
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "duration_secs",
+      "value": 421.078
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "license_name",
+      "value": "all_rights_reserved"
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "streaming",
+      "value": true
+    }
+  ],
+  "byArtist": {
+    "@id": "https://mega-tech.bandcamp.com",
+    "@type": "MusicGroup",
+    "name": "Megatech Industries"
+  },
+  "copyrightNotice": "All Rights Reserved",
+  "dateModified": "02 Mar 2021 16:12:36 GMT",
+  "datePublished": "09 Nov 2020 20:35:57 GMT",
+  "description": "mt004\r\n\r\nmastering by alexander salomonsen\r\n\r\n\r\nI'm very happy to announce Andrea's debut track. <3\r\n\r\nhttps://soundcloud.com/matriarkcph\r\nhttps://www.instagram.com/andreaapettersen/",
+  "duration": "P00H07M01S",
+  "image": "https://f4.bcbits.com/img/a0919724444_10.jpg",
+  "inAlbum": {
+    "@type": "MusicAlbum",
+    "albumRelease": [
+      {
+        "@id": "https://mega-tech.bandcamp.com/track/matriark-arangel#t2868806546",
+        "@type": [
+          "MusicRelease",
+          "Product"
+        ],
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "item_id",
+            "value": 2868806546
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "item_type",
+            "value": "t"
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "type_name",
+            "value": "Digital"
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "art_id",
+            "value": 919724444
+          }
+        ],
+        "description": "Includes high-quality download in MP3, FLAC and more. Paying supporters also get unlimited streaming via the free Bandcamp app.",
+        "image": [
+          "https://f4.bcbits.com/img/a0919724444_10.jpg"
+        ],
+        "musicReleaseFormat": "DigitalFormat",
+        "name": "Matriark - Arangel",
+        "offers": {
+          "@type": "Offer",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "download_pref",
+              "value": 2
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "max_price",
+              "value": 7000
+            }
+          ],
+          "availability": "OnlineOnly",
+          "price": 12,
+          "priceCurrency": "SEK",
+          "priceSpecification": {
+            "minPrice": 12
+          },
+          "url": "https://mega-tech.bandcamp.com/track/matriark-arangel#t2868806546-buy"
+        }
+      }
+    ],
+    "albumReleaseType": "SingleRelease",
+    "name": "Matriark - Arangel",
+    "numTracks": 1
+  },
+  "keywords": [
+    "Malmö"
+  ],
+  "name": "Matriark - Arangel",
+  "publisher": {
+    "@id": "https://mega-tech.bandcamp.com",
+    "@type": "MusicGroup",
+    "additionalProperty": [
+      {
+        "@type": "PropertyValue",
+        "name": "band_id",
+        "value": 563736578
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "currency",
+        "value": "SEK"
+      }
+    ],
+    "description": "Malmø/Cph label run by Megatech and Matriark",
+    "foundingLocation": {
+      "@type": "Place",
+      "name": "Malmö, Sweden"
+    },
+    "name": "Megatech Industries",
+    "subjectOf": [
+      {
+        "@type": "WebPage",
+        "name": "artists",
+        "url": "https://mega-tech.bandcamp.com/artists"
+      },
+      {
+        "@type": "WebPage",
+        "name": "music",
+        "url": "https://mega-tech.bandcamp.com/music"
+      },
+      {
+        "@type": "WebPage",
+        "name": "merch",
+        "url": "https://mega-tech.bandcamp.com/merch"
+      },
+      {
+        "@type": "WebPage",
+        "name": "community",
+        "url": "https://mega-tech.bandcamp.com/community"
+      }
+    ]
+  }
+}

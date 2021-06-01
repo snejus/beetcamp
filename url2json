@@ -1,29 +1,51 @@
-#!/bin/sh
+#!/bin/bash
 #
-# url2json [-h] <bandcamp-url>
+# Usage: url2json [-hu] [<bandcamp-url>]
 #
-#       Parse given bandcamp url and print the resulting json.
-#       Default output is a single-line JSON string used in tests.
-#       (It was used for obtaining test cases).
-#       Ensure you have curl, grep and jq on your system.
+#Parse given bandcamp url and print the resulting json. By default,
+#it outputs an indented/prettified json string which is used by the tests.
+#Use (human) flag -h to include colors and to page it, or -u to update
+#the json data in ./tests/json. Ensure you have curl, and jq on your system.
 #
-# url2json https://hello.bandcamp.com/album/hi > ./tests/testcase.json
+# Examples
+# · Save output to a file
+#    url2json https://hello.bandcamp.com/album/hi > ./tests/json/testcase.json
 #
-#       Add flag -h (human) to have it newlined and indented.
+# · Open directly
+#    url2json -h https://hello.bandcamp.com/album/hi
 #
-# url2json -h https://hello.bandcamp.com/album/hi | less
+# · Update all json test data
+#    url2json -u
 #
-#       Note: Some lengthy fields are removed since they aren't currently parsed.
-#             Feel free to adjust.
-#
+JQARGS=(--sort-keys 'del(.comment, .sponsor, .albumRelease[0].offers)')
 
-if [ -z "$1" ]; then
-    sed -n '2,$s/^#/ /p' "$0"
-    exit 0
+get_json () {
+  curl -s "$1" | grep datePubl | jq "${JQARGS[@]}"
+}
+
+get_human_json () {
+  JQARGS+=(-C)
+  get_json "$1" | less -R
+}
+
+update_test_jsons () {
+  for file in ./tests/json/*.json; do
+    url=$(jq -r '.["@id"]' "$file")
+    get_json "$url" \
+      | jq --sort-keys 'del(
+          (if .track then .track.itemListElement[].item else . end)
+            | .additionalProperty[]
+            | select(.name | test("mp3"))
+        )' > "$file" && echo >&2 "Updated $file: $url"
+  done
+}
+
+if [[ -z "$1" ]]; then
+  sed -n '2,$s/^#/ /p' "$0"
 else
-    jqflag=--compact-output
-    [ "$1" = -h ] && jqflag= && shift
-
-    curl -s "$1" | grep datePubl |
-        jq $jqflag 'del(.sponsor, .albumRelease[0].offers)'
+  case $1 in
+    -h) get_human_json "$2" ;;
+    -u) update_test_jsons ;;
+    *) get_json "$1" ;;
+  esac
 fi
