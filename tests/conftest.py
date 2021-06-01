@@ -396,3 +396,41 @@ def ep() -> ReleaseInfo:
         mediums=1,
     )
     return info
+
+
+@pytest.fixture
+def description_meta() -> ReleaseInfo:
+    albumartist = "Francois Dillinger"
+    info = ReleaseInfo(
+        image="https://f4.bcbits.com/img/a0890773906_10.jpg",
+        artist_id="https://diffusereality.bandcamp.com",
+        album_id="https://diffusereality.bandcamp.com/album/francois-dillinger-icosahedrone-lp",  # noqa
+        track_count=10,
+        media="CD",
+        disctitle="Francois Dillinger - Icosahedrone [LP]",
+    )
+    tracks = [
+        ("count-to-infinity", albumartist, "Count To Infinity", 376, None),
+        ("navigating-the-swamp-2", albumartist, "Navigating The Swamp", 347, None),
+        ("sit-and-wait-2", albumartist, "Sit And Wait", 320, None),
+        ("the-cup-runneth-over", albumartist, "The Cup Runneth Over", 341, None),
+        ("clockroaches", albumartist, "Clockroaches", 335, None),
+        ("ego-purge", albumartist, "Ego Purge", 378, None),
+        ("giving-in", albumartist, "Giving In", 432, None),
+        ("ending-endlessly", albumartist, "Ending Endlessly", 353, None),
+        ("sing-the-pain-away", albumartist, "Sing The Pain Away", 320, None),
+        ("dream-thief", albumartist, "Dream Thief", 442, None),
+    ]
+    info.set_albuminfo(
+        tracks,
+        album="Icosahedrone",
+        albumartist=albumartist,
+        albumtype="album",
+        catalognum="DREA 005",
+        label="Diffuse Reality",
+        release_date=date(2021, 5, 5),
+        va=False,
+        country="SI",
+        mediums=1,
+    )
+    return info

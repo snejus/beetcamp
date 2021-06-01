@@ -4,6 +4,7 @@ import re
 from datetime import date, datetime
 from functools import reduce
 from math import floor
+from operator import truth
 from string import ascii_lowercase, digits
 from typing import Any, Dict, List, Optional, Pattern, Set, Tuple
 from unicodedata import normalize
@@ -168,6 +169,7 @@ class Metaguru(Helpers):
     _media: Dict[str, str]
     _all_medias = {DEFAULT_MEDIA}  # type: Set[str]
     _singleton = False  # type: bool
+    _release_datestr = ""
 
     def __init__(self, html: str, media: str = DEFAULT_MEDIA) -> None:
         self._media = {}
@@ -178,6 +180,10 @@ class Metaguru(Helpers):
         match = re.search(PATTERNS["meta"], html)
         if match:
             self.meta = json.loads(match.group())
+
+        match = re.search(PATTERNS["release_date"], html)
+        if match:
+            self._release_datestr = match.groups()[0]
 
     @cached_property
     def description(self) -> str:
@@ -196,18 +202,17 @@ class Metaguru(Helpers):
 
     @cached_property
     def album_name(self) -> str:
+        match = re.search(r"Title:([^\n]+)", self.description)
+        if match:
+            return match.groups()[0].strip()
         return self.meta["name"]
 
     @cached_property
     def label(self) -> str:
+        match = re.search(r"Label:([^/,\n]+)", self.description)
+        if match:
+            return match.groups()[0].strip()
         return self.meta["publisher"]["name"]
-
-    @property
-    def clean_album_name(self) -> str:
-        args = {self.catalognum, self.label}.difference({""})
-        if not self._singleton:
-            args.add(self.albumartist)
-        return self.clean_up_album_name(self.album_name, *args)
 
     @cached_property
     def album_id(self) -> str:
@@ -219,6 +224,13 @@ class Metaguru(Helpers):
             return self.meta["byArtist"]["@id"]
         except KeyError:
             return self.meta["publisher"]["@id"]
+
+    @cached_property
+    def bandcamp_albumartist(self) -> str:
+        match = re.search(r"Artist:([^\n]+)", self.description)
+        if match:
+            return str(match.groups()[0].strip())
+        return self.meta["byArtist"]["name"]
 
     @property
     def image(self) -> str:
@@ -236,8 +248,7 @@ class Metaguru(Helpers):
 
     @cached_property
     def release_date(self) -> date:
-        datestr = self.parse_release_date(self.html)
-        return datetime.strptime(datestr, DATE_FORMAT).date()
+        return datetime.strptime(self._release_datestr, DATE_FORMAT).date()
 
     @cached_property
     def media(self) -> str:
@@ -323,17 +334,14 @@ class Metaguru(Helpers):
         )
 
     @cached_property
-    def bandcamp_albumartist(self) -> str:
-        """Return original album artist - most often the label name."""
-        return self.meta["byArtist"]["name"]
-
-    @cached_property
     def albumartist(self) -> str:
         """Handle various artists and albums that have a single artist."""
         if self.is_va:
             return "Various Artists"
-        if len(self.track_artists) == 1:
-            return next(iter(self.track_artists))
+        if self.label == self.bandcamp_albumartist:
+            artists = self.track_artists
+            if len(artists) == 1:
+                return next(iter(artists))
         return self.bandcamp_albumartist
 
     @property
@@ -347,6 +355,13 @@ class Metaguru(Helpers):
         if self.is_va:
             return "compilation"
         return "album"
+
+    @property
+    def clean_album_name(self) -> str:
+        args = set(filter(truth, [self.catalognum, self.label]))
+        if not self._singleton:
+            args.add(self.bandcamp_albumartist)
+        return self.clean_up_album_name(self.album_name, *args)
 
     @property
     def _common(self) -> JSONDict:

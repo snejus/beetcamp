@@ -236,10 +236,21 @@ def test_parse_single_track_release(release):
     check(guru.singleton, expected.singleton)
 
 
-CASES = ["album", "album_with_track_alt", "compilation", "ep", "artist_mess"]
-
-
-@pytest.mark.parametrize("release", map(lazy_fixture, CASES), indirect=["release"])
+@pytest.mark.parametrize(
+    "release",
+    map(
+        lazy_fixture,
+        [
+            "album",
+            "album_with_track_alt",
+            "compilation",
+            "ep",
+            "artist_mess",
+            "description_meta",
+        ],
+    ),
+    indirect=["release"],
+)
 def test_parse_various_types(release):
     html, expected_release = release
     guru = Metaguru(html, expected_release.media)
