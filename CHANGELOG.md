@@ -6,6 +6,8 @@
   dash.
 - Having witnessed a very creative track title **E7-E5**, for `track-alt` field, limit the
   number to the range **0-6**.
+- If the release date is _today_, the album status is **Official** and not
+  **Promotional**.
 
 ## [0.9.0] 2021-06-01
 

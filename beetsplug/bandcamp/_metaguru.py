@@ -382,7 +382,7 @@ class Metaguru(Helpers):
             catalognum=self.catalognum,
             albumtype=self.albumtype,
             album=self.clean_album_name,
-            albumstatus=OFFICIAL if self.release_date < date.today() else PROMO,
+            albumstatus=OFFICIAL if self.release_date <= date.today() else PROMO,
             country=self.country,
         )
 
