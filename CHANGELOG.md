@@ -4,6 +4,8 @@
 
 - Exclude `- DIGITAL ONLY` (and similar) from the track title when it's preceded by a
   dash.
+- Having witnessed a very creative track title **E7-E5**, for `track-alt` field, limit the
+  number to the range **0-6**.
 
 ## [0.9.0] 2021-06-01
 

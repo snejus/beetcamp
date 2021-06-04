@@ -51,7 +51,7 @@ PATTERNS: Dict[str, Pattern] = {
     "release_date": re.compile(r"release[ds] ([\d]{2} [A-Z][a-z]+ [\d]{4})"),
     "track_name": re.compile(
         r"""
-((?P<track_alt>(^[ABCDEFGH]{1,3}\d|^\d)\d?)\s?[.-]+(?=[^\d]))?
+((?P<track_alt>(^[ABCDEFGH]{1,3}[0-6]|^\d)\d?)\s?[.-]+(?=[^\d]))?
 (\s?(?P<artist>[^-]*)(\s-\s))?
 (?P<title>(\b([^\s]-|-[^\s]|[^-])+$))""",
         re.VERBOSE,
