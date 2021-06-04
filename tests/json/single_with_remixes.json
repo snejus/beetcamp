@@ -230,11 +230,6 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "file_mp3-128",
-              "value": "https://t4.bcbits.com/stream/ce2473d9eedca416f78a81575006e94d/mp3-128/4095985028?p=0&ts=1622732838&t=d54883810793805ef3a56e6f37f0a19aa75ee990&token=1622732838_35294688a42468e00f50e95c5f5cd38b68b37084"
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
             },
@@ -270,11 +265,6 @@
               "@type": "PropertyValue",
               "name": "duration_secs",
               "value": 521.279
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "file_mp3-128",
-              "value": "https://t4.bcbits.com/stream/fe01aacab0971d67b7491a2cc11d0b42/mp3-128/2433903511?p=0&ts=1622732838&t=198615b578146b5cf5f51bba994b72c3e6f1ab71&token=1622732838_df29acecb13d15fe1a727f26fb170dae61d4f8b9"
             },
             {
               "@type": "PropertyValue",
@@ -316,11 +306,6 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "file_mp3-128",
-              "value": "https://t4.bcbits.com/stream/2da9a5b0ea710d66a959cdcbbee0c518/mp3-128/3231912467?p=0&ts=1622732838&t=269e588465d6a27032ce4faf876cc0faa21f5fb0&token=1622732838_46a564f2f7929312c429102c526bfca2131683bd"
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
             },
@@ -359,11 +344,6 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "file_mp3-128",
-              "value": "https://t4.bcbits.com/stream/97e6ec609f468f2d83f8e5061b7f9300/mp3-128/1217738624?p=0&ts=1622732838&t=ecd9eb3300b5028e1620ef361e81f6b9a17fa962&token=1622732838_fdf023bb1db162c60c137a19aff67ea3b202e20a"
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
             },
@@ -399,11 +379,6 @@
               "@type": "PropertyValue",
               "name": "duration_secs",
               "value": 265.714
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "file_mp3-128",
-              "value": "https://t4.bcbits.com/stream/48ed71ff84e54137518656bd6767c06c/mp3-128/1473625405?p=0&ts=1622732838&t=ba48126b944e85086b6f97eec95345c679927130&token=1622732838_1848475e733cfd9875d8f9e04acc9c571957a922"
             },
             {
               "@type": "PropertyValue",
