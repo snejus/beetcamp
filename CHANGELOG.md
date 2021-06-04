@@ -1,3 +1,10 @@
+## [0.9.1] 2021-06-04
+
+### Fixed
+
+- Exclude `- DIGITAL ONLY` (and similar) from the track title when it's preceded by a
+  dash.
+
 ## [0.9.0] 2021-06-01
 
 ### Fixed
