@@ -12,7 +12,6 @@ from beetsplug.bandcamp._metaguru import DATA_SOURCE, NEW_BEETS, OFFICIAL
 @dataclass  # pylint: disable=too-many-instance-attributes
 class ReleaseInfo:
     html_release_date = ""
-    image: str
     album_id: str
     artist_id: str
     track_count: int
@@ -89,7 +88,6 @@ class ReleaseInfo:
 def single_track_release() -> ReleaseInfo:
     """Single track as a release on its own."""
     info = ReleaseInfo(
-        image="https://f4.bcbits.com/img/a2036476476_10.jpg",
         artist_id="https://mega-tech.bandcamp.com",
         album_id="https://mega-tech.bandcamp.com/track/matriark-arangel",
         track_count=1,
@@ -120,7 +118,6 @@ def single_track_album_search() -> Tuple[str, ReleaseInfo]:
     album_artist = "Alpha Tracks"
     track_url = "https://sinensis-ute.bandcamp.com/track/odondo"
     info = ReleaseInfo(
-        image="https://f4.bcbits.com/img/a0610664056_10.jpg",
         artist_id="https://sinensis-ute.bandcamp.com",
         album_id="https://sinensis-ute.bandcamp.com/album/sine03",
         track_count=2,
@@ -151,7 +148,6 @@ def album() -> ReleaseInfo:
     """An album with a single artist."""
     album_artist = "Mikkel Rev"
     info = ReleaseInfo(
-        image="https://f4.bcbits.com/img/a1035657740_10.jpg",
         artist_id="https://ute-rec.bandcamp.com",
         album_id="https://ute-rec.bandcamp.com/album/ute004",
         track_count=4,
@@ -174,7 +170,7 @@ def album() -> ReleaseInfo:
         tracks,
         album="UTE004",
         albumartist=album_artist,
-        albumtype="ep",
+        albumtype="album",
         catalognum="UTE004",
         label="Ute.Rec",
         release_date=date(2020, 7, 17),
@@ -190,7 +186,6 @@ def album_with_track_alt() -> ReleaseInfo:
     """An album with alternative track indexes."""
     artist_id = "https://foldrecords.bandcamp.com"
     info = ReleaseInfo(
-        image="https://f4.bcbits.com/img/a2798384948_10.jpg",
         artist_id=artist_id,
         album_id=f"{artist_id}/album/fld001-gareth-wild-common-assault-ep",
         track_count=6,
@@ -260,7 +255,6 @@ def album_with_track_alt() -> ReleaseInfo:
 def compilation() -> ReleaseInfo:
     """An album with various artists."""
     info = ReleaseInfo(
-        image="https://f4.bcbits.com/img/a4292881830_10.jpg",
         artist_id="https://ismusberlin.bandcamp.com",
         album_id="https://ismusberlin.bandcamp.com/album/ismva0033",
         track_count=13,
@@ -302,7 +296,6 @@ def compilation() -> ReleaseInfo:
 def artist_mess() -> ReleaseInfo:
     """An unusual album for testing some edge cases."""
     info = ReleaseInfo(
-        image="https://f4.bcbits.com/img/0021724693_10.jpg",
         artist_id="https://psykovsky.bandcamp.com",
         album_id="https://psykovsky.bandcamp.com/album/ksolntsu",
         track_count=15,
@@ -346,7 +339,6 @@ def artist_mess() -> ReleaseInfo:
 @pytest.fixture
 def ep() -> ReleaseInfo:
     info = ReleaseInfo(
-        image="https://f4.bcbits.com/img/a4292881830_10.jpg",
         artist_id="https://fallingapart.bandcamp.com",
         album_id="https://fallingapart.bandcamp.com/album/fa010-kickdown-vienna",
         track_count=4,
@@ -387,7 +379,7 @@ def ep() -> ReleaseInfo:
         tracks,
         album="fa010 | Kickdown Vienna",
         albumartist="jeånne, DJ DISRESPECT",
-        albumtype="ep",
+        albumtype="album",
         catalognum="",
         label="falling apart",
         release_date=date(2020, 10, 9),
@@ -402,7 +394,6 @@ def ep() -> ReleaseInfo:
 def description_meta() -> ReleaseInfo:
     albumartist = "Francois Dillinger"
     info = ReleaseInfo(
-        image="https://f4.bcbits.com/img/a0890773906_10.jpg",
         artist_id="https://diffusereality.bandcamp.com",
         album_id="https://diffusereality.bandcamp.com/album/francois-dillinger-icosahedrone-lp",  # noqa
         track_count=10,
@@ -431,6 +422,50 @@ def description_meta() -> ReleaseInfo:
         release_date=date(2021, 5, 5),
         va=False,
         country="SI",
+        mediums=1,
+    )
+    return info
+
+
+@pytest.fixture
+def single_with_remixes() -> ReleaseInfo:
+    albumartist = "Reece Cox"
+    info = ReleaseInfo(
+        artist_id="https://reececox.bandcamp.com",
+        album_id="https://reececox.bandcamp.com/album/emotion-1-kul-r-008",
+        track_count=5,
+        media="Vinyl",
+        disctitle="Emotion 1 Vinyl",
+    )
+    tracks = [
+        ("emotion-1", albumartist, "Emotion 1", 295, None),
+        (
+            "emotion-1-ibons-dizzy-stomp-mix",
+            albumartist,
+            "Emotion 1 (Ibon's Dizzy Stomp Mix)",
+            521,
+            None,
+        ),
+        ("emotion-1-parris-remix", albumartist, "Emotion 1 (Parris Remix)", 339, None),
+        (
+            "emotion-1-call-super-remix",
+            albumartist,
+            "Emotion 1 (Call Super Remix)",
+            400,
+            None,
+        ),
+        ("emotion-1-upsammy-remix", albumartist, "Emotion 1 (upsammy Remix)", 265, None),
+    ]
+    info.set_albuminfo(
+        tracks,
+        album="Emotion 1",
+        albumartist=albumartist,
+        albumtype="single",
+        catalognum="Kulør 008",
+        label="Reece Cox",
+        release_date=date(2021, 3, 5),
+        va=False,
+        country="DE",
         mediums=1,
     )
     return info

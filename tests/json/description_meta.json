@@ -1,0 +1,606 @@
+{
+  "@context": "https://schema.org",
+  "@id": "https://diffusereality.bandcamp.com/album/francois-dillinger-icosahedrone-lp",
+  "@type": "MusicAlbum",
+  "additionalProperty": [
+    {
+      "@type": "PropertyValue",
+      "name": "art_id",
+      "value": 890773906
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "featured_track_num",
+      "value": 1
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "license_name",
+      "value": "all_rights_reserved"
+    }
+  ],
+  "albumRelease": [
+    {
+      "@id": "https://diffusereality.bandcamp.com/album/francois-dillinger-icosahedrone-lp#a3569815948",
+      "@type": [
+        "MusicRelease",
+        "Product"
+      ],
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "item_id",
+          "value": 3569815948
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "item_type",
+          "value": "a"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_name",
+          "value": "Digital"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "art_id",
+          "value": 890773906
+        }
+      ],
+      "description": "Includes high-quality download in MP3, FLAC and more. Paying supporters also get unlimited streaming via the free Bandcamp app.",
+      "image": [
+        "https://f4.bcbits.com/img/a0890773906_10.jpg"
+      ],
+      "musicReleaseFormat": "DigitalFormat",
+      "name": "Francois Dillinger - Icosahedrone [LP]"
+    },
+    {
+      "@id": "https://diffusereality.bandcamp.com/album/francois-dillinger-icosahedrone-lp#p663837865",
+      "@type": [
+        "MusicRelease",
+        "Product"
+      ],
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "item_id",
+          "value": 663837865
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "item_type",
+          "value": "p"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_name",
+          "value": "Compact Disc (CD)"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "image_ids",
+          "value": [
+            23625297
+          ]
+        }
+      ],
+      "description": "Artist: Francois Dillinger\nTitle: Icosahedrone\nFormat: Vinyl, 12\" & CD\nLabel: Diffuse Reality\nCatalogue: DREA 005\n\nVinyl → bit.ly/3cUflzb\nVinyl orders include two Diffuse Reality stickers and digital downloads of the full release.\nwww.diffusereality.net",
+      "image": [
+        "https://f4.bcbits.com/img/0023625297_10.jpg"
+      ],
+      "musicReleaseFormat": "CDFormat",
+      "name": "Francois Dillinger - Icosahedrone [LP]",
+      "offers": {
+        "@type": "Offer",
+        "availability": "InStock",
+        "price": 8.99,
+        "priceCurrency": "EUR",
+        "priceSpecification": {
+          "minPrice": 8.99
+        },
+        "url": "https://diffusereality.bandcamp.com/album/francois-dillinger-icosahedrone-lp#p663837865-buy"
+      }
+    },
+    {
+      "@id": "https://diffusereality.bandcamp.com/track/count-to-infinity#t3885956131",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://diffusereality.bandcamp.com/track/navigating-the-swamp-2#t2952764834",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://diffusereality.bandcamp.com/track/sit-and-wait-2#t4283494502",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://diffusereality.bandcamp.com/track/the-cup-runneth-over#t4099471097",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://diffusereality.bandcamp.com/track/clockroaches#t3534669991",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://diffusereality.bandcamp.com/track/ego-purge#t3254609518",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://diffusereality.bandcamp.com/track/giving-in#t643361449",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://diffusereality.bandcamp.com/track/ending-endlessly#t938275914",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://diffusereality.bandcamp.com/track/sing-the-pain-away#t1106482452",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://diffusereality.bandcamp.com/track/dream-thief#t1336260361",
+      "@type": "MusicRelease"
+    }
+  ],
+  "albumReleaseType": "AlbumRelease",
+  "byArtist": {
+    "@id": "https://diffusereality.bandcamp.com",
+    "@type": "MusicGroup",
+    "name": "Diffuse Reality Records"
+  },
+  "copyrightNotice": "All Rights Reserved",
+  "dateModified": "14 May 2021 10:34:44 GMT",
+  "datePublished": "16 Apr 2021 07:54:22 GMT",
+  "image": "https://f4.bcbits.com/img/a0890773906_10.jpg",
+  "keywords": [
+    "Electronic",
+    "ambient",
+    "electro",
+    "rave",
+    "techno",
+    "trance",
+    "Slovenia"
+  ],
+  "name": "Francois Dillinger - Icosahedrone [LP]",
+  "numTracks": 10,
+  "publisher": {
+    "@id": "https://diffusereality.bandcamp.com",
+    "@type": "MusicGroup",
+    "additionalProperty": [
+      {
+        "@type": "PropertyValue",
+        "name": "band_id",
+        "value": 61399327
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "currency",
+        "value": "EUR"
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_id",
+        "value": 23801099
+      }
+    ],
+    "description": "From Buenos Aires, based in Barcelona.",
+    "foundingLocation": {
+      "@type": "Place",
+      "name": "Slovenia"
+    },
+    "genre": "https://bandcamp.com/tag/electronic",
+    "image": "https://f4.bcbits.com/img/0023801099_10.jpg",
+    "mainEntityOfPage": [
+      {
+        "@type": "WebPage",
+        "name": "diffusereality.net",
+        "url": "http://www.diffusereality.net/"
+      }
+    ],
+    "name": "Diffuse Reality Records",
+    "subjectOf": [
+      {
+        "@type": "WebPage",
+        "name": "MUSIC",
+        "url": "https://diffusereality.bandcamp.com/music"
+      },
+      {
+        "@type": "WebPage",
+        "name": "VINYL / MERCH",
+        "url": "https://diffusereality.bandcamp.com/merch"
+      },
+      {
+        "@type": "WebPage",
+        "name": "Community",
+        "url": "https://diffusereality.bandcamp.com/community"
+      }
+    ]
+  },
+  "track": {
+    "@type": "ItemList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://diffusereality.bandcamp.com/track/count-to-infinity",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 3885956131
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 376
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 1
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H06M16S",
+          "name": "Count To Infinity"
+        },
+        "position": 1
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://diffusereality.bandcamp.com/track/navigating-the-swamp-2",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 2952764834
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 347.317
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 2
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H05M47S",
+          "name": "Navigating The Swamp"
+        },
+        "position": 2
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://diffusereality.bandcamp.com/track/sit-and-wait-2",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 4283494502
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 320
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 3
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H05M20S",
+          "name": "Sit And Wait"
+        },
+        "position": 3
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://diffusereality.bandcamp.com/track/the-cup-runneth-over",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 4099471097
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 341.28
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 4
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H05M41S",
+          "name": "The Cup Runneth Over"
+        },
+        "position": 4
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://diffusereality.bandcamp.com/track/clockroaches",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 3534669991
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 335.988
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 5
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H05M35S",
+          "name": "Clockroaches"
+        },
+        "position": 5
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://diffusereality.bandcamp.com/track/ego-purge",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 3254609518
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 378
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 6
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H06M18S",
+          "name": "Ego Purge"
+        },
+        "position": 6
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://diffusereality.bandcamp.com/track/giving-in",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 643361449
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 432
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 7
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H07M12S",
+          "name": "Giving In"
+        },
+        "position": 7
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://diffusereality.bandcamp.com/track/ending-endlessly",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 938275914
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 353.143
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 8
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H05M53S",
+          "name": "Ending Endlessly"
+        },
+        "position": 8
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://diffusereality.bandcamp.com/track/sing-the-pain-away",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 1106482452
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 320
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 9
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H05M20S",
+          "name": "Sing The Pain Away"
+        },
+        "position": 9
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://diffusereality.bandcamp.com/track/dream-thief",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 1336260361
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 442
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 10
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H07M22S",
+          "name": "Dream Thief"
+        },
+        "position": 10
+      }
+    ],
+    "numberOfItems": 10
+  }
+}

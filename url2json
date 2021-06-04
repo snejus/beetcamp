@@ -17,6 +17,11 @@
 # · Update all json test data
 #    url2json -u
 #
+# · Format and print tracklist for our pytest fixtures
+#    url2json --tracklist-for-tests ./tests/jsons/single.json
+#
+JQARGS=(--sort-keys 'del(.comment, .sponsor, .albumRelease[0].offers)')
+
 JQARGS=(--sort-keys 'del(.comment, .sponsor, .albumRelease[0].offers)')
 
 get_json () {
@@ -26,6 +31,17 @@ get_json () {
 get_human_json () {
   JQARGS+=(-C)
   get_json "$1" | less -R
+}
+
+tracklist_for_tests () {
+  jq < "$1" -r '
+    "(" + (.track.itemListElement[].item | [
+      "\"" + (.["@id"] | sub(".*/"; "")) + "\"",
+      "albumartist",
+      "\"" + .name + "\"",
+      (.additionalProperty[1].value | floor),
+      "None"
+    ] | join(", ")) + "),"'
 }
 
 update_test_jsons () {
@@ -46,6 +62,7 @@ else
   case $1 in
     -h) get_human_json "$2" ;;
     -u) update_test_jsons ;;
+    --tracklist-for-tests) tracklist_for_tests "$2" ;;
     *) get_json "$1" ;;
   esac
 fi

@@ -1,0 +1,408 @@
+{
+  "@context": "https://schema.org",
+  "@id": "https://reececox.bandcamp.com/album/emotion-1-kul-r-008",
+  "@type": "MusicAlbum",
+  "additionalProperty": [
+    {
+      "@type": "PropertyValue",
+      "name": "art_id",
+      "value": 287692048
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "featured_track_num",
+      "value": 1
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "license_name",
+      "value": "all_rights_reserved"
+    }
+  ],
+  "albumRelease": [
+    {
+      "@id": "https://reececox.bandcamp.com/album/emotion-1-kul-r-008#a1858109989",
+      "@type": [
+        "MusicRelease",
+        "Product"
+      ],
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "item_id",
+          "value": 1858109989
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "item_type",
+          "value": "a"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_name",
+          "value": "Digital"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "art_id",
+          "value": 287692048
+        }
+      ],
+      "description": "Includes high-quality download in MP3, FLAC and more. Paying supporters also get unlimited streaming via the free Bandcamp app.",
+      "image": [
+        "https://f4.bcbits.com/img/a0287692048_10.jpg"
+      ],
+      "musicReleaseFormat": "DigitalFormat",
+      "name": "Emotion 1 - Kulør 008",
+      "recordLabel": {
+        "@id": "https://kulorco.bandcamp.com",
+        "@type": "MusicGroup",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "url_suffix",
+            "value": "from=btl"
+          }
+        ],
+        "name": "Kulør"
+      }
+    },
+    {
+      "@id": "https://reececox.bandcamp.com/album/emotion-1-kul-r-008#p1985399228",
+      "@type": [
+        "MusicRelease",
+        "Product"
+      ],
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "item_id",
+          "value": 1985399228
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "item_type",
+          "value": "p"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_name",
+          "value": "Vinyl LP"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "image_ids",
+          "value": [
+            23426665
+          ]
+        }
+      ],
+      "description": "Vinyl is expected later in March.\nPostage price includes tracking\n\nPlease be aware that we are still experiencing covid related issues with shipping companies. The package might therefore take longer than usual to arrive",
+      "image": [
+        "https://f4.bcbits.com/img/0023426665_10.jpg"
+      ],
+      "musicReleaseFormat": "VinylFormat",
+      "name": "Emotion 1 Vinyl",
+      "offers": {
+        "@type": "Offer",
+        "availability": "InStock",
+        "price": 95,
+        "priceCurrency": "EUR",
+        "priceSpecification": {
+          "minPrice": 95
+        },
+        "url": "https://reececox.bandcamp.com/album/emotion-1-kul-r-008#p1985399228-buy"
+      }
+    },
+    {
+      "@id": "https://reececox.bandcamp.com/track/emotion-1#t4095985028",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://reececox.bandcamp.com/track/emotion-1-ibons-dizzy-stomp-mix#t2433903511",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://reececox.bandcamp.com/track/emotion-1-parris-remix#t3231912467",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://reececox.bandcamp.com/track/emotion-1-call-super-remix#t1217738624",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://reececox.bandcamp.com/track/emotion-1-upsammy-remix#t1473625405",
+      "@type": "MusicRelease"
+    }
+  ],
+  "albumReleaseType": "AlbumRelease",
+  "byArtist": {
+    "@id": "https://reececox.bandcamp.com",
+    "@type": "MusicGroup",
+    "name": "Reece Cox"
+  },
+  "copyrightNotice": "All Rights Reserved",
+  "creditText": "W/P by Reece Cox \r\nMastered by Joel Krozer, Six Bit Deep\r\nCreative direction: Najaaraq Vestbirk \r\nArtwork: Holler in the Green by Miriam Kongstad \r\nGraphic design: Spine Studio \r\n\r\nA1 Reece Cox - Emotion 1 (4:55) \r\nWritten and produced by Reece Cox. \r\n\r\nA2 Reece Cox - Emotion 1 (Ibon's Dizzy Stomp Mix) (8:44) \r\nRemix by DJ Ibon.\r\n\r\nB1 Reece Cox - Emotion 1 (Parris Remix) (5:40) \r\nRemix by Dwayne Parris-Robinson, mixed by Call Super. \r\n\r\nB2 Reece Cox - Emotion 1 (Call Super Remix) (6.40) \r\nRemix by Call Super. \r\n\r\nB3 Reece Cox - Emotion 1 (Upsammy Remix) (4:26) \r\nRemix by Thessa Torsing.",
+  "dateModified": "09 Apr 2021 07:41:27 GMT",
+  "datePublished": "29 Jan 2021 07:46:31 GMT",
+  "image": "https://f4.bcbits.com/img/a0287692048_10.jpg",
+  "keywords": [
+    "Electronic",
+    "Berlin"
+  ],
+  "name": "Emotion 1 - Kulør 008",
+  "numTracks": 5,
+  "publisher": {
+    "@id": "https://reececox.bandcamp.com",
+    "@type": "MusicGroup",
+    "additionalProperty": [
+      {
+        "@type": "PropertyValue",
+        "name": "band_id",
+        "value": 3937885934
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "currency",
+        "value": "EUR"
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_id",
+        "value": 21721983
+      }
+    ],
+    "foundingLocation": {
+      "@type": "Place",
+      "name": "Berlin, Germany"
+    },
+    "genre": "https://bandcamp.com/tag/electronic",
+    "image": "https://f4.bcbits.com/img/0021721983_10.jpg",
+    "mainEntityOfPage": [
+      {
+        "@type": "WebSite",
+        "name": "reececox.info",
+        "url": "http://reececox.info"
+      },
+      {
+        "@type": "WebPage",
+        "name": "SoundCloud",
+        "url": "https://soundcloud.com/23x823ddj9iik"
+      }
+    ],
+    "name": "Reece Cox",
+    "subjectOf": [
+      {
+        "@type": "WebPage",
+        "name": "music",
+        "url": "https://reececox.bandcamp.com/music"
+      },
+      {
+        "@type": "WebPage",
+        "name": "merch",
+        "url": "https://reececox.bandcamp.com/merch"
+      },
+      {
+        "@type": "WebPage",
+        "name": "community",
+        "url": "https://reececox.bandcamp.com/community"
+      }
+    ]
+  },
+  "track": {
+    "@type": "ItemList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://reececox.bandcamp.com/track/emotion-1",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 4095985028
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 295.095
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 1
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H04M55S",
+          "name": "Emotion 1"
+        },
+        "position": 1
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://reececox.bandcamp.com/track/emotion-1-ibons-dizzy-stomp-mix",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 2433903511
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 521.279
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 2
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H08M41S",
+          "name": "Emotion 1 (Ibon's Dizzy Stomp Mix)"
+        },
+        "position": 2
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://reececox.bandcamp.com/track/emotion-1-parris-remix",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 3231912467
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 339.92
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 3
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H05M39S",
+          "name": "Emotion 1 (Parris Remix)"
+        },
+        "position": 3
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://reececox.bandcamp.com/track/emotion-1-call-super-remix",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 1217738624
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 400.483
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 4
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H06M40S",
+          "name": "Emotion 1 (Call Super Remix)"
+        },
+        "position": 4
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://reececox.bandcamp.com/track/emotion-1-upsammy-remix",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 1473625405
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 265.714
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 5
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H04M25S",
+          "name": "Emotion 1 (upsammy Remix)"
+        },
+        "position": 5
+      }
+    ],
+    "numberOfItems": 5
+  }
+}
