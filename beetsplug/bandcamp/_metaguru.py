@@ -342,9 +342,7 @@ class Metaguru(Helpers):
 
     @cached_property
     def is_ep(self) -> bool:
-        return ("EP" in self.album_name or "EP" in self.disctitle) or (
-            self._all_media != {DEFAULT_MEDIA} and len(self.tracks) < 5
-        )
+        return "EP" in self.album_name or "EP" in self.disctitle
 
     @cached_property
     def is_va(self) -> bool:
@@ -367,12 +365,12 @@ class Metaguru(Helpers):
 
     @property
     def albumtype(self) -> str:
-        if self.is_single:
-            return "single"
         if self.is_lp:
             return "album"
         if self.is_ep:
             return "ep"
+        if self.is_single:
+            return "single"
         if self.is_va:
             return "compilation"
         return "album"

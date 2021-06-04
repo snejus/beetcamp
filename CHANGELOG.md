@@ -3,9 +3,11 @@
 ### Fixed
 
 - `album.albumstatus`: If the release date is _today_, use **Official** and not **Promotional**.
-- `album.albumtype`: until now we have only set _single_ track releases to have the _single_
+- `album.albumtype`:
+  + Until now we have only set _single_ track releases to have the _single_
   type. This has been fixed regarding the MusicBrainz description: release composed of the
   same title and multiple remixes is a single.
+  + Use `ep` only if _EP_ is mentioned either in the album name or the disc title.
 - `album.catalognum`: Make the _DISCTITLE_ uppercase before looking for the catalogue number.
 - `album.media`: Exclude anything that contains _bundle_ in their names. These usually contain
   additional releases that we do not need.
