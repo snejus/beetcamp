@@ -72,27 +72,42 @@ def test_parse_release_date(string, expected):
 @pytest.mark.parametrize(
     ("name", "expected"),
     [
-        ("Title", (None, None, "Title")),
-        ("Artist - Title", (None, "Artist", "Title")),
-        ("A1. Artist - Title", ("A1", "Artist", "Title")),
-        ("A1- Artist - Title", ("A1", "Artist", "Title")),
-        ("A1.- Artist - Title", ("A1", "Artist", "Title")),
-        ("1. Artist - Title", ("1", "Artist", "Title")),
-        ("1.Artist - Title", ("1", "Artist", "Title")),
-        ("DJ BEVERLY HILL$ - Raw Steeze", (None, "DJ BEVERLY HILL$", "Raw Steeze")),
-        ("LI$INGLE010 - cyberflex - LEVEL X", (None, "cyberflex", "LEVEL X")),
-        ("Fifty-Third ft. SYH", (None, None, "Fifty-Third ft. SYH")),
-        ("I'll Become Pure N-R-G", (None, None, "I'll Become Pure N-R-G")),
-        ("&$%@#!", (None, None, "&$%@#!")),
-        ("24 Hours", (None, None, "24 Hours")),
-        ("Some tune (Someone's Remix)", (None, None, "Some tune (Someone's Remix)")),
-        ("19.85 - Colapso Inevitable", (None, "19.85", "Colapso Inevitable")),
-        ("19.85 - Colapso Inevitable (FREE)", (None, "19.85", "Colapso Inevitable")),
-        ("E7-E5", (None, None, "E7-E5")),
+        ("Title", (None, None, "Title", "Title")),
+        ("Artist - Title", (None, "Artist", "Title", "Title")),
+        ("A1. Artist - Title", ("A1", "Artist", "Title", "Title")),
+        ("A1- Artist - Title", ("A1", "Artist", "Title", "Title")),
+        ("A1.- Artist - Title", ("A1", "Artist", "Title", "Title")),
+        ("1. Artist - Title", ("1", "Artist", "Title", "Title")),
+        ("1.Artist - Title", ("1", "Artist", "Title", "Title")),
+        (
+            "DJ BEVERLY HILL$ - Raw Steeze",
+            (None, "DJ BEVERLY HILL$", "Raw Steeze", "Raw Steeze"),
+        ),
+        ("LI$INGLE010 - cyberflex - LEVEL X", (None, "cyberflex", "LEVEL X", "LEVEL X")),
+        ("Fifty-Third ft. SYH", (None, None, "Fifty-Third ft. SYH", "Fifty-Third")),
+        (
+            "I'll Become Pure N-R-G",
+            (None, None, "I'll Become Pure N-R-G", "I'll Become Pure N-R-G"),
+        ),
+        ("&$%@#!", (None, None, "&$%@#!", "&$%@#!")),
+        ("24 Hours", (None, None, "24 Hours", "24 Hours")),
+        (
+            "Some tune (Someone's Remix)",
+            (None, None, "Some tune (Someone's Remix)", "Some tune"),
+        ),
+        (
+            "19.85 - Colapso Inevitable",
+            (None, "19.85", "Colapso Inevitable", "Colapso Inevitable"),
+        ),
+        (
+            "19.85 - Colapso Inevitable (FREE)",
+            (None, "19.85", "Colapso Inevitable", "Colapso Inevitable"),
+        ),
+        ("E7-E5", (None, None, "E7-E5", "E7-E5")),
     ],
 )
 def test_parse_track_name(name, expected):
-    parts = ("track_alt", "artist", "title")
+    parts = ("track_alt", "artist", "title", "main_title")
     assert Metaguru.parse_track_name(name) == dict(zip(parts, expected))
 
 
@@ -260,6 +275,7 @@ def test_parse_single_track_release(release):
             "ep",
             "artist_mess",
             "description_meta",
+            "single_with_remixes",
         ],
     ),
     indirect=["release"],

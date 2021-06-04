@@ -94,13 +94,14 @@ class Helpers:
         return clean_name, False
 
     @staticmethod
-    def parse_track_name(name: str) -> JSONDict:
+    def parse_track_name(name: str) -> Dict[str, str]:
         name = re.sub(r" \(free[^)]*\)", "", name, flags=re.IGNORECASE)
+        track = {"track_alt": None, "artist": None, "title": name}
         match = re.search(PATTERNS["track_name"], name)
-        try:
-            return match.groupdict()  # type: ignore
-        except AttributeError:
-            return {"title": name, "artist": None, "track_alt": None}
+        if match:
+            track = match.groupdict()
+        track["main_title"] = re.sub(r"\s?([[(]|f(ea)?t\.).*", "", track["title"])
+        return track
 
     @staticmethod
     def parse_catalognum(album: str, disctitle: str, description: str) -> str:
@@ -273,7 +274,7 @@ class Metaguru(Helpers):
 
     @cached_property
     def disctitle(self) -> str:
-        """Digital media does not have discs unfortunately."""
+        """Return medium's disc title if found."""
         return "" if self.media == DEFAULT_MEDIA else self._media.get("name", "")
 
     @property
@@ -332,6 +333,10 @@ class Metaguru(Helpers):
         return artists
 
     @property
+    def is_single(self) -> bool:
+        return self._singleton or len(set(t.get("main_title") for t in self.tracks)) == 1
+
+    @property
     def is_lp(self) -> bool:
         return "LP" in self.album_name or "LP" in self.disctitle
 
@@ -362,7 +367,7 @@ class Metaguru(Helpers):
 
     @property
     def albumtype(self) -> str:
-        if self._singleton:
+        if self.is_single:
             return "single"
         if self.is_lp:
             return "album"
@@ -404,6 +409,7 @@ class Metaguru(Helpers):
 
     def _trackinfo(self, track: JSONDict, medium_total: int, **kwargs: Any) -> TrackInfo:
         track.pop("digital_only")
+        track.pop("main_title")
         return TrackInfo(
             **self._common,
             **track,
@@ -422,7 +428,7 @@ class Metaguru(Helpers):
         if NEW_BEETS:
             kwargs.update(**self._common_album, albumartist=self.bandcamp_albumartist)
 
-        return self._trackinfo(track, 1, **kwargs)
+        return self._trackinfo(track.copy(), 1, **kwargs)
 
     def albuminfo(self, include_all: bool) -> AlbumInfo:
         if self.media == "Digital Media" or include_all:
@@ -431,7 +437,7 @@ class Metaguru(Helpers):
             filtered_tracks = [t for t in self.tracks if not t["digital_only"]]
 
         medium_total = len(filtered_tracks)
-        _tracks = [self._trackinfo(track, medium_total) for track in filtered_tracks]
+        _tracks = [self._trackinfo(t.copy(), medium_total) for t in filtered_tracks]
         return AlbumInfo(
             **self._common,
             **self._common_album,

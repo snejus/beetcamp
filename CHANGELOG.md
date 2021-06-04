@@ -2,15 +2,22 @@
 
 ### Fixed
 
-- Exclude `- DIGITAL ONLY` (and similar) from the track title when it's preceded by a
-  dash.
-- Having witnessed a very creative track title **E7-E5**, for `track-alt` field, limit the
-  number to the range **0-6**.
-- If the release date is _today_, the album status is **Official** and not
-  **Promotional**.
-- Exclude media that has **bundle** in their names. These usually contain additional
-  releases that we do not need.
-- Make the _disctitle_ uppercase when trying to find the catalogue number.
+- `album.albumstatus`: If the release date is _today_, use **Official** and not **Promotional**.
+- `album.albumtype`: until now we have only set _single_ track releases to have the _single_
+  type. This has been fixed regarding the MusicBrainz description: release composed of the
+  same title and multiple remixes is a single.
+- `album.catalognum`: Make the _DISCTITLE_ uppercase before looking for the catalogue number.
+- `album.media`: Exclude anything that contains _bundle_ in their names. These usually contain
+  additional releases that we do not need.
+- `track.title`: Clean `- DIGITAL ONLY` (and similar) when it's preceded by a dash and not
+  enclosed by parens or square brackets.
+- `track.track_alt`: Having witnessed a very creative track title **E7-E5**, limit the `track_alt`
+  field number to the range **0-6**.
+- Committed a JSON testcase which was supposed to be part of `0.9.0`.
+
+### Added
+
+- Extend `url2json` with `--tracklist-for-tests` to ease adding new testcases.
 
 ## [0.9.0] 2021-06-01
 
