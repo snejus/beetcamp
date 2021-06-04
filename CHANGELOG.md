@@ -8,6 +8,9 @@
   number to the range **0-6**.
 - If the release date is _today_, the album status is **Official** and not
   **Promotional**.
+- Exclude media that has **bundle** in their names. These usually contain additional
+  releases that we do not need.
+- Make the _disctitle_ uppercase when trying to find the catalogue number.
 
 ## [0.9.0] 2021-06-01
 

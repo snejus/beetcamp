@@ -3,7 +3,7 @@ import json
 import re
 
 import pytest
-from beetsplug.bandcamp._metaguru import NEW_BEETS, Metaguru, urlify
+from beetsplug.bandcamp._metaguru import NEW_BEETS, Helpers, Metaguru, urlify
 from pytest_lazyfixture import lazy_fixture
 
 pytestmark = pytest.mark.parsing
@@ -140,37 +140,38 @@ def test_parse_country(name, expected):
 
 
 @pytest.mark.parametrize(
-    ("description", "album", "expected"),
+    ("album", "disctitle", "description", "expected"),
     [
-        ("", "Tracker-229 [PRH-002]", "PRH-002"),
-        ("", "[PRH-002] Tracker-229", "PRH-002"),
-        ("", "Tracker-229 PRH-002", "Tracker-229"),
-        ("", "ISMVA003.2", "ISMVA003.2"),
-        ("", "UTC003-CD", "UTC003"),
-        ("", "UTC-003", "UTC-003"),
-        ("", "EP [SINDEX008]", "SINDEX008"),
-        ("", "2 x Vinyl LP - MTY003", "MTY003"),
-        ("", "Kulør 001", "Kulør 001"),
-        ("", "00M", ""),
-        ("", "X-Coast - Dance Trax Vol.30", ""),
-        ("", "Christmas 2020", ""),
-        ("", "Various Artists 001", ""),
-        ("", "C30 Cassette", ""),
-        ("", "BC30 Hello", "BC30"),
-        ("", "Blood 1/4", ""),
-        ("", "Emotion 1 - Kulør 008", "Kulør 008"),
-        ("", "zz333HZ with remixes from Le Chocolat Noir", ""),
-        ("Catalogue Number: TE0029", "UTC-003", "TE0029"),
-        ("Catalogue Nr: TE0029", "UTC-003", "TE0029"),
-        ("Catalogue No.: TE0029", "UTC-003", "TE0029"),
-        ("Catalogue: CTU-300", "UTC-003", "CTU-300"),
-        ("Cat No: TE0029", "UTC-003", "TE0029"),
-        ("Cat Nr.: TE0029", "UTC-003", "TE0029"),
-        ("Catalogue:CTU-300", "UTC-003", "CTU-300"),
+        ("Tracker-229 [PRH-002]", "", "", "PRH-002"),
+        ("[PRH-002] Tracker-229", "", "", "PRH-002"),
+        ("Tracker-229 PRH-002", "", "", "Tracker-229"),
+        ("ISMVA003.2", "", "", "ISMVA003.2"),
+        ("UTC003-CD", "", "", "UTC003"),
+        ("UTC-003", "", "", "UTC-003"),
+        ("EP [SINDEX008]", "", "", "SINDEX008"),
+        ("2 x Vinyl LP - MTY003", "", "", "MTY003"),
+        ("Kulør 001", "", "", "Kulør 001"),
+        ("00M", "", "", ""),
+        ("X-Coast - Dance Trax Vol.30", "", "", ""),
+        ("Christmas 2020", "", "", ""),
+        ("Various Artists 001", "", "", ""),
+        ("C30 Cassette", "", "", ""),
+        ("BC30 Hello", "", "", "BC30"),
+        ("Blood 1/4", "", "", ""),
+        ("Emotion 1 - Kulør 008", "", "", "Kulør 008"),
+        ("zz333HZ with remixes from Le Chocolat Noir", "", "", ""),
+        ("UTC-003", "", "Catalogue Number: TE0029", "TE0029"),
+        ("UTC-003", "", "Catalogue Nr: TE0029", "TE0029"),
+        ("UTC-003", "", "Catalogue No.: TE0029", "TE0029"),
+        ("UTC-003", "", "Catalogue: CTU-300", "CTU-300"),
+        ("UTC-003", "", "Cat No: TE0029", "TE0029"),
+        ("UTC-003", "", "Cat Nr.: TE0029", "TE0029"),
+        ("UTC-003", "", "Catalogue:CTU-300", "CTU-300"),
+        ("", "LP | ostgutlp31", "", "OSTGUTLP31"),
     ],
 )
-def test_parse_catalognum(description, album, expected):
-    assert Metaguru.parse_catalognum(album, "", description) == expected
+def test_parse_catalognum(album, disctitle, description, expected):
+    assert Metaguru.parse_catalognum(album, disctitle, description) == expected
 
 
 @pytest.mark.parametrize(
@@ -206,6 +207,16 @@ def test_parse_catalognum(description, album, expected):
 )
 def test_clean_up_album_name(album, extras, expected):
     assert Metaguru.clean_up_album_name(album, *extras) == expected
+
+
+def test_bundles_get_excluded():
+    meta = {
+        "albumRelease": [
+            {"name": "Vinyl Bundle", "musicReleaseFormat": "VinylFormat"},
+            {"name": "Vinyl", "musicReleaseFormat": "VinylFormat"},
+        ]
+    }
+    assert set(Helpers._get_media(meta)) == {"Vinyl"}
 
 
 @pytest.fixture(name="release")
