@@ -100,7 +100,7 @@ class Helpers:
         match = re.search(PATTERNS["track_name"], name)
         if match:
             track = match.groupdict()
-        track["main_title"] = re.sub(r"\s?([[(]|f(ea)?t\.).*", "", track["title"])
+        track["main_title"] = re.sub(r"\s?([\[(]|f(ea)?t\.).*", "", track["title"])
         return track
 
     @staticmethod
