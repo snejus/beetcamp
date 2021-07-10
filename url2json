@@ -20,6 +20,7 @@
 # · Format and print tracklist for our pytest fixtures
 #    url2json --tracklist-for-tests ./tests/jsons/single.json
 #
+JQARGS=(--sort-keys 'del(.comment, .sponsor, .albumRelease[0].offers)')
 
 JQARGS=(--sort-keys 'del(.comment, .sponsor, .albumRelease[0].offers)')
 
