@@ -30,9 +30,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      - name: Lint: flake8
+      - name: Lint flake8
         run: |
           poetry run flake8 . --output-file flake.log  --exit-zero
-      - name: Lint: pylint
+      - name: Lint pylint
         run: |
           poetry run pylint --output pylint.log beetsplug/**/*.py
