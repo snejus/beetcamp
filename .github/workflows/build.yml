@@ -13,11 +13,6 @@ jobs:
       - uses: actions/checkout@v2
         with:
           python-version: ${{ matrix.python-version }}
-          # Disabling shallow clone is recommended for improving relevancy of reporting
-          fetch-depth: 0
-          args: >
-            -Dsonar.python.coverage.reportPaths=.reports/coverage/coverage.xml
-            -Dsonar.sourceEncoding=UTF-8
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
       - name: Install dependencies
