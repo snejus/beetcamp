@@ -120,10 +120,6 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
     def __init__(self) -> None:
         super().__init__()
         self.config.add(DEFAULT_CONFIG.copy())
-        # ~~~ DEPRECATED
-        if not self.config["lyrics"]:
-            ADDITIONAL_DATA_MAP.pop("lyrics", None)
-        # ~~~
         self.media = self.config["preferred_media"].as_str()
         self.excluded_extra_fields = set(self.config["exclude_extra_fields"].get())
         self.import_stages = [self.imported]

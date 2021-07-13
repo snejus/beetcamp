@@ -1,3 +1,14 @@
+## [0.10.0] 2021-07-13
+
+### Fixed
+
+- Thanks @arogl for fixing a FutureWarning apparent thrown in Python 3.7.
+
+### Removed
+
+- Removed deprecated `lyrics` configuration option.
+
+
 ## [0.9.1] 2021-06-04
 
 ### Fixed
