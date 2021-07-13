@@ -63,16 +63,9 @@ PATTERNS: Dict[str, Pattern] = {
 
 
 def urlify(pretty_string: str) -> str:
-    """Make a string bandcamp-url-compatible."""
-    return reduce(
-        lambda p, n: p + n
-        if n in VALID_URL_CHARS
-        else p + "-"
-        if not p.endswith("-")
-        else p,
-        pretty_string.lower().replace("'", ""),
-        "",
-    ).strip("-")
+    """Transform a string into bandcamp url."""
+    name = pretty_string.lower().replace("'", "")
+    return re.sub("--+", "-", re.sub(r"\W", "-", name, flags=re.ASCII)).strip("-")
 
 
 class Helpers:
@@ -295,7 +288,7 @@ class Metaguru(Helpers):
                 or getattr(countries.get(name=name, default=object), "alpha_2", None)
                 or subdivisions.lookup(name).country_code
             )
-        except (KeyError, ValueError, LookupError):
+        except (ValueError, LookupError):
             return WORLDWIDE
 
     @cached_property
@@ -429,7 +422,7 @@ class Metaguru(Helpers):
         return self._trackinfo(track.copy(), 1, **kwargs)
 
     def albuminfo(self, include_all: bool) -> AlbumInfo:
-        if self.media == "Digital Media" or include_all:
+        if self.media == DEFAULT_MEDIA or include_all:
             filtered_tracks = self.tracks
         else:
             filtered_tracks = [t for t in self.tracks if not t["digital_only"]]

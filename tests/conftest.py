@@ -6,7 +6,7 @@ from typing import Optional, Tuple
 
 import pytest
 from beets.autotag.hooks import AlbumInfo, TrackInfo
-from beetsplug.bandcamp._metaguru import DATA_SOURCE, NEW_BEETS, OFFICIAL
+from beetsplug.bandcamp._metaguru import DATA_SOURCE, DEFAULT_MEDIA, NEW_BEETS, OFFICIAL
 
 
 @dataclass  # pylint: disable=too-many-instance-attributes
@@ -91,7 +91,7 @@ def single_track_release() -> ReleaseInfo:
         artist_id="https://mega-tech.bandcamp.com",
         album_id="https://mega-tech.bandcamp.com/track/matriark-arangel",
         track_count=1,
-        media="Digital Media",
+        media=DEFAULT_MEDIA,
         disctitle=None,
     )
     info.set_singleton(
@@ -185,6 +185,7 @@ def album() -> ReleaseInfo:
 def album_with_track_alt() -> ReleaseInfo:
     """An album with alternative track indexes."""
     artist_id = "https://foldrecords.bandcamp.com"
+    artist = "Gareth Wild"
     info = ReleaseInfo(
         artist_id=artist_id,
         album_id=f"{artist_id}/album/fld001-gareth-wild-common-assault-ep",
@@ -195,42 +196,42 @@ def album_with_track_alt() -> ReleaseInfo:
     tracks = [
         (
             "a1-gareth-wild-live-wire",
-            "Gareth Wild",
+            artist,
             "Live Wire",
             357,
             "A1",
         ),
         (
             "a2-gareth-wild-live-wire-roll-dann-remix",
-            "Gareth Wild",
+            artist,
             "Live Wire ( Roll Dann Remix )",
             351,
             "A2",
         ),
         (
             "a3-gareth-wild-dds-locked-groove",
-            "Gareth Wild",
+            artist,
             "DDS [Locked Groove]",
             20,
             "A3",
         ),
         (
             "aa1-gareth-wild-common-assault",
-            "Gareth Wild",
+            artist,
             "Common Assault",
             315,
             "AA1",
         ),
         (
             "aa2-gareth-wild-saturn-storm",
-            "Gareth Wild",
+            artist,
             "Saturn Storm",
             365,
             "AA2",
         ),
         (
             "aa3-gareth-wild-quadrant-locked-groove",
-            "Gareth Wild",
+            artist,
             "Quadrant [Locked Groove]",
             20,
             "AA3",
@@ -239,7 +240,7 @@ def album_with_track_alt() -> ReleaseInfo:
     info.set_albuminfo(
         tracks,
         album="Common Assault",
-        albumartist="Gareth Wild",
+        albumartist=artist,
         albumtype="ep",
         catalognum="FLD001",
         label="FOLD RECORDS",
@@ -258,7 +259,7 @@ def compilation() -> ReleaseInfo:
         artist_id="https://ismusberlin.bandcamp.com",
         album_id="https://ismusberlin.bandcamp.com/album/ismva0033",
         track_count=13,
-        media="Digital Media",
+        media=DEFAULT_MEDIA,
         disctitle=None,
     )
     tracks = [
@@ -299,24 +300,25 @@ def artist_mess() -> ReleaseInfo:
         artist_id="https://psykovsky.bandcamp.com",
         album_id="https://psykovsky.bandcamp.com/album/ksolntsu",
         track_count=15,
-        media="Digital Media",
+        media=DEFAULT_MEDIA,
         disctitle=None,
     )
     # fmt: off
+    albumartist = "Psykovsky & Friends"
     tracks = [
         ("ela-na-pame", "Psykovsky & Orestis", "Ela Na Pame", 518, None),
         ("stone-sea", "Psykovsky & Luuli", "Stone Sea", 673, None),
         ("so-we-sailed-till-we-found", "Psykovsky & Spiral", "So We Sailed Till We Found", 454, None),  # noqa
         ("doors-of-perception", "Psykovsky & Kasatka", "Doors Of Perception", 473, None),  # noqa
         ("variant-on-the-right", "Psykovsky & Spiral & Seeasound", "Variant On The Right", 736, None),  # noqa
-        ("call-of-beauty", "Psykovsky & Friends", "Call Of Beauty", 769, None),
+        ("call-of-beauty", albumartist, "Call Of Beauty", 769, None),
         ("many-many-krishnas", "Psykovsky & Orestis & Jobaba", "Many Many Krishnas", 729, None),  # noqa
         ("prem-i-um", "Psykovsky & Kashyyyk & Arcek", "Prem I Um", 409, None),
         ("now-here-nowhere", "Psykovsky & Arcek", "Now Here Nowhere", 557, None),
         ("holy-black-little-lark", "Psykovsky & Maleficium & Seeasound", "Holy Black / Little Lark", 1087, None),  # noqa
-        ("worlds-of-wisdom", "Psykovsky & Friends", "Worlds Of Wisdom", 408, None),
-        ("pc-transmission", "Psykovsky & Friends", "PC Transmission", 561, None),
-        ("rs-lightmusic", "Psykovsky & Friends", "RS Lightmusic", 411, None),
+        ("worlds-of-wisdom", albumartist, "Worlds Of Wisdom", 408, None),
+        ("pc-transmission", albumartist, "PC Transmission", 561, None),
+        ("rs-lightmusic", albumartist, "RS Lightmusic", 411, None),
         ("ksolntsu", "Psykovsky & Quip Tone Beatz & Flish", "Ksolntsu", 555, None),
         ("dadme-albricios-hijos-deva", "Birds Of Praise", "Dadme albricios hijos d'Eva", 623, None),  # noqa
     ]
@@ -324,7 +326,7 @@ def artist_mess() -> ReleaseInfo:
     info.set_albuminfo(
         tracks,
         album="Ksolntsu",
-        albumartist="Psykovsky & Friends",
+        albumartist=albumartist,
         albumtype="album",
         catalognum="",
         label="Psykovsky",
