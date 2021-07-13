@@ -41,7 +41,7 @@ import requests
 import six
 from beets import config as root_config
 from beets import plugins
-from beets.autotag.hooks import AlbumInfo, Distance, TrackInfo
+from beets.autotag.hooks import AlbumInfo, TrackInfo
 from beets.library import Item
 
 from ._metaguru import DATA_SOURCE, DEFAULT_MEDIA, Metaguru, urlify
@@ -303,7 +303,7 @@ class BandcampAdditionalData(klass):
             else:
                 self._info("{}: {} field: already present on {}", name, item_field, item)
 
-    def add_additional_data(self, item: Item, write: bool = False) -> None:
+    def add_additional_data(self, item: Item) -> None:
         """If not excluded, fetch and store:
         * lyrics
         * release description as comments

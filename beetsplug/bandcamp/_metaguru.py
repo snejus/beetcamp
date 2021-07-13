@@ -162,9 +162,11 @@ class Helpers:
         media: JSONDict = {}
         for _format in meta["albumRelease"]:
             try:
-                assert "bundle" not in _format["name"].lower()
+                if "bundle" in _format["name"].lower():
+                    raise KeyError
+
                 medium = _format["musicReleaseFormat"]
-            except (KeyError, AssertionError):
+            except KeyError:
                 continue
             human_name = MEDIA_MAP[medium]
             media[human_name] = _format
