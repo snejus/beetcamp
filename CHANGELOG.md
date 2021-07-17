@@ -1,4 +1,4 @@
-## [0.10.0] 2021-07-13
+## [0.9.2] 2021-07-17
 
 ### Fixed
 
@@ -9,6 +9,11 @@
 ### Removed
 
 - Removed deprecated `lyrics` configuration option.
+
+### Added
+
+- Added a github action to run ci for `master` and `dev` branches. For now it's just a minimal
+  configuration and will probably get updated soon.
 
 
 ## [0.9.1] 2021-06-04
