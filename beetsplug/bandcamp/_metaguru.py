@@ -423,6 +423,7 @@ class Metaguru(Helpers):
         track.update(self.parse_track_name(self.album_name))
         if not track.get("artist"):
             track["artist"] = self.bandcamp_albumartist
+        if NEW_BEETS:
             kwargs["album"] = "{} - {}".format(track["artist"], track["title"])
 
         return self._trackinfo(track.copy(), 1, **kwargs)
