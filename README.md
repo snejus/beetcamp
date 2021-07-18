@@ -1,4 +1,5 @@
 [![image](http://img.shields.io/pypi/v/beetcamp.svg)](https://pypi.python.org/pypi/beetcamp)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=snejus_beets-bandcamp&metric=alert_status)](https://sonarcloud.io/dashboard?id=snejus_beets-bandcamp)
 
 Plug-in for [beets](https://github.com/beetbox/beets) to use Bandcamp as
 an autotagger source.

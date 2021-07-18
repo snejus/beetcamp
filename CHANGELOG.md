@@ -1,3 +1,23 @@
+## [0.9.2] 2021-07-17
+
+### Fixed
+
+- Thanks @arogl for fixing a FutureWarning apparent thrown in Python 3.7.
+- Thanks @brianredbeard for reporting that the plugin writes file metadata even when this
+  is disabled globally. This is now fixed.
+- singleton album/artist: cases when the release name contains only the track name are now
+  parsed correctly.
+
+### Removed
+
+- Removed deprecated `lyrics` configuration option.
+
+### Added
+
+- Added a github action to run ci for `master` and `dev` branches. For now it's just a minimal
+  configuration and will probably get updated soon.
+
+
 ## [0.9.1] 2021-06-04
 
 ### Fixed
