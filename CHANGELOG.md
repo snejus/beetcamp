@@ -5,6 +5,8 @@
 - Thanks @arogl for fixing a FutureWarning apparent thrown in Python 3.7.
 - Thanks @brianredbeard for reporting that the plugin writes file metadata even when this
   is disabled globally. This is now fixed.
+- singleton album/artist: cases when the release name contains only the track name are now
+  parsed correctly.
 
 ### Removed
 

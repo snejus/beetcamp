@@ -415,11 +415,15 @@ class Metaguru(Helpers):
     @property
     def singleton(self) -> TrackInfo:
         self._singleton = True
-        track = self.tracks[0]
-        track.update(self.parse_track_name(self.album_name))
         kwargs: JSONDict = {}
         if NEW_BEETS:
             kwargs.update(**self._common_album, albumartist=self.bandcamp_albumartist)
+
+        track = self.tracks[0]
+        track.update(self.parse_track_name(self.album_name))
+        if not track.get("artist"):
+            track["artist"] = self.bandcamp_albumartist
+            kwargs["album"] = "{} - {}".format(track["artist"], track["title"])
 
         return self._trackinfo(track.copy(), 1, **kwargs)
 

@@ -113,6 +113,34 @@ def single_track_release() -> ReleaseInfo:
 
 
 @pytest.fixture
+def single_only_track_name() -> ReleaseInfo:
+    """Single track as a release on its own."""
+    info = ReleaseInfo(
+        artist_id="https://gutkeinforu.bandcamp.com",
+        album_id="https://gutkeinforu.bandcamp.com/track/oenera",
+        track_count=1,
+        media=DEFAULT_MEDIA,
+        disctitle=None,
+    )
+    info.set_singleton(
+        artist="GUTKEIN",
+        title="OENERA",
+        length=355,
+        album="GUTKEIN - OENERA",
+        albumartist="GUTKEIN",
+        albumstatus="Official",
+        label="GUTKEIN",
+        albumtype="single",
+        catalognum="",
+        year=2021,
+        month=1,
+        day=10,
+        country="RU",
+    )
+    return info
+
+
+@pytest.fixture
 def single_track_album_search() -> Tuple[str, ReleaseInfo]:
     """Single track which is part of an album release."""
     album_artist = "Alpha Tracks"

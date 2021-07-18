@@ -255,7 +255,9 @@ def check(actual, expected) -> None:
 
 
 @pytest.mark.parametrize(
-    "release", [lazy_fixture("single_track_release")], indirect=["release"]
+    "release",
+    map(lazy_fixture, ["single_track_release", "single_only_track_name"]),
+    indirect=["release"],
 )
 def test_parse_single_track_release(release):
     html, expected = release
