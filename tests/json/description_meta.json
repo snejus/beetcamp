@@ -93,6 +93,18 @@
       "name": "Francois Dillinger - Icosahedrone [LP]",
       "offers": {
         "@type": "Offer",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "quantity_available",
+            "value": 7
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "quantity_warning",
+            "value": true
+          }
+        ],
         "availability": "InStock",
         "price": 8.99,
         "priceCurrency": "EUR",
@@ -151,7 +163,7 @@
   },
   "copyrightNotice": "All Rights Reserved",
   "dateModified": "14 May 2021 10:34:44 GMT",
-  "datePublished": "16 Apr 2021 07:54:22 GMT",
+  "datePublished": "05 May 2021 00:00:00 GMT",
   "image": "https://f4.bcbits.com/img/a0890773906_10.jpg",
   "keywords": [
     "Electronic",
@@ -160,7 +172,7 @@
     "rave",
     "techno",
     "trance",
-    "Slovenia"
+    "Spain"
   ],
   "name": "Francois Dillinger - Icosahedrone [LP]",
   "numTracks": 10,
@@ -180,14 +192,39 @@
       },
       {
         "@type": "PropertyValue",
+        "name": "has_any_downloads",
+        "value": true
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "has_download_codes",
+        "value": true
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "has_policies",
+        "value": 1
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_height",
+        "value": 3000
+      },
+      {
+        "@type": "PropertyValue",
         "name": "image_id",
         "value": 23801099
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_width",
+        "value": 3000
       }
     ],
     "description": "From Buenos Aires, based in Barcelona.",
     "foundingLocation": {
       "@type": "Place",
-      "name": "Slovenia"
+      "name": "Spain"
     },
     "genre": "https://bandcamp.com/tag/electronic",
     "image": "https://f4.bcbits.com/img/0023801099_10.jpg",

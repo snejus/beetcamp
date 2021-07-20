@@ -99,7 +99,19 @@
       "name": "FLD001 - Common Assault EP",
       "offers": {
         "@type": "Offer",
-        "availability": "InStock",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "quantity_available",
+            "value": 0
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "quantity_warning",
+            "value": true
+          }
+        ],
+        "availability": "SoldOut",
         "price": 12,
         "priceCurrency": "GBP",
         "priceSpecification": {
@@ -140,7 +152,7 @@
   },
   "copyrightNotice": "All Rights Reserved",
   "dateModified": "07 Nov 2020 14:18:05 GMT",
-  "datePublished": "17 Sep 2020 15:07:33 GMT",
+  "datePublished": "02 Nov 2020 00:00:00 GMT",
   "image": "https://f4.bcbits.com/img/a2798384948_10.jpg",
   "keywords": [
     "London"
@@ -163,8 +175,23 @@
       },
       {
         "@type": "PropertyValue",
+        "name": "has_any_downloads",
+        "value": true
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_height",
+        "value": 600
+      },
+      {
+        "@type": "PropertyValue",
         "name": "image_id",
         "value": 21655804
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_width",
+        "value": 600
       }
     ],
     "description": "The institution of arts based in the heart of East London's, Canning Town. Home to music and creative studios and a 500 capacity state-of-the-art performance space.",

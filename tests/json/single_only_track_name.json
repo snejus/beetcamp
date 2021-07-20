@@ -20,11 +20,6 @@
     },
     {
       "@type": "PropertyValue",
-      "name": "file_mp3-128",
-      "value": "https://t4.bcbits.com/stream/708e74e84a8a66aa04d4166b791a206d/mp3-128/793629957?p=0&ts=1626687245&t=b92eba62397b2fd2eef3e23cdf06c02520063b2b&token=1626687245_fe09193901e62ee290a3f6fdc28d1bf92c3ca86e"
-    },
-    {
-      "@type": "PropertyValue",
       "name": "license_name",
       "value": "all_rights_reserved"
     },
