@@ -195,6 +195,11 @@
       },
       {
         "@type": "WebPage",
+        "name": "merch",
+        "url": "https://psykovsky.bandcamp.com/merch"
+      },
+      {
+        "@type": "WebPage",
         "name": "community",
         "url": "https://psykovsky.bandcamp.com/community"
       }
