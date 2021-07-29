@@ -21,7 +21,7 @@ import logging
 import re
 from functools import partial
 from html import unescape
-from operator import attrgetter, truth
+from operator import truth
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -35,14 +35,11 @@ from typing import (
     Union,
 )
 
-import beets
-import beetsplug.fetchart as fetchart
 import requests
 import six
-from beets import config as root_config
-from beets import plugins
+from beets import __version__, config, library, plugins
 from beets.autotag.hooks import AlbumInfo, TrackInfo
-from beets.library import Item
+from beetsplug import fetchart
 
 from ._metaguru import DATA_SOURCE, DEFAULT_MEDIA, Metaguru, urlify
 
@@ -60,7 +57,7 @@ DEFAULT_CONFIG: JSONDict = {
 SEARCH_URL = "https://bandcamp.com/search?q={0}&page={1}"
 ALBUM_URL_IN_TRACK = re.compile(r'inAlbum":{[^}]*"@id":"([^"]*)"')
 SEARCH_ITEM_PAT = 'href="(https://[^/]*/{}/[^?]*)'
-USER_AGENT = "beets/{} +http://beets.radbox.org/".format(beets.__version__)
+USER_AGENT = "beets/{} +http://beets.radbox.org/".format(__version__)
 ALBUM_SEARCH = "album"
 ARTIST_SEARCH = "band"
 TRACK_SEARCH = "track"
@@ -97,7 +94,8 @@ class BandcampRequestsHandler:
 class BandcampAlbumArt(BandcampRequestsHandler, fetchart.RemoteArtSource):
     NAME = "Bandcamp"
 
-    def get(self, album: AlbumInfo, plugin, paths) -> Iterator[fetchart.Candidate]:
+    def get(self, album, plugin, paths):
+        # type: (AlbumInfo, plugins.BeetsPlugin, List) -> Iterator[fetchart.Candidate]  # noqa
         """Return the url for the cover from the bandcamp album page.
         This only returns cover art urls for bandcamp albums (by id).
         """
@@ -122,22 +120,100 @@ class BandcampAlbumArt(BandcampRequestsHandler, fetchart.RemoteArtSource):
             self._info("Art cover is already present")
 
 
-class Bandcamp(BandcampRequestsHandler, plugins.BeetsPlugin):
-    _gurucache: Dict[str, Metaguru]
+class BandcampAdditionalData:
+    write: bool
+    excluded_extra_fields: Set[str]
+    guru: Callable
+    _info: Callable
 
-    media: str
+    def verify_and_add(
+        self, item: library.Item, get_data: Callable[[str], str], excluded: Set[str]
+    ) -> None:
+        name = "Additional data"
+        for bandcamp_field in set(ADDITIONAL_DATA_MAP).difference(excluded):
+            item_field = ADDITIONAL_DATA_MAP[bandcamp_field]
+
+            if not getattr(item, item_field, None) or (
+                item_field == "comments" and item.comments.startswith("Visit http")
+            ):
+                new_value = get_data(bandcamp_field)
+                if new_value:
+                    setattr(item, item_field, new_value)
+                    self._info("{}: obtained {} for {}", name, bandcamp_field, item)
+            else:
+                self._info("{}: {} field: already present on {}", name, item_field, item)
+
+    def add_additional_data(self, item: library.Item) -> None:
+        """If not excluded, fetch and store:
+        * lyrics
+        * release description as comments
+        """
+        self.verify_and_add(
+            item,
+            partial(getattr, self.guru(item.mb_albumid or item.mb_trackid)),
+            self.excluded_extra_fields,
+        )
+
+        if self.write:
+            item.try_write()
+        item.store()
+
+
+class BandcampPlugin(
+    BandcampRequestsHandler, plugins.BeetsPlugin, BandcampAdditionalData
+):
+    _gurucache: Dict[str, Metaguru]
 
     def __init__(self) -> None:
         super().__init__()
         self.config.add(DEFAULT_CONFIG.copy())
-        self.media = self.config["preferred_media"].as_str()
+
+        self.write = config["import"]["write"].get()
+        self.excluded_extra_fields = set(self.config["exclude_extra_fields"].get())
+        self.import_stages = [self.imported]
         self.register_listener("pluginload", self.loaded)
         self._gurucache = dict()
 
+    def imported(self, _: Any, task: Any) -> None:
+        """Import hook for fetching additional data from bandcamp."""
+        for item in task.imported_items():
+            if self._from_bandcamp(item):
+                self.add_additional_data(item)
+
+    # self.register_listener(
+    #     "before_choose_candidate", self.before_choose_candidate_event
+    # )
+    # self.console = Console(tab_size=4)
+    # def before_choose_candidate_event(self, session, task):
+    # from beets.ui.commands import PromptChoice
+    # from rich import inspect
+    # from rich.console import Console
+    # from rich.pretty import Pretty
+    # from rich.table import Table
+    #     def print_items(_, task):
+    #         for item in task.items:
+    #         self.console.log(Pretty({key: val for (key, val) in item.items() if val}))
+
+    #     def print_candi(_, task):
+    #         candidate = task.candidates[0].info.copy()
+    #         tracks = candidate.pop("tracks")
+    #         self.console.log(
+    #             Pretty({key: val for (key, val) in candidate.items() if val})
+    #         )
+    #         for track in tracks:
+    #             self.console.log(
+    #                 Pretty({key: val for (key, val) in track.items() if val})
+    #             )
+
+    #     return [
+    #         PromptChoice("r", "pRint items", print_items),
+    #         PromptChoice("x", "Xo bar", print_candi),
+    #     ]
+
     @staticmethod
-    def _from_bandcamp(clue: Union[Item, str]) -> bool:
+    def _from_bandcamp(clue: Union[library.Item, str]) -> bool:
         """Accepts either an item or the mb_artistid."""
-        if isinstance(clue, Item):
+        if isinstance(clue, library.Item):
             clue = clue.mb_albumid or clue.mb_trackid
         return "bandcamp" in clue or (
             clue.startswith("http") and ("album" in clue or "track" in clue)
@@ -174,7 +250,7 @@ class Bandcamp(BandcampRequestsHandler, plugins.BeetsPlugin):
                     fetchart.SOURCE_NAMES[BandcampAlbumArt] = DATA_SOURCE
                     break
 
-    def _cheat_mode(self, item: Item, name: str, _type: str) -> str:
+    def _cheat_mode(self, item: library.Item, name: str, _type: str) -> str:
         reimport_url: str = getattr(item, f"mb_{_type}id", "")
         if "bandcamp" in reimport_url:
             return reimport_url
@@ -182,33 +258,35 @@ class Bandcamp(BandcampRequestsHandler, plugins.BeetsPlugin):
         if "Visit" in item.comments:
             match = re.search(r"https:[/a-z.-]+com", item.comments)
             if match:
-                url: str = "{}/{}/{}".format(match.group(), _type, urlify(name))
+                url = "{}/{}/{}".format(match.group(), _type, urlify(name))
                 self._info("Trying our guess {} before searching", url)
                 return url
         return ""
 
     def candidates(self, items, artist, album, va_likely, extra_tags=None):
-        # type: (List[Item], str, str, bool, Optional[JSONDict]) -> Iterator[AlbumInfo]
+        # type: (List[library.Item], str, str, bool, Optional[JSONDict]) -> Iterator[AlbumInfo]  # noqa
         """Return a sequence of AlbumInfo objects that match the
         album whose items are provided.
         """
         if items:
             initial_url = self._cheat_mode(items[0], album, ALBUM_SEARCH)
-            if initial_url:
-                return iter([self.get_album_info(initial_url)])
+            initial_guess = self.get_album_info(initial_url) if initial_url else None
+            if initial_guess:
+                return iter([initial_guess])
 
         return filter(truth, map(self.get_album_info, self._search(album, ALBUM_SEARCH)))
 
     def item_candidates(self, item, artist, title):
-        # type: (Item, str, str) -> Iterator[TrackInfo]
+        # type: (library.Item, str, str) -> Iterator[TrackInfo]
         """Return a sequence of TrackInfo objects that match the provided item.
         If the track was downloaded directly from bandcamp, it should contain
         a comment saying 'Visit <label-url>' - we look at this first by converting
         title into the format that Bandcamp use.
         """
         initial_url = self._cheat_mode(item, title, TRACK_SEARCH)
-        if initial_url:
-            return iter([self.get_track_info(initial_url)])
+        initial_guess = self.get_track_info(initial_url) if initial_url else None
+        if initial_guess:
+            return iter([initial_guess])
 
         query = title or item.album or artist
         return filter(truth, map(self.get_track_info, self._search(query, TRACK_SEARCH)))
@@ -256,10 +334,8 @@ class Bandcamp(BandcampRequestsHandler, plugins.BeetsPlugin):
         while next_page_exists():
             self._info("Page {}", str(page))
             html = self._get(SEARCH_URL.format(query, page))
-            if not html:
-                break
 
-            for match in re.finditer(pattern, html):
+            for match in re.finditer(pattern, html or ""):
                 if len(urls) == max_urls:
                     break
                 url = match.groups()[0]
@@ -271,62 +347,3 @@ class Bandcamp(BandcampRequestsHandler, plugins.BeetsPlugin):
                 page += 1
                 continue
             break
-
-
-if TYPE_CHECKING:
-    klass = Bandcamp
-else:
-    klass = object
-
-
-class BandcampAdditionalData(klass):
-    write: bool
-    excluded_extra_fields: Set[str]
-
-    def __init__(self) -> None:
-        super().__init__()
-        self.import_stages = [self.imported]
-        self.write = root_config["import"]["write"].get()
-        self.excluded_extra_fields = set(self.config["exclude_extra_fields"].get())
-
-    def verify_and_add(
-        self, item: Item, get_data: Callable[[str], str], excluded: Set[str]
-    ) -> None:
-        name = "Additional data"
-        for bandcamp_field in set(ADDITIONAL_DATA_MAP).difference(excluded):
-            item_field = ADDITIONAL_DATA_MAP[bandcamp_field]
-
-            if not getattr(item, item_field, None) or (
-                item_field == "comments" and item.comments.startswith("Visit http")
-            ):
-                new_value = get_data(bandcamp_field)
-                if new_value:
-                    setattr(item, item_field, new_value)
-                    self._info("{}: obtained {} for {}", name, bandcamp_field, item)
-            else:
-                self._info("{}: {} field: already present on {}", name, item_field, item)
-
-    def add_additional_data(self, item: Item) -> None:
-        """If not excluded, fetch and store:
-        * lyrics
-        * release description as comments
-        """
-        self.verify_and_add(
-            item,
-            partial(getattr, self.guru(item.mb_albumid or item.mb_trackid)),
-            self.excluded_extra_fields,
-        )
-
-        if self.write:
-            item.try_write()
-        item.store()
-
-    def imported(self, _: Any, task: Any) -> None:
-        """Import hook for fetching additional data from bandcamp."""
-        for item in task.imported_items():
-            if self._from_bandcamp(item):
-                self.add_additional_data(item)
-
-
-class BandcampPlugin(BandcampAdditionalData, Bandcamp):
-    pass

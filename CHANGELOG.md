@@ -8,6 +8,11 @@
   + `label`: some releases embed the `recordLabel` field into the json data - it now gets
     prioritized over the publisher name when it is available.
 
+### Fixed
+
+- A regression from `0.9.2` which caused double initialization of the plugin. If your
+  initial tracks metadata has the album name, the results should again be returned
+  instantly.
 
 ## [0.9.2] 2021-07-17
 
