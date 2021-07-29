@@ -13,6 +13,8 @@
 - A regression from `0.9.2` which caused double initialization of the plugin. If your
   initial tracks metadata has the album name, the results should again be returned
   instantly.
+- Searching by release ID where the ID is not a bandcamp URL should now be ignored by the
+  plugin. Thanks @arogl.
 
 ## [0.9.2] 2021-07-17
 

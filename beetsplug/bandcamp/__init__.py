@@ -21,19 +21,9 @@ import logging
 import re
 from functools import partial
 from html import unescape
+from json.decoder import JSONDecodeError
 from operator import truth
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    Callable,
-    Dict,
-    Iterator,
-    List,
-    Optional,
-    Sequence,
-    Set,
-    Union,
-)
+from typing import Any, Callable, Dict, Iterator, List, Optional, Sequence, Set, Union
 
 import requests
 import six
@@ -215,7 +205,7 @@ class BandcampPlugin(
         """Accepts either an item or the mb_artistid."""
         if isinstance(clue, library.Item):
             clue = clue.mb_albumid or clue.mb_trackid
-        return "bandcamp" in clue or (
+        return ".bandcamp." in clue or (
             clue.startswith("http") and ("album" in clue or "track" in clue)
         )
 
@@ -293,16 +283,24 @@ class BandcampPlugin(
 
     def album_for_id(self, album_id: str) -> Optional[AlbumInfo]:
         """Fetch an album by its bandcamp ID."""
-        return self.get_album_info(album_id)
+        if self._from_bandcamp(album_id):
+            return self.get_album_info(album_id)
+
+        self._info("Not a bandcamp URL, skipping")
+        return None
 
     def track_for_id(self, track_id: str) -> Optional[TrackInfo]:
         """Fetch a track by its bandcamp ID."""
-        return self.get_track_info(track_id)
+        if self._from_bandcamp(track_id):
+            return self.get_track_info(track_id)
+
+        self._info("Not a bandcamp URL, skipping")
+        return None
 
     def handle(self, guru: Metaguru, attr: str, _id: str) -> Any:
         try:
             return getattr(guru, attr)
-        except (KeyError, ValueError, AttributeError):
+        except (KeyError, ValueError, AttributeError, JSONDecodeError):
             self._info("Failed obtaining {}", _id)
             return None
 
