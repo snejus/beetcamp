@@ -1,7 +1,6 @@
 """Data prep / fixtures for tests."""
 from dataclasses import dataclass
 from datetime import date
-from datetime import datetime as dt
 from typing import Optional, Tuple
 
 import pytest
@@ -9,9 +8,8 @@ from beets.autotag.hooks import AlbumInfo, TrackInfo
 from beetsplug.bandcamp._metaguru import DATA_SOURCE, DEFAULT_MEDIA, NEW_BEETS, OFFICIAL
 
 
-@dataclass  # pylint: disable=too-many-instance-attributes
+@dataclass
 class ReleaseInfo:
-    html_release_date = ""
     album_id: str
     artist_id: str
     track_count: int
@@ -19,11 +17,6 @@ class ReleaseInfo:
     disctitle: Optional[str]
     singleton = None  # type: TrackInfo
     albuminfo = None  # type: AlbumInfo
-
-    def set_html_release_date(self, _date: date):
-        self.html_release_date = "released {:0>2d} {} {}".format(
-            _date.day, dt.strftime(dt.strptime(str(_date.month), "%m"), "%B"), _date.year
-        )
 
     def track_data(self, **kwargs) -> TrackInfo:
         kget = kwargs.get
@@ -56,7 +49,6 @@ class ReleaseInfo:
         if NEW_BEETS:
             data.update(**kwargs)
         self.singleton = TrackInfo(**data)
-        self.set_html_release_date(date(kwargs["year"], kwargs["month"], kwargs["day"]))
 
     def set_albuminfo(self, tracks, **kwargs):
         fields = ["index", "title_id", "artist", "title", "length", "alt"]
@@ -81,7 +73,6 @@ class ReleaseInfo:
             data_source=DATA_SOURCE,
             tracks=[TrackInfo(**self.track_data(**dict(t))) for t in iter_tracks],
         )
-        self.set_html_release_date(kwargs["release_date"])
 
 
 @pytest.fixture
@@ -451,7 +442,7 @@ def description_meta() -> ReleaseInfo:
         label="Diffuse Reality",
         release_date=date(2021, 5, 5),
         va=False,
-        country="SI",
+        country="ES",
         mediums=1,
     )
     return info

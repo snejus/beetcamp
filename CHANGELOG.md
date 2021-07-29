@@ -1,14 +1,10 @@
-## [0.10.0] 2021-07-xx
+## [0.9.3] 2021-07-29
 
 ### Updated
 
 - Bandcamp json updates:
-  + `datePublished` field now tells the correct release date which was the last bit that
-    we have been parsing from the plain html.
-  + A couple of new properties like `has_any_downloads`, `image_width / height`,
-    `quantity_available` though they're pretty much irrevelant for us.
-
-
+  + `datePublished` field now tells the correct release date so now we use it instead of
+    parsing the plain html for it.
 
 
 ## [0.9.2] 2021-07-17

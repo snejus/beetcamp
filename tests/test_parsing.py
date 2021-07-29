@@ -24,10 +24,9 @@ def test_description(descr, disctitle, creds, expected):
         description=descr,
         albumRelease=[{"musicReleaseFormat": "VinylFormat", "description": disctitle}],
         creditText=creds,
-        datePublished="doesntmatter",
+        dateModified="doesntmatter",
     )
-    guru = Metaguru(json.dumps(meta), media="Vinyl")
-    guru._media = meta.get("albumRelease", [{}])[0]
+    guru = Metaguru(json.dumps(meta), media_prefs="Vinyl")
     assert guru.description == expected, vars(guru)
 
 
@@ -56,17 +55,6 @@ def test_mediums_count(name, expected):
 )
 def test_convert_title(title, expected):
     assert urlify(title) == expected
-
-
-@pytest.mark.parametrize(
-    ("string", "expected"),
-    [
-        ("released 06 November 2019", "06 November 2019"),
-        ("released on Some Records", ""),
-    ],
-)
-def test_parse_release_date(string, expected):
-    assert Metaguru.parse_release_date(string) == expected
 
 
 @pytest.mark.parametrize(
@@ -231,20 +219,19 @@ def test_bundles_get_excluded():
             {"name": "Vinyl", "musicReleaseFormat": "VinylFormat"},
         ]
     }
-    assert set(Helpers._get_media(meta)) == {"Vinyl"}
+    assert set(Helpers._get_media_index(meta)) == {"Vinyl"}
 
 
 @pytest.fixture(name="release")
 def _release(request):
     """Read the json data and make it span a single line - same like it's found in htmls.
-    Include the release date too - we still need to get it directly.
     Fixture names map to the testfiles (minus the extension).
     """
     info = request.param
-    prepend = info.html_release_date + "\n"
     fixturename = next(iter(request._parent_request._fixture_defs.keys()))
     filename = "tests/json/{}.json".format(fixturename)
-    return prepend + re.sub(r"\n *", "", open(filename).read()), info
+    with open(filename) as file:
+        return re.sub(r"\n *", "", file.read()), info
 
 
 def check(actual, expected) -> None:
@@ -285,9 +272,8 @@ def test_parse_single_track_release(release):
 def test_parse_various_types(release):
     html, expected_release = release
     guru = Metaguru(html, expected_release.media)
-    include_all = False
 
-    actual_album = guru.album(include_all)
+    actual_album = guru.album
     disctitle = actual_album.tracks[0].disctitle
     assert disctitle == expected_release.disctitle
     expected_album = expected_release.albuminfo

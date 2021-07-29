@@ -153,7 +153,11 @@ class Bandcamp(BandcampRequestsHandler, plugins.BeetsPlugin):
         if not html:
             html = self._get(url)
         if html:
-            self._gurucache[url] = Metaguru(html, self.media)
+            self._gurucache[url] = Metaguru(
+                html,
+                self.config["preferred_media"].as_str(),
+                self.config["include_digital_only_tracks"],
+            )
         return self._gurucache.get(url)
 
     def loaded(self) -> None:
@@ -170,7 +174,7 @@ class Bandcamp(BandcampRequestsHandler, plugins.BeetsPlugin):
                     fetchart.SOURCE_NAMES[BandcampAlbumArt] = DATA_SOURCE
                     break
 
-    def _cheat_mode(self, item: Item, name: str, _type: str) -> Optional[str]:
+    def _cheat_mode(self, item: Item, name: str, _type: str) -> str:
         reimport_url: str = getattr(item, f"mb_{_type}id", "")
         if "bandcamp" in reimport_url:
             return reimport_url
@@ -181,7 +185,7 @@ class Bandcamp(BandcampRequestsHandler, plugins.BeetsPlugin):
                 url: str = "{}/{}/{}".format(match.group(), _type, urlify(name))
                 self._info("Trying our guess {} before searching", url)
                 return url
-        return None
+        return ""
 
     def candidates(self, items, artist, album, va_likely, extra_tags=None):
         # type: (List[Item], str, str, bool, Optional[JSONDict]) -> Iterator[AlbumInfo]
@@ -190,9 +194,9 @@ class Bandcamp(BandcampRequestsHandler, plugins.BeetsPlugin):
         """
         if items:
             initial_url = self._cheat_mode(items[0], album, ALBUM_SEARCH)
-            initial_guess = self.get_album_info(initial_url) if initial_url else None
-            if initial_guess:
-                return iter([initial_guess])
+            if initial_url:
+                return iter([self.get_album_info(initial_url)])
+
         return filter(truth, map(self.get_album_info, self._search(album, ALBUM_SEARCH)))
 
     def item_candidates(self, item, artist, title):
@@ -203,9 +207,9 @@ class Bandcamp(BandcampRequestsHandler, plugins.BeetsPlugin):
         title into the format that Bandcamp use.
         """
         initial_url = self._cheat_mode(item, title, TRACK_SEARCH)
-        initial_guess = self.get_track_info(initial_url) if initial_url else None
-        if initial_guess:
-            return iter([initial_guess])
+        if initial_url:
+            return iter([self.get_track_info(initial_url)])
+
         query = title or item.album or artist
         return filter(truth, map(self.get_track_info, self._search(query, TRACK_SEARCH)))
 
@@ -217,25 +221,24 @@ class Bandcamp(BandcampRequestsHandler, plugins.BeetsPlugin):
         """Fetch a track by its bandcamp ID."""
         return self.get_track_info(track_id)
 
+    def handle(self, guru: Metaguru, attr: str, _id: str) -> Any:
+        try:
+            return getattr(guru, attr)
+        except (KeyError, ValueError, AttributeError):
+            self._info("Failed obtaining {}", _id)
+            return None
+
     def get_album_info(self, url: str) -> Optional[AlbumInfo]:
         """Return an AlbumInfo object for a bandcamp album page.
         If track url is given by mistake, find and fetch the album url instead.
         """
-        include_all = self.config["include_digital_only_tracks"]
         guru = self.guru(url, html=self._get(url))
-        return self.handle(partial(guru.album, include_all), url) if guru else None
+        return self.handle(guru, "album", url) if guru else None
 
     def get_track_info(self, url: str) -> Optional[TrackInfo]:
         """Returns a TrackInfo object for a bandcamp track page."""
         guru = self.guru(url)
-        return self.handle(partial(attrgetter("singleton"), guru), url) if guru else None
-
-    def handle(self, call: Callable, _id: str) -> Any:
-        try:
-            return call()
-        except (KeyError, ValueError, AttributeError):
-            self._info("Failed obtaining {}", _id)
-            return None
+        return self.handle(guru, "singleton", url) if guru else None
 
     def _search(self, query: str, search_type: str = ALBUM_SEARCH) -> Iterator[str]:
         """Return an iterator for item URLs of type search_type matching the query."""
