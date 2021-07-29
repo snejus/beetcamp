@@ -300,7 +300,7 @@ class BandcampPlugin(
     def handle(self, guru: Metaguru, attr: str, _id: str) -> Any:
         try:
             return getattr(guru, attr)
-        except (KeyError, ValueError, AttributeError, JSONDecodeError):
+        except (KeyError, ValueError, AttributeError):
             self._info("Failed obtaining {}", _id)
             return None
 
