@@ -21,7 +21,6 @@ import logging
 import re
 from functools import partial
 from html import unescape
-from json.decoder import JSONDecodeError
 from operator import truth
 from typing import Any, Callable, Dict, Iterator, List, Optional, Sequence, Set, Union
 
