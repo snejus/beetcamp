@@ -5,7 +5,6 @@ from datetime import date, datetime
 from functools import reduce
 from math import floor
 from operator import truth
-from string import ascii_lowercase, digits
 from typing import Any, Dict, List, Optional, Pattern, Set, Tuple
 from unicodedata import normalize
 
@@ -34,7 +33,6 @@ MEDIA_MAP = {
     "CassetteFormat": "Cassette",
     "DigitalFormat": DEFAULT_MEDIA,
 }
-VALID_URL_CHARS = {*ascii_lowercase, *digits}
 
 _catalognum = r"([A-Z][^-.\s\d]+[-.\s]?\d{2,4}(?:[.-]?\d|CD)?)"
 _exclusive = r"[\[( -]*(bandcamp )?(digi(tal)? )?(bonus|only|exclusive)[\])]?"
@@ -85,7 +83,7 @@ class Helpers:
         return clean_name, False
 
     @staticmethod
-    def parse_track_name(name: str) -> Dict[str, str]:
+    def parse_track_name(name: str) -> Dict[str, Optional[str]]:
         name = re.sub(r" \(free[^)]*\)", "", name, flags=re.IGNORECASE)
         track = {"track_alt": None, "artist": None, "title": name}
         match = re.search(PATTERNS["track_name"], name)
@@ -431,7 +429,7 @@ class Metaguru(Helpers):
         track.update(self.parse_track_name(self.album_name))
         if not track.get("artist"):
             track["artist"] = self.bandcamp_albumartist
-        if NEW_BEETS:
+        if NEW_BEETS and "-" not in kwargs.get("album", ""):
             kwargs["album"] = "{} - {}".format(track["artist"], track["title"])
 
         return self._trackinfo(track, medium_total=1, **kwargs)

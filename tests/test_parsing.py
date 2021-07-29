@@ -274,12 +274,10 @@ def test_parse_various_types(release):
     guru = Metaguru(html, expected_release.media)
 
     actual_album = guru.album
-    disctitle = actual_album.tracks[0].disctitle
-    assert disctitle == expected_release.disctitle
     expected_album = expected_release.albuminfo
 
     assert hasattr(actual_album, "tracks")
-    assert len(actual_album.tracks) == expected_release.track_count
+    assert len(actual_album.tracks) == len(expected_album.tracks)
 
     expected_album.tracks.sort(key=lambda t: t.index)
     actual_album.tracks.sort(key=lambda t: t.index)
