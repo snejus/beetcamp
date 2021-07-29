@@ -89,7 +89,7 @@ class Helpers:
         match = re.search(PATTERNS["track_name"], name)
         if match:
             track = match.groupdict()
-        track["main_title"] = re.sub(r"\s?([\[(]|f(ea)?t\.).*", "", track["title"])
+        track["main_title"] = re.sub(r"\s?([\[(]|f(ea)?t\.).*", "", str(track["title"]))
         return track
 
     @staticmethod
@@ -197,18 +197,16 @@ class Metaguru(Helpers):
 
     @cached_property
     def description(self) -> str:
-        """Return album and media description if unless they start with a generic message.
+        """Return album and media description unless they start with a generic message.
         If credits exist, append them too.
         """
-        exclude = r"Includes high-quality dow.*"
         _credits = self.meta.get("creditText", "")
-        contents = [
+        parts = [
             self.meta.get("description", ""),
-            re.sub(exclude, "", self._media.get("description", "")),
+            "" if self.media_name == DEFAULT_MEDIA else self._media.get("description"),
             "Credits: " + _credits if _credits else "",
         ]
-        s = "\n - "
-        return reduce(lambda a, b: a + s + b if b else a, contents, "").replace("\r", "")
+        return reduce(lambda x, y: x + "\n - " + y, filter(truth, parts), "")
 
     @cached_property
     def album_name(self) -> str:
@@ -270,18 +268,18 @@ class Metaguru(Helpers):
         return datetime.strptime(date_part, "%d %b %Y").date()
 
     @cached_property
-    def media(self) -> str:
+    def media_name(self) -> str:
         """Return the human-readable version of the media format."""
         return MEDIA_MAP.get(self._media.get("musicReleaseFormat", ""), DEFAULT_MEDIA)
 
     @cached_property
     def disctitle(self) -> str:
         """Return medium's disc title if found."""
-        return "" if self.media == DEFAULT_MEDIA else self._media.get("name", "")
+        return "" if self.media_name == DEFAULT_MEDIA else self._media.get("name", "")
 
-    @property
+    @cached_property
     def mediums(self) -> int:
-        return self.get_vinyl_count(self.disctitle) if self.media == "Vinyl" else 1
+        return self.get_vinyl_count(self.disctitle) if self.media_name == "Vinyl" else 1
 
     @cached_property
     def catalognum(self) -> str:
@@ -365,7 +363,7 @@ class Metaguru(Helpers):
                 return next(iter(artists))
         return self.bandcamp_albumartist
 
-    @property
+    @cached_property
     def albumtype(self) -> str:
         if self.is_lp:
             return "album"
@@ -377,18 +375,18 @@ class Metaguru(Helpers):
             return "compilation"
         return "album"
 
-    @property
+    @cached_property
     def clean_album_name(self) -> str:
-        args = set(filter(truth, [self.catalognum, self.label]))
+        args = list(filter(truth, [self.catalognum, self.label]))
         if not self._singleton:
-            args.add(self.bandcamp_albumartist)
+            args.append(self.bandcamp_albumartist)
         return self.clean_up_album_name(self.album_name, *args)
 
     @property
     def _common(self) -> JSONDict:
         return dict(
             data_source=DATA_SOURCE,
-            media=self.media,
+            media=self.media_name,
             data_url=self.album_id,
             artist_id=self.artist_id,
         )
@@ -437,7 +435,7 @@ class Metaguru(Helpers):
     @property
     def album(self) -> AlbumInfo:
         """Return album for the appropriate release format."""
-        if self.media == DEFAULT_MEDIA or self.include_all_tracks:
+        if self.media_name == DEFAULT_MEDIA or self.include_all_tracks:
             filtered_tracks = self.tracks
         else:
             filtered_tracks = [t for t in self.tracks if not t["digital_only"]]

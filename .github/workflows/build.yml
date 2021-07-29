@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          python-version: ${{ matrix.python-version }}
+          # python-version: ${{ matrix.python-version }}
           # Disabling shallow clone is recommended for improving relevancy of reporting
           fetch-depth: 0
       - name: Set up Python ${{ matrix.python-version }}

@@ -14,7 +14,6 @@ pytestmark = pytest.mark.parsing
     [
         ("", "", "", ""),
         ("hello", "", "", "\n - hello"),
-        ("", "Includes high-quality download", "Thanks", "\n - Credits: Thanks"),
         ("", "sick vinyl", "", "\n - sick vinyl"),
         ("sickest vinyl", "sick vinyl", "", "\n - sickest vinyl\n - sick vinyl"),
     ],
