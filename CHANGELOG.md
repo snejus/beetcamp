@@ -3,8 +3,10 @@
 ### Updated
 
 - Bandcamp json updates:
-  + `datePublished` field now tells the correct release date so now we use it instead of
-    parsing the plain html for it.
+  + `release_date`: `datePublished` field now tells the correct release date so now we use
+    it instead of parsing the plain html.
+  + `label`: some releases embed the `recordLabel` field into the json data - it now gets
+    prioritized over the publisher name when it is available.
 
 
 ## [0.9.2] 2021-07-17

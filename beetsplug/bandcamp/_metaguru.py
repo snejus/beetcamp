@@ -224,6 +224,11 @@ class Metaguru(Helpers):
         match = re.search(r"Label:([^/,\n]+)", self.description)
         if match:
             return match.groups()[0].strip()
+
+        try:
+            return self.meta["albumRelease"][0]["recordLabel"]["name"]
+        except (KeyError, IndexError):
+            pass
         return self.meta["publisher"]["name"]
 
     @cached_property

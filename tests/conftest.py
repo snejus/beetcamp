@@ -483,7 +483,7 @@ def single_with_remixes() -> ReleaseInfo:
         albumartist=albumartist,
         albumtype="single",
         catalognum="Kulør 008",
-        label="Reece Cox",
+        label="Kulør",
         release_date=date(2021, 3, 5),
         va=False,
         country="DE",
