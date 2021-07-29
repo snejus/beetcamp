@@ -21,6 +21,7 @@ import logging
 import re
 from functools import partial
 from html import unescape
+from json.decoder import JSONDecodeError
 from operator import truth
 from typing import Any, Callable, Dict, Iterator, List, Optional, Sequence, Set
 
@@ -274,7 +275,7 @@ class BandcampPlugin(
     def handle(self, guru: Metaguru, attr: str, _id: str) -> Any:
         try:
             return getattr(guru, attr)
-        except (KeyError, ValueError, AttributeError):
+        except (KeyError, ValueError, AttributeError, JSONDecodeError):
             self._info("Failed obtaining {}", _id)
             return None
 
