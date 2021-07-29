@@ -271,6 +271,13 @@ class BandcampPlugin(
             self._exc("Unexpected error obtaining {}, please report at {}", _id, url)
             return None
 
+    def handle(self, guru: Metaguru, attr: str, _id: str) -> Any:
+        try:
+            return getattr(guru, attr)
+        except (KeyError, ValueError, AttributeError):
+            self._info("Failed obtaining {}", _id)
+            return None
+
     def get_album_info(self, url: str) -> Optional[AlbumInfo]:
         """Return an AlbumInfo object for a bandcamp album page.
         If track url is given by mistake, find and fetch the album url instead.
