@@ -7,6 +7,8 @@
     it instead of parsing the plain html.
   + `label`: some releases embed the `recordLabel` field into the json data - it now gets
     prioritized over the publisher name when it is available.
+- `track.title`: clean up `*digital only*` properly. Previously we did not account for
+  asterixes
 
 ### Fixed
 

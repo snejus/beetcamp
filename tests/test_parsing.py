@@ -108,6 +108,7 @@ def test_parse_track_name(name, expected):
         ("33 (bandcamp exclusive)", True, "33"),
         ("Tune (Someone's Remix) [Digital Bonus]", True, "Tune (Someone's Remix)"),
         ("Hello - DIGITAL ONLY", True, "Hello"),
+        ("Hello *digital bonus*", True, "Hello"),
     ],
 )
 def test_check_digital_only(name, expected_digital_only, expected_name):
