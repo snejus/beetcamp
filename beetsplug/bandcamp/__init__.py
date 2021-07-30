@@ -169,36 +169,6 @@ class BandcampPlugin(
             if self._from_bandcamp(item):
                 self.add_additional_data(item)
 
-    # self.register_listener(
-    #     "before_choose_candidate", self.before_choose_candidate_event
-    # )
-    # self.console = Console(tab_size=4)
-    # def before_choose_candidate_event(self, session, task):
-    # from beets.ui.commands import PromptChoice
-    # from rich import inspect
-    # from rich.console import Console
-    # from rich.pretty import Pretty
-    # from rich.table import Table
-    #     def print_items(_, task):
-    #         for item in task.items:
-    #         self.console.log(Pretty({key: val for (key, val) in item.items() if val}))
-
-    #     def print_candi(_, task):
-    #         candidate = task.candidates[0].info.copy()
-    #         tracks = candidate.pop("tracks")
-    #         self.console.log(
-    #             Pretty({key: val for (key, val) in candidate.items() if val})
-    #         )
-    #         for track in tracks:
-    #             self.console.log(
-    #                 Pretty({key: val for (key, val) in track.items() if val})
-    #             )
-
-    #     return [
-    #         PromptChoice("r", "pRint items", print_items),
-    #         PromptChoice("x", "Xo bar", print_candi),
-    #     ]
-
     @staticmethod
     def _from_bandcamp(clue: Union[library.Item, str]) -> bool:
         """Accepts either an item or the mb_artistid."""
