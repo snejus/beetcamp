@@ -7,11 +7,7 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
-  test:
-    strategy:
-      matrix:
-        python-version:
-          - 3.8
+  sonarcloud:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
