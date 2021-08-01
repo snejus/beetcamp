@@ -1,3 +1,10 @@
+## [0.9.4] 2021-08-xx
+
+### Updated
+
+* `track_alt`: handle `A1 - Title` and `A1 - Artist - Title` when alt index is not
+  followed by a full stop.
+
 ## [0.9.3] 2021-08-01
 
 ### Updated

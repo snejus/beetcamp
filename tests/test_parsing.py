@@ -64,6 +64,8 @@ def test_convert_title(title, expected):
         ("A1. Artist - Title", ("A1", "Artist", "Title", "Title")),
         ("A1- Artist - Title", ("A1", "Artist", "Title", "Title")),
         ("A1.- Artist - Title", ("A1", "Artist", "Title", "Title")),
+        ("A1 - Title", ("A1", None, "Title", "Title")),
+        ("B2 - Artist - Title", ("B2", "Artist", "Title", "Title")),
         ("1. Artist - Title", ("1", "Artist", "Title", "Title")),
         ("1.Artist - Title", ("1", "Artist", "Title", "Title")),
         (
