@@ -174,7 +174,7 @@
         "value": 1920
       }
     ],
-    "description": "a maverick electronic music producer, since 2000 Psykovsky has worked with a number of different solo and collaborative projects, and is nowadays acknowledged as one of the most auspicious psytrance artists - check out Psykovsky's alternative digital audio-visual releases at https://foundation.app/Psykovsky and https://www.youtube.com/channel/UCu1BnVhnFn0pcVZnkwmOAZQ",
+    "description": "a maverick electronic music producer, since 2000 Psykovsky has worked with a number of different solo and collaborative projects, and is nowadays acknowledged as one of the most auspicious psytrance artists - check out Psykovsky's alternative digital audio-visual releases at https://foundation.app/vPsykovsky and https://www.youtube.com/channel/UCu1BnVhnFn0pcVZnkwmOAZQ",
     "foundingLocation": {
       "@type": "Place",
       "name": "Niue"
@@ -187,11 +187,6 @@
         "@type": "WebPage",
         "name": "music",
         "url": "https://psykovsky.bandcamp.com/music"
-      },
-      {
-        "@type": "WebPage",
-        "name": "merch",
-        "url": "https://psykovsky.bandcamp.com/merch"
       },
       {
         "@type": "WebPage",

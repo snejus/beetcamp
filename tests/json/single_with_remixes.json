@@ -109,7 +109,7 @@
           {
             "@type": "PropertyValue",
             "name": "quantity_available",
-            "value": 35
+            "value": 34
           }
         ],
         "availability": "InStock",
@@ -181,7 +181,7 @@
       {
         "@type": "PropertyValue",
         "name": "has_policies",
-        "value": 1
+        "value": true
       },
       {
         "@type": "PropertyValue",

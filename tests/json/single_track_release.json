@@ -131,7 +131,7 @@
       {
         "@type": "PropertyValue",
         "name": "has_policies",
-        "value": 1
+        "value": true
       }
     ],
     "description": "Malmø/Cph label run by Megatech and Matriark",

@@ -160,7 +160,7 @@
       {
         "@type": "PropertyValue",
         "name": "has_policies",
-        "value": 1
+        "value": true
       },
       {
         "@type": "PropertyValue",
