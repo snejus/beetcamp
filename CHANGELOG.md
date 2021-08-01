@@ -36,6 +36,18 @@ Thanks @arogl for reporting each of the above!
 
 - `track.track_alt`: handle `A1 - Title` and `A1 - Artist - Title` when alt index is not
   followed by a full stop.
+* `track.title`: handle cases like `Artist -Title` when there is no space between the dash
+  and the title
+
+### Added
+* `track.artist`: for a remix track, append the remix author to this field such that
+
+  ```
+  Main Artist - Title (Someone Remix) ->
+    albumartist: Main Artist
+    artist: Main Artist, Someone
+    title: Title (Someone Remix)
+  ```
 
 - `track.title`:
 
