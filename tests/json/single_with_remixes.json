@@ -105,6 +105,13 @@
       "name": "Emotion 1 Vinyl",
       "offers": {
         "@type": "Offer",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "quantity_available",
+            "value": 34
+          }
+        ],
         "availability": "InStock",
         "price": 95,
         "priceCurrency": "EUR",
@@ -144,7 +151,7 @@
   "copyrightNotice": "All Rights Reserved",
   "creditText": "W/P by Reece Cox \r\nMastered by Joel Krozer, Six Bit Deep\r\nCreative direction: Najaaraq Vestbirk \r\nArtwork: Holler in the Green by Miriam Kongstad \r\nGraphic design: Spine Studio \r\n\r\nA1 Reece Cox - Emotion 1 (4:55) \r\nWritten and produced by Reece Cox. \r\n\r\nA2 Reece Cox - Emotion 1 (Ibon's Dizzy Stomp Mix) (8:44) \r\nRemix by DJ Ibon.\r\n\r\nB1 Reece Cox - Emotion 1 (Parris Remix) (5:40) \r\nRemix by Dwayne Parris-Robinson, mixed by Call Super. \r\n\r\nB2 Reece Cox - Emotion 1 (Call Super Remix) (6.40) \r\nRemix by Call Super. \r\n\r\nB3 Reece Cox - Emotion 1 (Upsammy Remix) (4:26) \r\nRemix by Thessa Torsing.",
   "dateModified": "09 Apr 2021 07:41:27 GMT",
-  "datePublished": "29 Jan 2021 07:46:31 GMT",
+  "datePublished": "05 Mar 2021 00:00:00 GMT",
   "image": "https://f4.bcbits.com/img/a0287692048_10.jpg",
   "keywords": [
     "Electronic",
@@ -168,8 +175,28 @@
       },
       {
         "@type": "PropertyValue",
+        "name": "has_any_downloads",
+        "value": true
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "has_policies",
+        "value": true
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_height",
+        "value": 2000
+      },
+      {
+        "@type": "PropertyValue",
         "name": "image_id",
         "value": 21721983
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_width",
+        "value": 2000
       }
     ],
     "foundingLocation": {

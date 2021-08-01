@@ -121,7 +121,7 @@
   },
   "copyrightNotice": "All Rights Reserved",
   "dateModified": "15 Dec 2020 12:25:06 GMT",
-  "datePublished": "29 Nov 2020 10:44:02 GMT",
+  "datePublished": "29 Nov 2020 00:00:00 GMT",
   "description": "Mastering by Eric Reivolp, Artwork by Nick Cocozza",
   "image": "https://f4.bcbits.com/img/a4292881830_10.jpg",
   "keywords": [
@@ -149,8 +149,33 @@
       },
       {
         "@type": "PropertyValue",
+        "name": "has_any_downloads",
+        "value": true
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "has_download_codes",
+        "value": true
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "has_policies",
+        "value": true
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_height",
+        "value": 2400
+      },
+      {
+        "@type": "PropertyValue",
         "name": "image_id",
         "value": 17543303
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_width",
+        "value": 3000
       }
     ],
     "description": "-ism\nɪz(ə)m\n\n.a distinctive practice, system, or philosophy, typically a political ideology or an artistic movement.",

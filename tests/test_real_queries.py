@@ -97,3 +97,12 @@ def test_singleton_cheat_mode(single_track_release):
     candidates = pl.item_candidates(item, expected.artist, item.title)
     track = next(candidates)
     assert vars(track) == vars(expected)
+
+
+@pytest.mark.parametrize("method", ["album_for_id", "track_for_id"])
+def test_handle_non_bandcamp_url(method):
+    """The plugin should not break if a non-bandcamp URL is presented."""
+    pl = BandcampPlugin()
+    url = "https://www.discogs.com/Nightwish-Angels-Fall-First/release/2709470"
+    album = getattr(pl, method)(url)
+    assert album is None

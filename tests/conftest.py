@@ -1,7 +1,6 @@
 """Data prep / fixtures for tests."""
 from dataclasses import dataclass
 from datetime import date
-from datetime import datetime as dt
 from typing import Optional, Tuple
 
 import pytest
@@ -9,21 +8,14 @@ from beets.autotag.hooks import AlbumInfo, TrackInfo
 from beetsplug.bandcamp._metaguru import DATA_SOURCE, DEFAULT_MEDIA, NEW_BEETS, OFFICIAL
 
 
-@dataclass  # pylint: disable=too-many-instance-attributes
+@dataclass
 class ReleaseInfo:
-    html_release_date = ""
     album_id: str
     artist_id: str
-    track_count: int
     media: str
     disctitle: Optional[str]
     singleton = None  # type: TrackInfo
     albuminfo = None  # type: AlbumInfo
-
-    def set_html_release_date(self, _date: date):
-        self.html_release_date = "released {:0>2d} {} {}".format(
-            _date.day, dt.strftime(dt.strptime(str(_date.month), "%m"), "%B"), _date.year
-        )
 
     def track_data(self, **kwargs) -> TrackInfo:
         kget = kwargs.get
@@ -41,12 +33,13 @@ class ReleaseInfo:
             media=self.media,
             medium=1,
             medium_index=kget("index"),
-            medium_total=self.track_count,
+            medium_total=kget("medium_total"),
             disctitle=self.disctitle,
         )
 
     def set_singleton(self, artist: str, title: str, length: int, **kwargs) -> None:
         data = self.track_data(
+            medium_total=1,
             title=title,
             track_id=self.album_id,
             artist=artist,
@@ -56,11 +49,12 @@ class ReleaseInfo:
         if NEW_BEETS:
             data.update(**kwargs)
         self.singleton = TrackInfo(**data)
-        self.set_html_release_date(date(kwargs["year"], kwargs["month"], kwargs["day"]))
 
     def set_albuminfo(self, tracks, **kwargs):
-        fields = ["index", "title_id", "artist", "title", "length", "alt"]
-        iter_tracks = [zip(fields, (idx, *track)) for idx, track in enumerate(tracks, 1)]
+        fields = ["medium_total", "index", "title_id", "artist", "title", "length", "alt"]
+        iter_tracks = [
+            zip(fields, (len(tracks), idx, *track)) for idx, track in enumerate(tracks, 1)
+        ]
         self.albuminfo = AlbumInfo(
             album=kwargs["album"],
             album_id=self.album_id,
@@ -81,7 +75,6 @@ class ReleaseInfo:
             data_source=DATA_SOURCE,
             tracks=[TrackInfo(**self.track_data(**dict(t))) for t in iter_tracks],
         )
-        self.set_html_release_date(kwargs["release_date"])
 
 
 @pytest.fixture
@@ -90,7 +83,6 @@ def single_track_release() -> ReleaseInfo:
     info = ReleaseInfo(
         artist_id="https://mega-tech.bandcamp.com",
         album_id="https://mega-tech.bandcamp.com/track/matriark-arangel",
-        track_count=1,
         media=DEFAULT_MEDIA,
         disctitle=None,
     )
@@ -118,7 +110,6 @@ def single_only_track_name() -> ReleaseInfo:
     info = ReleaseInfo(
         artist_id="https://gutkeinforu.bandcamp.com",
         album_id="https://gutkeinforu.bandcamp.com/track/oenera",
-        track_count=1,
         media=DEFAULT_MEDIA,
         disctitle=None,
     )
@@ -148,7 +139,6 @@ def single_track_album_search() -> Tuple[str, ReleaseInfo]:
     info = ReleaseInfo(
         artist_id="https://sinensis-ute.bandcamp.com",
         album_id="https://sinensis-ute.bandcamp.com/album/sine03",
-        track_count=2,
         media="CD",
         disctitle="CD",
     )
@@ -178,7 +168,6 @@ def album() -> ReleaseInfo:
     info = ReleaseInfo(
         artist_id="https://ute-rec.bandcamp.com",
         album_id="https://ute-rec.bandcamp.com/album/ute004",
-        track_count=4,
         media="Vinyl",
         disctitle='12" Vinyl',
     )
@@ -217,7 +206,6 @@ def album_with_track_alt() -> ReleaseInfo:
     info = ReleaseInfo(
         artist_id=artist_id,
         album_id=f"{artist_id}/album/fld001-gareth-wild-common-assault-ep",
-        track_count=6,
         media="Vinyl",
         disctitle="FLD001 - Common Assault EP",
     )
@@ -286,10 +274,10 @@ def compilation() -> ReleaseInfo:
     info = ReleaseInfo(
         artist_id="https://ismusberlin.bandcamp.com",
         album_id="https://ismusberlin.bandcamp.com/album/ismva0033",
-        track_count=13,
         media=DEFAULT_MEDIA,
         disctitle=None,
     )
+    albumartist = "Various Artists"
     tracks = [
         (
             "zebar-zimo-wish-granter-original-mix",
@@ -305,11 +293,88 @@ def compilation() -> ReleaseInfo:
             361,
             None,
         ),
+        (
+            "less-distress-wheres-my-arc-paulie-original-mix",
+            "Less Distress",
+            "Where's My Arc, Paulie? (Original Mix)",
+            313,
+            None,
+        ),
+        (
+            "lucas-martins-south-original-mix",
+            "Lucas Martins",
+            "South (Original Mix)",
+            388,
+            None,
+        ),
+        (
+            "pro-athlete-floorcrusher-original-mix",
+            "Pro Athlete",
+            "Floorcrusher (Original Mix)",
+            330,
+            None,
+        ),
+        (
+            "zwyrg-point-of-no-return-original-mix",
+            "zwyrg",
+            "Point Of No Return (Original Mix)",
+            426,
+            None,
+        ),
+        (
+            "ndym-succession-original-mix",
+            "ΣNDYM ",
+            "Succession (Original Mix)",
+            414,
+            None,
+        ),
+        (
+            "kl-ne-woke-up-in-a-broken-world-original-mix",
+            "KLØNE",
+            "Woke Up In A Broken World (Original Mix)",
+            390,
+            None,
+        ),
+        (
+            "i-e-diva-plavalaguna-original-mix",
+            "I.E",
+            "Diva Plavalaguna (Original Mix)",
+            370,
+            None,
+        ),
+        (
+            "dj-g2g-darkbreak-escape-original-mix",
+            "DJ G2G",
+            "Darkbreak Escape (Original Mix)",
+            374,
+            None,
+        ),
+        (
+            "mr-free-the-4th-room-original-mix",
+            "Mr. Free",
+            "The 4th Room (Original Mix)",
+            344,
+            None,
+        ),
+        (
+            "abem-black-powder-original-mix",
+            "ABEM",
+            "Black Powder (Original Mix)",
+            465,
+            None,
+        ),
+        (
+            "dj-reiz-plan-9-from-outer-space-original-mix",
+            "DJ Reiz",
+            "Plan 9 From Outer Space (Original Mix)",
+            408,
+            None,
+        ),
     ]
     info.set_albuminfo(
         tracks,
         album="ISMVA003.3",
-        albumartist="Various Artists",
+        albumartist=albumartist,
         albumtype="compilation",
         catalognum="ISMVA003.3",
         label="Ismus",
@@ -327,7 +392,6 @@ def artist_mess() -> ReleaseInfo:
     info = ReleaseInfo(
         artist_id="https://psykovsky.bandcamp.com",
         album_id="https://psykovsky.bandcamp.com/album/ksolntsu",
-        track_count=15,
         media=DEFAULT_MEDIA,
         disctitle=None,
     )
@@ -371,7 +435,6 @@ def ep() -> ReleaseInfo:
     info = ReleaseInfo(
         artist_id="https://fallingapart.bandcamp.com",
         album_id="https://fallingapart.bandcamp.com/album/fa010-kickdown-vienna",
-        track_count=4,
         media="Vinyl",
         disctitle='12" Vinyl',
     )
@@ -426,7 +489,6 @@ def description_meta() -> ReleaseInfo:
     info = ReleaseInfo(
         artist_id="https://diffusereality.bandcamp.com",
         album_id="https://diffusereality.bandcamp.com/album/francois-dillinger-icosahedrone-lp",  # noqa
-        track_count=10,
         media="CD",
         disctitle="Francois Dillinger - Icosahedrone [LP]",
     )
@@ -451,7 +513,7 @@ def description_meta() -> ReleaseInfo:
         label="Diffuse Reality",
         release_date=date(2021, 5, 5),
         va=False,
-        country="SI",
+        country="ES",
         mediums=1,
     )
     return info
@@ -463,7 +525,6 @@ def single_with_remixes() -> ReleaseInfo:
     info = ReleaseInfo(
         artist_id="https://reececox.bandcamp.com",
         album_id="https://reececox.bandcamp.com/album/emotion-1-kul-r-008",
-        track_count=5,
         media="Vinyl",
         disctitle="Emotion 1 Vinyl",
     )
@@ -492,7 +553,7 @@ def single_with_remixes() -> ReleaseInfo:
         albumartist=albumartist,
         albumtype="single",
         catalognum="Kulør 008",
-        label="Reece Cox",
+        label="Kulør",
         release_date=date(2021, 3, 5),
         va=False,
         country="DE",

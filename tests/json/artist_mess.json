@@ -123,7 +123,7 @@
   },
   "copyrightNotice": "Various",
   "dateModified": "12 Jul 2018 19:50:45 GMT",
-  "datePublished": "12 Feb 2015 14:58:55 GMT",
+  "datePublished": "12 Feb 2015 00:00:00 GMT",
   "image": "https://f4.bcbits.com/img/a1199755283_10.jpg",
   "keywords": [
     "Electronic",
@@ -150,11 +150,31 @@
       },
       {
         "@type": "PropertyValue",
+        "name": "has_any_downloads",
+        "value": true
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "has_download_codes",
+        "value": true
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_height",
+        "value": 1920
+      },
+      {
+        "@type": "PropertyValue",
         "name": "image_id",
         "value": 21724693
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_width",
+        "value": 1920
       }
     ],
-    "description": "a maverick electronic music producer, since 2000 Psykovsky has worked with a number of different solo and collaborative projects, and is nowadays acknowledged as one of the most auspicious psytrance artists - check out Psykovsky's alternative digital audio-visual releases at https://foundation.app/Psykovsky and https://www.youtube.com/channel/UCu1BnVhnFn0pcVZnkwmOAZQ",
+    "description": "a maverick electronic music producer, since 2000 Psykovsky has worked with a number of different solo and collaborative projects, and is nowadays acknowledged as one of the most auspicious psytrance artists - check out Psykovsky's alternative digital audio-visual releases at https://foundation.app/vPsykovsky and https://www.youtube.com/channel/UCu1BnVhnFn0pcVZnkwmOAZQ",
     "foundingLocation": {
       "@type": "Place",
       "name": "Niue"

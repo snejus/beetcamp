@@ -128,7 +128,7 @@
   },
   "copyrightNotice": "All Rights Reserved",
   "dateModified": "27 Feb 2021 11:20:21 GMT",
-  "datePublished": "07 Sep 2020 16:18:04 GMT",
+  "datePublished": "09 Oct 2020 00:00:00 GMT",
   "image": "https://f4.bcbits.com/img/a3742084072_10.jpg",
   "keywords": [
     "Chicago",
@@ -156,8 +156,33 @@
       },
       {
         "@type": "PropertyValue",
+        "name": "has_any_downloads",
+        "value": true
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "has_download_codes",
+        "value": true
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "has_policies",
+        "value": true
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_height",
+        "value": 480
+      },
+      {
+        "@type": "PropertyValue",
         "name": "image_id",
         "value": 15313255
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_width",
+        "value": 480
       }
     ],
     "description": "vinyl record label / disc-jockey\n\nbooking (masha): goldfishage@gmail.com",
