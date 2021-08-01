@@ -93,6 +93,11 @@ def test_convert_title(title, expected):
             (None, "19.85", "Colapso Inevitable", "Colapso Inevitable"),
         ),
         ("E7-E5", (None, None, "E7-E5", "E7-E5")),
+        (
+            "Lacchesi - UNREALNUMBERS - MK4 (Lacchesi Remix)",
+            (None, "UNREALNUMBERS", "MK4 (Lacchesi Remix)", "MK4"),
+        ),
+        ("UNREALNUMBERS -Karaburan", (None, "UNREALNUMBERS", "Karaburan", "Karaburan")),
     ],
 )
 def test_parse_track_name(name, expected):
@@ -267,6 +272,7 @@ def test_parse_single_track_release(release):
             "artist_mess",
             "description_meta",
             "single_with_remixes",
+            "remix_artists",
         ],
     ),
     indirect=["release"],

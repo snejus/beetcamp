@@ -1,0 +1,440 @@
+{
+  "@context": "https://schema.org",
+  "@id": "https://maisoncloserecords.bandcamp.com/album/unrealnumbers-unseen-ep-varya-karpova-lacchesi-remixes",
+  "@type": "MusicAlbum",
+  "additionalProperty": [
+    {
+      "@type": "PropertyValue",
+      "name": "art_id",
+      "value": 1571280308
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "featured_track_num",
+      "value": 1
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "license_name",
+      "value": "all_rights_reserved"
+    }
+  ],
+  "albumRelease": [
+    {
+      "@id": "https://maisoncloserecords.bandcamp.com/album/unrealnumbers-unseen-ep-varya-karpova-lacchesi-remixes#a832154543",
+      "@type": [
+        "MusicRelease",
+        "Product"
+      ],
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "item_id",
+          "value": 832154543
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "item_type",
+          "value": "a"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_name",
+          "value": "Digital"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "art_id",
+          "value": 1571280308
+        }
+      ],
+      "description": "Includes high-quality download in MP3, FLAC and more. Paying supporters also get unlimited streaming via the free Bandcamp app.",
+      "image": [
+        "https://f4.bcbits.com/img/a1571280308_10.jpg"
+      ],
+      "musicReleaseFormat": "DigitalFormat",
+      "name": "UNREALNUMBERS - Unseen EP (Varya Karpova & Lacchesi Remixes)"
+    },
+    {
+      "@id": "https://maisoncloserecords.bandcamp.com/track/unrealnumbers-unseen#t3030790431",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://maisoncloserecords.bandcamp.com/track/unrealnumbers-mk4#t987420966",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://maisoncloserecords.bandcamp.com/track/unrealnumbers-karaburan#t3850977436",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://maisoncloserecords.bandcamp.com/track/unrealnumbers-rekon#t628289803",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://maisoncloserecords.bandcamp.com/track/unrealnumbers-unseen-varya-karpova-remix#t3533046617",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://maisoncloserecords.bandcamp.com/track/unrealnumbers-mk4-lacchesi-remix#t359910911",
+      "@type": "MusicRelease"
+    }
+  ],
+  "albumReleaseType": "AlbumRelease",
+  "byArtist": {
+    "@id": "https://maisoncloserecords.bandcamp.com",
+    "@type": "MusicGroup",
+    "name": "Maison Close"
+  },
+  "copyrightNotice": "All Rights Reserved",
+  "dateModified": "11 Jun 2021 08:55:23 GMT",
+  "datePublished": "11 Jun 2021 00:00:00 GMT",
+  "description": "Supported by Dax J, SPFDJ, Wallis, u.r.trax, Rezystor, DYEN, VII Circle, VII Circle & more ...",
+  "image": "https://f4.bcbits.com/img/a1571280308_10.jpg",
+  "keywords": [
+    "Electronic",
+    "techno",
+    "Paris"
+  ],
+  "name": "UNREALNUMBERS - Unseen EP (Varya Karpova & Lacchesi Remixes)",
+  "numTracks": 6,
+  "publisher": {
+    "@id": "https://maisoncloserecords.bandcamp.com",
+    "@type": "MusicGroup",
+    "additionalProperty": [
+      {
+        "@type": "PropertyValue",
+        "name": "band_id",
+        "value": 1994130301
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "currency",
+        "value": "EUR"
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "has_any_downloads",
+        "value": true
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_height",
+        "value": 1081
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_id",
+        "value": 23882550
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_width",
+        "value": 1081
+      }
+    ],
+    "foundingLocation": {
+      "@type": "Place",
+      "name": "Paris, France"
+    },
+    "genre": "https://bandcamp.com/tag/electronic",
+    "image": "https://f4.bcbits.com/img/0023882550_10.jpg",
+    "mainEntityOfPage": [
+      {
+        "@type": "WebPage",
+        "name": "Facebook",
+        "url": "https://www.facebook.com/maisoncloserecords"
+      }
+    ],
+    "name": "Maison Close",
+    "subjectOf": [
+      {
+        "@type": "WebPage",
+        "name": "music",
+        "url": "https://maisoncloserecords.bandcamp.com/music"
+      },
+      {
+        "@type": "WebPage",
+        "name": "merch",
+        "url": "https://maisoncloserecords.bandcamp.com/merch"
+      },
+      {
+        "@type": "WebPage",
+        "name": "community",
+        "url": "https://maisoncloserecords.bandcamp.com/community"
+      }
+    ]
+  },
+  "track": {
+    "@type": "ItemList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://maisoncloserecords.bandcamp.com/track/unrealnumbers-unseen",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 3030790431
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 383.662
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "file_mp3-128",
+              "value": "https://t4.bcbits.com/stream/4543359829e4d26f5212fd825c294987/mp3-128/3030790431?p=0&ts=1627912448&t=c8924f50ca0582800d8a6e213ae2000ee2087f9b&token=1627912448_136d3fd8a6f4ad443dbd16c733b7a78dcf7ee36c"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 1
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H06M23S",
+          "name": "UNREALNUMBERS - Unseen"
+        },
+        "position": 1
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://maisoncloserecords.bandcamp.com/track/unrealnumbers-mk4",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 987420966
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 352.448
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "file_mp3-128",
+              "value": "https://t4.bcbits.com/stream/5d005520f2bef0553b8c547da8eb64bd/mp3-128/987420966?p=0&ts=1627912448&t=e823fecac94d68943ea9c52d613f57f0927b6e8f&token=1627912448_526ea830f1c1544408e769aaad1086491e896e3f"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 2
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H05M52S",
+          "name": "UNREALNUMBERS - MK4"
+        },
+        "position": 2
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://maisoncloserecords.bandcamp.com/track/unrealnumbers-karaburan",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 3850977436
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 341.408
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "file_mp3-128",
+              "value": "https://t4.bcbits.com/stream/d9422bc6afda053acbfdb6575000055f/mp3-128/3850977436?p=0&ts=1627912448&t=3de03f8b8997c093e373dd1d80c8944b1253e724&token=1627912448_a41277aecd9e8804b53508a4a458dc05876eb2a0"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 3
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H05M41S",
+          "name": "UNREALNUMBERS -Karaburan"
+        },
+        "position": 3
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://maisoncloserecords.bandcamp.com/track/unrealnumbers-rekon",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 628289803
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 340.699
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "file_mp3-128",
+              "value": "https://t4.bcbits.com/stream/fe26e802dfa97481d030377219eec14f/mp3-128/628289803?p=0&ts=1627912448&t=833acec180af39484a71b05f9b710b6798ebfde3&token=1627912448_989cf026430c785b9a7e4adaafe4b2d39ac3a68c"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 4
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H05M40S",
+          "name": "UNREALNUMBERS - Rekon"
+        },
+        "position": 4
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://maisoncloserecords.bandcamp.com/track/unrealnumbers-unseen-varya-karpova-remix",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 3533046617
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 362.774
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "file_mp3-128",
+              "value": "https://t4.bcbits.com/stream/4a21cd485649ca10d5449d15257b860f/mp3-128/3533046617?p=0&ts=1627912448&t=c6142e598140c998dbe896f8a48bf81e5e3cd663&token=1627912448_9dbe5cf3537b28a8eec4c5126c2eaf262de2d09a"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 5
+            }
+          ],
+          "byArtist": {
+            "@type": "MusicGroup",
+            "name": "Varya Karpova"
+          },
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H06M02S",
+          "name": "UNREALNUMBERS - Unseen (Varya Karpova Remix)"
+        },
+        "position": 5
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://maisoncloserecords.bandcamp.com/track/unrealnumbers-mk4-lacchesi-remix",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 359910911
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 350.897
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "file_mp3-128",
+              "value": "https://t4.bcbits.com/stream/9c52f71a1f7f56bdf20bde65f44d7aa7/mp3-128/359910911?p=0&ts=1627912448&t=d1ed78faf7c7f1f287eaad62719961419c5d962d&token=1627912448_d0ed20a442588e53b3b4d6a5d856f02aedafddab"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 6
+            }
+          ],
+          "byArtist": {
+            "@type": "MusicGroup",
+            "name": "Lacchesi"
+          },
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H05M50S",
+          "name": "UNREALNUMBERS - MK4 (Lacchesi Remix)"
+        },
+        "position": 6
+      }
+    ],
+    "numberOfItems": 6
+  }
+}

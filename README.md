@@ -30,7 +30,6 @@ Navigate to your `beets` virtual environment and install the plug-in with
 ```
 
 
-
 # Configuration
 
 ## Example
@@ -45,6 +44,7 @@ bandcamp:
       - lyrics
       - comments
 ```
+
 ---
 
 #### `preferred_media`
@@ -115,15 +115,6 @@ bandcamp:
       - lyrics
       - comments
 ```
-
----
-
->#### ~~`lyrics`~~
->
->- ~~Default: `false`.~~
->
->~~Add lyrics to the tracks if they are available.~~
-- deprecated - see `exclude_extra_fields` above
 
 # Usage
 

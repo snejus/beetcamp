@@ -560,3 +560,47 @@ def single_with_remixes() -> ReleaseInfo:
         mediums=1,
     )
     return info
+
+
+@pytest.fixture
+def remix_artists() -> ReleaseInfo:
+    albumartist = "UNREALNUMBERS"
+    info = ReleaseInfo(
+        artist_id="https://maisoncloserecords.bandcamp.com",
+        album_id="https://maisoncloserecords.bandcamp.com/album/unrealnumbers-unseen-ep-varya-karpova-lacchesi-remixes",  # noqa
+        media="Digital Media",
+        disctitle=None,
+    )
+    tracks = [
+        ("unrealnumbers-unseen", albumartist, "Unseen", 383, None),
+        ("unrealnumbers-mk4", albumartist, "MK4", 352, None),
+        ("unrealnumbers-karaburan", albumartist, "Karaburan", 341, None),
+        ("unrealnumbers-rekon", albumartist, "Rekon", 340, None),
+        (
+            "unrealnumbers-unseen-varya-karpova-remix",
+            albumartist + ", Varya Karpova",
+            "Unseen (Varya Karpova Remix)",
+            362,
+            None,
+        ),
+        (
+            "unrealnumbers-mk4-lacchesi-remix",
+            albumartist + ", Lacchesi",
+            "MK4 (Lacchesi Remix)",
+            350,
+            None,
+        ),
+    ]
+    info.set_albuminfo(
+        tracks,
+        album="Unseen (Varya Karpova & Lacchesi Remixes)",
+        albumartist=albumartist,
+        albumtype="ep",
+        catalognum="",
+        label="Maison Close",
+        release_date=date(2021, 6, 11),
+        va=False,
+        country="FR",
+        mediums=1,
+    )
+    return info

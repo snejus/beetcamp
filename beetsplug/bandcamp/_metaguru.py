@@ -48,7 +48,7 @@ PATTERNS: Dict[str, Pattern] = {
     "track_name": re.compile(
         r"""
 ((?P<track_alt>(^[ABCDEFGH]{1,3}[0-6]|^\d)\d?)\s?[.-]+\s?(?=[^\d]))?
-(\s?(?P<artist>[^-]*)(\s-\s))?
+(\s?(?P<artist>[^-]*)(\s-\s?))?
 (?P<title>(\b([^\s]-|-[^\s]|[^-])+$))""",
         re.VERBOSE,
     ),
@@ -318,7 +318,14 @@ class Metaguru(Helpers):
                 **self.parse_track_name(name),
             )
             track["medium_index"] = track["index"]
-            track["artist"] = raw_item.get("byArtist", {}).get("name", track["artist"])
+            if "byArtist" in raw_item:
+                remix_artist = raw_item["byArtist"]["name"]
+                current_artist = track.get("artist")
+                if current_artist:
+                    track["artist"] = f"{current_artist}, {remix_artist}"
+                else:
+                    track["artist"] = remix_artist
+
             if not track["artist"]:
                 track["artist"] = self.bandcamp_albumartist
             tracks.append(track)
@@ -327,7 +334,7 @@ class Metaguru(Helpers):
 
     @cached_property
     def track_artists(self) -> Set[str]:
-        ignore = r" f(ea)?t\. .*"
+        ignore = r",.*| f(ea)?t\. .*"
         artists = set(re.sub(ignore, "", t.get("artist") or "") for t in self.tracks)
         artists.discard("")
         return artists
@@ -379,7 +386,7 @@ class Metaguru(Helpers):
     def clean_album_name(self) -> str:
         args = list(filter(truth, [self.catalognum, self.label]))
         if not self._singleton:
-            args.append(self.bandcamp_albumartist)
+            args.append(self.albumartist)
         return self.clean_up_album_name(self.album_name, *args)
 
     @property
