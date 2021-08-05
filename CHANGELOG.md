@@ -39,7 +39,7 @@ Thanks @arogl for reporting each of the above!
 * `track.title`: handle cases like `Artist -Title` when there is no space between the dash
   and the title
 
-### Added
+### Updated
 * `track.artist`: in rare cases when bandcamp specify that track artist **is the author of the remix (not the albumartist)**, append the remix author to the artist field such that
 
   ```
