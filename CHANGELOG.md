@@ -7,7 +7,7 @@
 * `track.title`: handle cases like `Artist -Title` when there is no space between the dash
   and the title
 
-### Added
+### Updated
 * `track.artist`: in rare cases when bandcamp specify that track artist **is the author of the remix (not the albumartist)**, append the remix author to the artist field such that
 
   ```
@@ -16,6 +16,8 @@
     artist: Main Artist, Someone
     title: Title (Someone Remix)
   ```
+
+* `catalognum`: do not use **VA[0-9]+** as a valid catalognum.
 
 ## [0.9.3] 2021-08-01
 

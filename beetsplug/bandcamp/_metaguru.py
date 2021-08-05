@@ -42,7 +42,9 @@ PATTERNS: Dict[str, Pattern] = {
     "desc_catalognum": re.compile(rf"{_catalognum_header} ?({_catalognum})"),
     "quick_catalognum": re.compile(rf"\[{_catalognum}\]"),
     "catalognum": re.compile(rf"^{_catalognum}|{_catalognum}$"),
-    "catalognum_excl": re.compile(r"(?i:vol(ume)?|artists)|202[01]|(^|\s)C\d\d|\d+/\d+"),
+    "catalognum_excl": re.compile(
+        r"(?i:vol(ume)?|artists|\bva\d+)|202[01]|(^|\s)C\d\d|\d+/\d+"
+    ),
     "digital": re.compile(rf"^DIGI (\d+\.\s?)?|(?i:{_exclusive})"),
     "lyrics": re.compile(r'"lyrics":({[^}]*})'),
     "track_name": re.compile(
@@ -224,7 +226,9 @@ class Metaguru(Helpers):
             "" if self.media_name == DEFAULT_MEDIA else self._media.get("description"),
             "Credits: " + _credits if _credits else "",
         ]
-        return reduce(lambda x, y: x + "\n - " + y, filter(truth, parts), "").replace("\r", "")
+        return reduce(lambda x, y: f"{x}\n - {y}", filter(truth, parts), "").replace(
+            "\r", ""
+        )
 
     @cached_property
     def album_name(self) -> str:

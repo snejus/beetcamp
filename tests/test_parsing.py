@@ -193,6 +193,8 @@ def test_parse_country(name, expected):
         ("UTC-003", "", "Cat Nr.: TE0029", "TE0029"),
         ("UTC-003", "", "Catalogue:CTU-300", "CTU-300"),
         ("", "LP | ostgutlp31", "", "OSTGUTLP31"),
+        ("Album VA001", "", "", ""),
+        ("Album MVA001", "", "", "MVA001"),
     ],
 )
 def test_parse_catalognum(album, disctitle, description, expected):
