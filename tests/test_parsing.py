@@ -106,6 +106,21 @@ def test_parse_track_name(name, expected):
 
 
 @pytest.mark.parametrize(
+    ("parsed_artist", "item", "albumartist", "expected"),
+    [
+        (None, {}, "Albumartist", "Albumartist"),
+        ("", {}, "Albumartist", "Albumartist"),
+        ("Parsed", {}, "Albumartist", "Parsed"),
+        ("Parsed", {"byArtist": {"name": "Official"}}, "Albumartist", "Parsed, Official"),
+        ("Parsed", {"byArtist": {"name": "Parsed"}}, "Albumartist", "Parsed"),
+        (None, {"byArtist": {"name": "Official"}}, "Albumartist", "Official"),
+    ],
+)
+def test_determine_track_artist(parsed_artist, item, albumartist, expected):
+    assert Metaguru.determine_track_artist(parsed_artist, item, albumartist) == expected
+
+
+@pytest.mark.parametrize(
     ("name", "expected_digital_only", "expected_name"),
     [
         ("Artist - Track [Digital Bonus]", True, "Artist - Track"),

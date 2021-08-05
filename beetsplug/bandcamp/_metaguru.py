@@ -93,6 +93,24 @@ class Helpers:
         return track
 
     @staticmethod
+    def determine_track_artist(
+        parsed_artist: Optional[str], raw_track: JSONDict, albumartist: str
+    ) -> str:
+        """If bandcamp specifies it, return the official artist, or append it to the
+        parsed artist (remix artist). Otherwise, return the parsed artist. If we did not
+        find one, default to the albumartist.
+        """
+        if "byArtist" in raw_track:
+            official_artist = raw_track["byArtist"]["name"]
+            if parsed_artist and parsed_artist != official_artist:
+                return f"{parsed_artist}, {official_artist}"
+            return official_artist
+
+        if parsed_artist:
+            return parsed_artist
+        return albumartist
+
+    @staticmethod
     def parse_catalognum(album: str, disctitle: str, description: str) -> str:
         for pattern, source in [
             (PATTERNS["desc_catalognum"], description),
@@ -206,7 +224,7 @@ class Metaguru(Helpers):
             "" if self.media_name == DEFAULT_MEDIA else self._media.get("description"),
             "Credits: " + _credits if _credits else "",
         ]
-        return reduce(lambda x, y: x + "\n - " + y, filter(truth, parts), "")
+        return reduce(lambda x, y: x + "\n - " + y, filter(truth, parts), "").replace("\r", "")
 
     @cached_property
     def album_name(self) -> str:
@@ -318,16 +336,10 @@ class Metaguru(Helpers):
                 **self.parse_track_name(name),
             )
             track["medium_index"] = track["index"]
-            if "byArtist" in raw_item:
-                remix_artist = raw_item["byArtist"]["name"]
-                current_artist = track.get("artist")
-                if current_artist:
-                    track["artist"] = f"{current_artist}, {remix_artist}"
-                else:
-                    track["artist"] = remix_artist
+            track["artist"] = self.determine_track_artist(
+                track["artist"], raw_item, self.bandcamp_albumartist
+            )
 
-            if not track["artist"]:
-                track["artist"] = self.bandcamp_albumartist
             tracks.append(track)
 
         return tracks
