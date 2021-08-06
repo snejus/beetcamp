@@ -39,6 +39,11 @@
         },
         {
           "@type": "PropertyValue",
+          "name": "selling_band_id",
+          "value": 3338267481
+        },
+        {
+          "@type": "PropertyValue",
           "name": "type_name",
           "value": "Digital"
         },
@@ -86,6 +91,11 @@
         },
         {
           "@type": "PropertyValue",
+          "name": "selling_band_id",
+          "value": 3338267481
+        },
+        {
+          "@type": "PropertyValue",
           "name": "type_name",
           "value": "Vinyl LP"
         },
@@ -95,6 +105,11 @@
           "value": [
             23426665
           ]
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_id",
+          "value": 2
         }
       ],
       "description": "Vinyl is expected later in March.\nPostage price includes tracking\n\nPlease be aware that we are still experiencing covid related issues with shipping companies. The package might therefore take longer than usual to arrive",
@@ -114,7 +129,7 @@
         ],
         "availability": "InStock",
         "price": 95,
-        "priceCurrency": "EUR",
+        "priceCurrency": "DKK",
         "priceSpecification": {
           "minPrice": 95
         },

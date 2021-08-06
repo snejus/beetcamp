@@ -44,6 +44,11 @@
         },
         {
           "@type": "PropertyValue",
+          "name": "selling_band_id",
+          "value": 2663533860
+        },
+        {
+          "@type": "PropertyValue",
           "name": "type_name",
           "value": "Digital"
         },

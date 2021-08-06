@@ -23,7 +23,7 @@
 JQARGS=(--sort-keys 'del(.comment, .sponsor, .albumRelease[0].offers)')
 
 get_json () {
-  curl -s "$1" | grep datePubl | jq "${JQARGS[@]}"
+  curl -sL "$1" | grep dateModif | jq "${JQARGS[@]}"
 }
 
 get_human_json () {

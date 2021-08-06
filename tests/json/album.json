@@ -39,6 +39,11 @@
         },
         {
           "@type": "PropertyValue",
+          "name": "selling_band_id",
+          "value": 788052312
+        },
+        {
+          "@type": "PropertyValue",
           "name": "type_name",
           "value": "Digital"
         },
@@ -74,6 +79,11 @@
         },
         {
           "@type": "PropertyValue",
+          "name": "selling_band_id",
+          "value": 788052312
+        },
+        {
+          "@type": "PropertyValue",
           "name": "type_name",
           "value": "Vinyl LP"
         },
@@ -84,6 +94,11 @@
             22500386,
             22500378
           ]
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_id",
+          "value": 2
         }
       ],
       "image": [

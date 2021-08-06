@@ -39,6 +39,11 @@
         },
         {
           "@type": "PropertyValue",
+          "name": "selling_band_id",
+          "value": 1614229409
+        },
+        {
+          "@type": "PropertyValue",
           "name": "type_name",
           "value": "Digital"
         },
@@ -74,6 +79,11 @@
         },
         {
           "@type": "PropertyValue",
+          "name": "selling_band_id",
+          "value": 1614229409
+        },
+        {
+          "@type": "PropertyValue",
           "name": "type_name",
           "value": "Other Vinyl"
         },
@@ -86,6 +96,11 @@
             21712022,
             21712024
           ]
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_id",
+          "value": 18
         }
       ],
       "description": "For the inaugural EP, FOLD resident Gareth Wild presents ‘Common Assault’. With metallic tubular synthesis, cut-throat percussion and rolling rhythms, this EP is an effective and essential piece of material demonstrating all angles of Techno, immersive to peak-time.\n\nThe release features three original tracks and two locked grooves from Gareth with stripped back, dark-side remix work from Madrid’s very own Roll Dann.",

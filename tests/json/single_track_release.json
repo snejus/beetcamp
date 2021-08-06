@@ -1,6 +1,6 @@
 {
   "@context": "https://schema.org",
-  "@id": "https://mega-tech.bandcamp.com/track/matriark-arangel",
+  "@id": "https://mega-tech.bandcamp.com/track/arangel",
   "@type": "MusicRecording",
   "additionalProperty": [
     {
@@ -30,21 +30,20 @@
     }
   ],
   "byArtist": {
-    "@id": "https://mega-tech.bandcamp.com",
     "@type": "MusicGroup",
-    "name": "Megatech Industries"
+    "name": "Matriark"
   },
   "copyrightNotice": "All Rights Reserved",
-  "dateModified": "02 Mar 2021 16:12:36 GMT",
+  "dateModified": "05 Aug 2021 15:40:56 GMT",
   "datePublished": "09 Nov 2020 00:00:00 GMT",
-  "description": "mt004\r\n\r\nmastering by alexander salomonsen\r\n\r\n\r\nI'm very happy to announce Andrea's debut track. <3\r\n\r\nhttps://soundcloud.com/matriarkcph\r\nhttps://www.instagram.com/andreaapettersen/",
+  "description": "mt004\n\nmastering by alexander salomonsen\n\n\nI'm very happy to announce Andrea's debut track. <3\n\nhttps://soundcloud.com/matriarkcph\nhttps://www.instagram.com/andreaapettersen/",
   "duration": "P00H07M01S",
   "image": "https://f4.bcbits.com/img/a0919724444_10.jpg",
   "inAlbum": {
     "@type": "MusicAlbum",
     "albumRelease": [
       {
-        "@id": "https://mega-tech.bandcamp.com/track/matriark-arangel#t2868806546",
+        "@id": "https://mega-tech.bandcamp.com/track/arangel#t2868806546",
         "@type": [
           "MusicRelease",
           "Product"
@@ -62,6 +61,11 @@
           },
           {
             "@type": "PropertyValue",
+            "name": "selling_band_id",
+            "value": 563736578
+          },
+          {
+            "@type": "PropertyValue",
             "name": "type_name",
             "value": "Digital"
           },
@@ -76,7 +80,7 @@
           "https://f4.bcbits.com/img/a0919724444_10.jpg"
         ],
         "musicReleaseFormat": "DigitalFormat",
-        "name": "Matriark - Arangel",
+        "name": "Arangel",
         "offers": {
           "@type": "Offer",
           "additionalProperty": [
@@ -97,18 +101,18 @@
           "priceSpecification": {
             "minPrice": 12
           },
-          "url": "https://mega-tech.bandcamp.com/track/matriark-arangel#t2868806546-buy"
+          "url": "https://mega-tech.bandcamp.com/track/arangel#t2868806546-buy"
         }
       }
     ],
     "albumReleaseType": "SingleRelease",
-    "name": "Matriark - Arangel",
+    "name": "Arangel",
     "numTracks": 1
   },
   "keywords": [
     "Malmö"
   ],
-  "name": "Matriark - Arangel",
+  "name": "Arangel",
   "publisher": {
     "@id": "https://mega-tech.bandcamp.com",
     "@type": "MusicGroup",

@@ -39,6 +39,11 @@
         },
         {
           "@type": "PropertyValue",
+          "name": "selling_band_id",
+          "value": 61399327
+        },
+        {
+          "@type": "PropertyValue",
           "name": "type_name",
           "value": "Digital"
         },
@@ -74,6 +79,11 @@
         },
         {
           "@type": "PropertyValue",
+          "name": "selling_band_id",
+          "value": 61399327
+        },
+        {
+          "@type": "PropertyValue",
           "name": "type_name",
           "value": "Compact Disc (CD)"
         },
@@ -83,6 +93,11 @@
           "value": [
             23625297
           ]
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_id",
+          "value": 1
         }
       ],
       "description": "Artist: Francois Dillinger\nTitle: Icosahedrone\nFormat: Vinyl, 12\" & CD\nLabel: Diffuse Reality\nCatalogue: DREA 005\n\nVinyl → bit.ly/3cUflzb\nVinyl orders include two Diffuse Reality stickers and digital downloads of the full release.\nwww.diffusereality.net",
@@ -172,7 +187,7 @@
     "rave",
     "techno",
     "trance",
-    "Spain"
+    "Portugal"
   ],
   "name": "Francois Dillinger - Icosahedrone [LP]",
   "numTracks": 10,
@@ -224,7 +239,7 @@
     "description": "From Buenos Aires, based in Barcelona.",
     "foundingLocation": {
       "@type": "Place",
-      "name": "Spain"
+      "name": "Portugal"
     },
     "genre": "https://bandcamp.com/tag/electronic",
     "image": "https://f4.bcbits.com/img/0023801099_10.jpg",

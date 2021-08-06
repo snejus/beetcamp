@@ -82,7 +82,7 @@ def single_track_release() -> ReleaseInfo:
     """Single track as a release on its own."""
     info = ReleaseInfo(
         artist_id="https://mega-tech.bandcamp.com",
-        album_id="https://mega-tech.bandcamp.com/track/matriark-arangel",
+        album_id="https://mega-tech.bandcamp.com/track/arangel",
         media=DEFAULT_MEDIA,
         disctitle=None,
     )
@@ -91,7 +91,7 @@ def single_track_release() -> ReleaseInfo:
         title="Arangel",
         length=421,
         album="Matriark - Arangel",
-        albumartist="Megatech Industries",
+        albumartist="Matriark",
         albumstatus="Official",
         label="Megatech Industries",
         albumtype="single",
@@ -513,7 +513,7 @@ def description_meta() -> ReleaseInfo:
         label="Diffuse Reality",
         release_date=date(2021, 5, 5),
         va=False,
-        country="ES",
+        country="PT",
         mediums=1,
     )
     return info

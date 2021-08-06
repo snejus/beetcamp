@@ -39,6 +39,11 @@
         },
         {
           "@type": "PropertyValue",
+          "name": "selling_band_id",
+          "value": 3963823236
+        },
+        {
+          "@type": "PropertyValue",
           "name": "type_name",
           "value": "Digital"
         },
@@ -74,6 +79,11 @@
         },
         {
           "@type": "PropertyValue",
+          "name": "selling_band_id",
+          "value": 3963823236
+        },
+        {
+          "@type": "PropertyValue",
           "name": "type_name",
           "value": "Vinyl LP"
         },
@@ -84,6 +94,11 @@
             23869838,
             23869839
           ]
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_id",
+          "value": 2
         }
       ],
       "description": "artist: jeånne, DJ Disrespect\nrelease name: Kickdown Vienna\ncatalog: fa010\nbandcamp release date: 09.10.20\nofficial release date: 16.10.20\nformat: vinyl (+ digital only at bandcamp)\n\ntrack info:\nA1 jeånne - the devil's not ås blåck ås he is påinted (hård mix)\nA2 jeånne - the påth to pårådise begins in hell\nB1 DJ DISRESPECT - VIENNA (WARM UP MIX)\nB2 DJ DISRESPECT - TRANSITION (ATHLETIC MIX)\n\nrelease description:\nvienna based artist jeånne maintaining ancient aesthetics on A side. fast pacing acid structures under aggressive beats, enveloped in melancholic strings and melodies.\nDJ DISRESPECT aka Toni Moralez already proven his strong production skills on this and also other labels. He is now delivering two adrenalin kicking, schranz-like dancefloor destroyers out of the depths of Frankfurt am Main.",
