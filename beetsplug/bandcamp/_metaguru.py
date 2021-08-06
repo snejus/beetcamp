@@ -23,6 +23,8 @@ COUNTRY_OVERRIDES = {
     "Russia": "RU",  # pycountry: Russian Federation
     "The Netherlands": "NL",  # pycountry: Netherlands
     "UK": "GB",  # pycountry: Great Britain
+    "D.C.": "US",
+    "South Korea": "KR",  # pycountry: Korea, Republic of
 }
 DATA_SOURCE = "bandcamp"
 WORLDWIDE = "XW"

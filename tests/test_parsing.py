@@ -156,6 +156,8 @@ def test_check_digital_only(name, expected_digital_only, expected_name):
         ("Russia", "RU"),
         ("Montreal, Québec", "CA"),
         ("St. Louis, Missouri", "US"),
+        ("Washington, D.C.", "US"),
+        ("Seoul, South Korea", "KR"),
     ],
 )
 def test_parse_country(name, expected):
