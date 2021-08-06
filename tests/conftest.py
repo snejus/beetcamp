@@ -323,7 +323,7 @@ def compilation() -> ReleaseInfo:
         ),
         (
             "ndym-succession-original-mix",
-            "ΣNDYM ",
+            "ΣNDYM",
             "Succession (Original Mix)",
             414,
             None,
