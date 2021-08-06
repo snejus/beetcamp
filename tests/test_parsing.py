@@ -98,6 +98,7 @@ def test_convert_title(title, expected):
             (None, "UNREALNUMBERS", "MK4 (Lacchesi Remix)", "MK4"),
         ),
         ("UNREALNUMBERS -Karaburan", (None, "UNREALNUMBERS", "Karaburan", "Karaburan")),
+        ("A2.  Two Spaces", ("A2", None, "Two Spaces", "Two Spaces")),
     ],
 )
 def test_parse_track_name(name, expected):
@@ -232,6 +233,8 @@ def test_parse_catalognum(album, disctitle, description, expected):
         ("Healing Noise (EP) (Free Download)", [], "Healing Noise"),
         ("[MCVA003] - VARIOUS ARTISTS", ["MCVA003"], "MCVA003"),
         ("Drepa Mann [Vinyl]", [], "Drepa Mann"),
+        ("Drepa Mann  [Vinyl]", [], "Drepa Mann"),
+        ("The Castle [BLCKLPS009] Incl. Remix", ["BLCKLPS009"], "The Castle Incl. Remix"),
     ],
 )
 def test_clean_up_album_name(album, extras, expected):

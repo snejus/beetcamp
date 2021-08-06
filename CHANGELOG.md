@@ -21,6 +21,8 @@
   ```
 
 * `catalognum`: do not use **VA[0-9]+** as a valid catalognum.
+* `album` and `track.title`: little clean up: replace multiple consecutive spaces with a
+  single one
 
 ## [0.9.3] 2021-08-01
 

@@ -89,6 +89,7 @@ class Helpers:
     @staticmethod
     def parse_track_name(name: str) -> Dict[str, Optional[str]]:
         name = re.sub(r" \(free[^)]*\)", "", name, flags=re.IGNORECASE)
+        name = re.sub(r"\s\s+", " ", name)
         track = {"track_alt": None, "artist": None, "title": name}
         match = re.search(PATTERNS["track_name"], name)
         if match:
@@ -143,6 +144,8 @@ class Helpers:
         If it ends up cleaning the name entirely, then return the first `args` member
         if any given (catalognum or label). If not given, return the original name.
         """
+        # firstly remove redundant spaces
+        name = re.sub(r"\s\s+", " ", name)
         # always removed
         exclude = ["E.P.", "various artists", "limited edition", "free download", "vinyl"]
         # add provided arguments
@@ -150,7 +153,7 @@ class Helpers:
         # handle special chars
         excl = "|".join(map(re.escape, exclude))
 
-        _with_brackparens = r"[\[(]({})[])]"
+        _with_brackparens = r"\s?[\[(]({})[])]"
         _opt_brackparens = r"[\[(]?({})[])]?"
         _lead_or_trail_dash = r"(\s-\s)({0})|({0})(\s?-\s)"
         _followed_by_pipe_or_slash = r"({})\s[|/]+\s?"
