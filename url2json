@@ -44,13 +44,22 @@ tracklist_for_tests () {
 
 update_test_jsons () {
   for file in ./tests/json/*.json; do
+    cp "$file" "$file.old"
     url=$(jq -r '.["@id"]' "$file")
+    printf '%-50s' "$file"
     get_json "$url" \
       | jq --sort-keys 'del(
           (if .track then .track.itemListElement[].item else . end)
             | .additionalProperty[]
             | select(.name | test("mp3"))
-        )' > "$file" && echo >&2 "Updated $file: $url"
+        )' > "$file"
+    if diff -q "$file.old" "$file" &>/dev/null; then
+      echo -e ' \e[1;32mNo changes\e[0m'
+    else
+      echo
+      diff --side-by-side --suppress-common-lines --color=auto "$file.old" "$file"
+    fi
+    rm "$file.old"
   done
 }
 
