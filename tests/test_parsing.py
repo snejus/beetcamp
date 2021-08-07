@@ -132,6 +132,7 @@ def test_determine_track_artist(parsed_artist, item, albumartist, expected):
         ("Tune (Someone's Remix) [Digital Bonus]", True, "Tune (Someone's Remix)"),
         ("Hello - DIGITAL ONLY", True, "Hello"),
         ("Hello *digital bonus*", True, "Hello"),
+        ("Only a Goodbye", False, "Only a Goodbye"),
     ],
 )
 def test_check_digital_only(name, expected_digital_only, expected_name):
