@@ -2,15 +2,16 @@
 
 ### Fixed
 
-* `track.track_alt`: handle `A1 - Title` and `A1 - Artist - Title` when alt index is not
+- `track.track_alt`: handle `A1 - Title` and `A1 - Artist - Title` when alt index is not
   followed by a full stop.
-* `track.title`: handle cases like `Artist -Title` when there is no space between the dash
+- `track.title`: handle cases like `Artist -Title` when there is no space between the dash
   and the title
-* `country`: **Washington, D.C.** and **South Korea** have not been parsed correctly and
+- `country`: **Washington, D.C.** and **South Korea** have not been parsed correctly and
   thus releases have been defaulting to **XW**. This is now fixed.
 
 ### Updated
-* `track.artist`: in rare cases when bandcamp specify that track artist **is the author of
+
+- `track.artist`: in rare cases when bandcamp specify that track artist **is the author of
   the remix (not the albumartist)**, append the remix author to the artist field such that
 
   ```
@@ -20,8 +21,11 @@
     title: Title (Someone Remix)
   ```
 
-* `catalognum`: do not use **VA[0-9]+** as a valid catalognum.
-* `album` and `track.title`: little clean up: replace multiple consecutive spaces with a
+- `catalognum`:
+  - Treat **VA[0-9]+** as invalid.
+  - Handle single digits (like `ROAD4`) as valid (until now we required at least two)
+  - Handle catalognums in parentheses, like `(ISM001)`
+- `album` and `track.title`: little clean up: replace multiple consecutive spaces with a
   single one
 
 ## [0.9.3] 2021-08-01
@@ -29,9 +33,9 @@
 ### Updated
 
 - Bandcamp json updates:
-  + `release_date`: `datePublished` field now tells the correct release date so now we use
+  - `release_date`: `datePublished` field now tells the correct release date so now we use
     it instead of parsing the plain html.
-  + `label`: some releases embed the `recordLabel` field into the json data - it now gets
+  - `label`: some releases embed the `recordLabel` field into the json data - it now gets
     prioritized over the publisher name when it is available.
 - `track.title`: clean up `*digital only*` properly. Previously we did not account for
   asterixes
@@ -62,7 +66,6 @@
 
 - Added a github action to run ci for `master` and `dev` branches. For now it's just a minimal
   configuration and will probably get updated soon.
-
 
 ## [0.9.1] 2021-06-04
 

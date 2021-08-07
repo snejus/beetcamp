@@ -198,6 +198,8 @@ def test_parse_country(name, expected):
         ("", "LP | ostgutlp31", "", "OSTGUTLP31"),
         ("Album VA001", "", "", ""),
         ("Album MVA001", "", "", "MVA001"),
+        ("Album [ROAD4]", "", "", "ROAD4"),
+        ("Need For Lead (ISM001)", "", "", "ISM001"),
     ],
 )
 def test_parse_catalognum(album, disctitle, description, expected):
@@ -205,7 +207,7 @@ def test_parse_catalognum(album, disctitle, description, expected):
 
 
 @pytest.mark.parametrize(
-    ("album", "extras", "expected"),
+    ("name", "extras", "expected"),
     [
         ("Album - Various Artists", [], "Album"),
         ("Various Artists - Album", [], "Album"),
@@ -237,8 +239,8 @@ def test_parse_catalognum(album, disctitle, description, expected):
         ("The Castle [BLCKLPS009] Incl. Remix", ["BLCKLPS009"], "The Castle Incl. Remix"),
     ],
 )
-def test_clean_up_album_name(album, extras, expected):
-    assert Metaguru.clean_up_album_name(album, *extras) == expected
+def test_clean_name(name, extras, expected):
+    assert Metaguru.clean_name(name, *extras) == expected
 
 
 def test_bundles_get_excluded():

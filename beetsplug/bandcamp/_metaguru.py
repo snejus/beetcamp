@@ -36,13 +36,13 @@ MEDIA_MAP = {
     "DigitalFormat": DEFAULT_MEDIA,
 }
 
-_catalognum = r"([A-Z][^-.\s\d]+[-.\s]?\d{2,4}(?:[.-]?\d|CD)?)"
+_catalognum = r"([A-Z][^-.\s\d]+([-.]?\d{1,}|\s\d{2,})(?:[.-]?\d|CD)?)"
 _exclusive = r"[*\[( -]*(bandcamp )?(digi(tal)? )?(bonus|only|exclusive)[*\])]?"
 _catalognum_header = r"(?:Catalogue(?: (?:Number|N[or]))?|Cat N[or])\.?:"
 PATTERNS: Dict[str, Pattern] = {
     "meta": re.compile(r".*dateModified.*", flags=re.MULTILINE),
     "desc_catalognum": re.compile(rf"{_catalognum_header} ?({_catalognum})"),
-    "quick_catalognum": re.compile(rf"\[{_catalognum}\]"),
+    "quick_catalognum": re.compile(rf"[\[(]{_catalognum}[])]"),
     "catalognum": re.compile(rf"^{_catalognum}|{_catalognum}$"),
     "catalognum_excl": re.compile(
         r"(?i:vol(ume)?|artists|\bva\d+)|202[01]|(^|\s)C\d\d|\d+/\d+"
@@ -139,7 +139,7 @@ class Helpers:
         return 0
 
     @staticmethod
-    def clean_up_album_name(name: str, *args: str) -> str:
+    def clean_name(name: str, *args: str) -> str:
         """Return clean album name.
         If it ends up cleaning the name entirely, then return the first `args` member
         if any given (catalognum or label). If not given, return the original name.
@@ -408,7 +408,7 @@ class Metaguru(Helpers):
         args = list(filter(truth, [self.catalognum, self.label]))
         if not self._singleton:
             args.append(self.albumartist)
-        return self.clean_up_album_name(self.album_name, *args)
+        return self.clean_name(self.album_name, *args)
 
     @property
     def _common(self) -> JSONDict:
@@ -436,6 +436,9 @@ class Metaguru(Helpers):
     def _trackinfo(self, track: JSONDict, **kwargs: Any) -> TrackInfo:
         track.pop("digital_only")
         track.pop("main_title")
+        track["title"] = self.clean_name(
+            track["title"], *filter(truth, [self.catalognum, self.label])
+        )
         return TrackInfo(
             **self._common,
             **track,
