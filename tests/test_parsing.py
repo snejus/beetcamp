@@ -201,6 +201,7 @@ def test_parse_country(name, expected):
         ("Album [ROAD4]", "", "", "ROAD4"),
         ("Need For Lead (ISM001)", "", "", "ISM001"),
         ("OBS.CUR 2 Depths", "", "", "OBS.CUR 2"),
+        ("VINYL 12", "", "", ""),
     ],
 )
 def test_parse_catalognum(album, disctitle, description, expected):

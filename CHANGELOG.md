@@ -22,7 +22,7 @@
   ```
 
 - `catalognum`:
-  - Treat **VA[0-9]+** as invalid.
+  - Treat **VA[0-9]+**, **Vinyl 12** as invalid.
   - Handle single digits (like **ROAD4**) as valid (until now we required at least two)
   - Handle catalognums in parentheses, like **(ISM001)**
   - Handle a period in the non-digit part, like **OBS.CUR 12**
