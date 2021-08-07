@@ -46,7 +46,7 @@ PATTERNS: Dict[str, Pattern] = {
     "meta": re.compile(r".*dateModified.*", flags=re.MULTILINE),
     "desc_catalognum": re.compile(rf"{_catalognum_header} ?({_catalognum})"),
     "quick_catalognum": re.compile(rf"[\[(]{_catalognum}[])]"),
-    "catalognum": re.compile(rf"^{_catalognum}|{_catalognum}$"),
+    "catalognum": re.compile(rf"(^{_catalognum}|{_catalognum}$)"),
     "catalognum_excl": re.compile(
         r"(?i:vol(ume)?|artists|\bva\d+|vinyl|triple)|202[01]|(^|\s)C\d\d|\d+/\d+"
     ),
@@ -129,18 +129,16 @@ class Helpers:
         ]:
             match = re.search(pattern, re.sub(PATTERNS["catalognum_excl"], "", source))
             if match:
-                try:
-                    return next(group for group in match.groups() if group)
-                except StopIteration:
-                    continue
+                return match.groups()[0]
         return ""
 
     @staticmethod
     def get_duration(source: JSONDict) -> int:
-        for item in source.get("additionalProperty", []):
-            if item.get("name") == "duration_secs":
-                return floor(item.get("value", 0))
-        return 0
+        return [
+            floor(x.get("value", 0))
+            for x in source.get("additionalProperty", [])
+            if x.get("name") == "duration_secs"
+        ][0]
 
     @staticmethod
     def clean_name(name: str, *args: str) -> str:
@@ -389,10 +387,8 @@ class Metaguru(Helpers):
         """Handle various artists and albums that have a single artist."""
         if self.is_va:
             return VA
-        if self.label == self.bandcamp_albumartist:
-            artists = self.track_artists
-            if len(artists) == 1:
-                return next(iter(artists))
+        if self.label == self.bandcamp_albumartist and len(self.track_artists) == 1:
+            return next(iter(self.track_artists))
         return self.bandcamp_albumartist
 
     @cached_property
