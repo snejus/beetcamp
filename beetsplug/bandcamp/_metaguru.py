@@ -91,7 +91,7 @@ class Helpers:
 
     @staticmethod
     def parse_track_name(name: str) -> Dict[str, Optional[str]]:
-        name = re.sub(r" \(free[^)]*\)", "", name, flags=re.IGNORECASE)
+        name = re.sub(r' \(free[^)]*\)|["]', "", name, flags=re.IGNORECASE)
         name = re.sub(r"\s\s+", " ", name)
         track = {"track_alt": None, "artist": None, "title": name}
         match = re.search(PATTERNS["track_name"], name)
@@ -148,8 +148,8 @@ class Helpers:
         If it ends up cleaning the name entirely, then return the first `args` member
         if any given (catalognum or label). If not given, return the original name.
         """
-        # firstly remove redundant spaces
-        name = re.sub(r"\s\s+", " ", name)
+        # firstly remove redundant spaces and duoble quotes
+        name = re.sub(r"\s\s+", " ", name.replace('"', ""))
         # always removed
         exclude = ["E.P.", VA, "limited edition", "free download", "vinyl"]
         # add provided arguments
