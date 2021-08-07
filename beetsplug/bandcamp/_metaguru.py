@@ -121,8 +121,9 @@ class Helpers:
         for pattern, source in [
             (PATTERNS["desc_catalognum"], description),
             (PATTERNS["quick_catalognum"], album),
-            (PATTERNS["catalognum"], disctitle.upper()),
             (PATTERNS["catalognum"], album),
+            (PATTERNS["catalognum"], disctitle),
+            (PATTERNS["catalognum"], disctitle.upper()),
         ]:
             match = re.search(pattern, re.sub(PATTERNS["catalognum_excl"], "", source))
             if match:
@@ -406,7 +407,9 @@ class Metaguru(Helpers):
 
     @cached_property
     def clean_album_name(self) -> str:
-        args = list(filter(truth, [self.catalognum, self.label]))
+        args = [self.catalognum] if self.catalognum else []
+        if not self.is_va:
+            args.append(self.label)
         if not self._singleton:
             args.append(self.albumartist)
         return self.clean_name(self.album_name, *args)

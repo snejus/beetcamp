@@ -28,6 +28,7 @@
   - Handle a period in the non-digit part, like **OBS.CUR 12**
 - `album` and `track.title`: little clean up: replace multiple consecutive spaces with a
   single one
+- `album`: only remove label from the album name if `albumtype` is not a compilation
 - `albumartist`: if **various** is specified as the albumartist, make it **Various
   Artists**
 

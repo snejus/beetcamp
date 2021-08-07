@@ -186,7 +186,7 @@ def test_parse_country(name, expected):
         ("C30 Cassette", "", "", ""),
         ("BC30 Hello", "", "", "BC30"),
         ("Blood 1/4", "", "", ""),
-        ("Emotion 1 - Kulør 008", "", "", "Kulør 008"),
+        ("Emotion 1 - Kulør 008", "Emotion 1 Vinyl", "", "Kulør 008"),
         ("zz333HZ with remixes from Le Chocolat Noir", "", "", ""),
         ("UTC-003", "", "Catalogue Number: TE0029", "TE0029"),
         ("UTC-003", "", "Catalogue Nr: TE0029", "TE0029"),
