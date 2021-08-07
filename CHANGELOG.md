@@ -36,13 +36,14 @@ Thanks @arogl for reporting each of the above!
 
 - `track.track_alt`: handle `A1 - Title` and `A1 - Artist - Title` when alt index is not
   followed by a full stop.
-* `track.title`: handle cases like `Artist -Title` when there is no space between the dash
+- `track.title`: handle cases like `Artist -Title` when there is no space between the dash
   and the title
-* `country`: **Washington, D.C.** and **South Korea** have not been parsed correctly and
+- `country`: **Washington, D.C.** and **South Korea** have not been parsed correctly and
   thus releases have been defaulting to **XW**. This is now fixed.
 
 ### Updated
-* `track.artist`: in rare cases when bandcamp specify that track artist **is the author of
+
+- `track.artist`: in rare cases when bandcamp specify that track artist **is the author of
   the remix (not the albumartist)**, append the remix author to the artist field such that
 
   ```
