@@ -37,7 +37,9 @@ MEDIA_MAP = {
 }
 VA = "Various Artists"
 
-_catalognum = r"([A-Z]([^-.\s\d]|[.-][^0-9])+(([-.]?|[A-Z]\s)\d+|\s\d{2,})(?:[.-]?\d|CD)?)"
+_catalognum = (
+    r"([A-Z]([^-.\s\d]|[.-][^0-9])+(([-.]?|[A-Z]\s)\d+|\s\d{2,})[A-Z]?(?:[.-]?\d|CD)?)"
+)
 _exclusive = r"[*\[( -]*(bandcamp )?(digi(tal)? )?(bonus|only|exclusive)[*\])]?"
 _catalognum_header = r"(?:Catalogue(?: (?:Number|N[or]))?|Cat N[or])\.?:"
 PATTERNS: Dict[str, Pattern] = {

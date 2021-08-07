@@ -204,6 +204,7 @@ def test_parse_country(name, expected):
         ("VINYL 12", "", "", ""),
         ("Triple 12", "", "", ""),
         ("", "o-ton 113", "", "O-TON 113"),
+        ("IBM001V", "", "", "IBM001V"),
     ],
 )
 def test_parse_catalognum(album, disctitle, description, expected):
