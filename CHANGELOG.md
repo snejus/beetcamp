@@ -25,7 +25,7 @@
   - Treat **VA[0-9]+**, **Vinyl [0-9]+**, **Triple [0-9]+** as invalid.
   - Handle single digits (like **ROAD4**) as valid (until now we required at least two)
   - Handle catalognums in parentheses, like **(ISM001)**
-  - Handle a period in the non-digit part, like **OBS.CUR 12**
+  - Handle a period or a dash in the non-digit part, like **OBS.CUR 12**, **O-TON 113**
 - `album` and `track.title`: little clean up: replace multiple consecutive spaces with a
   single one
 - `album`: only remove label from the album name if `albumtype` is not a compilation
