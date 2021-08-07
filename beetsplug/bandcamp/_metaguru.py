@@ -35,8 +35,9 @@ MEDIA_MAP = {
     "CassetteFormat": "Cassette",
     "DigitalFormat": DEFAULT_MEDIA,
 }
+VA = "Various Artists"
 
-_catalognum = r"([A-Z][^-.\s\d]+([-.]?\d{1,}|\s\d{2,})(?:[.-]?\d|CD)?)"
+_catalognum = r"([A-Z]([^-.\s\d]|\.[^0-9])+(([-.]?|[A-Z]\s)\d+|\s\d{2,})(?:[.-]?\d|CD)?)"
 _exclusive = r"[*\[( -]*(bandcamp )?(digi(tal)? )?(bonus|only|exclusive)[*\])]?"
 _catalognum_header = r"(?:Catalogue(?: (?:Number|N[or]))?|Cat N[or])\.?:"
 PATTERNS: Dict[str, Pattern] = {
@@ -147,7 +148,7 @@ class Helpers:
         # firstly remove redundant spaces
         name = re.sub(r"\s\s+", " ", name)
         # always removed
-        exclude = ["E.P.", "various artists", "limited edition", "free download", "vinyl"]
+        exclude = ["E.P.", VA, "limited edition", "free download", "vinyl"]
         # add provided arguments
         exclude.extend(args)
         # handle special chars
@@ -270,7 +271,7 @@ class Metaguru(Helpers):
         match = re.search(r"Artist:([^\n]+)", self.description)
         if match:
             return str(match.groups()[0].strip())
-        return self.meta["byArtist"]["name"]
+        return self.meta["byArtist"]["name"].replace("various", VA)
 
     @property
     def image(self) -> str:
@@ -374,7 +375,7 @@ class Metaguru(Helpers):
 
     @cached_property
     def is_va(self) -> bool:
-        return "various artists" in self.album_name.lower() or (
+        return VA.lower() in self.album_name.lower() or (
             len(self.track_artists) > 1
             and not {self.bandcamp_albumartist}.issubset(self.track_artists)
             and len(self.tracks) > 4
@@ -384,7 +385,7 @@ class Metaguru(Helpers):
     def albumartist(self) -> str:
         """Handle various artists and albums that have a single artist."""
         if self.is_va:
-            return "Various Artists"
+            return VA
         if self.label == self.bandcamp_albumartist:
             artists = self.track_artists
             if len(artists) == 1:

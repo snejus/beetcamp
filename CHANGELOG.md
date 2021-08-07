@@ -23,10 +23,13 @@
 
 - `catalognum`:
   - Treat **VA[0-9]+** as invalid.
-  - Handle single digits (like `ROAD4`) as valid (until now we required at least two)
-  - Handle catalognums in parentheses, like `(ISM001)`
+  - Handle single digits (like **ROAD4**) as valid (until now we required at least two)
+  - Handle catalognums in parentheses, like **(ISM001)**
+  - Handle a period in the non-digit part, like **OBS.CUR 12**
 - `album` and `track.title`: little clean up: replace multiple consecutive spaces with a
   single one
+- `albumartist`: if **various** is specified as the albumartist, make it **Various
+  Artists**
 
 ## [0.9.3] 2021-08-01
 
