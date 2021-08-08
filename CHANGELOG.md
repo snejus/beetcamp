@@ -5,8 +5,8 @@
 - `track.track_alt`: handle `A1 - Title` and `A1 - Artist - Title` when alt index is not
   followed by a full stop.
 - `track.title`:
-  - Handle cases like `Artist -Title` when there is no space between the dash and the
-    title
+  - Handle cases like **Artist -Title** / **Artist- Title** when there is no space between
+    the dash and the title or artist
   - Fixed _digital only_ cleaner which would previously remove the string **Only** when
     it's found on its own
 - `country`: **Washington, D.C.** and **South Korea** have not been parsed correctly and
@@ -34,9 +34,9 @@
 - `album` and `track.title`: little clean up: replace multiple consecutive spaces with a
   single one and remove all double quotes
 - `album`:
-  * Only remove label from the album name if `albumtype` is not a compilation
-  * Remove **(FREE DL)**, **VA** from the album name
-  * Improved the way **Various Artists** are cleaned up when catalognum is available
+  - Only remove label from the album name if `albumtype` is not a compilation
+  - Remove **(FREE DL)**, **VA** from the album name
+  - Improved the way **Various Artists** are cleaned up when catalognum is available
 - `albumartist`:
   - If **various** is specified as the albumartist, make it **Various Artists**
   - When the label have set their name as the albumartist in every field, and if the

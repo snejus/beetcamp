@@ -99,6 +99,11 @@ def test_convert_title(title, expected):
         ),
         ("UNREALNUMBERS -Karaburan", (None, "UNREALNUMBERS", "Karaburan", "Karaburan")),
         ("A2.  Two Spaces", ("A2", None, "Two Spaces", "Two Spaces")),
+        (
+            "Ellie Goulding- Starry Eyed ( ROWDIBOÏ EDIT))",
+            (None, "Ellie Goulding", "Starry Eyed (ROWDIBOÏ EDIT)", "Starry Eyed"),
+        ),
+        ("Space Jam - (RZVX EDIT)", (None, "Space Jam", "(RZVX EDIT)", ""))
     ],
 )
 def test_parse_track_name(name, expected):

@@ -53,8 +53,8 @@ PATTERNS: Dict[str, Pattern] = {
     "track_name": re.compile(
         r"""
 ((?P<track_alt>(^[ABCDEFGH]{1,3}[0-6]|^\d)\d?)\s?[.-]+\s?(?=[^\d]))?
-(\s?(?P<artist>[^-]*)(\s-\s?))?
-(?P<title>(\b([^\s]-|-[^\s]|[^-])+$))""",
+(\s?(?P<artist>[^-]+[^\s])(\s-\s?|\s?-\s))?
+(?P<title>((\b|\()([^\s]-|-[^\s]|[^-])+$))""",
         re.VERBOSE,
     ),
     "vinyl_name": re.compile(
@@ -89,8 +89,13 @@ class Helpers:
 
     @staticmethod
     def parse_track_name(name: str) -> Dict[str, Optional[str]]:
-        name = re.sub(r' \(free[^)]*\)|["]', "", name, flags=re.IGNORECASE)
-        name = re.sub(r"\s\s+", " ", name)
+        for pat, repl in [
+            (r' \(free[^)]*\)|["]', ""),
+            (r"\s\s+", " "),
+            (r"\( ", "("),
+            (r"\)\)+", ")"),
+        ]:
+            name = re.sub(pat, repl, name, flags=re.IGNORECASE)
         track = {"track_alt": None, "artist": None, "title": name}
         match = re.search(PATTERNS["track_name"], name)
         if match:
