@@ -9,6 +9,8 @@
     the dash and the title or artist
   - Fixed _digital only_ cleaner which would previously remove the string **Only** when
     it's found on its own
+  - Accept [**¯\\_(ツ)_/¯**](https://clandestinerecords.bandcamp.com/track/--7) as valid title
+  - Clean up **( Remix )** -> **(Remix)**
 - `country`: **Washington, D.C.** and **South Korea** have not been parsed correctly and
   thus releases have been defaulting to **XW**. This is now fixed.
 
@@ -41,7 +43,7 @@
   - If **various** is specified as the albumartist, make it **Various Artists**
   - When the label have set their name as the albumartist in every field, and if the
     actual albumartist could be inferred from the album name, use the inferred name.
-- `albumtype`: handle 4 track release as valid candidates for a compilation / VA release
+- `albumtype`: treat 4-track release as a valid candidate for a compilation / VA albumtype
 
 ## [0.9.3] 2021-08-01
 

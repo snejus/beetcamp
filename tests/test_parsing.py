@@ -103,7 +103,8 @@ def test_convert_title(title, expected):
             "Ellie Goulding- Starry Eyed ( ROWDIBOÏ EDIT))",
             (None, "Ellie Goulding", "Starry Eyed (ROWDIBOÏ EDIT)", "Starry Eyed"),
         ),
-        ("Space Jam - (RZVX EDIT)", (None, "Space Jam", "(RZVX EDIT)", ""))
+        ("Space Jam - (RZVX EDIT)", (None, "Space Jam", "(RZVX EDIT)", "")),
+        ("¯\\_(ツ)_/¯", (None, None, "¯\\_(ツ)_/¯", "¯\\_(ツ)_/¯")),
     ],
 )
 def test_parse_track_name(name, expected):

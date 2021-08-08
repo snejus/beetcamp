@@ -50,11 +50,12 @@ PATTERNS: Dict[str, Pattern] = {
     ),
     "digital": re.compile(rf"^DIGI (\d+\.\s?)?|(?i:{_exclusive})"),
     "lyrics": re.compile(r'"lyrics":({[^}]*})'),
+    "remix_or_ft": re.compile(r"\s?([\[(][A-z0-9]|f(ea)?t\.).+"),
     "track_name": re.compile(
         r"""
 ((?P<track_alt>(^[ABCDEFGH]{1,3}[0-6]|^\d)\d?)\s?[.-]+\s?(?=[^\d]))?
 (\s?(?P<artist>[^-]+[^\s])(\s-\s?|\s?-\s))?
-(?P<title>((\b|\()([^\s]-|-[^\s]|[^-])+$))""",
+(?P<title>([^\s]-|-[^\s]|[^-])+$)""",
         re.VERBOSE,
     ),
     "vinyl_name": re.compile(
@@ -92,7 +93,8 @@ class Helpers:
         for pat, repl in [
             (r' \(free[^)]*\)|["]', ""),
             (r"\s\s+", " "),
-            (r"\( ", "("),
+            (r"\(\s", "("),
+            (r"\s\)", ")"),
             (r"\)\)+", ")"),
         ]:
             name = re.sub(pat, repl, name, flags=re.IGNORECASE)
@@ -100,7 +102,7 @@ class Helpers:
         match = re.search(PATTERNS["track_name"], name)
         if match:
             track = match.groupdict()
-        track["main_title"] = re.sub(r"\s?([\[(]|f(ea)?t\.).*", "", str(track["title"]))
+        track["main_title"] = re.sub(PATTERNS["remix_or_ft"], "", str(track["title"]))
         return track
 
     @staticmethod
