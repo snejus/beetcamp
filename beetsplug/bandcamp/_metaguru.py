@@ -146,7 +146,7 @@ class Helpers:
         # firstly remove redundant spaces and duoble quotes
         name = re.sub(r"\s\s+", " ", name.replace('"', ""))
         # always removed
-        exclude = ["E.P.", VA, "limited edition", "free download", "free dl", "vinyl"]
+        exclude = ["E.P.", VA, "VA", "limited edition", "free download", "free dl", "vinyl"]
         # add provided arguments
         exclude.extend(args)
         # handle special chars

@@ -246,6 +246,8 @@ def test_parse_catalognum(album, disctitle, description, expected):
         ("The Castle [BLCKLPS009] Incl. Remix", ["BLCKLPS009"], "The Castle Incl. Remix"),
         ('Anetha - "Ophiuchus EP"', ["Anetha"], "Ophiuchus"),
         ("Album (FREE DL)", [], "Album"),
+        ("Devils Kiss VA", [], "Devils Kiss"),
+        ("Devils Kiss VA001", [], "Devils Kiss VA001"),
     ],
 )
 def test_clean_name(name, extras, expected):
