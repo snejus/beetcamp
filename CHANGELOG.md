@@ -30,6 +30,7 @@
   - Handle catalognums in parentheses, like **(ISM001)**
   - Handle a period or a dash in the non-digit part, like **OBS.CUR 12**, **O-TON 113**
   - Allow a single capital letter after the digits, like **IBM001V**
+  - Allow the catalognum to start with a non-capital letter, like **fa010**
 - `album` and `track.title`: little clean up: replace multiple consecutive spaces with a
   single one and remove all double quotes
 - `album`: only remove label from the album name if `albumtype` is not a compilation

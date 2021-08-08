@@ -37,9 +37,7 @@ MEDIA_MAP = {
 }
 VA = "Various Artists"
 
-_catalognum = (
-    r"([A-Z]([^-.\s\d]|[.-][^0-9])+(([-.]?|[A-Z]\s)\d+|\s\d{2,})[A-Z]?(?:[.-]?\d|CD)?)"
-)
+_catalognum = r"(\b[A-Za-z]([^-.\s\d]|[.-][^0-9])+(([-.]?|[A-Z]\s)\d+|\s\d{2,})[A-Z]?(?:[.-]?\d|CD)?\b)"  # noqa
 _exclusive = r"[*\[( -]*(bandcamp|digi(tal)?) (digital )?(only|bonus|exclusive)[*\])]?"
 _catalognum_header = r"(?:Catalogue(?: (?:Number|N[or]))?|Cat N[or])\.?:"
 PATTERNS: Dict[str, Pattern] = {
@@ -125,7 +123,6 @@ class Helpers:
             (PATTERNS["quick_catalognum"], album),
             (PATTERNS["catalognum"], album),
             (PATTERNS["catalognum"], disctitle),
-            (PATTERNS["catalognum"], disctitle.upper()),
         ]:
             match = re.search(pattern, re.sub(PATTERNS["catalognum_excl"], "", source))
             if match:

@@ -196,7 +196,7 @@ def test_parse_country(name, expected):
         ("UTC-003", "", "Cat No: TE0029", "TE0029"),
         ("UTC-003", "", "Cat Nr.: TE0029", "TE0029"),
         ("UTC-003", "", "Catalogue:CTU-300", "CTU-300"),
-        ("", "LP | ostgutlp31", "", "OSTGUTLP31"),
+        ("", "LP | ostgutlp31", "", "ostgutlp31"),
         ("Album VA001", "", "", ""),
         ("Album MVA001", "", "", "MVA001"),
         ("Album [ROAD4]", "", "", "ROAD4"),
@@ -204,8 +204,9 @@ def test_parse_country(name, expected):
         ("OBS.CUR 2 Depths", "", "", "OBS.CUR 2"),
         ("VINYL 12", "", "", ""),
         ("Triple 12", "", "", ""),
-        ("", "o-ton 113", "", "O-TON 113"),
+        ("", "o-ton 113", "", "o-ton 113"),
         ("IBM001V", "", "", "IBM001V"),
+        ("fa010", "", "", "fa010"),
     ],
 )
 def test_parse_catalognum(album, disctitle, description, expected):
