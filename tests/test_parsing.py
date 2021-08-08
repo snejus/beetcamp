@@ -246,7 +246,7 @@ def test_parse_catalognum(album, disctitle, description, expected):
         ("[MCVA003] - VARIOUS ARTISTS", ["MCVA003"], "MCVA003"),
         ("Drepa Mann [Vinyl]", [], "Drepa Mann"),
         ("Drepa Mann  [Vinyl]", [], "Drepa Mann"),
-        ("The Castle [BLCKLPS009] Incl. Remix", ["BLCKLPS009"], "The Castle Incl. Remix"),
+        ("The Castle [BLCKLPS009] Incl. Remix", ["BLCKLPS009"], "The Castle"),
         ('Anetha - "Ophiuchus EP"', ["Anetha"], "Ophiuchus"),
         ("Album (FREE DL)", [], "Album"),
         ("Devils Kiss VA", [], "Devils Kiss"),
@@ -260,6 +260,7 @@ def test_parse_catalognum(album, disctitle, description, expected):
         ("Diva Hello", [], "Diva Hello"),
         ("RR009 - Various Artist", ["RR009"], "RR009"),
         ("Diva (Incl. some sort of Remixes)", [], "Diva"),
+        ("HWEP010 - MEZZ - COLOR OF WAR", ["HWEP010", "MEZZ"], "COLOR OF WAR"),
     ],
 )
 def test_clean_name(name, extras, expected):

@@ -173,7 +173,7 @@ class Helpers:
         _opt_brackparens = r"[\[(]?{}[])]?"
         _lead_or_trail_dash = r"\s-\s{0}|{0}\s?-"
         _followed_by_pipe_or_slash = r"{}\s[|/]+\s?"
-        _starts = r"(^|\s){0}\s"
+        _starts = r"(^|\s){0}\s-?"
         _trails = r" {}$"
         pattern = "|".join(
             [
