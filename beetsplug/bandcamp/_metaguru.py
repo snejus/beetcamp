@@ -50,6 +50,7 @@ PATTERNS: Dict[str, Pattern] = {
     ),
     "digital": re.compile(rf"^DIGI (\d+\.\s?)?|(?i:{_exclusive})"),
     "lyrics": re.compile(r'"lyrics":({[^}]*})'),
+    "clean_incl": re.compile(r"(?i:(\(?incl.+|\(.+)remix.*)"),
     "remix_or_ft": re.compile(r"\s?([\[(][A-z0-9]|f(ea)?t\.).+"),
     "track_name": re.compile(
         r"""
@@ -145,14 +146,17 @@ class Helpers:
         ][0]
 
     @staticmethod
-    def clean_name(name: str, *args: str) -> str:
-        """Return clean album name.
+    def clean_name(name: str, *args: str, remove_extra: bool = False) -> str:
+        """Return the clean album name.
         If it ends up cleaning the name entirely, then return the first `args` member
         if any given (catalognum or label). If not given, return the original name.
+        If `remove_extra` is True, remove info in parentheses (usually remix info).
         """
-        # remove redundant spaces, duoble quotes, remixes info
-        name = re.sub(r"\s\s+", " ", name.replace('"', ""))
-        name = re.sub(r"\(?incl.+remix.*", "", name, flags=re.IGNORECASE)
+        # remove redundant spaces and duoble quotes, convert ampersands
+        name = re.sub(r"\s\s+", " ", name.replace('"', "").replace(" &", ","))
+        if remove_extra:
+            name = re.sub(PATTERNS["clean_incl"], "", name)
+
         # always removed
         exclude = [
             "E.P.",
@@ -172,13 +176,13 @@ class Helpers:
         _with_brackparens = r"\s?[\[(]{}[])]"
         _opt_brackparens = r"[\[(]?{}[])]?"
         _lead_or_trail_dash = r"\s-\s{0}|{0}\s?-"
-        _followed_by_pipe_or_slash = r"{}\s[|/]+\s?"
+        _followed_by_pipe_slash_comma = r"{}(,|\s[|/]+)\s?"
         _starts = r"(^|\s){0}\s-?"
         _trails = r" {}$"
         pattern = "|".join(
             [
                 " " + _opt_brackparens.format("[EL]P"),
-                _followed_by_pipe_or_slash.format(excl),
+                _followed_by_pipe_slash_comma.format(excl),
                 _with_brackparens.format(excl),
                 _lead_or_trail_dash.format(excl),
                 _starts.format(excl),
@@ -400,19 +404,20 @@ class Metaguru(Helpers):
     def is_va(self) -> bool:
         return VA.lower() in self.album_name.lower() or (
             len(self.track_artists) > 1
-            and not {self.bandcamp_albumartist}.issubset(self.track_artists)
+            and not {*self.bandcamp_albumartist.split(", ")}.issubset(self.track_artists)
             and len(self.tracks) >= 4
         )
 
     @cached_property
     def albumartist(self) -> str:
         """Handle various artists and albums that have a single artist."""
-        if self.is_va:
+        if self.albumtype == "compilation":
             return VA
         tartists = self.track_artists
-        first_tartist = tartists.copy().pop()
-        if len(tartists) == 1 and first_tartist != self.label:
-            return first_tartist
+        if len(tartists) == 1:
+            first_tartist = tartists.copy().pop()
+            if first_tartist != self.label:
+                return first_tartist
         return self.bandcamp_albumartist
 
     @cached_property
@@ -430,11 +435,11 @@ class Metaguru(Helpers):
     @cached_property
     def clean_album_name(self) -> str:
         args = [self.catalognum] if self.catalognum else []
-        if not self.is_va:
+        if not self.albumtype == "compilation":
             args.append(self.label)
         if not self._singleton:
             args.append(self.albumartist)
-        return self.clean_name(self.album_name, *args)
+        return self.clean_name(self.album_name, *args, remove_extra=True)
 
     @property
     def _common(self) -> JSONDict:
@@ -504,7 +509,7 @@ class Metaguru(Helpers):
             **self._common_album,
             artist=self.albumartist,
             album_id=self.album_id,
-            va=self.is_va,
+            va=self.albumtype == "compilation",
             mediums=self.mediums,
             tracks=_tracks,
         )

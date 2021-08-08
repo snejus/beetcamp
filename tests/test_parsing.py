@@ -261,10 +261,15 @@ def test_parse_catalognum(album, disctitle, description, expected):
         ("RR009 - Various Artist", ["RR009"], "RR009"),
         ("Diva (Incl. some sort of Remixes)", [], "Diva"),
         ("HWEP010 - MEZZ - COLOR OF WAR", ["HWEP010", "MEZZ"], "COLOR OF WAR"),
+        (
+            "DJ Reiz & Tonni 3000 - Smashed Bros",
+            ["Tonni 3000", "DJ Reiz"],
+            "Smashed Bros",
+        ),
     ],
 )
 def test_clean_name(name, extras, expected):
-    assert Metaguru.clean_name(name, *extras) == expected
+    assert Metaguru.clean_name(name, *extras, remove_extra=True) == expected
 
 
 def test_bundles_get_excluded():

@@ -471,12 +471,12 @@ def ep() -> ReleaseInfo:
     info.set_albuminfo(
         tracks,
         album="Kickdown Vienna",
-        albumartist="Various Artists",
-        albumtype="compilation",
+        albumartist="jeånne, DJ DISRESPECT",
+        albumtype="album",
         catalognum="fa010",
         label="falling apart",
         release_date=date(2020, 10, 9),
-        va=True,
+        va=False,
         country="DE",
         mediums=1,
     )
@@ -593,7 +593,7 @@ def remix_artists() -> ReleaseInfo:
     ]
     info.set_albuminfo(
         tracks,
-        album="Unseen (Varya Karpova & Lacchesi Remixes)",
+        album="Unseen",
         albumartist=albumartist,
         albumtype="ep",
         catalognum="",

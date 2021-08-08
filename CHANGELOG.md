@@ -4,13 +4,16 @@
 
 - `track.track_alt`: handle `A1 - Title` and `A1 - Artist - Title` when alt index is not
   followed by a full stop.
+
 - `track.title`:
+
   - Handle cases like **Artist -Title** / **Artist- Title** when there is no space between
     the dash and the title or artist
   - Fixed _digital only_ cleaner which would previously remove the string **Only** when
     it's found on its own
   - Accept [**¯\\_(ツ)_/¯**](https://clandestinerecords.bandcamp.com/track/--7) as valid title
   - Clean up **( Remix )** -> **(Remix)**
+
 - `country`: **Washington, D.C.** and **South Korea** have not been parsed correctly and
   thus releases have been defaulting to **XW**. This is now fixed.
 
@@ -27,6 +30,7 @@
   ```
 
 - `catalognum`:
+
   - Treat **VA[0-9]+**, **vinyl [0-9]+**, **triple [0-9]+**, **ep 12** as invalid (case
     insensitive)
   - Handle single digits (like **ROAD4**) as valid (until now we required at least two)
@@ -34,13 +38,18 @@
   - Handle a period or a dash in the non-digit part, like **OBS.CUR 12**, **O-TON 113**
   - Allow a single capital letter after the digits, like **IBM001V**
   - Allow the catalognum to start with a non-capital letter, like **fa010**
+
 - `album` and `track.title`: little clean up: replace multiple consecutive spaces with a
   single one and remove all double quotes
+
 - `album`:
+
   - Only remove label from the album name if `albumtype` is not a compilation
   - Remove **(FREE DL)**, **VA** from the album name
   - Improved the way **Various Artists** are cleaned up when catalognum is available
   - Remove **_(Incl._ some artists _remixes)_** and alike
+  - Convert ** &** into a comma and remove all track artists from the album name
+
 - `albumartist`:
   - If **various** is specified as the albumartist, make it **Various Artists**
   - When the label have set their name as the albumartist in every field, and if the
