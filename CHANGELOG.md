@@ -41,6 +41,8 @@ Thanks @arogl for reporting each of the above!
     the dash and the title or artist
   - Fixed _digital only_ cleaner which would previously remove the string **Only** when
     it's found on its own
+  - Accept [**¯\\_(ツ)_/¯**](https://clandestinerecords.bandcamp.com/track/--7) as valid title
+  - Clean up **( Remix )** -> **(Remix)**
 - `country`: **Washington, D.C.** and **South Korea** have not been parsed correctly and
   thus releases have been defaulting to **XW**. This is now fixed.
 
