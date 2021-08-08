@@ -218,7 +218,7 @@ def test_parse_catalognum(album, disctitle, description, expected):
     [
         ("Album - Various Artists", [], "Album"),
         ("Various Artists - Album", [], "Album"),
-        ("Various Artists Album", [], "Various Artists Album"),
+        ("Various Artists Album", [], "Album"),
         ("Album EP", [], "Album"),
         ("Album [EP]", [], "Album"),
         ("Album (EP)", [], "Album"),
@@ -229,11 +229,7 @@ def test_parse_catalognum(album, disctitle, description, expected):
         ("[Label] Album EP", ["Label"], "Album"),
         ("Artist - Album EP", ["Artist"], "Album"),
         ("Label | Album", ["Label"], "Album"),
-        (
-            "Tweaker-229 - Tweaker-229 [PRH-002]",
-            ["PRH-002", "Tweaker-229"],
-            "Tweaker-229",
-        ),
+        ("Tweaker-229 [PRH-002]", ["PRH-002", "Tweaker-229"], "PRH-002"),
         ("Album (limited edition)", [], "Album"),
         ("Album - VARIOUS ARTISTS", [], "Album"),
         ("Drepa Mann", [], "Drepa Mann"),
@@ -248,6 +244,14 @@ def test_parse_catalognum(album, disctitle, description, expected):
         ("Album (FREE DL)", [], "Album"),
         ("Devils Kiss VA", [], "Devils Kiss"),
         ("Devils Kiss VA001", [], "Devils Kiss VA001"),
+        (
+            "Dax J - EDLX.051 Illusions Of Power",
+            ["EDLX.051", "Dax J"],
+            "Illusions Of Power",
+        ),
+        ("WEAPONS 001 - VARIOUS ARTISTS", ["WEAPONS 001"], "WEAPONS 001"),
+        ("Diva Hello", [], "Diva Hello"),
+        ("RR009 - Various Artist", ["RR009"], "RR009"),
     ],
 )
 def test_clean_name(name, extras, expected):

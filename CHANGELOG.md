@@ -36,6 +36,7 @@
 - `album`:
   * Only remove label from the album name if `albumtype` is not a compilation
   * Remove **(FREE DL)**, **VA** from the album name
+  * Improved the way **Various Artists** are cleaned up when catalognum is available
 - `albumartist`:
   - If **various** is specified as the albumartist, make it **Various Artists**
   - When the label have set their name as the albumartist in every field, and if the

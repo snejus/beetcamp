@@ -146,23 +146,34 @@ class Helpers:
         # firstly remove redundant spaces and duoble quotes
         name = re.sub(r"\s\s+", " ", name.replace('"', ""))
         # always removed
-        exclude = ["E.P.", VA, "VA", "limited edition", "free download", "free dl", "vinyl"]
+        exclude = [
+            "E.P.",
+            VA,
+            "Various Artist",
+            "VA",
+            "limited edition",
+            "free download",
+            "free dl",
+            "vinyl",
+        ]
         # add provided arguments
         exclude.extend(args)
         # handle special chars
-        excl = "|".join(map(re.escape, exclude))
+        excl = "(" + "|".join(map(re.escape, exclude)) + ")"
 
-        _with_brackparens = r"\s?[\[(]({})[])]"
-        _opt_brackparens = r"[\[(]?({})[])]?"
-        _lead_or_trail_dash = r"(\s-\s)({0})|({0})(\s?-\s)"
-        _followed_by_pipe_or_slash = r"({})\s[|/]+\s?"
-        _trails = r" ({})$"
+        _with_brackparens = r"\s?[\[(]{}[])]"
+        _opt_brackparens = r"[\[(]?{}[])]?"
+        _lead_or_trail_dash = r"\s-\s{0}|{0}\s?-"
+        _followed_by_pipe_or_slash = r"{}\s[|/]+\s?"
+        _starts = r"(^|\s){0}\s"
+        _trails = r" {}$"
         pattern = "|".join(
             [
                 " " + _opt_brackparens.format("[EL]P"),
                 _followed_by_pipe_or_slash.format(excl),
                 _with_brackparens.format(excl),
                 _lead_or_trail_dash.format(excl),
+                _starts.format(excl),
                 _trails.format(excl),
             ]
         )
