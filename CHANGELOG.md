@@ -51,8 +51,8 @@ Thanks @arogl for reporting each of the above!
 
 ### Updated
 
-- `track.artist`: in rare cases when bandcamp specify that track artist **is the author of
-  the remix (not the albumartist)**, append the remix author to the artist field such that
+- `track.artist`: when bandcamp specify multiple albumartists, check each of them whether
+  their names appear in the track title, and only includes matching ones, for example
 
   ```
   Main Artist - Title (Someone Remix) ->
