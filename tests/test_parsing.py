@@ -113,18 +113,25 @@ def test_parse_track_name(name, expected):
 
 
 @pytest.mark.parametrize(
-    ("parsed_artist", "item", "albumartist", "expected"),
+    ("parsed", "official", "albumartist", "title", "expected"),
     [
-        (None, {}, "Albumartist", "Albumartist"),
-        ("", {}, "Albumartist", "Albumartist"),
-        ("Parsed", {}, "Albumartist", "Parsed"),
-        ("Parsed", {"byArtist": {"name": "Official"}}, "Albumartist", "Parsed, Official"),
-        ("Parsed", {"byArtist": {"name": "Parsed"}}, "Albumartist", "Parsed"),
-        (None, {"byArtist": {"name": "Official"}}, "Albumartist", "Official"),
+        (None, "", "AlbumA", "", "AlbumA"),
+        ("", "", "Artist1, Artist2", "Artist2 Remix", "Artist1, Artist2"),
+        ("Parsed", "", "AlbumA", "", "Parsed"),
+        ("Parsed", "Official", "AlbumA", "", "Parsed"),
+        (
+            "Parsed",
+            "Official",
+            "AlbumA",
+            "Official AlbumA Remix",
+            "Parsed, AlbumA, Official",
+        ),
+        (None, "Official", "AlbumA", "", "Official"),
     ],
 )
-def test_determine_track_artist(parsed_artist, item, albumartist, expected):
-    assert Metaguru.determine_track_artist(parsed_artist, item, albumartist) == expected
+def test_determine_track_artist(parsed, official, albumartist, title, expected):
+    item = {"byArtist": {"name": official}} if official else {}
+    assert Metaguru.determine_track_artist(parsed, item, albumartist, title) == expected
 
 
 @pytest.mark.parametrize(

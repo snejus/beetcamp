@@ -108,21 +108,24 @@ class Helpers:
 
     @staticmethod
     def determine_track_artist(
-        parsed_artist: Optional[str], raw_track: JSONDict, albumartist: str
+        parsed_artist: Optional[str], raw_track: JSONDict, albumartist: str, title: str
     ) -> str:
         """If bandcamp specifies it, return the official artist, or append it to the
         parsed artist (remix artist). Otherwise, return the parsed artist. If we did not
         find one, default to the albumartist.
         """
-        if "byArtist" in raw_track:
-            official_artist = raw_track["byArtist"]["name"]
-            if parsed_artist and parsed_artist != official_artist:
-                return f"{parsed_artist}, {official_artist}"
-            return official_artist
+        official_artist = raw_track.get("byArtist", {}).get("name", "")
+        albumartists = albumartist.split(", ")
 
-        if parsed_artist:
-            return parsed_artist
-        return albumartist
+        main_artist = parsed_artist or official_artist or albumartists[0]
+
+        additional_artists = set([official_artist, *albumartists])
+        additional_artists.discard(main_artist)
+        artists = sorted(additional_artists, key=lambda x: x.lower())
+        title = title.lower()
+        filtered = [main_artist, *filter(lambda x: x and x.lower() in title, artists)]
+
+        return ", ".join(filtered)
 
     @staticmethod
     def parse_catalognum(album: str, disctitle: str, description: str) -> str:
@@ -374,7 +377,7 @@ class Metaguru(Helpers):
             )
             track["medium_index"] = track["index"]
             track["artist"] = self.determine_track_artist(
-                track["artist"], raw_item, self.bandcamp_albumartist
+                track["artist"], raw_item, self.bandcamp_albumartist, track["title"]
             )
 
             tracks.append(track)
