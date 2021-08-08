@@ -33,7 +33,9 @@
   - Allow the catalognum to start with a non-capital letter, like **fa010**
 - `album` and `track.title`: little clean up: replace multiple consecutive spaces with a
   single one and remove all double quotes
-- `album`: only remove label from the album name if `albumtype` is not a compilation
+- `album`:
+  * Only remove label from the album name if `albumtype` is not a compilation
+  * Remove **(FREE DL)** from the album name
 - `albumartist`:
   - If **various** is specified as the albumartist, make it **Various Artists**
   - When the label have set their name as the albumartist in every field, and if the
