@@ -258,6 +258,7 @@ def test_parse_catalognum(album, disctitle, description, expected):
         ("WEAPONS 001 - VARIOUS ARTISTS", ["WEAPONS 001"], "WEAPONS 001"),
         ("Diva Hello", [], "Diva Hello"),
         ("RR009 - Various Artist", ["RR009"], "RR009"),
+        ("Diva (Incl. some sort of Remixes)", [], "Diva"),
     ],
 )
 def test_clean_name(name, extras, expected):

@@ -150,8 +150,9 @@ class Helpers:
         If it ends up cleaning the name entirely, then return the first `args` member
         if any given (catalognum or label). If not given, return the original name.
         """
-        # firstly remove redundant spaces and duoble quotes
+        # remove redundant spaces, duoble quotes, remixes info
         name = re.sub(r"\s\s+", " ", name.replace('"', ""))
+        name = re.sub(r"\(?incl.+remix.*", "", name, flags=re.IGNORECASE)
         # always removed
         exclude = [
             "E.P.",
@@ -408,8 +409,10 @@ class Metaguru(Helpers):
         """Handle various artists and albums that have a single artist."""
         if self.is_va:
             return VA
-        if self.label == self.bandcamp_albumartist and len(self.track_artists) == 1:
-            return self.track_artists.copy().pop()
+        tartists = self.track_artists
+        first_tartist = tartists.copy().pop()
+        if len(tartists) == 1 and first_tartist != self.label:
+            return first_tartist
         return self.bandcamp_albumartist
 
     @cached_property
