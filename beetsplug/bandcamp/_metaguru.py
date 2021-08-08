@@ -283,7 +283,8 @@ class Metaguru(Helpers):
 
         albumartist = self.meta["byArtist"]["name"].replace("various", VA)
         if self.label == albumartist:
-            return self.parse_track_name(self.album_name).get("artist") or albumartist
+            no_catalognum = self.album_name.replace(self.catalognum, "")
+            return self.parse_track_name(no_catalognum).get("artist") or albumartist
 
         return albumartist
 
@@ -392,7 +393,7 @@ class Metaguru(Helpers):
         return VA.lower() in self.album_name.lower() or (
             len(self.track_artists) > 1
             and not {self.bandcamp_albumartist}.issubset(self.track_artists)
-            and len(self.tracks) > 4
+            and len(self.tracks) >= 4
         )
 
     @cached_property

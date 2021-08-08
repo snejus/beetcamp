@@ -41,6 +41,7 @@
   - If **various** is specified as the albumartist, make it **Various Artists**
   - When the label have set their name as the albumartist in every field, and if the
     actual albumartist could be inferred from the album name, use the inferred name.
+- `albumtype`: handle 4 track release as valid candidates for a compilation / VA release
 
 ## [0.9.3] 2021-08-01
 
