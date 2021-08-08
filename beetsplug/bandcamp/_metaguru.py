@@ -272,7 +272,12 @@ class Metaguru(Helpers):
         match = re.search(r"Artist:([^\n]+)", self.description)
         if match:
             return str(match.groups()[0].strip())
-        return self.meta["byArtist"]["name"].replace("various", VA)
+
+        albumartist = self.meta["byArtist"]["name"].replace("various", VA)
+        if self.label == albumartist:
+            return self.parse_track_name(self.album_name).get("artist") or albumartist
+
+        return albumartist
 
     @property
     def image(self) -> str:
@@ -388,7 +393,7 @@ class Metaguru(Helpers):
         if self.is_va:
             return VA
         if self.label == self.bandcamp_albumartist and len(self.track_artists) == 1:
-            return next(iter(self.track_artists))
+            return self.track_artists.copy().pop()
         return self.bandcamp_albumartist
 
     @cached_property

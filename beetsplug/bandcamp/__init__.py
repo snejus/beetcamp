@@ -191,7 +191,7 @@ class BandcampPlugin(
             self._gurucache[url] = Metaguru(
                 html,
                 self.config["preferred_media"].as_str(),
-                self.config["include_digital_only_tracks"],
+                self.config["include_digital_only_tracks"].get(),
             )
         return self._gurucache.get(url)
 

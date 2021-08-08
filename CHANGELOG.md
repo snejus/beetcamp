@@ -33,8 +33,10 @@
 - `album` and `track.title`: little clean up: replace multiple consecutive spaces with a
   single one and remove all double quotes
 - `album`: only remove label from the album name if `albumtype` is not a compilation
-- `albumartist`: if **various** is specified as the albumartist, make it **Various
-  Artists**
+- `albumartist`:
+  - If **various** is specified as the albumartist, make it **Various Artists**
+  - When the label have set their name as the albumartist in every field, and if the
+    actual albumartist could be inferred from the album name, use the inferred name.
 
 ## [0.9.3] 2021-08-01
 
