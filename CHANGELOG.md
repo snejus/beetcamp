@@ -37,8 +37,8 @@ Thanks @arogl for reporting each of the above!
 - `track.track_alt`: handle `A1 - Title` and `A1 - Artist - Title` when alt index is not
   followed by a full stop.
 - `track.title`:
-  - Handle cases like `Artist -Title` when there is no space between the dash and the
-    title
+  - Handle cases like **Artist -Title** / **Artist- Title** when there is no space between
+    the dash and the title or artist
   - Fixed _digital only_ cleaner which would previously remove the string **Only** when
     it's found on its own
 - `country`: **Washington, D.C.** and **South Korea** have not been parsed correctly and
