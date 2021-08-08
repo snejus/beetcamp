@@ -46,7 +46,7 @@ PATTERNS: Dict[str, Pattern] = {
     "quick_catalognum": re.compile(rf"[\[(]{_catalognum}[])]"),
     "catalognum": re.compile(rf"(^{_catalognum}|{_catalognum}$)"),
     "catalognum_excl": re.compile(
-        r"(?i:vol(ume)?|artists|\bva\d+|vinyl|triple)|202[01]|(^|\s)C\d\d|\d+/\d+"
+        r"(?i:vol(ume)?|artists|\bva\d+|vinyl|triple|ep 12)|202[01]|(^|\s)C\d\d|\d+/\d+"
     ),
     "digital": re.compile(rf"^DIGI (\d+\.\s?)?|(?i:{_exclusive})"),
     "lyrics": re.compile(r'"lyrics":({[^}]*})'),
