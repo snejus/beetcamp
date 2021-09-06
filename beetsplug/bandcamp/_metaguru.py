@@ -79,7 +79,7 @@ class Helpers:
         if not match:
             return 1
         count: str = match.groupdict()["count"]
-        return int(count) if count.isdigit() else conv[count.lower()]
+        return int(count) if count.isdigit() else conv[count.casefold()]
 
     @staticmethod
     def clean_digital_only_track(name: str) -> Tuple[str, bool]:
@@ -203,7 +203,7 @@ class Helpers:
         media: JSONDict = {}
         for _format in meta["albumRelease"]:
             try:
-                if "bundle" in _format["name"].lower():
+                if "bundle" in _format["name"].casefold():
                     raise KeyError
 
                 medium = _format["musicReleaseFormat"]
@@ -405,7 +405,7 @@ class Metaguru(Helpers):
 
     @cached_property
     def is_va(self) -> bool:
-        return VA.lower() in self.album_name.lower() or (
+        return VA.casefold() in self.album_name.casefold() or (
             len(self.track_artists) > 1
             and not {*self.bandcamp_albumartist.split(", ")}.issubset(self.track_artists)
             and len(self.tracks) >= 4
