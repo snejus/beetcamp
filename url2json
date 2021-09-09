@@ -35,8 +35,8 @@ tracklist_for_tests () {
   jq < "$1" -r '
     "(" + (.track.itemListElement[].item | [
       "\"" + (.["@id"] | sub(".*/"; "")) + "\"",
-      "albumartist",
-      "\"" + .name + "\"",
+      "\"" + ((.name | sub(" - .*"; "")) // "albumartist") + "\"",
+      "\"" + (.name | sub(".* - "; "")) + "\"",
       (.additionalProperty[1].value | floor),
       "None"
     ] | join(", ")) + "),"'
