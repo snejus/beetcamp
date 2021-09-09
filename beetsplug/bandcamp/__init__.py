@@ -22,12 +22,13 @@ import re
 from functools import partial
 from html import unescape
 from operator import truth
-from typing import Any, Callable, Dict, Iterator, List, Optional, Sequence, Set, Union
+from typing import Any, Callable, Dict, Iterator, List, Optional, Sequence, Set
 
 import requests
 import six
 from beets import __version__, config, library, plugins
 from beets.autotag.hooks import AlbumInfo, TrackInfo
+from beets.importer import ImportTask
 from beetsplug import fetchart
 
 from ._metaguru import DATA_SOURCE, DEFAULT_MEDIA, Metaguru, urlify
@@ -109,6 +110,12 @@ class BandcampAlbumArt(BandcampRequestsHandler, fetchart.RemoteArtSource):
             self._info("Art cover is already present")
 
 
+def _from_bandcamp(clue: str) -> bool:
+    return ".bandcamp." in clue or (
+        clue.startswith("http") and ("/album/" in clue or "/track/" in clue)
+    )
+
+
 class BandcampAdditionalData:
     write: bool
     excluded_extra_fields: Set[str]
@@ -127,25 +134,21 @@ class BandcampAdditionalData:
             ):
                 new_value = get_data(bandcamp_field)
                 if new_value:
-                    setattr(item, item_field, new_value)
+                    item.update({item_field: new_value})
                     self._info("{}: obtained {} for {}", name, bandcamp_field, item)
+                else:
+                    self._info("{}: {} not found for {}", name, bandcamp_field, item)
             else:
-                self._info("{}: {} field: already present on {}", name, item_field, item)
+                self._info("{}: {}: already present on {}", name, item_field, item)
+        return item
 
-    def add_additional_data(self, item: library.Item) -> None:
+    def _add_additional_data(self, item: library.Item) -> None:
         """If not excluded, fetch and store:
         * lyrics
         * release description as comments
         """
-        self.verify_and_add(
-            item,
-            partial(getattr, self.guru(item.mb_albumid or item.mb_trackid)),
-            self.excluded_extra_fields,
-        )
-
-        if self.write:
-            item.try_write()
-        item.store()
+        get_data_call = partial(getattr, self.guru(item.mb_albumid or item.mb_trackid))
+        return self.verify_and_add(item, get_data_call, self.excluded_extra_fields)
 
 
 class BandcampPlugin(
@@ -159,24 +162,15 @@ class BandcampPlugin(
 
         self.write = config["import"]["write"].get()
         self.excluded_extra_fields = set(self.config["exclude_extra_fields"].get())
-        self.import_stages = [self.imported]
+        self.register_listener("import_task_apply", self.add_additional_data)
         self.register_listener("pluginload", self.loaded)
         self._gurucache = dict()
 
-    def imported(self, _: Any, task: Any) -> None:
+    def add_additional_data(self, task: ImportTask) -> None:
         """Import hook for fetching additional data from bandcamp."""
-        for item in task.imported_items():
-            if self._from_bandcamp(item):
-                self.add_additional_data(item)
-
-    @staticmethod
-    def _from_bandcamp(clue: Union[library.Item, str]) -> bool:
-        """Accepts either an item or the mb_artistid."""
-        if isinstance(clue, library.Item):
-            clue = clue.mb_albumid or clue.mb_trackid
-        return ".bandcamp." in clue or (
-            clue.startswith("http") and ("album" in clue or "track" in clue)
-        )
+        for item in task.items:
+            if _from_bandcamp(item.mb_albumid or item.mb_trackid):
+                self._add_additional_data(item)
 
     def guru(self, url: str, html: Optional[str] = None) -> Optional[Metaguru]:
         """Return cached guru. If there isn't one, fetch the url if html isn't
@@ -200,13 +194,13 @@ class BandcampPlugin(
         # TODO: This is ugly, but i didn't find another way to extend fetchart
         # without declaring a new plugin.
         if self.config["art"]:
+            fetchart.ART_SOURCES[DATA_SOURCE] = BandcampAlbumArt
+            fetchart.SOURCE_NAMES[BandcampAlbumArt] = DATA_SOURCE
+            bandcamp_fetchart = BandcampAlbumArt(self._log, self.config)
+
             for plugin in plugins.find_plugins():
                 if isinstance(plugin, fetchart.FetchArtPlugin):
-                    plugin.sources = [
-                        BandcampAlbumArt(plugin._log, self.config)
-                    ] + plugin.sources
-                    fetchart.ART_SOURCES[DATA_SOURCE] = BandcampAlbumArt
-                    fetchart.SOURCE_NAMES[BandcampAlbumArt] = DATA_SOURCE
+                    plugin.sources = [bandcamp_fetchart, *plugin.sources]
                     break
 
     def _cheat_mode(self, item: library.Item, name: str, _type: str) -> str:
@@ -214,7 +208,7 @@ class BandcampPlugin(
         if "bandcamp" in reimport_url:
             return reimport_url
 
-        if "Visit" in item.comments:
+        if item.comments.startswith("Visit"):
             match = re.search(r"https:[/a-z.-]+com", item.comments)
             if match:
                 url = "{}/{}/{}".format(match.group(), _type, urlify(name))
@@ -252,7 +246,7 @@ class BandcampPlugin(
 
     def album_for_id(self, album_id: str) -> Optional[AlbumInfo]:
         """Fetch an album by its bandcamp ID."""
-        if self._from_bandcamp(album_id):
+        if _from_bandcamp(album_id):
             return self.get_album_info(album_id)
 
         self._info("Not a bandcamp URL, skipping")
@@ -260,7 +254,7 @@ class BandcampPlugin(
 
     def track_for_id(self, track_id: str) -> Optional[TrackInfo]:
         """Fetch a track by its bandcamp ID."""
-        if self._from_bandcamp(track_id):
+        if _from_bandcamp(track_id):
             return self.get_track_info(track_id)
 
         self._info("Not a bandcamp URL, skipping")
@@ -271,6 +265,10 @@ class BandcampPlugin(
             return getattr(guru, attr)
         except (KeyError, ValueError, AttributeError):
             self._info("Failed obtaining {}", _id)
+            return None
+        except Exception:
+            url = "https://github.com/snejus/beetcamp/issues/new"
+            self._exc("Unexpected error obtaining {}, please report at {}", _id, url)
             return None
 
     def get_album_info(self, url: str) -> Optional[AlbumInfo]:

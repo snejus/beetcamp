@@ -2,6 +2,14 @@
 
 ### Fixed
 
+- General
+
+  - Fixed the logic which fetches the additional data fields (`comments` and `lyrics`). It
+    used to cause unwanted behavior _since it wrote the files when `write: yes`_ was
+    enabled in the beets config. Now, it's activated through the `import_task_apply` hook
+    and _adjusts the metadata_ (beets db) without ever touching the files directly.
+  - Unexpected errors are now printed instead of causing `beets` to quit immediately.
+
 - `track.track_alt`: handle `A1 - Title` and `A1 - Artist - Title` when alt index is not
   followed by a full stop.
 
@@ -45,7 +53,7 @@
 - `album`:
 
   - Only remove label from the album name if `albumtype` is not a compilation
-  - Remove **(FREE DL)**, **VA** from the album name
+  - Remove **(FREE)**, **(FREE DL)**, **VA** from the album name
   - Improved the way **Various Artists** are cleaned up when catalognum is available
   - Remove **_(Incl._ some artists _remixes)_** and alike
   - Convert ** &** into a comma and remove all track artists from the album name
