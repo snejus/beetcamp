@@ -51,6 +51,11 @@
           "@type": "PropertyValue",
           "name": "art_id",
           "value": 2798384948
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "digital_release_description",
+          "value": "Digital Bonus.\r\nLive Wire (Roll Dann Remix 2)"
         }
       ],
       "description": "Includes high-quality download in MP3, FLAC and more. Paying supporters also get unlimited streaming via the free Bandcamp app.",
@@ -89,6 +94,11 @@
         },
         {
           "@type": "PropertyValue",
+          "name": "certified_seller",
+          "value": true
+        },
+        {
+          "@type": "PropertyValue",
           "name": "image_ids",
           "value": [
             21656549,
@@ -96,6 +106,11 @@
             21712022,
             21712024
           ]
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "is_music_merch",
+          "value": true
         },
         {
           "@type": "PropertyValue",
@@ -115,6 +130,21 @@
       "offers": {
         "@type": "Offer",
         "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "download_type",
+            "value": "a"
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "fulfillment_days",
+            "value": 1
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "includes_digital_download",
+            "value": true
+          },
           {
             "@type": "PropertyValue",
             "name": "quantity_available",
@@ -166,7 +196,7 @@
     "name": "Gareth Wild"
   },
   "copyrightNotice": "All Rights Reserved",
-  "dateModified": "07 Nov 2020 14:18:05 GMT",
+  "dateModified": "03 Sep 2021 10:40:23 GMT",
   "datePublished": "02 Nov 2020 00:00:00 GMT",
   "image": "https://f4.bcbits.com/img/a2798384948_10.jpg",
   "keywords": [

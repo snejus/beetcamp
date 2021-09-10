@@ -97,6 +97,11 @@
         },
         {
           "@type": "PropertyValue",
+          "name": "is_music_merch",
+          "value": true
+        },
+        {
+          "@type": "PropertyValue",
           "name": "type_id",
           "value": 2
         }
@@ -110,6 +115,28 @@
       "name": "12\" Vinyl",
       "offers": {
         "@type": "Offer",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "download_type",
+            "value": "a"
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "fulfillment_days",
+            "value": 1
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "includes_digital_download",
+            "value": true
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "quantity_available",
+            "value": 97
+          }
+        ],
         "availability": "InStock",
         "price": 10,
         "priceCurrency": "EUR",
@@ -142,7 +169,7 @@
     "name": "jeånne, DJ DISRESPECT"
   },
   "copyrightNotice": "All Rights Reserved",
-  "dateModified": "27 Feb 2021 11:20:21 GMT",
+  "dateModified": "14 Aug 2021 09:35:03 GMT",
   "datePublished": "09 Oct 2020 00:00:00 GMT",
   "image": "https://f4.bcbits.com/img/a3742084072_10.jpg",
   "keywords": [

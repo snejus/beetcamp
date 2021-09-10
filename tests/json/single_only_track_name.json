@@ -177,11 +177,6 @@
         "@type": "WebPage",
         "name": "music",
         "url": "https://gutkeinforu.bandcamp.com/music"
-      },
-      {
-        "@type": "WebPage",
-        "name": "community",
-        "url": "https://gutkeinforu.bandcamp.com/community"
       }
     ]
   }

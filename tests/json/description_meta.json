@@ -96,6 +96,11 @@
         },
         {
           "@type": "PropertyValue",
+          "name": "is_music_merch",
+          "value": true
+        },
+        {
+          "@type": "PropertyValue",
           "name": "type_id",
           "value": 1
         }
@@ -109,6 +114,21 @@
       "offers": {
         "@type": "Offer",
         "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "download_type",
+            "value": "a"
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "fulfillment_days",
+            "value": 15
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "includes_digital_download",
+            "value": true
+          },
           {
             "@type": "PropertyValue",
             "name": "quantity_available",
@@ -127,6 +147,82 @@
           "minPrice": 8.99
         },
         "url": "https://diffusereality.bandcamp.com/album/francois-dillinger-icosahedrone-lp#p663837865-buy"
+      }
+    },
+    {
+      "@id": "https://diffusereality.bandcamp.com/album/francois-dillinger-icosahedrone-lp#b43435753",
+      "@type": [
+        "MusicRelease",
+        "Product"
+      ],
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "item_id",
+          "value": 43435753
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "item_type",
+          "value": "b"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "selling_band_id",
+          "value": 61399327
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_name",
+          "value": "Digital"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "art_id",
+          "value": 3627156854
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "is_bfd",
+          "value": true
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_id",
+          "value": "d"
+        }
+      ],
+      "image": [
+        "https://f4.bcbits.com/img/a3627156854_10.jpg"
+      ],
+      "musicReleaseFormat": "DigitalFormat",
+      "name": "full digital discography (378 releases)",
+      "offers": {
+        "@type": "Offer",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "bundle_size",
+            "value": 378
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "discount",
+            "value": 0.7
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "max_price",
+            "value": 1000
+          }
+        ],
+        "availability": "OnlineOnly",
+        "price": 886.97,
+        "priceCurrency": "EUR",
+        "priceSpecification": {
+          "minPrice": 886.97
+        },
+        "url": "https://diffusereality.bandcamp.com/album/francois-dillinger-icosahedrone-lp#b43435753-buy"
       }
     },
     {
