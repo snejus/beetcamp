@@ -1,4 +1,4 @@
-## [0.9.4] 2021-08-xx
+## [0.10.0] 2021-09-10
 
 ### Fixed
 
@@ -27,16 +27,6 @@
 
 ### Updated
 
-- `track.artist`: when bandcamp specify multiple albumartists, check each of them whether
-  their names appear in the track title, and only includes matching ones, for example
-
-  ```
-  Main Artist - Title (Someone Remix) ->
-    albumartist: Main Artist
-    artist: Main Artist, Someone
-    title: Title (Someone Remix)
-  ```
-
 - `catalognum`:
 
   - Treat **VA[0-9]+**, **vinyl [0-9]+**, **triple [0-9]+**, **ep 12** as invalid (case
@@ -53,15 +43,14 @@
 - `album`:
 
   - Only remove label from the album name if `albumtype` is not a compilation
-  - Remove **(FREE)**, **(FREE DL)**, **VA**
+  - Remove **(FREE)**, **(FREE DL)**, **VA**, **_(Incl._ some artists _remixes)_** and alike
   - Improved the way **Various Artists** are cleaned up when catalognum is available
-  - Remove **_(Incl._ some artists _remixes)_** and alike
 
 - `albumartist`:
   - If **various** is specified as the albumartist, make it **Various Artists**
   - When the label have set their name as the albumartist in every field, and if the
     actual albumartist could be inferred from the album name, use the inferred name.
-  - If _all_ release tracks have the same artist, prioritise them as the albumartist
+  - If _all_ release tracks have the same artist, assume they are the albumartist
 
 - `albumtype`: treat 4-track release as a valid candidate for a compilation / VA albumtype
 
