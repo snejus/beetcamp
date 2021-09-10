@@ -5,8 +5,37 @@ import re
 import pytest
 from beetsplug.bandcamp._metaguru import NEW_BEETS, Helpers, Metaguru, urlify
 from pytest_lazyfixture import lazy_fixture
+from rich.console import Console
+from rich.panel import Panel
+from rich.table import Table
+from rich.text import Text
 
 pytestmark = pytest.mark.parsing
+
+console = Console(
+    color_system="truecolor", force_terminal=True, force_interactive=True, highlight=True
+)
+
+
+def print_result(case, expected, result):
+    console.width = 150
+
+    table = Table("result", *expected.keys(), show_header=True, border_style="black")
+    expectedrow = []
+    resultrow = []
+    for key in expected.keys():
+        res_color, exp_color = "dim", "dim"
+        expectedval = expected.get(key)
+        resultval = result.get(key)
+        if resultval != expectedval:
+            res_color, exp_color = "bold red", "bold green"
+        expectedrow.append(Text(str(expectedval), style=exp_color))
+        resultrow.append(Text(str(resultval), style=res_color))
+
+    table.add_row("expected", *expectedrow)
+    table.add_row("actual", *resultrow)
+
+    console.print(Panel(table, title=f"[bold]{case}", title_align="left"))
 
 
 @pytest.mark.parametrize(
@@ -107,9 +136,10 @@ def test_convert_title(title, expected):
         ("¯\\_(ツ)_/¯", (None, None, "¯\\_(ツ)_/¯", "¯\\_(ツ)_/¯")),
     ],
 )
-def test_parse_track_name(name, expected):
-    parts = ("track_alt", "artist", "title", "main_title")
-    assert Metaguru.parse_track_name(name) == dict(zip(parts, expected))
+def test_parse_track_name(inputs, expected):
+    expected_track = dict(zip(("track_alt", "artist", "title", "main_title"), expected))
+    result = Metaguru.parse_track_name(Metaguru.clean_name(*inputs))
+    assert expected_track == result, print_result(inputs[0], expected_track, result)
 
 
 @pytest.mark.parametrize(
