@@ -19,9 +19,8 @@ cached-property = "^1.5.2"
 pycountry = "^20.7.3"
 
 [tool.poetry.dev-dependencies]
-beets = { git = "https://github.com/beetbox/beets" }
+beets = "*"
 dataclasses = { version = "*", python = "<3.7" }
-tox = ">=3.21.1"
 flake8 = ">=3.8.4"
 flake8-bandit = ">=2.0.0"
 mypy = ">=0.790"
@@ -30,6 +29,8 @@ pytest = ">=6.2"
 pytest-cov = ">=2.10.1"
 pytest-randomly = "*"
 pytest-lazy-fixture = ">=0.6.3"
+rich = "^10.9.0"
+tox = ">=3.21.1"
 types-setuptools = "^57.0.0"
 types-requests = "^2.25.0"
 types-six = "^0.1.7"
