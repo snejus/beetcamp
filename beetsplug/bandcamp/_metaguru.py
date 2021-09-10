@@ -508,9 +508,6 @@ class Metaguru(Helpers):
     def _trackinfo(self, track: JSONDict, **kwargs: Any) -> TrackInfo:
         track.pop("digital_only")
         track.pop("main_title")
-        track["title"] = self.clean_name(
-            track["title"], *filter(truth, [self.catalognum, self.label])
-        )
         return TrackInfo(
             **self._common,
             **track,
