@@ -86,54 +86,85 @@ def test_convert_title(title, expected):
 
 
 @pytest.mark.parametrize(
-    ("name", "expected"),
+    ("inputs", "expected"),
     [
-        ("Title", (None, None, "Title", "Title")),
-        ("Artist - Title", (None, "Artist", "Title", "Title")),
-        ("A1. Artist - Title", ("A1", "Artist", "Title", "Title")),
-        ("A1- Artist - Title", ("A1", "Artist", "Title", "Title")),
-        ("A1.- Artist - Title", ("A1", "Artist", "Title", "Title")),
-        ("A1 - Title", ("A1", None, "Title", "Title")),
-        ("B2 - Artist - Title", ("B2", "Artist", "Title", "Title")),
-        ("1. Artist - Title", ("1", "Artist", "Title", "Title")),
-        ("1.Artist - Title", ("1", "Artist", "Title", "Title")),
+        (("Title",), (None, None, "Title", "Title")),
+        (("Artist - Title",), (None, "Artist", "Title", "Title")),
+        (("A1. Artist - Title",), ("A1", "Artist", "Title", "Title")),
+        (("A1- Artist - Title",), ("A1", "Artist", "Title", "Title")),
+        (("A1.- Artist - Title",), ("A1", "Artist", "Title", "Title")),
+        (("A1 - Title",), ("A1", None, "Title", "Title")),
+        (("B2 - Artist - Title",), ("B2", "Artist", "Title", "Title")),
+        (("1. Artist - Title",), (None, "Artist", "Title", "Title")),
+        (("1.Artist - Title",), (None, "Artist", "Title", "Title")),
         (
-            "DJ BEVERLY HILL$ - Raw Steeze",
+            ("DJ BEVERLY HILL$ - Raw Steeze",),
             (None, "DJ BEVERLY HILL$", "Raw Steeze", "Raw Steeze"),
         ),
-        ("LI$INGLE010 - cyberflex - LEVEL X", (None, "cyberflex", "LEVEL X", "LEVEL X")),
-        ("Fifty-Third ft. SYH", (None, None, "Fifty-Third ft. SYH", "Fifty-Third")),
         (
-            "I'll Become Pure N-R-G",
+            ("LI$INGLE010 - cyberflex - LEVEL X", "LI$INGLE010"),
+            (None, "cyberflex", "LEVEL X", "LEVEL X"),
+        ),
+        (("Fifty-Third ft. SYH",), (None, None, "Fifty-Third ft. SYH", "Fifty-Third")),
+        (
+            ("I'll Become Pure N-R-G",),
             (None, None, "I'll Become Pure N-R-G", "I'll Become Pure N-R-G"),
         ),
-        ("&$%@#!", (None, None, "&$%@#!", "&$%@#!")),
-        ("24 Hours", (None, None, "24 Hours", "24 Hours")),
+        (("&$%@#!",), (None, None, "&$%@#!", "&$%@#!")),
+        (("24 Hours",), (None, None, "24 Hours", "24 Hours")),
         (
-            "Some tune (Someone's Remix)",
+            ("Some tune (Someone's Remix)",),
             (None, None, "Some tune (Someone's Remix)", "Some tune"),
         ),
         (
-            "19.85 - Colapso Inevitable",
+            ("19.85 - Colapso Inevitable",),
             (None, "19.85", "Colapso Inevitable", "Colapso Inevitable"),
         ),
         (
-            "19.85 - Colapso Inevitable (FREE)",
+            ("19.85 - Colapso Inevitable (FREE)",),
             (None, "19.85", "Colapso Inevitable", "Colapso Inevitable"),
         ),
-        ("E7-E5", (None, None, "E7-E5", "E7-E5")),
+        (("E7-E5",), (None, None, "E7-E5", "E7-E5")),
         (
-            "Lacchesi - UNREALNUMBERS - MK4 (Lacchesi Remix)",
-            (None, "UNREALNUMBERS", "MK4 (Lacchesi Remix)", "MK4"),
+            ("Lacchesi - UNREALNUMBERS - MK4 (Lacchesi Remix)",),
+            (None, "Lacchesi, UNREALNUMBERS", "MK4 (Lacchesi Remix)", "MK4"),
         ),
-        ("UNREALNUMBERS -Karaburan", (None, "UNREALNUMBERS", "Karaburan", "Karaburan")),
-        ("A2.  Two Spaces", ("A2", None, "Two Spaces", "Two Spaces")),
         (
-            "Ellie Goulding- Starry Eyed ( ROWDIBOÏ EDIT))",
+            ("UNREALNUMBERS -Karaburan",),
+            (None, "UNREALNUMBERS", "Karaburan", "Karaburan"),
+        ),
+        (("A2.  Two Spaces",), ("A2", None, "Two Spaces", "Two Spaces")),
+        (
+            ("Ellie Goulding- Starry Eyed ( ROWDIBOÏ EDIT))",),
             (None, "Ellie Goulding", "Starry Eyed (ROWDIBOÏ EDIT)", "Starry Eyed"),
         ),
-        ("Space Jam - (RZVX EDIT)", (None, "Space Jam", "(RZVX EDIT)", "")),
-        ("¯\\_(ツ)_/¯", (None, None, "¯\\_(ツ)_/¯", "¯\\_(ツ)_/¯")),
+        (
+            ("Space Jam - (RZVX EDIT)",),
+            (None, None, "Space Jam (RZVX EDIT)", "Space Jam"),
+        ),
+        (("¯\\_(ツ)_/¯",), (None, None, "¯\\_(ツ)_/¯", "¯\\_(ツ)_/¯")),
+        (("VIENNA (WARM UP MIX",), (None, None, "VIENNA (WARM UP MIX", "VIENNA")),
+        (
+            ("MOD-R - ARE YOU RECEIVING ME",),
+            (None, "MOD-R", "ARE YOU RECEIVING ME", "ARE YOU RECEIVING ME"),
+        ),
+        (
+            ("K - The Lightning Princess",),
+            (None, "K", "The Lightning Princess", "The Lightning Princess"),
+        ),
+        (
+            ("MEAN-E - PLANETARY NEBULAE",),
+            (None, "MEAN-E", "PLANETARY NEBULAE", "PLANETARY NEBULAE"),
+        ),
+        (("f-theme",), (None, None, "f-theme", "f-theme")),
+        (
+            ("NYH244 04 Chris Angel - Mind Freak", "NYH244"),
+            (None, "Chris Angel", "Mind Freak", "Mind Freak"),
+        ),
+        (
+            ("Mr. Free - The 4th Room",),
+            (None, "Mr. Free", "The 4th Room", "The 4th Room"),
+        ),
     ],
 )
 def test_parse_track_name(inputs, expected):
@@ -143,25 +174,27 @@ def test_parse_track_name(inputs, expected):
 
 
 @pytest.mark.parametrize(
-    ("parsed", "official", "albumartist", "title", "expected"),
+    ("parsed", "official", "albumartist", "expected"),
     [
-        (None, "", "AlbumA", "", "AlbumA"),
-        ("", "", "Artist1, Artist2", "Artist2 Remix", "Artist1, Artist2"),
-        ("Parsed", "", "AlbumA", "", "Parsed"),
-        ("Parsed", "Official", "AlbumA", "", "Parsed"),
-        (
-            "Parsed",
-            "Official",
-            "AlbumA",
-            "Official AlbumA Remix",
-            "Parsed, AlbumA, Official",
-        ),
-        (None, "Official", "AlbumA", "", "Official"),
+        (None, "", "AlbumA", "AlbumA"),
+        ("", "", "Artist1, Artist2", "Artist1, Artist2"),
+        ("Parsed", "", "AlbumA", "Parsed"),
+        ("Parsed", "Official", "AlbumA", "Parsed"),
+        (None, "Official", "AlbumA", "Official"),
     ],
 )
-def test_determine_track_artist(parsed, official, albumartist, title, expected):
+def test_get_track_artist(parsed, official, albumartist, expected):
     item = {"byArtist": {"name": official}} if official else {}
-    assert Metaguru.determine_track_artist(parsed, item, albumartist, title) == expected
+    assert Metaguru.get_track_artist(parsed, item, albumartist) == expected
+
+
+@pytest.mark.parametrize(
+    ("artists", "expected"), [(["4.44.444.8", "4.44.444.8"], {"4.44.444.8"})]
+)
+def test_track_artists(artists, expected):
+    guru = Metaguru("")
+    guru.tracks = [{"artist": a} for a in artists]
+    assert guru.track_artists == expected
 
 
 @pytest.mark.parametrize(
@@ -212,49 +245,51 @@ def test_parse_country(name, expected):
 
 
 @pytest.mark.parametrize(
-    ("album", "disctitle", "description", "expected"),
+    ("album", "disctitle", "description", "label", "expected"),
     [
-        ("Tracker-229 [PRH-002]", "", "", "PRH-002"),
-        ("[PRH-002] Tracker-229", "", "", "PRH-002"),
-        ("Tracker-229 PRH-002", "", "", "Tracker-229"),
-        ("ISMVA003.2", "", "", "ISMVA003.2"),
-        ("UTC003-CD", "", "", "UTC003"),
-        ("UTC-003", "", "", "UTC-003"),
-        ("EP [SINDEX008]", "", "", "SINDEX008"),
-        ("2 x Vinyl LP - MTY003", "", "", "MTY003"),
-        ("Kulør 001", "", "", "Kulør 001"),
-        ("00M", "", "", ""),
-        ("X-Coast - Dance Trax Vol.30", "", "", ""),
-        ("Christmas 2020", "", "", ""),
-        ("Various Artists 001", "", "", ""),
-        ("C30 Cassette", "", "", ""),
-        ("BC30 Hello", "", "", "BC30"),
-        ("Blood 1/4", "", "", ""),
-        ("Emotion 1 - Kulør 008", "Emotion 1 Vinyl", "", "Kulør 008"),
-        ("zz333HZ with remixes from Le Chocolat Noir", "", "", ""),
-        ("UTC-003", "", "Catalogue Number: TE0029", "TE0029"),
-        ("UTC-003", "", "Catalogue Nr: TE0029", "TE0029"),
-        ("UTC-003", "", "Catalogue No.: TE0029", "TE0029"),
-        ("UTC-003", "", "Catalogue: CTU-300", "CTU-300"),
-        ("UTC-003", "", "Cat No: TE0029", "TE0029"),
-        ("UTC-003", "", "Cat Nr.: TE0029", "TE0029"),
-        ("UTC-003", "", "Catalogue:CTU-300", "CTU-300"),
-        ("", "LP | ostgutlp31", "", "ostgutlp31"),
-        ("Album VA001", "", "", ""),
-        ("Album MVA001", "", "", "MVA001"),
-        ("Album [ROAD4]", "", "", "ROAD4"),
-        ("Need For Lead (ISM001)", "", "", "ISM001"),
-        ("OBS.CUR 2 Depths", "", "", "OBS.CUR 2"),
-        ("VINYL 12", "", "", ""),
-        ("Triple 12", "", "", ""),
-        ("", "o-ton 113", "", "o-ton 113"),
-        ("IBM001V", "", "", "IBM001V"),
-        ("fa010", "", "", "fa010"),
-        ("", 'EP 12"', "", ""),
+        ("Tracker-229 [PRH-002]", "", "", "", "PRH-002"),
+        ("[PRH-002] Tracker-229", "", "", "", "PRH-002"),
+        ("Tracker-229 PRH-002", "", "", "", "Tracker-229"),
+        ("ISMVA003.2", "", "", "", "ISMVA003.2"),
+        ("UTC003-CD", "", "", "", "UTC003"),
+        ("UTC-003", "", "", "", "UTC-003"),
+        ("EP [SINDEX008]", "", "", "", "SINDEX008"),
+        ("2 x Vinyl LP - MTY003", "", "", "", "MTY003"),
+        ("Kulør 001", "", "", "Kulør", "Kulør 001"),
+        ("00M", "", "", "", ""),
+        ("X-Coast - Dance Trax Vol.30", "", "", "", ""),
+        ("Christmas 2020", "", "", "", ""),
+        ("Various Artists 001", "", "", "", ""),
+        ("C30 Cassette", "", "", "", ""),
+        ("BC30 Hello", "", "", "", "BC30"),
+        ("Blood 1/4", "", "", "", ""),
+        ("Emotion 1 - Kulør 008", "Emotion 1 Vinyl", "", "Kulør", "Kulør 008"),
+        ("zz333HZ with remixes from Le Chocolat Noir", "", "", "", ""),
+        ("UTC-003", "", "Catalogue Number: TE0029", "", "TE0029"),
+        ("UTC-003", "", "Catalogue Nr: TE0029", "", "TE0029"),
+        ("UTC-003", "", "Catalogue No.: TE0029", "", "TE0029"),
+        ("UTC-003", "", "Catalogue: CTU-300", "", "CTU-300"),
+        ("UTC-003", "", "Cat No: TE0029", "", "TE0029"),
+        ("UTC-003", "", "Cat Nr.: TE0029", "", "TE0029"),
+        ("UTC-003", "", "Catalogue:CTU-300", "", "CTU-300"),
+        ("", "LP | ostgutlp31", "", "", "ostgutlp31"),
+        ("Album VA001", "", "", "", ""),
+        ("Album MVA001", "", "", "", "MVA001"),
+        ("Album [ROAD4]", "", "", "", "ROAD4"),
+        ("Need For Lead (ISM001)", "", "", "", "ISM001"),
+        ("OBS.CUR 2 Depths", "", "", "", "OBS.CUR 2"),
+        ("VINYL 12", "", "", "", ""),
+        ("Triple 12", "", "", "", ""),
+        ("", "o-ton 113", "", "", "o-ton 113"),
+        ("IBM001V", "", "", "", "IBM001V"),
+        ("fa010", "", "", "", "fa010"),
+        ("", 'EP 12"', "", "", ""),
+        ("Hope Works 003", "", "", "Hope Works", "Hope Works 003"),
+        ("Counterspell [HMX005]", "", "", "", "HMX005"),
     ],
 )
-def test_parse_catalognum(album, disctitle, description, expected):
-    assert Metaguru.parse_catalognum(album, disctitle, description) == expected
+def test_parse_catalognum(album, disctitle, description, label, expected):
+    assert Metaguru.parse_catalognum(album, disctitle, description, label) == expected
 
 
 @pytest.mark.parametrize(
@@ -284,6 +319,7 @@ def test_parse_catalognum(album, disctitle, description, expected):
         ("Drepa Mann [Vinyl]", [], "Drepa Mann"),
         ("Drepa Mann  [Vinyl]", [], "Drepa Mann"),
         ("The Castle [BLCKLPS009] Incl. Remix", ["BLCKLPS009"], "The Castle"),
+        ("The Castle [BLCKLPS009] Incl. Remix", [], "The Castle [BLCKLPS009]"),
         ('Anetha - "Ophiuchus EP"', ["Anetha"], "Ophiuchus"),
         ("Album (FREE DL)", [], "Album"),
         ("Devils Kiss VA", [], "Devils Kiss"),
@@ -298,11 +334,6 @@ def test_parse_catalognum(album, disctitle, description, expected):
         ("RR009 - Various Artist", ["RR009"], "RR009"),
         ("Diva (Incl. some sort of Remixes)", [], "Diva"),
         ("HWEP010 - MEZZ - COLOR OF WAR", ["HWEP010", "MEZZ"], "COLOR OF WAR"),
-        (
-            "DJ Reiz & Tonni 3000 - Smashed Bros",
-            ["Tonni 3000", "DJ Reiz"],
-            "Smashed Bros",
-        ),
     ],
 )
 def test_clean_name(name, extras, expected):
