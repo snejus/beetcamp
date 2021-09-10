@@ -333,6 +333,7 @@ def test_parse_single_track_release(release):
             "description_meta",
             "single_with_remixes",
             "remix_artists",
+            "edge_cases",
         ],
     ),
     indirect=["release"],
@@ -347,12 +348,12 @@ def test_parse_various_types(release):
     assert hasattr(actual_album, "tracks")
     assert len(actual_album.tracks) == len(expected_album.tracks)
 
-    expected_album.tracks.sort(key=lambda t: t.index)
-    actual_album.tracks.sort(key=lambda t: t.index)
-
-    for actual_track, expected_track in zip(actual_album.tracks, expected_album.tracks):
-        check(actual_track, expected_track)
+    expected_tracks = sorted(expected_album.tracks, key=lambda t: t.index)
+    actual_tracks = sorted(actual_album.tracks, key=lambda t: t.index)
 
     actual_album.tracks = None
     expected_album.tracks = None
     check(actual_album, expected_album)
+
+    for actual_track, expected_track in zip(actual_tracks, expected_tracks):
+        check(actual_track, expected_track)

@@ -578,14 +578,14 @@ def remix_artists() -> ReleaseInfo:
         ("unrealnumbers-rekon", albumartist, "Rekon", 340, None),
         (
             "unrealnumbers-unseen-varya-karpova-remix",
-            albumartist + ", Varya Karpova",
+            albumartist,
             "Unseen (Varya Karpova Remix)",
             362,
             None,
         ),
         (
             "unrealnumbers-mk4-lacchesi-remix",
-            albumartist + ", Lacchesi",
+            albumartist,
             "MK4 (Lacchesi Remix)",
             350,
             None,
@@ -601,6 +601,92 @@ def remix_artists() -> ReleaseInfo:
         release_date=date(2021, 6, 11),
         va=False,
         country="FR",
+        mediums=1,
+    )
+    return info
+
+
+@pytest.fixture
+def edge_cases() -> ReleaseInfo:
+    albumartist = "Various Artists"
+    info = ReleaseInfo(
+        artist_id="https://newyorkhaunted.bandcamp.com",
+        album_id="https://newyorkhaunted.bandcamp.com/album/nyh244-less-weird-parallel-universe-nearly-20-years-of-erikoisdance",  # noqa
+        media="Digital Media",
+        disctitle=None,
+    )
+    tracks = [
+        ("nyh244-01-mallisto-track-3", "Mallisto", "Track 3", 205, None),
+        (
+            "nyh244-02-twisted-krister-music-for-dealers",
+            "Twisted Krister",
+            "Music For Dealers",
+            224,
+            None,
+        ),
+        ("nyh244-03-erikoismies", "Erikoismies", "_ _ _", 134, None),
+        ("nyh244-04-chris-angel-mind-freak", "Chris Angel", "Mind Freak", 280, None),
+        (
+            "nyh244-05-mr-yakamoto-new-age-home-recording",
+            "Mr. Yakamoto",
+            "New Age Home Recording",
+            435,
+            None,
+        ),
+        (
+            "nyh244-06-non-baryonic-form-puujumala",
+            "Non-baryonic Form",
+            "Puujumala",
+            92,
+            None,
+        ),
+        (
+            "nyh244-07-omni-gideon-flogiston-odj-harri-keys-of-life-house-music-edit",
+            "Omni Gideon",
+            "Flogiston (ODJ Harri Keys Of Life House Music Edit)",
+            595,
+            None,
+        ),
+        ("nyh244-08-poly-t-schweinfurt-green", "Poly-T", "Schweinfurt Green", 162, None),
+        ("nyh244-mallisto-laulu-numero-1", "Mallisto", "Laulu Numero 1", 215, None),
+        (
+            "nyh244-10-non-baryonic-form-nitrogen-glaciers",
+            "Non-baryonic Form",
+            "Nitrogen Glaciers",
+            213,
+            None,
+        ),
+        ("nyh244-11-erikoismies-cdr-track-vi", "Erikoismies", "CDR Track VI", 162, None),
+        (
+            "nyh244-12-die-todesmachine-mosktraumen",
+            "Die Todesmachine",
+            "Mosktraumen",
+            251,
+            None,
+        ),
+        ("nyh244-13-sauce-cop-mn-50", "Sauce & Cop", "MN-50", 178, None),
+        ("nyh244-14-treepio-tsimplno", "Treepio", "TSIMPLNO", 376, None),
+        ("nyh244-15-erikoismies-cdr-track-i", "Erikoismies", "CDR Track I", 358, None),
+        (
+            "nyh244-16-non-baryonic-form-cb-skull",
+            "Non-baryonic Form",
+            "CB Skull",
+            248,
+            None,
+        ),
+        ("nyh244-17-omni-gideon-ytterbium-13", "Omni Gideon", "Ytterbium 13", 287, None),
+        ("nyh244-18-sauce-cop-quartz-crisis", "Sauce & Cop", "Quartz Crisis", 315, None),
+    ]
+    info.set_albuminfo(
+        tracks,
+        album="Less Weird Parallel Universe - Nearly 20 Years of Erikoisdance",
+        albumartist=albumartist,
+        albumtype="compilation",
+        catalognum="NYH244",
+        label="New York Haunted",
+        release_date=date(2021, 9, 3),
+        va=True,
+        country="NL",
         mediums=1,
     )
     return info

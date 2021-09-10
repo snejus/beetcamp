@@ -53,16 +53,16 @@
 - `album`:
 
   - Only remove label from the album name if `albumtype` is not a compilation
-  - Remove **(FREE)**, **(FREE DL)**, **VA** from the album name
+  - Remove **(FREE)**, **(FREE DL)**, **VA**
   - Improved the way **Various Artists** are cleaned up when catalognum is available
   - Remove **_(Incl._ some artists _remixes)_** and alike
-  - Convert ** &** into a comma and remove all track artists from the album name
 
 - `albumartist`:
   - If **various** is specified as the albumartist, make it **Various Artists**
   - When the label have set their name as the albumartist in every field, and if the
     actual albumartist could be inferred from the album name, use the inferred name.
   - If _all_ release tracks have the same artist, prioritise them as the albumartist
+
 - `albumtype`: treat 4-track release as a valid candidate for a compilation / VA albumtype
 
 ## [0.9.3] 2021-08-01
