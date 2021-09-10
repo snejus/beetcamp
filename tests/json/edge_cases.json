@@ -1,0 +1,999 @@
+{
+  "@context": "https://schema.org",
+  "@id": "https://newyorkhaunted.bandcamp.com/album/nyh244-less-weird-parallel-universe-nearly-20-years-of-erikoisdance",
+  "@type": "MusicAlbum",
+  "additionalProperty": [
+    {
+      "@type": "PropertyValue",
+      "name": "art_id",
+      "value": 2614409477
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "featured_track_num",
+      "value": 1
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "has_discounts",
+      "value": true
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "license_name",
+      "value": "all_rights_reserved"
+    }
+  ],
+  "albumRelease": [
+    {
+      "@id": "https://newyorkhaunted.bandcamp.com/album/nyh244-less-weird-parallel-universe-nearly-20-years-of-erikoisdance#a555321025",
+      "@type": [
+        "MusicRelease",
+        "Product"
+      ],
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "item_id",
+          "value": 555321025
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "item_type",
+          "value": "a"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "selling_band_id",
+          "value": 2309305945
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_name",
+          "value": "Digital"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "art_id",
+          "value": 2614409477
+        }
+      ],
+      "description": "Includes high-quality download in MP3, FLAC and more. Paying supporters also get unlimited streaming via the free Bandcamp app.",
+      "image": [
+        "https://f4.bcbits.com/img/a2614409477_10.jpg"
+      ],
+      "musicReleaseFormat": "DigitalFormat",
+      "name": "NYH244 Less Weird Parallel Universe  - Nearly 20 Years of Erikoisdance"
+    },
+    {
+      "@id": "https://newyorkhaunted.bandcamp.com/album/nyh244-less-weird-parallel-universe-nearly-20-years-of-erikoisdance#b43334244",
+      "@type": [
+        "MusicRelease",
+        "Product"
+      ],
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "item_id",
+          "value": 43334244
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "item_type",
+          "value": "b"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "selling_band_id",
+          "value": 2309305945
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_name",
+          "value": "Digital"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "art_id",
+          "value": 2614409477
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "is_bfd",
+          "value": true
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_id",
+          "value": "d"
+        }
+      ],
+      "image": [
+        "https://f4.bcbits.com/img/a2614409477_10.jpg"
+      ],
+      "musicReleaseFormat": "DigitalFormat",
+      "name": "full digital discography (289 releases)",
+      "offers": {
+        "@type": "Offer",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "bundle_size",
+            "value": 289
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "discount",
+            "value": 0.9
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "max_price",
+            "value": 1000
+          }
+        ],
+        "availability": "OnlineOnly",
+        "price": 87.1,
+        "priceCurrency": "EUR",
+        "priceSpecification": {
+          "minPrice": 87.1
+        },
+        "url": "https://newyorkhaunted.bandcamp.com/album/nyh244-less-weird-parallel-universe-nearly-20-years-of-erikoisdance#b43334244-buy"
+      }
+    },
+    {
+      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-01-mallisto-track-3#t1765925550",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-02-twisted-krister-music-for-dealers#t1998398008",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-03-erikoismies#t1251598717",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-04-chris-angel-mind-freak#t4010114980",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-05-mr-yakamoto-new-age-home-recording#t210486065",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-06-non-baryonic-form-puujumala#t3216207004",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-07-omni-gideon-flogiston-odj-harri-keys-of-life-house-music-edit#t1137318928",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-08-poly-t-schweinfurt-green#t2953877677",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-mallisto-laulu-numero-1#t1089671829",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-10-non-baryonic-form-nitrogen-glaciers#t2239748918",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-11-erikoismies-cdr-track-vi#t2465973750",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-12-die-todesmachine-mosktraumen#t2408056440",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-13-sauce-cop-mn-50#t139973535",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-14-treepio-tsimplno#t820494330",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-15-erikoismies-cdr-track-i#t2607172093",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-16-non-baryonic-form-cb-skull#t799719279",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-17-omni-gideon-ytterbium-13#t1776876399",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-18-sauce-cop-quartz-crisis#t2765402059",
+      "@type": "MusicRelease"
+    }
+  ],
+  "albumReleaseType": "AlbumRelease",
+  "byArtist": {
+    "@id": "https://newyorkhaunted.bandcamp.com",
+    "@type": "MusicGroup",
+    "name": "New York Haunted"
+  },
+  "copyrightNotice": "All Rights Reserved",
+  "creditText": "Less Weird Parallel Universe\r\nNearly 20 Years of Erikoisdance\r\nAll tracks previously released on CDR.\r\ncompiled by Tom & Vince\r\n\r\n1) Track 3 \r\nMallisto\r\nLive at Mannerheimintie 100 B 48, 31.12.1998 (Erikoisdance 19, 2014)\r\n\r\n2) Music for Dealers \r\nTwisted Krister\r\nRingbahn (Erikoisdance 14, 2010)\r\n\r\n3) _ _ _ \r\nErikoismies\r\nSIMO Tracks (Erikoisdance 15, 2012)\r\n\r\n4) Mind Freak\r\nChris Angel\r\nDiabolus in Musica (Erikoisdance 8, 2008)\r\n\r\n5) New Age Home Recording I \r\nMr. Yakamoto\r\nNew Age Home Recordings (Erikoisdance 10, 2008)\r\n\r\n6) Puujumala \r\nNon-baryonic Form\r\nStereo Balance in The Phythm Part (Erikoisdance 7, 2008)\r\n\r\n7) Flogiston (ODJ Harri Keys of Life House Music Edit) \r\nOmni Gideon (edit by ODJ Harri)\r\nSähkölasku (Erikoisdance 11, 2008)\r\n\r\n8) Schweinfurt Green\r\nPoly-T\r\nComplete Works (Erikoisdance 6, 2007)\r\n \r\n9) Laulu numero 1\r\nMallisto\r\nJuhannus 3008 (Erikoisdance 13, 2009)\r\n\r\n10) Nitrogen Glaciers\r\nNon-baryonic Form\r\nSpatial Guest (Erikoisdance 20, 2016)\r\n\r\n11) CDR Track VI\r\nErikoismies\r\nCDR Tracks (Erikoisdance 9, 2008)\r\n\r\n12) Moskstraumen\r\nDie Todesmaschine \r\nMoskstraumen (Erikoisdance 12, 2009)\r\n\r\n13) MN-50\r\nSauce & Cop\r\nJonkun on ymmärrettävä mitä tehdään (Erikoisdance 16, 2013)\r\n\r\n14) TSIMPLNO\r\nTreepio\r\nTransistor Amnesia (Erikoisdance 38, 2019)\r\n\r\n15) CDR Track I\r\nErikoismies\r\nCDR Tracks (Erikoisdance 9, 2008)\r\n\r\n16) CB Skull \r\nNon-baryonic Form\r\nStereo Balance in The Phythm Part (Erikoisdance 7, 2008)\r\n\r\n17) Ytterbium 13\r\nOmni Gideon\r\nSähkölasku (Erikoisdance 11, 2008)\r\n\r\n18) Quartz Crisis\r\nSauce & Cop\r\n[Untitled Split CDR] (Erikoisdance 21, 2015)",
+  "dateModified": "03 Sep 2021 11:54:24 GMT",
+  "datePublished": "03 Sep 2021 00:00:00 GMT",
+  "description": "I met Tom of Eikoismies a good 20 years ago, back when we were both running small labels, focused on electro mostly. We exchanged tracks and stickers and stayed in touch, lost touch and got back in touch. For our followers, it'll hardly be a surprise to hear I am a big fan of his label Erikoisdance, which has been running for 20 years. \r\n\r\nIts a real honor to be able to make a selection of tracks of this CDR-only label available digitally. Especially because they have been releasing really top notch experimental electronics and techno in a very limited way. The old-school way, of burning cdr's and hand drawing on them and sending them to fans all over the world. This has kept them very autonomous in their releases and style of music. But man.. it's just too good to not share with the rest of the world via ze webbzz.\r\n\r\nI hope you enjoy this selection and I hope you check out Erikoisdance and order one of their timeless. kvlt, trve techno artifacts.\r\n\r\nKeep polycarbonate alive!\r\nhttp://mustakirahvi.net/erikoisdance/",
+  "image": "https://f4.bcbits.com/img/a2614409477_10.jpg",
+  "keywords": [
+    "Electronic",
+    "erikoisdance",
+    "experimental electronic",
+    "experimental techno",
+    "finland",
+    "finnish techno",
+    "post-techno",
+    "techno",
+    "treepio",
+    "Tilburg"
+  ],
+  "name": "NYH244 Less Weird Parallel Universe  - Nearly 20 Years of Erikoisdance",
+  "numTracks": 18,
+  "publisher": {
+    "@id": "https://newyorkhaunted.bandcamp.com",
+    "@type": "MusicGroup",
+    "additionalProperty": [
+      {
+        "@type": "PropertyValue",
+        "name": "band_id",
+        "value": 2309305945
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "currency",
+        "value": "EUR"
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "has_any_downloads",
+        "value": true
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "has_download_codes",
+        "value": true
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_height",
+        "value": 590
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_id",
+        "value": 5400029
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_width",
+        "value": 590
+      }
+    ],
+    "description": "NYH is the label of Dutch producer Drvg Cvltvre. Experimental house and techno. \n\nimagery created by @youtubeartifact\na bot by @dontsave\nand kandinsky.io",
+    "foundingLocation": {
+      "@type": "Place",
+      "name": "Tilburg, Netherlands"
+    },
+    "genre": "https://bandcamp.com/tag/electronic",
+    "image": "https://f4.bcbits.com/img/0005400029_10.jpg",
+    "name": "New York Haunted",
+    "subjectOf": [
+      {
+        "@type": "WebPage",
+        "name": "music",
+        "url": "https://newyorkhaunted.bandcamp.com/music"
+      },
+      {
+        "@type": "WebPage",
+        "name": "merch",
+        "url": "https://newyorkhaunted.bandcamp.com/merch"
+      },
+      {
+        "@type": "WebPage",
+        "name": "community",
+        "url": "https://newyorkhaunted.bandcamp.com/community"
+      }
+    ]
+  },
+  "track": {
+    "@type": "ItemList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-01-mallisto-track-3",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 1765925550
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 205.633
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 1
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H03M25S",
+          "name": "NYH244 01 Mallisto - Track 3"
+        },
+        "position": 1
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-02-twisted-krister-music-for-dealers",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 1998398008
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 224.52
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 2
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H03M44S",
+          "name": "NYH244 02 Twisted Krister - Music For Dealers"
+        },
+        "position": 2
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-03-erikoismies",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 1251598717
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 134.609
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 3
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H02M14S",
+          "name": "NYH244 03 Erikoismies - _ _ _"
+        },
+        "position": 3
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-04-chris-angel-mind-freak",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 4010114980
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 280.361
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 4
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H04M40S",
+          "name": "NYH244 04 Chris Angel - Mind Freak"
+        },
+        "position": 4
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-05-mr-yakamoto-new-age-home-recording",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 210486065
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 435.838
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 5
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H07M15S",
+          "name": "NYH244 05 Mr. Yakamoto - New Age Home Recording"
+        },
+        "position": 5
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-06-non-baryonic-form-puujumala",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 3216207004
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 92.3574
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 6
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H01M32S",
+          "name": "NYH244 06 Non-baryonic Form - Puujumala"
+        },
+        "position": 6
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-07-omni-gideon-flogiston-odj-harri-keys-of-life-house-music-edit",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 1137318928
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 595.497
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 7
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H09M55S",
+          "name": "NYH244 07 Omni Gideon - Flogiston (ODJ Harri Keys Of Life House Music Edit)"
+        },
+        "position": 7
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-08-poly-t-schweinfurt-green",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 2953877677
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 162.856
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 8
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H02M42S",
+          "name": "NYH244 08 Poly-T - Schweinfurt Green"
+        },
+        "position": 8
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-mallisto-laulu-numero-1",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 1089671829
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 215.407
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 9
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H03M35S",
+          "name": "NYH244 Mallisto - Laulu Numero 1"
+        },
+        "position": 9
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-10-non-baryonic-form-nitrogen-glaciers",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 2239748918
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 213.424
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 10
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H03M33S",
+          "name": "NYH244 10 Non-baryonic Form - Nitrogen Glaciers"
+        },
+        "position": 10
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-11-erikoismies-cdr-track-vi",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 2465973750
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 162.433
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 11
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H02M42S",
+          "name": "NYH244 11 Erikoismies - CDR Track VI"
+        },
+        "position": 11
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-12-die-todesmachine-mosktraumen",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 2408056440
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 251.347
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 12
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H04M11S",
+          "name": "NYH244 12 Die Todesmachine - Mosktraumen"
+        },
+        "position": 12
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-13-sauce-cop-mn-50",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 139973535
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 178.252
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 13
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H02M58S",
+          "name": "NYH244 13 Sauce & Cop - MN-50"
+        },
+        "position": 13
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-14-treepio-tsimplno",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 820494330
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 376.958
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 14
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H06M16S",
+          "name": "NYH244 14 Treepio - TSIMPLNO"
+        },
+        "position": 14
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-15-erikoismies-cdr-track-i",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 2607172093
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 358.398
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 15
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H05M58S",
+          "name": "NYH244 15 Erikoismies - CDR Track I"
+        },
+        "position": 15
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-16-non-baryonic-form-cb-skull",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 799719279
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 248.483
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 16
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H04M08S",
+          "name": "NYH244 16 Non-baryonic Form - CB Skull"
+        },
+        "position": 16
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-17-omni-gideon-ytterbium-13",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 1776876399
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 287.696
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 17
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H04M47S",
+          "name": "NYH244 17 Omni Gideon - Ytterbium 13"
+        },
+        "position": 17
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-18-sauce-cop-quartz-crisis",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 2765402059
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 315.228
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 18
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H05M15S",
+          "name": "NYH244 18 Sauce & Cop - Quartz Crisis"
+        },
+        "position": 18
+      }
+    ],
+    "numberOfItems": 18
+  }
+}

@@ -82,7 +82,7 @@ def single_track_release() -> ReleaseInfo:
     """Single track as a release on its own."""
     info = ReleaseInfo(
         artist_id="https://mega-tech.bandcamp.com",
-        album_id="https://mega-tech.bandcamp.com/track/matriark-arangel",
+        album_id="https://mega-tech.bandcamp.com/track/arangel",
         media=DEFAULT_MEDIA,
         disctitle=None,
     )
@@ -91,7 +91,7 @@ def single_track_release() -> ReleaseInfo:
         title="Arangel",
         length=421,
         album="Matriark - Arangel",
-        albumartist="Megatech Industries",
+        albumartist="Matriark",
         albumstatus="Official",
         label="Megatech Industries",
         albumtype="single",
@@ -220,7 +220,7 @@ def album_with_track_alt() -> ReleaseInfo:
         (
             "a2-gareth-wild-live-wire-roll-dann-remix",
             artist,
-            "Live Wire ( Roll Dann Remix )",
+            "Live Wire (Roll Dann Remix)",
             351,
             "A2",
         ),
@@ -323,7 +323,7 @@ def compilation() -> ReleaseInfo:
         ),
         (
             "ndym-succession-original-mix",
-            "ΣNDYM ",
+            "ΣNDYM",
             "Succession (Original Mix)",
             414,
             None,
@@ -470,10 +470,10 @@ def ep() -> ReleaseInfo:
     ]
     info.set_albuminfo(
         tracks,
-        album="fa010 | Kickdown Vienna",
+        album="Kickdown Vienna",
         albumartist="jeånne, DJ DISRESPECT",
         albumtype="album",
-        catalognum="",
+        catalognum="fa010",
         label="falling apart",
         release_date=date(2020, 10, 9),
         va=False,
@@ -513,7 +513,7 @@ def description_meta() -> ReleaseInfo:
         label="Diffuse Reality",
         release_date=date(2021, 5, 5),
         va=False,
-        country="ES",
+        country="PT",
         mediums=1,
     )
     return info
@@ -557,6 +557,136 @@ def single_with_remixes() -> ReleaseInfo:
         release_date=date(2021, 3, 5),
         va=False,
         country="DE",
+        mediums=1,
+    )
+    return info
+
+
+@pytest.fixture
+def remix_artists() -> ReleaseInfo:
+    albumartist = "UNREALNUMBERS"
+    info = ReleaseInfo(
+        artist_id="https://maisoncloserecords.bandcamp.com",
+        album_id="https://maisoncloserecords.bandcamp.com/album/unrealnumbers-unseen-ep-varya-karpova-lacchesi-remixes",  # noqa
+        media="Digital Media",
+        disctitle=None,
+    )
+    tracks = [
+        ("unrealnumbers-unseen", albumartist, "Unseen", 383, None),
+        ("unrealnumbers-mk4", albumartist, "MK4", 352, None),
+        ("unrealnumbers-karaburan", albumartist, "Karaburan", 341, None),
+        ("unrealnumbers-rekon", albumartist, "Rekon", 340, None),
+        (
+            "unrealnumbers-unseen-varya-karpova-remix",
+            albumartist,
+            "Unseen (Varya Karpova Remix)",
+            362,
+            None,
+        ),
+        (
+            "unrealnumbers-mk4-lacchesi-remix",
+            albumartist,
+            "MK4 (Lacchesi Remix)",
+            350,
+            None,
+        ),
+    ]
+    info.set_albuminfo(
+        tracks,
+        album="Unseen",
+        albumartist=albumartist,
+        albumtype="ep",
+        catalognum="",
+        label="Maison Close",
+        release_date=date(2021, 6, 11),
+        va=False,
+        country="FR",
+        mediums=1,
+    )
+    return info
+
+
+@pytest.fixture
+def edge_cases() -> ReleaseInfo:
+    albumartist = "Various Artists"
+    info = ReleaseInfo(
+        artist_id="https://newyorkhaunted.bandcamp.com",
+        album_id="https://newyorkhaunted.bandcamp.com/album/nyh244-less-weird-parallel-universe-nearly-20-years-of-erikoisdance",  # noqa
+        media="Digital Media",
+        disctitle=None,
+    )
+    tracks = [
+        ("nyh244-01-mallisto-track-3", "Mallisto", "Track 3", 205, None),
+        (
+            "nyh244-02-twisted-krister-music-for-dealers",
+            "Twisted Krister",
+            "Music For Dealers",
+            224,
+            None,
+        ),
+        ("nyh244-03-erikoismies", "Erikoismies", "_ _ _", 134, None),
+        ("nyh244-04-chris-angel-mind-freak", "Chris Angel", "Mind Freak", 280, None),
+        (
+            "nyh244-05-mr-yakamoto-new-age-home-recording",
+            "Mr. Yakamoto",
+            "New Age Home Recording",
+            435,
+            None,
+        ),
+        (
+            "nyh244-06-non-baryonic-form-puujumala",
+            "Non-baryonic Form",
+            "Puujumala",
+            92,
+            None,
+        ),
+        (
+            "nyh244-07-omni-gideon-flogiston-odj-harri-keys-of-life-house-music-edit",
+            "Omni Gideon",
+            "Flogiston (ODJ Harri Keys Of Life House Music Edit)",
+            595,
+            None,
+        ),
+        ("nyh244-08-poly-t-schweinfurt-green", "Poly-T", "Schweinfurt Green", 162, None),
+        ("nyh244-mallisto-laulu-numero-1", "Mallisto", "Laulu Numero 1", 215, None),
+        (
+            "nyh244-10-non-baryonic-form-nitrogen-glaciers",
+            "Non-baryonic Form",
+            "Nitrogen Glaciers",
+            213,
+            None,
+        ),
+        ("nyh244-11-erikoismies-cdr-track-vi", "Erikoismies", "CDR Track VI", 162, None),
+        (
+            "nyh244-12-die-todesmachine-mosktraumen",
+            "Die Todesmachine",
+            "Mosktraumen",
+            251,
+            None,
+        ),
+        ("nyh244-13-sauce-cop-mn-50", "Sauce & Cop", "MN-50", 178, None),
+        ("nyh244-14-treepio-tsimplno", "Treepio", "TSIMPLNO", 376, None),
+        ("nyh244-15-erikoismies-cdr-track-i", "Erikoismies", "CDR Track I", 358, None),
+        (
+            "nyh244-16-non-baryonic-form-cb-skull",
+            "Non-baryonic Form",
+            "CB Skull",
+            248,
+            None,
+        ),
+        ("nyh244-17-omni-gideon-ytterbium-13", "Omni Gideon", "Ytterbium 13", 287, None),
+        ("nyh244-18-sauce-cop-quartz-crisis", "Sauce & Cop", "Quartz Crisis", 315, None),
+    ]
+    info.set_albuminfo(
+        tracks,
+        album="Less Weird Parallel Universe - Nearly 20 Years of Erikoisdance",
+        albumartist=albumartist,
+        albumtype="compilation",
+        catalognum="NYH244",
+        label="New York Haunted",
+        release_date=date(2021, 9, 3),
+        va=True,
+        country="NL",
         mediums=1,
     )
     return info

@@ -61,6 +61,11 @@
           },
           {
             "@type": "PropertyValue",
+            "name": "selling_band_id",
+            "value": 1309392494
+          },
+          {
+            "@type": "PropertyValue",
             "name": "type_name",
             "value": "Digital"
           },
@@ -172,11 +177,6 @@
         "@type": "WebPage",
         "name": "music",
         "url": "https://gutkeinforu.bandcamp.com/music"
-      },
-      {
-        "@type": "WebPage",
-        "name": "community",
-        "url": "https://gutkeinforu.bandcamp.com/community"
       }
     ]
   }

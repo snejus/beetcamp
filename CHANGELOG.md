@@ -1,11 +1,67 @@
+## [0.10.0] 2021-09-10
+
+### Fixed
+
+- General
+
+  - Fixed the logic which fetches the additional data fields (`comments` and `lyrics`). It
+    used to cause unwanted behavior _since it wrote the files when `write: yes`_ was
+    enabled in the beets config. Now, it's activated through the `import_task_apply` hook
+    and _adjusts the metadata_ (beets db) without ever touching the files directly.
+  - Unexpected errors are now printed instead of causing `beets` to quit immediately.
+
+- `track.track_alt`: handle `A1 - Title` and `A1 - Artist - Title` when alt index is not
+  followed by a full stop.
+
+- `track.title`:
+
+  - Handle cases like **Artist -Title** / **Artist- Title** when there is no space between
+    the dash and the title or artist
+  - Fixed _digital only_ cleaner which would previously remove the string **Only** when
+    it's found on its own
+  - Accept [**¯\\_(ツ)_/¯**](https://clandestinerecords.bandcamp.com/track/--7) as valid title
+  - Clean up **( Remix )** -> **(Remix)**
+
+- `country`: **Washington, D.C.** and **South Korea** have not been parsed correctly and
+  thus releases have been defaulting to **XW**. This is now fixed.
+
+### Updated
+
+- `catalognum`:
+
+  - Treat **VA[0-9]+**, **vinyl [0-9]+**, **triple [0-9]+**, **ep 12** as invalid (case
+    insensitive)
+  - Handle single digits (like **ROAD4**) as valid (until now we required at least two)
+  - Handle catalognums in parentheses, like **(ISM001)**
+  - Handle a period or a dash in the non-digit part, like **OBS.CUR 12**, **O-TON 113**
+  - Allow a single capital letter after the digits, like **IBM001V**
+  - Allow the catalognum to start with a non-capital letter, like **fa010**
+
+- `album` and `track.title`: little clean up: replace multiple consecutive spaces with a
+  single one and remove all double quotes
+
+- `album`:
+
+  - Only remove label from the album name if `albumtype` is not a compilation
+  - Remove **(FREE)**, **(FREE DL)**, **VA**, **_(Incl._ some artists _remixes)_** and alike
+  - Improved the way **Various Artists** are cleaned up when catalognum is available
+
+- `albumartist`:
+  - If **various** is specified as the albumartist, make it **Various Artists**
+  - When the label have set their name as the albumartist in every field, and if the
+    actual albumartist could be inferred from the album name, use the inferred name.
+  - If _all_ release tracks have the same artist, assume they are the albumartist
+
+- `albumtype`: treat 4-track release as a valid candidate for a compilation / VA albumtype
+
 ## [0.9.3] 2021-08-01
 
 ### Updated
 
 - Bandcamp json updates:
-  + `release_date`: `datePublished` field now tells the correct release date so now we use
+  - `release_date`: `datePublished` field now tells the correct release date so now we use
     it instead of parsing the plain html.
-  + `label`: some releases embed the `recordLabel` field into the json data - it now gets
+  - `label`: some releases embed the `recordLabel` field into the json data - it now gets
     prioritized over the publisher name when it is available.
 - `track.title`: clean up `*digital only*` properly. Previously we did not account for
   asterixes
@@ -36,7 +92,6 @@
 
 - Added a github action to run ci for `master` and `dev` branches. For now it's just a minimal
   configuration and will probably get updated soon.
-
 
 ## [0.9.1] 2021-06-04
 

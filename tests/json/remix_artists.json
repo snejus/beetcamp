@@ -1,12 +1,12 @@
 {
   "@context": "https://schema.org",
-  "@id": "https://fallingapart.bandcamp.com/album/fa010-kickdown-vienna",
+  "@id": "https://maisoncloserecords.bandcamp.com/album/unrealnumbers-unseen-ep-varya-karpova-lacchesi-remixes",
   "@type": "MusicAlbum",
   "additionalProperty": [
     {
       "@type": "PropertyValue",
       "name": "art_id",
-      "value": 3742084072
+      "value": 1571280308
     },
     {
       "@type": "PropertyValue",
@@ -21,7 +21,7 @@
   ],
   "albumRelease": [
     {
-      "@id": "https://fallingapart.bandcamp.com/album/fa010-kickdown-vienna#a4190194561",
+      "@id": "https://maisoncloserecords.bandcamp.com/album/unrealnumbers-unseen-ep-varya-karpova-lacchesi-remixes#a832154543",
       "@type": [
         "MusicRelease",
         "Product"
@@ -30,7 +30,7 @@
         {
           "@type": "PropertyValue",
           "name": "item_id",
-          "value": 4190194561
+          "value": 832154543
         },
         {
           "@type": "PropertyValue",
@@ -40,7 +40,7 @@
         {
           "@type": "PropertyValue",
           "name": "selling_band_id",
-          "value": 3963823236
+          "value": 1994130301
         },
         {
           "@type": "PropertyValue",
@@ -50,18 +50,18 @@
         {
           "@type": "PropertyValue",
           "name": "art_id",
-          "value": 3742084072
+          "value": 1571280308
         }
       ],
       "description": "Includes high-quality download in MP3, FLAC and more. Paying supporters also get unlimited streaming via the free Bandcamp app.",
       "image": [
-        "https://f4.bcbits.com/img/a3742084072_10.jpg"
+        "https://f4.bcbits.com/img/a1571280308_10.jpg"
       ],
       "musicReleaseFormat": "DigitalFormat",
-      "name": "fa010 | Kickdown Vienna"
+      "name": "UNREALNUMBERS - Unseen EP (Varya Karpova & Lacchesi Remixes)"
     },
     {
-      "@id": "https://fallingapart.bandcamp.com/album/fa010-kickdown-vienna#p2928220301",
+      "@id": "https://maisoncloserecords.bandcamp.com/album/unrealnumbers-unseen-ep-varya-karpova-lacchesi-remixes#b42347570",
       "@type": [
         "MusicRelease",
         "Product"
@@ -70,126 +70,123 @@
         {
           "@type": "PropertyValue",
           "name": "item_id",
-          "value": 2928220301
+          "value": 42347570
         },
         {
           "@type": "PropertyValue",
           "name": "item_type",
-          "value": "p"
+          "value": "b"
         },
         {
           "@type": "PropertyValue",
           "name": "selling_band_id",
-          "value": 3963823236
+          "value": 1994130301
         },
         {
           "@type": "PropertyValue",
           "name": "type_name",
-          "value": "Vinyl LP"
+          "value": "Digital"
         },
         {
           "@type": "PropertyValue",
-          "name": "image_ids",
-          "value": [
-            23869838,
-            23869839
-          ]
+          "name": "art_id",
+          "value": 587506457
         },
         {
           "@type": "PropertyValue",
-          "name": "is_music_merch",
+          "name": "is_bfd",
           "value": true
         },
         {
           "@type": "PropertyValue",
           "name": "type_id",
-          "value": 2
+          "value": "d"
         }
       ],
-      "description": "artist: jeånne, DJ Disrespect\nrelease name: Kickdown Vienna\ncatalog: fa010\nbandcamp release date: 09.10.20\nofficial release date: 16.10.20\nformat: vinyl (+ digital only at bandcamp)\n\ntrack info:\nA1 jeånne - the devil's not ås blåck ås he is påinted (hård mix)\nA2 jeånne - the påth to pårådise begins in hell\nB1 DJ DISRESPECT - VIENNA (WARM UP MIX)\nB2 DJ DISRESPECT - TRANSITION (ATHLETIC MIX)\n\nrelease description:\nvienna based artist jeånne maintaining ancient aesthetics on A side. fast pacing acid structures under aggressive beats, enveloped in melancholic strings and melodies.\nDJ DISRESPECT aka Toni Moralez already proven his strong production skills on this and also other labels. He is now delivering two adrenalin kicking, schranz-like dancefloor destroyers out of the depths of Frankfurt am Main.",
       "image": [
-        "https://f4.bcbits.com/img/0023869838_10.jpg",
-        "https://f4.bcbits.com/img/0023869839_10.jpg"
+        "https://f4.bcbits.com/img/a0587506457_10.jpg"
       ],
-      "musicReleaseFormat": "VinylFormat",
-      "name": "12\" Vinyl",
+      "musicReleaseFormat": "DigitalFormat",
+      "name": "full digital discography (8 releases)",
       "offers": {
         "@type": "Offer",
         "additionalProperty": [
           {
             "@type": "PropertyValue",
-            "name": "download_type",
-            "value": "a"
+            "name": "bundle_size",
+            "value": 8
           },
           {
             "@type": "PropertyValue",
-            "name": "fulfillment_days",
-            "value": 1
+            "name": "discount",
+            "value": 0.4
           },
           {
             "@type": "PropertyValue",
-            "name": "includes_digital_download",
-            "value": true
-          },
-          {
-            "@type": "PropertyValue",
-            "name": "quantity_available",
-            "value": 97
+            "name": "max_price",
+            "value": 1000
           }
         ],
-        "availability": "InStock",
-        "price": 10,
+        "availability": "OnlineOnly",
+        "price": 42.6,
         "priceCurrency": "EUR",
         "priceSpecification": {
-          "minPrice": 10
+          "minPrice": 42.6
         },
-        "url": "https://fallingapart.bandcamp.com/album/fa010-kickdown-vienna#p2928220301-buy"
+        "url": "https://maisoncloserecords.bandcamp.com/album/unrealnumbers-unseen-ep-varya-karpova-lacchesi-remixes#b42347570-buy"
       }
     },
     {
-      "@id": "https://fallingapart.bandcamp.com/track/je-nne-the-devils-not-s-bl-ck-s-he-is-p-inted-h-rd-mix#t1568631558",
+      "@id": "https://maisoncloserecords.bandcamp.com/track/unrealnumbers-unseen#t3030790431",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://fallingapart.bandcamp.com/track/je-nne-the-p-th-to-p-r-dise-begins-in-hell#t1365259276",
+      "@id": "https://maisoncloserecords.bandcamp.com/track/unrealnumbers-mk4#t987420966",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://fallingapart.bandcamp.com/track/dj-disrespect-vienna-warm-up-mix#t2270629014",
+      "@id": "https://maisoncloserecords.bandcamp.com/track/unrealnumbers-karaburan#t3850977436",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://fallingapart.bandcamp.com/track/dj-disrespect-transition-athletic-mix#t1411519787",
+      "@id": "https://maisoncloserecords.bandcamp.com/track/unrealnumbers-rekon#t628289803",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://maisoncloserecords.bandcamp.com/track/unrealnumbers-unseen-varya-karpova-remix#t3533046617",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://maisoncloserecords.bandcamp.com/track/unrealnumbers-mk4-lacchesi-remix#t359910911",
       "@type": "MusicRelease"
     }
   ],
   "albumReleaseType": "AlbumRelease",
   "byArtist": {
+    "@id": "https://maisoncloserecords.bandcamp.com",
     "@type": "MusicGroup",
-    "name": "jeånne, DJ DISRESPECT"
+    "name": "Maison Close"
   },
   "copyrightNotice": "All Rights Reserved",
-  "dateModified": "14 Aug 2021 09:35:03 GMT",
-  "datePublished": "09 Oct 2020 00:00:00 GMT",
-  "image": "https://f4.bcbits.com/img/a3742084072_10.jpg",
+  "dateModified": "11 Jun 2021 08:55:23 GMT",
+  "datePublished": "11 Jun 2021 00:00:00 GMT",
+  "description": "Supported by Dax J, SPFDJ, Wallis, u.r.trax, Rezystor, DYEN, VII Circle, VII Circle & more ...",
+  "image": "https://f4.bcbits.com/img/a1571280308_10.jpg",
   "keywords": [
-    "Chicago",
     "Electronic",
-    "Experimental",
-    "Techno",
-    "acid",
-    "Frankfurt"
+    "techno",
+    "Paris"
   ],
-  "name": "fa010 | Kickdown Vienna",
-  "numTracks": 4,
+  "name": "UNREALNUMBERS - Unseen EP (Varya Karpova & Lacchesi Remixes)",
+  "numTracks": 6,
   "publisher": {
-    "@id": "https://fallingapart.bandcamp.com",
+    "@id": "https://maisoncloserecords.bandcamp.com",
     "@type": "MusicGroup",
     "additionalProperty": [
       {
         "@type": "PropertyValue",
         "name": "band_id",
-        "value": 3963823236
+        "value": 1994130301
       },
       {
         "@type": "PropertyValue",
@@ -203,70 +200,49 @@
       },
       {
         "@type": "PropertyValue",
-        "name": "has_download_codes",
-        "value": true
-      },
-      {
-        "@type": "PropertyValue",
-        "name": "has_policies",
-        "value": true
-      },
-      {
-        "@type": "PropertyValue",
         "name": "image_height",
-        "value": 480
+        "value": 1081
       },
       {
         "@type": "PropertyValue",
         "name": "image_id",
-        "value": 15313255
+        "value": 23882550
       },
       {
         "@type": "PropertyValue",
         "name": "image_width",
-        "value": 480
+        "value": 1081
       }
     ],
-    "description": "vinyl record label / disc-jockey\n\nbooking (masha): goldfishage@gmail.com",
     "foundingLocation": {
       "@type": "Place",
-      "name": "Frankfurt, Germany"
+      "name": "Paris, France"
     },
     "genre": "https://bandcamp.com/tag/electronic",
-    "image": "https://f4.bcbits.com/img/0015313255_10.jpg",
+    "image": "https://f4.bcbits.com/img/0023882550_10.jpg",
     "mainEntityOfPage": [
       {
         "@type": "WebPage",
-        "name": "Instagram",
-        "url": "https://www.instagram.com/fallingapart030/"
-      },
-      {
-        "@type": "WebPage",
-        "name": "discogs.com",
-        "url": "https://www.discogs.com/label/1018951-falling-apart"
-      },
-      {
-        "@type": "WebPage",
-        "name": "SoundCloud",
-        "url": "https://soundcloud.com/fallingapart030"
+        "name": "Facebook",
+        "url": "https://www.facebook.com/maisoncloserecords"
       }
     ],
-    "name": "falling apart",
+    "name": "Maison Close",
     "subjectOf": [
       {
         "@type": "WebPage",
         "name": "music",
-        "url": "https://fallingapart.bandcamp.com/music"
+        "url": "https://maisoncloserecords.bandcamp.com/music"
       },
       {
         "@type": "WebPage",
         "name": "merch",
-        "url": "https://fallingapart.bandcamp.com/merch"
+        "url": "https://maisoncloserecords.bandcamp.com/merch"
       },
       {
         "@type": "WebPage",
         "name": "community",
-        "url": "https://fallingapart.bandcamp.com/community"
+        "url": "https://maisoncloserecords.bandcamp.com/community"
       }
     ]
   },
@@ -276,18 +252,18 @@
       {
         "@type": "ListItem",
         "item": {
-          "@id": "https://fallingapart.bandcamp.com/track/je-nne-the-devils-not-s-bl-ck-s-he-is-p-inted-h-rd-mix",
+          "@id": "https://maisoncloserecords.bandcamp.com/track/unrealnumbers-unseen",
           "@type": "MusicRecording",
           "additionalProperty": [
             {
               "@type": "PropertyValue",
               "name": "track_id",
-              "value": 1568631558
+              "value": 3030790431
             },
             {
               "@type": "PropertyValue",
               "name": "duration_secs",
-              "value": 385.8
+              "value": 383.662
             },
             {
               "@type": "PropertyValue",
@@ -306,26 +282,26 @@
             }
           ],
           "copyrightNotice": "All Rights Reserved",
-          "duration": "P00H06M25S",
-          "name": "jeånne - the devil's not ås blåck ås he is påinted (hård mix)"
+          "duration": "P00H06M23S",
+          "name": "UNREALNUMBERS - Unseen"
         },
         "position": 1
       },
       {
         "@type": "ListItem",
         "item": {
-          "@id": "https://fallingapart.bandcamp.com/track/je-nne-the-p-th-to-p-r-dise-begins-in-hell",
+          "@id": "https://maisoncloserecords.bandcamp.com/track/unrealnumbers-mk4",
           "@type": "MusicRecording",
           "additionalProperty": [
             {
               "@type": "PropertyValue",
               "name": "track_id",
-              "value": 1365259276
+              "value": 987420966
             },
             {
               "@type": "PropertyValue",
               "name": "duration_secs",
-              "value": 333.5
+              "value": 352.448
             },
             {
               "@type": "PropertyValue",
@@ -344,26 +320,26 @@
             }
           ],
           "copyrightNotice": "All Rights Reserved",
-          "duration": "P00H05M33S",
-          "name": "jeånne - the påth to pårådise begins in hell"
+          "duration": "P00H05M52S",
+          "name": "UNREALNUMBERS - MK4"
         },
         "position": 2
       },
       {
         "@type": "ListItem",
         "item": {
-          "@id": "https://fallingapart.bandcamp.com/track/dj-disrespect-vienna-warm-up-mix",
+          "@id": "https://maisoncloserecords.bandcamp.com/track/unrealnumbers-karaburan",
           "@type": "MusicRecording",
           "additionalProperty": [
             {
               "@type": "PropertyValue",
               "name": "track_id",
-              "value": 2270629014
+              "value": 3850977436
             },
             {
               "@type": "PropertyValue",
               "name": "duration_secs",
-              "value": 315.203
+              "value": 341.408
             },
             {
               "@type": "PropertyValue",
@@ -382,26 +358,26 @@
             }
           ],
           "copyrightNotice": "All Rights Reserved",
-          "duration": "P00H05M15S",
-          "name": "DJ DISRESPECT - VIENNA (WARM UP MIX"
+          "duration": "P00H05M41S",
+          "name": "UNREALNUMBERS -Karaburan"
         },
         "position": 3
       },
       {
         "@type": "ListItem",
         "item": {
-          "@id": "https://fallingapart.bandcamp.com/track/dj-disrespect-transition-athletic-mix",
+          "@id": "https://maisoncloserecords.bandcamp.com/track/unrealnumbers-rekon",
           "@type": "MusicRecording",
           "additionalProperty": [
             {
               "@type": "PropertyValue",
               "name": "track_id",
-              "value": 1411519787
+              "value": 628289803
             },
             {
               "@type": "PropertyValue",
               "name": "duration_secs",
-              "value": 333.703
+              "value": 340.699
             },
             {
               "@type": "PropertyValue",
@@ -420,12 +396,96 @@
             }
           ],
           "copyrightNotice": "All Rights Reserved",
-          "duration": "P00H05M33S",
-          "name": "DJ DISRESPECT - TRANSITION (ATHLETIC MIX)"
+          "duration": "P00H05M40S",
+          "name": "UNREALNUMBERS - Rekon"
         },
         "position": 4
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://maisoncloserecords.bandcamp.com/track/unrealnumbers-unseen-varya-karpova-remix",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 3533046617
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 362.774
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 5
+            }
+          ],
+          "byArtist": {
+            "@type": "MusicGroup",
+            "name": "Varya Karpova"
+          },
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H06M02S",
+          "name": "UNREALNUMBERS - Unseen (Varya Karpova Remix)"
+        },
+        "position": 5
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://maisoncloserecords.bandcamp.com/track/unrealnumbers-mk4-lacchesi-remix",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 359910911
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 350.897
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 6
+            }
+          ],
+          "byArtist": {
+            "@type": "MusicGroup",
+            "name": "Lacchesi"
+          },
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H05M50S",
+          "name": "UNREALNUMBERS - MK4 (Lacchesi Remix)"
+        },
+        "position": 6
       }
     ],
-    "numberOfItems": 4
+    "numberOfItems": 6
   }
 }

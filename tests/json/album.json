@@ -39,6 +39,11 @@
         },
         {
           "@type": "PropertyValue",
+          "name": "selling_band_id",
+          "value": 788052312
+        },
+        {
+          "@type": "PropertyValue",
           "name": "type_name",
           "value": "Digital"
         },
@@ -74,8 +79,18 @@
         },
         {
           "@type": "PropertyValue",
+          "name": "selling_band_id",
+          "value": 788052312
+        },
+        {
+          "@type": "PropertyValue",
           "name": "type_name",
           "value": "Vinyl LP"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "certified_seller",
+          "value": true
         },
         {
           "@type": "PropertyValue",
@@ -84,6 +99,16 @@
             22500386,
             22500378
           ]
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "is_music_merch",
+          "value": true
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_id",
+          "value": 2
         }
       ],
       "image": [
@@ -95,6 +120,21 @@
       "offers": {
         "@type": "Offer",
         "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "download_type",
+            "value": "a"
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "fulfillment_days",
+            "value": 10
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "includes_digital_download",
+            "value": true
+          },
           {
             "@type": "PropertyValue",
             "name": "quantity_available",

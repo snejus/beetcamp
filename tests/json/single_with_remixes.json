@@ -39,6 +39,11 @@
         },
         {
           "@type": "PropertyValue",
+          "name": "selling_band_id",
+          "value": 3338267481
+        },
+        {
+          "@type": "PropertyValue",
           "name": "type_name",
           "value": "Digital"
         },
@@ -86,8 +91,18 @@
         },
         {
           "@type": "PropertyValue",
+          "name": "selling_band_id",
+          "value": 3338267481
+        },
+        {
+          "@type": "PropertyValue",
           "name": "type_name",
           "value": "Vinyl LP"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "certified_seller",
+          "value": true
         },
         {
           "@type": "PropertyValue",
@@ -95,6 +110,16 @@
           "value": [
             23426665
           ]
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "is_music_merch",
+          "value": true
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_id",
+          "value": 2
         }
       ],
       "description": "Vinyl is expected later in March.\nPostage price includes tracking\n\nPlease be aware that we are still experiencing covid related issues with shipping companies. The package might therefore take longer than usual to arrive",
@@ -108,13 +133,28 @@
         "additionalProperty": [
           {
             "@type": "PropertyValue",
+            "name": "download_type",
+            "value": "a"
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "fulfillment_days",
+            "value": 4
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "includes_digital_download",
+            "value": true
+          },
+          {
+            "@type": "PropertyValue",
             "name": "quantity_available",
-            "value": 34
+            "value": 32
           }
         ],
         "availability": "InStock",
         "price": 95,
-        "priceCurrency": "EUR",
+        "priceCurrency": "DKK",
         "priceSpecification": {
           "minPrice": 95
         },

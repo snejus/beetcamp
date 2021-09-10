@@ -43,7 +43,7 @@ def test_return_none_for_gibberish():
 def test_search():
     query = "matriark"
     search_type = "track"
-    expect_to_find = "https://mega-tech.bandcamp.com/track/matriark-arangel"
+    expect_to_find = "https://mega-tech.bandcamp.com/track/arangel"
 
     plugin = BandcampPlugin()
     urls = list(plugin._search(query, search_type))

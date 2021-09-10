@@ -44,6 +44,11 @@
         },
         {
           "@type": "PropertyValue",
+          "name": "selling_band_id",
+          "value": 2663533860
+        },
+        {
+          "@type": "PropertyValue",
           "name": "type_name",
           "value": "Digital"
         },
@@ -59,6 +64,82 @@
       ],
       "musicReleaseFormat": "DigitalFormat",
       "name": "ISMVA003.3"
+    },
+    {
+      "@id": "https://ismusberlin.bandcamp.com/album/ismva0033#b42222766",
+      "@type": [
+        "MusicRelease",
+        "Product"
+      ],
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "item_id",
+          "value": 42222766
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "item_type",
+          "value": "b"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "selling_band_id",
+          "value": 2663533860
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_name",
+          "value": "Digital"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "art_id",
+          "value": 378822374
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "is_bfd",
+          "value": true
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_id",
+          "value": "d"
+        }
+      ],
+      "image": [
+        "https://f4.bcbits.com/img/a0378822374_10.jpg"
+      ],
+      "musicReleaseFormat": "DigitalFormat",
+      "name": "full digital discography (16 releases)",
+      "offers": {
+        "@type": "Offer",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "bundle_size",
+            "value": 16
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "discount",
+            "value": 0.25
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "max_price",
+            "value": 1000
+          }
+        ],
+        "availability": "OnlineOnly",
+        "price": 29.25,
+        "priceCurrency": "EUR",
+        "priceSpecification": {
+          "minPrice": 29.25
+        },
+        "url": "https://ismusberlin.bandcamp.com/album/ismva0033#b42222766-buy"
+      }
     },
     {
       "@id": "https://ismusberlin.bandcamp.com/track/zebar-zimo-wish-granter-original-mix#t2573934244",
