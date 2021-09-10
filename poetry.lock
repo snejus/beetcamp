@@ -72,7 +72,6 @@ description = "music tagger and library organizer"
 category = "dev"
 optional = false
 python-versions = "*"
-develop = false
 
 [package.dependencies]
 confuse = ">=1.0.0"
