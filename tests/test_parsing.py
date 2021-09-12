@@ -165,6 +165,10 @@ def test_convert_title(title, expected):
             ("Mr. Free - The 4th Room",),
             (None, "Mr. Free", "The 4th Room", "The 4th Room"),
         ),
+        (
+            ("B1 Red Tooth District (Original Mix)",),
+            ("B1", None, "Red Tooth District (Original Mix)", "Red Tooth District"),
+        ),
     ],
 )
 def test_parse_track_name(inputs, expected):

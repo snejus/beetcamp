@@ -2,6 +2,7 @@
 
 ### Fixed
 - `catalognum`: parse **Catalog:** from credits
+- `track_alt`: allow **B2 Title** where _B2_ is followed by a space
 
 ## [0.10.0] 2021-09-10
 
