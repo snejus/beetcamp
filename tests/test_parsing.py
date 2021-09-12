@@ -296,6 +296,7 @@ def test_parse_country(name, expected):
         ("UTC-003", "", "Cat No: TE0029", "", "TE0029"),
         ("UTC-003", "", "Cat Nr.: TE0029", "", "TE0029"),
         ("UTC-003", "", "Catalogue:CTU-300", "", "CTU-300"),
+        ("Emotional Shutdown", "", "Catalog: SCTR007", "", "SCTR007"),
         ("", "LP | ostgutlp31", "", "", "ostgutlp31"),
         ("Album VA001", "", "", "", ""),
         ("Album MVA001", "", "", "", "MVA001"),
