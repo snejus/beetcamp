@@ -5,6 +5,7 @@
   - allow non-capitals in the description, like **Fabrik037**
 
 - `track_alt`: allow **B2 Title** where _B2_ is followed by a space
+- `track.title`: remove `*digital-only`
 
 ## [0.10.1] 2021-09-13
 
