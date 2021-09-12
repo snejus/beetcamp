@@ -1,4 +1,12 @@
 ## [0.10.1] 2021-09-13
+- `catalognum`:
+
+  - parse **Catalog:** from credits
+  - allow non-capitals in the description, like **Fabrik037**
+
+- `track_alt`: allow **B2 Title** where _B2_ is followed by a space
+
+## [0.10.1] 2021-09-13
 
 ### Fixed
 

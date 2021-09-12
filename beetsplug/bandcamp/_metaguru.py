@@ -44,7 +44,7 @@ _exclusive = r"[*\[( -]*(bandcamp|digi(tal)?) (digital )?(only|bonus|exclusive)[
 _catalognum_header = r"(?:Catalog(?:ue)?(?: (?:Number|N[or]))?|Cat N[or])\.?:"
 PATTERNS: Dict[str, Pattern] = {
     "meta": re.compile(r".*dateModified.*", flags=re.MULTILINE),
-    "desc_catalognum": re.compile(rf"(?:{_catalognum_header} ?)([A-Z]+[. -]?[0-9]+)"),
+    "desc_catalognum": re.compile(rf"(?:{_catalognum_header} ?)([A-z]+[. -]?[0-9]+)"),
     "quick_catalognum": re.compile(rf"[\[(]{_catalognum}[])]"),
     "catalognum": re.compile(rf"(^{_catalognum}|{_catalognum}$)"),
     "catalognum_excl": re.compile(
@@ -221,7 +221,11 @@ class Helpers:
         def clean(patstr: str, text: str) -> str:
             return re.sub(patstr, "", text)
 
+<<<<<<< HEAD
         return clean(empty_parens, clean(rubbish, name)).strip("/-|([ ") or default
+=======
+        return clean(empty_parens, clean(rubbish, name)).strip("/-|(.: ") or default
+>>>>>>> b77724f (catalognum: allow non capitals in the desc, allow Catalog:)
 
     @staticmethod
     def get_genre(keyword: str) -> str:
