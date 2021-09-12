@@ -1,3 +1,10 @@
+## [0.10.1] 2021-09-12
+
+### Fixed
+
+- Fixed #18 by handling cases when a track duration is not given.
+
+
 ## [0.10.0] 2021-09-10
 
 ### Fixed

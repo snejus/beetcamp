@@ -151,11 +151,14 @@ class Helpers:
 
     @staticmethod
     def get_duration(source: JSONDict) -> int:
-        return [
-            floor(x.get("value", 0))
+        prop = [
+            x.get("value") or 0
             for x in source.get("additionalProperty", [])
             if x.get("name") == "duration_secs"
-        ][0]
+        ]
+        if len(prop) == 1:
+            return floor(prop[0])
+        return 0
 
     @staticmethod
     def clean_name(name: str, *args: str, remove_extra: bool = False) -> str:
@@ -393,7 +396,7 @@ class Metaguru(Helpers):
                 index=index,
                 medium_index=index,
                 track_id=raw_item.get("@id"),
-                length=self.get_duration(raw_item),
+                length=self.get_duration(raw_item) or None,
                 **self.parse_track_name(name, catalognum),
             )
             track["artist"] = self.get_track_artist(
