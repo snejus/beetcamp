@@ -518,10 +518,10 @@ class Metaguru(Helpers):
     @cached_property
     def clean_album_name(self) -> str:
         args = [self.catalognum] if self.catalognum else []
-        if not self.albumtype == "compilation":
-            args.append(self.label)
         if not self._singleton:
             args.append(self.albumartist)
+        if not self.albumtype == "compilation":
+            args.append(self.label)
         return self.clean_name(self.album_name, *args, remove_extra=True)
 
     @property
