@@ -3,15 +3,22 @@
 ### Fixed
 
 - Fixed #18 by handling cases when a track duration is not given.
-- Fixed #19 where artist name **SUNN O)))** would get incorrectly damaged by too
-  aggressive album name cleanup logic.
+- Fixed #19 where artist names like **SUNN O)))** would get incorrectly mistreated by
+  the album name cleanup logic due to multiple consecutive parentheses. The fix involved
+  adding some rules around it: they are now deduped _only if_
 
-  Closing parentheses are now deduped from the album name _only if_
-  - they follow a space
-  - or enclose a remix / edit info and are the last characters.
+  - they are preceded with a space
+  - or they enclose remix / edit info and are the last characters in the album name
+
+- Fixed #20 where dynamically obtained label names used in further REs caused `re.error`
+  since they were not appropriately escaped.
 
 Thanks @arogl for reporting each of the above!
 
+- `album`: Keep label in the album name if it's immediately followed by an apostrophe. An
+  example scenario:
+  - `label: Mike`
+  - `album: Mike's Creations`
 
 ## [0.10.0] 2021-09-10
 

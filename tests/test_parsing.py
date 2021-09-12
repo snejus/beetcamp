@@ -336,6 +336,8 @@ def test_parse_catalognum(album, disctitle, description, label, expected):
         ("Diva (Incl. some sort of Remixes)", [], "Diva"),
         ("HWEP010 - MEZZ - COLOR OF WAR", ["HWEP010", "MEZZ"], "COLOR OF WAR"),
         ("O)))Bow 1", [], "O)))Bow 1"),
+        ("hi'Hello", ["hi"], "hi'Hello"),
+        ("hi]Hello", ["hi"], "]Hello"),
     ],
 )
 def test_clean_name(name, extras, expected):
