@@ -213,6 +213,7 @@ def test_track_artists(artists, expected):
         ("Hello - DIGITAL ONLY", True, "Hello"),
         ("Hello *digital bonus*", True, "Hello"),
         ("Only a Goodbye", False, "Only a Goodbye"),
+        ("Track *digital-only", True, "Track"),
     ],
 )
 def test_check_digital_only(name, expected_digital_only, expected_name):
