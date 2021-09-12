@@ -13,6 +13,8 @@ from cached_property import cached_property
 from pkg_resources import get_distribution, parse_version
 from pycountry import countries, subdivisions
 
+from .genres_lookup import GENRES
+
 NEW_BEETS = get_distribution("beets").parsed_version >= parse_version("1.5.0")
 
 JSONDict = Dict[str, Any]
@@ -220,6 +222,24 @@ class Helpers:
             return re.sub(patstr, "", text)
 
         return clean(empty_parens, clean(rubbish, name)).strip("/-|([ ") or default
+
+    @staticmethod
+    def get_genre(keyword: str) -> str:
+        genre = ""
+        if keyword.casefold() in GENRES:
+            if keyword[0].islower():
+                genre = keyword.capitalize()
+            else:
+                genre = keyword
+
+        parts = list(map(str.strip, keyword.split(" ")))
+        if len(parts) > 1 and all(map(lambda x: x in GENRES, parts)):
+            genre = keyword
+
+        if len(genre) and " " in genre:
+            gsplit = genre.split(" ")
+            return " ".join(map(lambda x: x.capitalize() if x[0].lower() else x, gsplit))
+        return genre
 
     @staticmethod
     def _get_media_index(meta: JSONDict) -> JSONDict:
@@ -450,6 +470,24 @@ class Metaguru(Helpers):
         )
 
     @cached_property
+    def genre(self) -> Optional[str]:
+        genres = set()
+        for kw in self.meta["keywords"]:
+            genre = self.get_genre(kw)
+            if genre:
+                genres.add(genre)
+        if len(genres) > 1:
+            genres.discard("Electronic")
+        for genre in list(genres):
+            parts = genre.split(" ")
+            if len(parts) > 1:
+                for part in parts:
+                    if part in genres:
+                        genres.discard(part)
+
+        return ", ".join(sorted(genres)) or None
+
+    @cached_property
     def albumartist(self) -> str:
         """Handle various artists and albums that have a single artist."""
         if self.albumtype == "compilation":
@@ -503,6 +541,7 @@ class Metaguru(Helpers):
             album=self.clean_album_name,
             albumstatus=OFFICIAL if self.release_date <= date.today() else PROMO,
             country=self.country,
+            genre=self.genre,
         )
 
     def _trackinfo(self, track: JSONDict, **kwargs: Any) -> TrackInfo:

@@ -346,6 +346,19 @@ def test_clean_name(name, extras, expected):
     assert Metaguru.clean_name(name, *extras, remove_extra=True) == expected
 
 
+@pytest.mark.parametrize(
+    ("keyword", "expected"),
+    [
+        ("experimental", "Experimental"),
+        ("experimental techno", "Experimental Techno"),
+        ("experimental techno", "Experimental Techno"),
+        ("United Kingdom", ""),
+    ],
+)
+def test_genre(keyword, expected):
+    assert expected == Metaguru.get_genre(keyword)
+
+
 def test_bundles_get_excluded():
     meta = {
         "albumRelease": [
