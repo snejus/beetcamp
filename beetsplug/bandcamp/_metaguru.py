@@ -424,7 +424,7 @@ class Metaguru(Helpers):
             raw_item = raw_track["item"]
             index = raw_track.get("position") or 1
             name, digital_only = self.clean_digital_only_track(raw_item["name"])
-            name = self.clean_name(name, *filter(truth, [self.catalognum, self.label]))
+            name = self.clean_name(name, *filter(truth, [self.catalognum]))
             track = dict(
                 digital_only=digital_only,
                 index=index,
