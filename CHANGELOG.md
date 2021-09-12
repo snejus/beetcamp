@@ -3,6 +3,14 @@
 ### Fixed
 
 - Fixed #18 by handling cases when a track duration is not given.
+- Fixed #19 where artist name **SUNN O)))** would get incorrectly damaged by too
+  aggressive album name cleanup logic.
+
+  Closing parentheses are now deduped from the album name _only if_
+  - they follow a space
+  - or enclose a remix / edit info and are the last characters.
+
+Thanks @arogl for reporting each of the above!
 
 
 ## [0.10.0] 2021-09-10
@@ -54,6 +62,7 @@
   - Improved the way **Various Artists** are cleaned up when catalognum is available
 
 - `albumartist`:
+
   - If **various** is specified as the albumartist, make it **Various Artists**
   - When the label have set their name as the albumartist in every field, and if the
     actual albumartist could be inferred from the album name, use the inferred name.

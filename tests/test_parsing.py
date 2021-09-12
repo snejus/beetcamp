@@ -163,6 +163,8 @@ def test_convert_title(title, expected):
             ("Mr. Free - The 4th Room",),
             (None, "Mr. Free", "The 4th Room", "The 4th Room"),
         ),
+        (("O)))Bow 1",), (None, None, "O)))Bow 1", "O)))Bow 1")),
+        (("H.E.L.L.O.",), (None, None, "H.E.L.L.O.", "H.E.L.L.O.")),
     ],
 )
 def test_parse_track_name(inputs, expected):
@@ -284,6 +286,7 @@ def test_parse_country(name, expected):
         ("", 'EP 12"', "", "", ""),
         ("Hope Works 003", "", "", "Hope Works", "Hope Works 003"),
         ("Counterspell [HMX005]", "", "", "", "HMX005"),
+        ("3: Flight Of The Behemoth", "", "", "SUNN O)))", ""),
     ],
 )
 def test_parse_catalognum(album, disctitle, description, label, expected):
@@ -332,6 +335,7 @@ def test_parse_catalognum(album, disctitle, description, label, expected):
         ("RR009 - Various Artist", ["RR009"], "RR009"),
         ("Diva (Incl. some sort of Remixes)", [], "Diva"),
         ("HWEP010 - MEZZ - COLOR OF WAR", ["HWEP010", "MEZZ"], "COLOR OF WAR"),
+        ("O)))Bow 1", [], "O)))Bow 1"),
     ],
 )
 def test_clean_name(name, extras, expected):
