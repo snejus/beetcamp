@@ -1,3 +1,8 @@
+## [0.10.1] 2021-09-xx
+
+### Fixed
+- `catalognum`: parse **Catalog:** from credits
+
 ## [0.10.0] 2021-09-10
 
 ### Fixed
