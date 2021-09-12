@@ -52,7 +52,7 @@ PATTERNS: Dict[str, Pattern] = {
     "lyrics": re.compile(r'"lyrics":({[^}]*})'),
     "clean_incl": re.compile(r"(?i:(\(?incl[^)]+\)?|\([^)]+remix[^)]+\)))"),
     "remix_or_ft": re.compile(r"\s(?i:(\[|\().*(mix|edit)|f(ea)?t\.).*"),
-    "track_alt": re.compile(r"([ABCDEFGH]{1,3}[0-9])(\.|.?- )"),
+    "track_alt": re.compile(r"([ABCDEFGH]{1,3}[0-9])(\.|.?-\s|\s)"),
     "vinyl_name": re.compile(
         r'(?P<count>(?i:[1-5]|single|double|triple))(LP)? ?x? ?((7|10|12)" )?Vinyl'
     ),
@@ -212,7 +212,7 @@ class Helpers:
         # handle special chars
         excl = "|".join(map(re.escape, exclude))
 
-        rubbish = r"(?i:\b({})(\b|[\])]|$))".format(excl)
+        rubbish = r"(?i:\b({})(\b|$))".format(excl)
         empty_parens = r"\(\)|\[\]"
         default = next(iter([*args, name]))
 
