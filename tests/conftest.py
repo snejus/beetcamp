@@ -690,3 +690,65 @@ def edge_cases() -> ReleaseInfo:
         mediums=1,
     )
     return info
+
+
+@pytest.fixture
+def issues_18() -> ReleaseInfo:
+    albumartist = "General Dicon"
+    info = ReleaseInfo(
+        artist_id="https://54thregiment.bandcamp.com",
+        album_id="https://54thregiment.bandcamp.com/album/fall-in",
+        media="Digital Media",
+        disctitle=None,
+    )
+    tracks = [
+        ("54-regi", albumartist, "54 regi", None, None),
+        ("54-regi-2", albumartist, "54 regi", 227, None),
+        (
+            "mile-high-monsta-ft-nation",
+            albumartist,
+            "Mile high monsta ft.nation",
+            157,
+            None,
+        ),
+        ("pure-entertainment", albumartist, "Pure entertainment", 166, None),
+        ("smoke-interlude", albumartist, "Smoke interlude", 69, None),
+        (
+            "ganja-tune-ft-spellbinder",
+            albumartist,
+            "Ganja tune ft.spellbinder",
+            235,
+            None,
+        ),
+        ("war-ft-spellbinder", albumartist, "War ft.spellbinder", 203, None),
+        (
+            "w-m-m-a-where-my-money-ft-spellbinder",
+            albumartist,
+            "w.m.m.a(where my money @) ft.Spellbinder",
+            147,
+            None,
+        ),
+        ("due-time", albumartist, "Due time", 257, None),
+        ("hustle-aint-no-game", albumartist, "Hustle Ain't no game", 197, None),
+        (
+            "its-ova-ft-scrilla-scratch",
+            albumartist,
+            "It's ova ft. scrilla scratch",
+            201,
+            None,
+        ),
+        ("dont-stop-ft-spellbinder", albumartist, "Don't stop ft.Spellbinder", 244, None),
+    ]
+    info.set_albuminfo(
+        tracks,
+        album="FALL IN",
+        albumartist=albumartist,
+        albumtype="album",
+        catalognum="",
+        label="54th Regiment",
+        release_date=date(2011, 4, 20),
+        va=False,
+        country="US",
+        mediums=1,
+    )
+    return info

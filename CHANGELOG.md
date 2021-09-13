@@ -1,3 +1,27 @@
+## [0.10.1] 2021-09-13
+
+### Fixed
+
+- Fixed #18 by handling cases when a track duration is not given.
+- Fixed #19 where artist names like **SUNN O)))** would get incorrectly mistreated by
+  the album name cleanup logic due to multiple consecutive parentheses. The fix involved
+  adding some rules around it: they are now deduped _only if_
+
+  - they are preceded with a space
+  - or they enclose remix / edit info and are the last characters in the album name
+
+- Fixed #20 where dynamically obtained label names used in further REs caused `re.error`
+  since they were not appropriately escaped (for example, `label: /m\ records`).
+
+Thanks @arogl for reporting each of the above!
+
+- `album`: Keep label in the album name if it's immediately followed by an apostrophe. An
+  example scenario:
+  - `label: Mike`
+  - `album: Mike's Creations`
+
+[0.10.1]: https://github.com/snejus/beetcamp/releases/tag/0.10.1
+
 ## [0.10.0] 2021-09-10
 
 ### Fixed
@@ -47,6 +71,7 @@
   - Improved the way **Various Artists** are cleaned up when catalognum is available
 
 - `albumartist`:
+
   - If **various** is specified as the albumartist, make it **Various Artists**
   - When the label have set their name as the albumartist in every field, and if the
     actual albumartist could be inferred from the album name, use the inferred name.

@@ -1,0 +1,697 @@
+{
+  "@context": "https://schema.org",
+  "@id": "https://54thregiment.bandcamp.com/album/fall-in",
+  "@type": "MusicAlbum",
+  "additionalProperty": [
+    {
+      "@type": "PropertyValue",
+      "name": "art_id",
+      "value": 1474409418
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "featured_track_num",
+      "value": 2
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "license_name",
+      "value": "all_rights_reserved"
+    }
+  ],
+  "albumRelease": [
+    {
+      "@id": "https://54thregiment.bandcamp.com/album/fall-in#a3640739659",
+      "@type": [
+        "MusicRelease",
+        "Product"
+      ],
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "item_id",
+          "value": 3640739659
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "item_type",
+          "value": "a"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "selling_band_id",
+          "value": 732004402
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_name",
+          "value": "Digital"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "art_id",
+          "value": 1474409418
+        }
+      ],
+      "description": "Includes high-quality download in MP3, FLAC and more. Paying supporters also get unlimited streaming via the free Bandcamp app.",
+      "image": [
+        "https://f4.bcbits.com/img/a1474409418_10.jpg"
+      ],
+      "musicReleaseFormat": "DigitalFormat",
+      "name": "FALL IN"
+    },
+    {
+      "@id": "https://54thregiment.bandcamp.com/track/54-regi#t2788523249",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://54thregiment.bandcamp.com/track/54-regi-2#t1940656242",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://54thregiment.bandcamp.com/track/mile-high-monsta-ft-nation#t2017700002",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://54thregiment.bandcamp.com/track/pure-entertainment#t2504455144",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://54thregiment.bandcamp.com/track/smoke-interlude#t2191604344",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://54thregiment.bandcamp.com/track/ganja-tune-ft-spellbinder#t3808316298",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://54thregiment.bandcamp.com/track/war-ft-spellbinder#t1546501549",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://54thregiment.bandcamp.com/track/w-m-m-a-where-my-money-ft-spellbinder#t3184302987",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://54thregiment.bandcamp.com/track/due-time#t524055908",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://54thregiment.bandcamp.com/track/hustle-aint-no-game#t2084081972",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://54thregiment.bandcamp.com/track/its-ova-ft-scrilla-scratch#t3829944235",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://54thregiment.bandcamp.com/track/dont-stop-ft-spellbinder#t3094837483",
+      "@type": "MusicRelease"
+    }
+  ],
+  "albumReleaseType": "AlbumRelease",
+  "byArtist": {
+    "@type": "MusicGroup",
+    "name": "General Dicon"
+  },
+  "copyrightNotice": "All Rights Reserved",
+  "dateModified": "16 May 2011 03:29:03 GMT",
+  "datePublished": "20 Apr 2011 00:00:00 GMT",
+  "image": "https://f4.bcbits.com/img/a1474409418_10.jpg",
+  "keywords": [
+    "Hip-hop",
+    "Real nigga shit",
+    "rap",
+    "Denver"
+  ],
+  "name": "FALL IN",
+  "numTracks": 12,
+  "publisher": {
+    "@id": "https://54thregiment.bandcamp.com",
+    "@type": "MusicGroup",
+    "additionalProperty": [
+      {
+        "@type": "PropertyValue",
+        "name": "band_id",
+        "value": 732004402
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "currency",
+        "value": "USD"
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "has_any_downloads",
+        "value": true
+      }
+    ],
+    "foundingLocation": {
+      "@type": "Place",
+      "name": "Denver, Colorado"
+    },
+    "name": "54th Regiment",
+    "subjectOf": [
+      {
+        "@type": "WebPage",
+        "name": "music",
+        "url": "https://54thregiment.bandcamp.com/music"
+      },
+      {
+        "@type": "WebPage",
+        "name": "community",
+        "url": "https://54thregiment.bandcamp.com/community"
+      }
+    ]
+  },
+  "track": {
+    "@type": "ItemList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://54thregiment.bandcamp.com/track/54-regi",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 2788523249
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 1
+            }
+          ],
+          "byArtist": {
+            "@type": "MusicGroup",
+            "name": "General Dicon"
+          },
+          "copyrightNotice": "All Rights Reserved",
+          "name": "54 regi"
+        },
+        "position": 1
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://54thregiment.bandcamp.com/track/54-regi-2",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 1940656242
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 227.133
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "file_mp3-128",
+              "value": "https://t4.bcbits.com/stream/3e237aa615688e92b46106c611d15d8b/mp3-128/1940656242?p=0&ts=1631534807&t=4e2cb34b23392f1f9d5804419562921fbd384224&token=1631534807_655c3f230219f021bba3925157ff05f4a51edc83"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 2
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H03M47S",
+          "name": "54 regi"
+        },
+        "position": 2
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://54thregiment.bandcamp.com/track/mile-high-monsta-ft-nation",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 2017700002
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 157.6
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "file_mp3-128",
+              "value": "https://t4.bcbits.com/stream/f3bf4f8c0e53577ae140d1acd27a738d/mp3-128/2017700002?p=0&ts=1631534807&t=98f4ecc70b2fc95d1056d8f8544bc0a6c0fd3410&token=1631534807_2f4034189e091238215720d9939749eb3c66f935"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 3
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H02M37S",
+          "name": "Mile high monsta ft.nation"
+        },
+        "position": 3
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://54thregiment.bandcamp.com/track/pure-entertainment",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 2504455144
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 166.76
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "file_mp3-128",
+              "value": "https://t4.bcbits.com/stream/98d692639a9bffc9b5b3a9af6a0f0cce/mp3-128/2504455144?p=0&ts=1631534807&t=7ae00a5548e00355e72a7730dc9cace4b9d3b0aa&token=1631534807_3fa437819ca5a93f51db41de90890b43f34c1c3a"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 4
+            }
+          ],
+          "byArtist": {
+            "@type": "MusicGroup",
+            "name": "General Dicon"
+          },
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H02M46S",
+          "name": "Pure entertainment"
+        },
+        "position": 4
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://54thregiment.bandcamp.com/track/smoke-interlude",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 2191604344
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 69.8933
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "file_mp3-128",
+              "value": "https://t4.bcbits.com/stream/336f2a46da8ef4a98ae521904774750c/mp3-128/2191604344?p=0&ts=1631534807&t=06de6a90f07c7fb83c7b074072ca87518264f897&token=1631534807_64cdf287455c108e963c30eded3fb4c95cc0d9cf"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 5
+            }
+          ],
+          "byArtist": {
+            "@type": "MusicGroup",
+            "name": "General Dicon"
+          },
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H01M09S",
+          "name": "Smoke interlude"
+        },
+        "position": 5
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://54thregiment.bandcamp.com/track/ganja-tune-ft-spellbinder",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 3808316298
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 235.253
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "file_mp3-128",
+              "value": "https://t4.bcbits.com/stream/ae30fdc4c257f2771435c42bb3f6c79e/mp3-128/3808316298?p=0&ts=1631534807&t=9eba37afd1e12c0f0cdf83994891dd5633219bc8&token=1631534807_d3881acdde680dfb03457450525a07679d0179d5"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 6
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H03M55S",
+          "name": "Ganja tune ft.spellbinder"
+        },
+        "position": 6
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://54thregiment.bandcamp.com/track/war-ft-spellbinder",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 1546501549
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 203.907
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "file_mp3-128",
+              "value": "https://t4.bcbits.com/stream/cdf0ed781d4861588f85aa5a89a7e66b/mp3-128/1546501549?p=0&ts=1631534807&t=0b5e049a54e7ec26d860e148df2f2ac0b48082e9&token=1631534807_30cf3b020e4f3c684e0e093ccc6961825f5e3640"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 7
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H03M23S",
+          "name": "War ft.spellbinder"
+        },
+        "position": 7
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://54thregiment.bandcamp.com/track/w-m-m-a-where-my-money-ft-spellbinder",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 3184302987
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 147.44
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "file_mp3-128",
+              "value": "https://t4.bcbits.com/stream/9f207a7854105f69530642b7fc11506b/mp3-128/3184302987?p=0&ts=1631534807&t=66e0593fe53b22aa674b26f4ed7e95f4e75dcd0b&token=1631534807_21e446a9598b35728a2e507e2d4afe4262c454a2"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 8
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H02M27S",
+          "name": "w.m.m.a(where my money @) ft.Spellbinder"
+        },
+        "position": 8
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://54thregiment.bandcamp.com/track/due-time",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 524055908
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 257.453
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "file_mp3-128",
+              "value": "https://t4.bcbits.com/stream/52f3d3eab73893b10cb963263199ab62/mp3-128/524055908?p=0&ts=1631534807&t=ed0f227c2f435c0e223243cc7ef0f303fcdda296&token=1631534807_760ed98b2e2ae9bbaef545d49ed48db1df15b7ae"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 9
+            }
+          ],
+          "byArtist": {
+            "@type": "MusicGroup",
+            "name": "General Dicon"
+          },
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H04M17S",
+          "name": "Due time"
+        },
+        "position": 9
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://54thregiment.bandcamp.com/track/hustle-aint-no-game",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 2084081972
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 197.733
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "file_mp3-128",
+              "value": "https://t4.bcbits.com/stream/72448b0596b1935b22c347b880417074/mp3-128/2084081972?p=0&ts=1631534807&t=06308d10e1ae7f2491d1ec705b161c31e6566763&token=1631534807_d0c53fffb3f5502d12f2680d3ae155b4be54288e"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 10
+            }
+          ],
+          "byArtist": {
+            "@type": "MusicGroup",
+            "name": "General Dicon"
+          },
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H03M17S",
+          "name": "Hustle Ain't no game"
+        },
+        "position": 10
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://54thregiment.bandcamp.com/track/its-ova-ft-scrilla-scratch",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 3829944235
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 201.12
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "file_mp3-128",
+              "value": "https://t4.bcbits.com/stream/904ac3e59366444590acdd16894decc7/mp3-128/3829944235?p=0&ts=1631534807&t=2ce322cb65d1dfc138d94869ac189591009dbf1b&token=1631534807_2217b1298b0521f7101bbb668c5ef53f8dc48fd0"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 11
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H03M21S",
+          "name": "It's ova ft. scrilla scratch"
+        },
+        "position": 11
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://54thregiment.bandcamp.com/track/dont-stop-ft-spellbinder",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 3094837483
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "duration_secs",
+              "value": 244.08
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "file_mp3-128",
+              "value": "https://t4.bcbits.com/stream/f2e003bda3cbaa4776dc92c9502f4241/mp3-128/3094837483?p=0&ts=1631534807&t=d125ad1f50b8ed02ceda7333dbd0429581c1aff7&token=1631534807_3c5ba711777b9912c392a408c8cbbf78037cb99d"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "streaming",
+              "value": true
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "tracknum",
+              "value": 12
+            }
+          ],
+          "byArtist": {
+            "@type": "MusicGroup",
+            "name": "General Dicon"
+          },
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H04M04S",
+          "name": "Don't stop ft.Spellbinder"
+        },
+        "position": 12
+      }
+    ],
+    "numberOfItems": 12
+  }
+}

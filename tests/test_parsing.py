@@ -1,10 +1,8 @@
 """Module for tests related to parsing."""
 import json
-import re
 
 import pytest
-from beetsplug.bandcamp._metaguru import NEW_BEETS, Helpers, Metaguru, urlify
-from pytest_lazyfixture import lazy_fixture
+from beetsplug.bandcamp._metaguru import Helpers, Metaguru, urlify
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
@@ -165,6 +163,8 @@ def test_convert_title(title, expected):
             ("Mr. Free - The 4th Room",),
             (None, "Mr. Free", "The 4th Room", "The 4th Room"),
         ),
+        (("O)))Bow 1",), (None, None, "O)))Bow 1", "O)))Bow 1")),
+        (("H.E.L.L.O.",), (None, None, "H.E.L.L.O.", "H.E.L.L.O.")),
     ],
 )
 def test_parse_track_name(inputs, expected):
@@ -286,6 +286,8 @@ def test_parse_country(name, expected):
         ("", 'EP 12"', "", "", ""),
         ("Hope Works 003", "", "", "Hope Works", "Hope Works 003"),
         ("Counterspell [HMX005]", "", "", "", "HMX005"),
+        ("3: Flight Of The Behemoth", "", "", "SUNN O)))", ""),
+        ("[CAT001]", "", "", "\\m/ records", "CAT001"),
     ],
 )
 def test_parse_catalognum(album, disctitle, description, label, expected):
@@ -334,6 +336,9 @@ def test_parse_catalognum(album, disctitle, description, label, expected):
         ("RR009 - Various Artist", ["RR009"], "RR009"),
         ("Diva (Incl. some sort of Remixes)", [], "Diva"),
         ("HWEP010 - MEZZ - COLOR OF WAR", ["HWEP010", "MEZZ"], "COLOR OF WAR"),
+        ("O)))Bow 1", [], "O)))Bow 1"),
+        ("hi'Hello", ["hi"], "hi'Hello"),
+        ("hi]Hello", ["hi"], "]Hello"),
     ],
 )
 def test_clean_name(name, extras, expected):
@@ -348,73 +353,3 @@ def test_bundles_get_excluded():
         ]
     }
     assert set(Helpers._get_media_index(meta)) == {"Vinyl"}
-
-
-@pytest.fixture(name="release")
-def _release(request):
-    """Read the json data and make it span a single line - same like it's found in htmls.
-    Fixture names map to the testfiles (minus the extension).
-    """
-    info = request.param
-    fixturename = next(iter(request._parent_request._fixture_defs.keys()))
-    filename = "tests/json/{}.json".format(fixturename)
-    with open(filename) as file:
-        return re.sub(r"\n *", "", file.read()), info
-
-
-def check(actual, expected) -> None:
-    if NEW_BEETS:
-        assert actual == expected
-    else:
-        assert vars(actual) == vars(expected)
-
-
-@pytest.mark.parametrize(
-    "release",
-    map(lazy_fixture, ["single_track_release", "single_only_track_name"]),
-    indirect=["release"],
-)
-def test_parse_single_track_release(release):
-    html, expected = release
-    guru = Metaguru(html)
-
-    check(guru.singleton, expected.singleton)
-
-
-@pytest.mark.parametrize(
-    "release",
-    map(
-        lazy_fixture,
-        [
-            "album",
-            "album_with_track_alt",
-            "compilation",
-            "ep",
-            "artist_mess",
-            "description_meta",
-            "single_with_remixes",
-            "remix_artists",
-            "edge_cases",
-        ],
-    ),
-    indirect=["release"],
-)
-def test_parse_various_types(release):
-    html, expected_release = release
-    guru = Metaguru(html, expected_release.media)
-
-    actual_album = guru.album
-    expected_album = expected_release.albuminfo
-
-    assert hasattr(actual_album, "tracks")
-    assert len(actual_album.tracks) == len(expected_album.tracks)
-
-    expected_tracks = sorted(expected_album.tracks, key=lambda t: t.index)
-    actual_tracks = sorted(actual_album.tracks, key=lambda t: t.index)
-
-    actual_album.tracks = None
-    expected_album.tracks = None
-    check(actual_album, expected_album)
-
-    for actual_track, expected_track in zip(actual_tracks, expected_tracks):
-        check(actual_track, expected_track)

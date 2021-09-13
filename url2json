@@ -33,13 +33,16 @@ get_human_json () {
 
 tracklist_for_tests () {
   jq < "$1" -r '
-    "(" + (.track.itemListElement[].item | [
+    "("
+    + (.track.itemListElement[].item
+    | [
       "\"" + (.["@id"] | sub(".*/"; "")) + "\"",
-      "\"" + ((.name | sub(" - .*"; "")) // "albumartist") + "\"",
+      ((select(.name | test(" - .*")) | "\"" + sub(" - .*"; "") + "\"" | sub("\"\""; "")) // "albumartist"),
       "\"" + (.name | sub(".* - "; "")) + "\"",
-      (.additionalProperty[1].value | floor),
+      (.additionalProperty[] | select(.name == "duration_secs").value | floor) // "None",
       "None"
-    ] | join(", ")) + "),"'
+    ]
+    | join(", ")) + "),"'
 }
 
 update_test_jsons () {
