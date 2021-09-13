@@ -29,7 +29,7 @@ import six
 from beets import __version__, config, library, plugins
 from beets.autotag.hooks import AlbumInfo, TrackInfo
 from beets.importer import ImportTask
-from beetsplug import fetchart
+from beetsplug import fetchart  # type: ignore[attr-defined]
 
 from ._metaguru import DATA_SOURCE, DEFAULT_MEDIA, Metaguru, urlify
 
@@ -266,7 +266,7 @@ class BandcampPlugin(
         except (KeyError, ValueError, AttributeError):
             self._info("Failed obtaining {}", _id)
             return None
-        except Exception:
+        except Exception:  # pylint: disable=broad-except
             url = "https://github.com/snejus/beetcamp/issues/new"
             self._exc("Unexpected error obtaining {}, please report at {}", _id, url)
             return None
