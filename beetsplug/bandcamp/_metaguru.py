@@ -178,7 +178,7 @@ class Helpers:
         # catalognum, album, albumartist
         for arg in args:
             arg = re.escape(arg)
-            name = re.sub(rf"{arg}(?=[^'])", "", name)
+            name = re.sub(rf"{arg}((?=[^'])|$)", "", name)
 
         # redundant spaces, duoble quotes, parentheses
         for pat, repl in [

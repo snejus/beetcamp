@@ -287,6 +287,7 @@ def test_parse_country(name, expected):
         ("Hope Works 003", "", "", "Hope Works", "Hope Works 003"),
         ("Counterspell [HMX005]", "", "", "", "HMX005"),
         ("3: Flight Of The Behemoth", "", "", "SUNN O)))", ""),
+        ("[CAT001]", "", "", "\\m/ records", "CAT001"),
     ],
 )
 def test_parse_catalognum(album, disctitle, description, label, expected):
@@ -338,7 +339,6 @@ def test_parse_catalognum(album, disctitle, description, label, expected):
         ("O)))Bow 1", [], "O)))Bow 1"),
         ("hi'Hello", ["hi"], "hi'Hello"),
         ("hi]Hello", ["hi"], "]Hello"),
-        ("[CAT001]", "", "", "\m/ records", "CAT001"),
     ],
 )
 def test_clean_name(name, extras, expected):
