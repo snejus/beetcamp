@@ -11,7 +11,7 @@
   - or they enclose remix / edit info and are the last characters in the album name
 
 - Fixed #20 where dynamically obtained label names used in further REs caused `re.error`
-  since they were not appropriately escaped.
+  since they were not appropriately escaped (for example, `label: /m\ records`).
 
 Thanks @arogl for reporting each of the above!
 

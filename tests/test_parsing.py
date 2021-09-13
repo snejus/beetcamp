@@ -338,6 +338,7 @@ def test_parse_catalognum(album, disctitle, description, label, expected):
         ("O)))Bow 1", [], "O)))Bow 1"),
         ("hi'Hello", ["hi"], "hi'Hello"),
         ("hi]Hello", ["hi"], "]Hello"),
+        ("[CAT001]", "", "", "\m/ records", "CAT001"),
     ],
 )
 def test_clean_name(name, extras, expected):
