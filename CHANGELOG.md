@@ -1,4 +1,4 @@
-## [0.10.1] 2021-09-12
+## [0.10.1] 2021-09-13
 
 ### Fixed
 
@@ -19,6 +19,8 @@ Thanks @arogl for reporting each of the above!
   example scenario:
   - `label: Mike`
   - `album: Mike's Creations`
+
+[0.10.1]: https://github.com/snejus/beetcamp/releases/tag/0.10.1
 
 ## [0.10.0] 2021-09-10
 
