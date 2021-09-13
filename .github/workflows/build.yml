@@ -26,13 +26,12 @@ jobs:
       - name: Pytest
         run: |
           poetry run pytest
-          poetry run coverage xml
       - name: Flake8
         run: poetry run flake8 . --output-file flake.log  --exit-zero
       - name: Pylint
         run: poetry run pylint --output pylint.log --exit-zero beetsplug/**/*.py
       - name: SonarCloud Scan
-        uses: sonarsource/sonarcloud-github-action@master
+        uses: SonarSource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

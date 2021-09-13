@@ -103,8 +103,10 @@ class Helpers:
             track["track_alt"] = track_alt
             name = name.replace(track_alt, "")
 
+        # do not strip a period from the end since it could end with an abbrev
+        name = name.lstrip(".")
         # in most cases that's the delimiter between the artist and the title
-        parts = re.split(r"\s-\s|\s?-\s|\s-\s?", name.strip(",.- "))
+        parts = re.split(r"\s-\s|\s?-\s|\s-\s?", name.strip(",- "))
 
         # title is always given
         track["title"] = parts.pop(-1)
@@ -134,28 +136,36 @@ class Helpers:
         3. Check whether label name is followed by numbers
         4. Check album name and disctitle using more flexible rules.
         """
+        label_excl: Tuple[Optional[Pattern], Optional[str]] = (None, None)
+        if label:
+            escaped = re.escape(label)
+            label_excl = (re.compile(rf"({escaped}\s?[0-9]+)"), album)
+
         for pattern, source in [
             (PATTERNS["desc_catalognum"], description),
             (PATTERNS["quick_catalognum"], album),
-            (rf"({label}\s?[0-9]+)", album) if label else (None, None),
+            label_excl,
             (PATTERNS["catalognum"], album),
             (PATTERNS["catalognum"], disctitle),
         ]:
             if not pattern:
                 continue
 
-            match = re.search(pattern, re.sub(PATTERNS["catalognum_excl"], "", source))
+            match = pattern.search(PATTERNS["catalognum_excl"].sub("", source))
             if match:
                 return match.groups()[0]
         return ""
 
     @staticmethod
     def get_duration(source: JSONDict) -> int:
-        return [
-            floor(x.get("value", 0))
+        prop = [
+            x.get("value") or 0
             for x in source.get("additionalProperty", [])
             if x.get("name") == "duration_secs"
-        ][0]
+        ]
+        if len(prop) == 1:
+            return floor(prop[0])
+        return 0
 
     @staticmethod
     def clean_name(name: str, *args: str, remove_extra: bool = False) -> str:
@@ -167,13 +177,16 @@ class Helpers:
         """
         # catalognum, album, albumartist
         for arg in args:
-            name = name.replace(arg, "")
+            arg = re.escape(arg)
+            name = re.sub(rf"{arg}((?=[^'])|$)", "", name)
 
         # redundant spaces, duoble quotes, parentheses
         for pat, repl in [
             (r"\s\s+", " "),
             (r"\(\s+|(- )?\(+", "("),
-            (r"\s+\)|\)+", ")"),
+            # Remove duplicate closing parens if they follow a space
+            # or enclose mix/edit info and are at the end
+            (r" \)+|(?<=(?i:.mix|edit))\)+$", ")"),
             (r'"', ""),
         ]:
             name = re.sub(pat, repl, name)
@@ -206,7 +219,7 @@ class Helpers:
         def clean(patstr: str, text: str) -> str:
             return re.sub(patstr, "", text)
 
-        return clean(empty_parens, clean(rubbish, name)).strip("/-|(. ") or default
+        return clean(empty_parens, clean(rubbish, name)).strip("/-|([ ") or default
 
     @staticmethod
     def _get_media_index(meta: JSONDict) -> JSONDict:
@@ -393,7 +406,7 @@ class Metaguru(Helpers):
                 index=index,
                 medium_index=index,
                 track_id=raw_item.get("@id"),
-                length=self.get_duration(raw_item),
+                length=self.get_duration(raw_item) or None,
                 **self.parse_track_name(name, catalognum),
             )
             track["artist"] = self.get_track_artist(
