@@ -198,21 +198,6 @@ def test_track_artists(artists, expected):
 
 
 @pytest.mark.parametrize(
-    ("parsed", "official", "albumartist", "title", "expected"),
-    [
-        (None, "", "AlbumA", "AlbumA"),
-        ("", "", "Artist1, Artist2", "Artist1, Artist2"),
-        ("Parsed", "", "AlbumA", "Parsed"),
-        ("Parsed", "Official", "AlbumA", "Parsed"),
-        (None, "Official", "AlbumA", "Official"),
-    ],
-)
-def test_get_track_artist(parsed, official, albumartist, expected):
-    item = {"byArtist": {"name": official}} if official else {}
-    assert Metaguru.get_track_artist(parsed, item, albumartist) == expected
-
-
-@pytest.mark.parametrize(
     ("artists", "expected"), [(["4.44.444.8", "4.44.444.8"], {"4.44.444.8"})]
 )
 def test_track_artists(artists, expected):
