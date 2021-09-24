@@ -1,3 +1,4 @@
+---
 name: Code quality
 on:
   push:
@@ -26,6 +27,12 @@ jobs:
       - name: Pytest
         run: |
           poetry run pytest
+      - name: Coveralls
+        run: |
+          poetry install coveralls
+          coveralls
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
       - name: Flake8
         run: poetry run flake8 . --output-file flake.log  --exit-zero
       - name: Pylint
