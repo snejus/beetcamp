@@ -29,7 +29,6 @@ jobs:
           poetry run pytest
       - name: Coveralls
         run: |
-          coverage xml
           pip install coveralls
           coveralls
         env:
