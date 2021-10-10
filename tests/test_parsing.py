@@ -165,6 +165,8 @@ def test_convert_title(title, expected):
         ),
         (("O)))Bow 1",), (None, None, "O)))Bow 1", "O)))Bow 1")),
         (("H.E.L.L.O.",), (None, None, "H.E.L.L.O.", "H.E.L.L.O.")),
+        (("5 MINUTES",), (None, None, "5 MINUTES", "5 MINUTES")),
+        (("a2.Artist - Title",), ("A2", "Artist", "Title", "Title")),
     ],
 )
 def test_parse_track_name(inputs, expected):

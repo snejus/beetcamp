@@ -25,13 +25,15 @@ from operator import truth
 from typing import Any, Callable, Dict, Iterator, List, Optional, Sequence, Set
 
 import requests
-import six
 from beets import __version__, config, library, plugins
 from beets.autotag.hooks import AlbumInfo, TrackInfo
 from beets.importer import ImportTask
 from beetsplug import fetchart  # type: ignore[attr-defined]
+from rich.console import Console
 
 from ._metaguru import DATA_SOURCE, DEFAULT_MEDIA, Metaguru, urlify
+
+console = Console(force_terminal=True, force_interactive=True, highlight=True)
 
 JSONDict = Dict[str, Any]
 
@@ -58,6 +60,68 @@ ADDITIONAL_DATA_MAP: Dict[str, str] = {
 }
 
 
+def append_discogs_data(task):
+
+    if not len(task.candidates):
+        return
+
+    from beetsplug import discogs
+
+    album = task.candidates[0].info
+
+    pl = discogs.DiscogsPlugin()
+    pl.setup()
+
+    label = album.label.split(" ")[0]
+    year = album.year
+    albumartist = album.artist
+    artist = None
+    track = None
+    if album.albumtype == "single" and not hasattr(album, "tracks"):
+        reltitle = album.album
+        artist = albumartist
+        track = reltitle.split(" - ")[-1]
+    else:
+        reltitle = re.sub(r" +?[^A-z0-9 ].+$", "", album.album)
+        if hasattr(album, "tracks"):
+            artist = album.tracks[0].artist
+            track = album.tracks[0].title
+
+    print(f"Checking discogs for release: {reltitle}, label: {label}, year: {year}")
+    releases = pl.discogs_client.search(release_title=reltitle, label=label, year=year)
+    if not len(releases) and artist and track:
+        print(f"Checking discogs for track artist: {artist}, track: {track}")
+        releases = pl.discogs_client.search(artist=artist, track=track)
+    if not len(releases):
+        if "various" not in reltitle.casefold():
+            print(f"Checking discogs for release: {reltitle}, albumartist: {albumartist}")
+            releases = pl.discogs_client.search(
+                release_title=reltitle, artist=albumartist
+            )
+    if len(releases):
+        release = vars(releases[0])["data"]
+        console.print(release)
+
+        album.discogs_albumid = release["id"]
+        catno = release.get("catno")
+        if not (catno == "none" or re.match(r"\d+", catno)):
+            album.catalognum = catno
+
+        all_genres = set([*(album.genre or "").split(", "), *release["style"]])
+        album.genre = ", ".join(filter(truth, sorted(all_genres)))
+
+        # dlabel = release.get("label")[0]
+        # if (
+        #     not dlabel.startswith("Not On Label")
+        #     and album.label.casefold() != dlabel.casefold()
+        # ):
+        #     album.label = dlabel
+
+        relcountry = release.get("country")
+        if album.country == "XW" and relcountry and len(relcountry) == 2:
+            album.country = relcountry
+
+
 class BandcampRequestsHandler:
     """A class that provides an ability to make requests and handles failures."""
 
@@ -81,90 +145,59 @@ class BandcampRequestsHandler:
         return unescape(response.text)
 
 
-class BandcampAlbumArt(BandcampRequestsHandler, fetchart.RemoteArtSource):
-    NAME = "Bandcamp"
-
-    def get(self, album, plugin, paths):
-        # type: (AlbumInfo, plugins.BeetsPlugin, List) -> Iterator[fetchart.Candidate]  # noqa
-        """Return the url for the cover from the bandcamp album page.
-        This only returns cover art urls for bandcamp albums (by id).
-        """
-        # TODO: Make this configurable
-        if hasattr(album, "art_source") and album.art_source == DATA_SOURCE:
-            url = album.mb_albumid
-            if isinstance(url, six.string_types) and DATA_SOURCE in url:
-                html = self._get(url)
-                if html:
-                    try:
-                        yield self._candidate(
-                            url=self.guru(html).image,
-                            match=fetchart.Candidate.MATCH_EXACT,
-                        )
-                    except (KeyError, AttributeError, ValueError):
-                        self._info("Unexpected parsing error fetching album art")
-                else:
-                    self._info("Could not connect to the URL")
-            else:
-                self._info("Not fetching art for a non-bandcamp album")
-        else:
-            self._info("Art cover is already present")
-
-
 def _from_bandcamp(clue: str) -> bool:
     return ".bandcamp." in clue or (
         clue.startswith("http") and ("/album/" in clue or "/track/" in clue)
     )
 
 
-class BandcampAdditionalData:
-    write: bool
-    excluded_extra_fields: Set[str]
-    guru: Callable
-    _info: Callable
+class BandcampAlbumArt(BandcampRequestsHandler, fetchart.RemoteArtSource):
+    NAME = "Bandcamp"
+    get_guru = None  # type: Callable[[str], Metaguru]
 
-    def verify_and_add(
-        self, item: library.Item, get_data: Callable[[str], str], excluded: Set[str]
-    ) -> None:
-        name = "Additional data"
-        for bandcamp_field in set(ADDITIONAL_DATA_MAP).difference(excluded):
-            item_field = ADDITIONAL_DATA_MAP[bandcamp_field]
+    def __init__(self, get_guru: Callable, *args) -> None:
+        setattr(self, "get_guru", get_guru)
+        super().__init__(*args)
 
-            if not getattr(item, item_field, None) or (
-                item_field == "comments" and item.comments.startswith("Visit http")
-            ):
-                new_value = get_data(bandcamp_field)
-                if new_value:
-                    item.update({item_field: new_value})
-                    self._info("{}: obtained {} for {}", name, bandcamp_field, item)
-                else:
-                    self._info("{}: {} not found for {}", name, bandcamp_field, item)
-            else:
-                self._info("{}: {}: already present on {}", name, item_field, item)
-        return item
-
-    def _add_additional_data(self, item: library.Item) -> None:
-        """If not excluded, fetch and store:
-        * lyrics
-        * release description as comments
+    def get(self, album: AlbumInfo, _, paths) -> Iterator[fetchart.Candidate]:
+        """Return the url for the cover from the bandcamp album page.
+        This only returns cover art urls for bandcamp albums (by id).
         """
-        get_data_call = partial(getattr, self.guru(item.mb_albumid or item.mb_trackid))
-        return self.verify_and_add(item, get_data_call, self.excluded_extra_fields)
+        console.print(paths)
+        if hasattr(album, "art_source") and album.art_source == DATA_SOURCE:
+            self._info("Art cover is already present")
+        elif not _from_bandcamp(album.mb_albumid):
+            self._info("Not fetching art for a non-bandcamp album: {}", album.mb_albumid)
+        else:
+            guru = getattr(self, "get_guru")(album.mb_albumid)
+            if not guru:
+                self._info("Could not obtain the following URL: {}", album.mb_albumid)
+            else:
+                try:
+                    image = guru.image
+                except Exception:
+                    self._exc("Unexpected parsing error fetching album art")
+                yield self._candidate(url=image, match=fetchart.Candidate.MATCH_EXACT)
 
 
-class BandcampPlugin(
-    BandcampRequestsHandler, plugins.BeetsPlugin, BandcampAdditionalData
-):
+class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
     _gurucache: Dict[str, Metaguru]
 
     def __init__(self) -> None:
         super().__init__()
         self.config.add(DEFAULT_CONFIG.copy())
 
-        self.write = config["import"]["write"].get()
         self.excluded_extra_fields = set(self.config["exclude_extra_fields"].get())
-        self.register_listener("import_task_apply", self.add_additional_data)
+        self.register_listener("before_choose_candidate", self.append_discogs_data)
         self.register_listener("pluginload", self.loaded)
         self._gurucache = dict()
+
+    def append_discogs_data(self, task: ImportTask) -> None:
+        try:
+            append_discogs_data(task)
+        except Exception:
+            console.print_exception(show_locals=True, extra_lines=8)
+            exit(1)
 
     def add_additional_data(self, task: ImportTask) -> None:
         """Import hook for fetching additional data from bandcamp."""
@@ -196,7 +229,9 @@ class BandcampPlugin(
         if self.config["art"]:
             fetchart.ART_SOURCES[DATA_SOURCE] = BandcampAlbumArt
             fetchart.SOURCE_NAMES[BandcampAlbumArt] = DATA_SOURCE
-            bandcamp_fetchart = BandcampAlbumArt(self._log, self.config)
+            bandcamp_fetchart = BandcampAlbumArt(
+                partial(self.guru), self._log, self.config
+            )
 
             for plugin in plugins.find_plugins():
                 if isinstance(plugin, fetchart.FetchArtPlugin):
@@ -209,7 +244,7 @@ class BandcampPlugin(
             return reimport_url
 
         if item.comments.startswith("Visit"):
-            match = re.search(r"https:[/a-z.-]+com", item.comments)
+            match = re.search(r"https:[/a-z0-9.-]+com", item.comments)
             if match:
                 url = "{}/{}/{}".format(match.group(), _type, urlify(name))
                 self._info("Trying our guess {} before searching", url)
@@ -275,6 +310,13 @@ class BandcampPlugin(
         """Return an AlbumInfo object for a bandcamp album page.
         If track url is given by mistake, find and fetch the album url instead.
         """
+        if "/track/" in url:
+            match = re.search(r'inAlbum.+(https://[^/]+/album/[^#?"]+)', self._get(url))
+            if match:
+                url = match.expand(r"\1")
+            else:
+                return self.get_track_info(url)
+
         guru = self.guru(url, html=self._get(url))
         return self.handle(guru, "album", url) if guru else None
 
@@ -312,3 +354,28 @@ class BandcampPlugin(
                 page += 1
                 continue
             break
+
+
+def main() -> int:
+    import json
+    import os
+    import sys
+
+    url = sys.argv[1]
+    pl = BandcampPlugin()
+    try:
+        album = pl.get_album_info(url)
+        assert album
+    except Exception as exc:
+        console.print_exception(
+            extra_lines=8, show_locals=True, width=os.environ.get("COLUMNS", 150)
+        )
+        console.print(vars(pl))
+        console.print([*map(vars, pl._gurucache.values())])
+        raise exc
+    else:
+        print(json.dumps(album))
+
+
+if __name__ == "__main__":
+    main()

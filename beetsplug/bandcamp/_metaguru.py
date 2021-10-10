@@ -5,15 +5,21 @@ from datetime import date, datetime
 from functools import reduce
 from math import floor
 from operator import truth
-from typing import Any, Dict, List, Optional, Pattern, Set, Tuple
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Pattern, Set, Tuple
 from unicodedata import normalize
 
 from beets.autotag.hooks import AlbumInfo, TrackInfo
 from cached_property import cached_property
 from pkg_resources import get_distribution, parse_version
 from pycountry import countries, subdivisions
+from rich.console import Console
 
 from .genres_lookup import GENRES
+
+if TYPE_CHECKING:
+    import beetsplug
+
+console = Console(force_interactive=True, force_terminal=True)
 
 NEW_BEETS = get_distribution("beets").parsed_version >= parse_version("1.5.0")
 
@@ -41,7 +47,7 @@ VA = "Various Artists"
 
 _catalognum = r"(\b[A-Za-z]([^-.\s\d]|[.-][^0-9])+(([-.]?|[A-Z]\s)\d+|\s\d{2,})[A-Z]?(?:[.-]?\d|CD)?\b)"  # noqa
 _exclusive = r"[*\[( -]*(bandcamp|digi(tal)?)[ -](digital )?(only|bonus|exclusive)[*\])]?"
-_catalognum_header = r"(?:Catalog(?:ue)?(?: (?:Number|N[or]))?|Cat N[or])\.?:"
+_catalognum_header = r"(?:(?:Cat|Catalog)(?:ue)?(?: (?:Number|N[or]))?|Cat N[or])\.?:"
 PATTERNS: Dict[str, Pattern] = {
     "meta": re.compile(r".*dateModified.*", flags=re.MULTILINE),
     "desc_catalognum": re.compile(rf"(?:{_catalognum_header} ?)([A-z]+[. -]?[0-9]+)"),
@@ -54,7 +60,7 @@ PATTERNS: Dict[str, Pattern] = {
     "lyrics": re.compile(r'"lyrics":({[^}]*})'),
     "clean_incl": re.compile(r"(?i:(\(?incl[^)]+\)?|\([^)]+remix[^)]+\)))"),
     "remix_or_ft": re.compile(r"\s(?i:(\[|\().*(mix|edit)|f(ea)?t\.).*"),
-    "track_alt": re.compile(r"([ABCDEFGH]{1,3}[0-9])(\.|.?-\s|\s)"),
+    "track_alt": re.compile(r"([abABCDEFGH]{1,3}[0-9])(\.|.?-\s|\s)"),
     "vinyl_name": re.compile(
         r'(?P<count>(?i:[1-5]|single|double|triple))(LP)? ?x? ?((7|10|12)" )?Vinyl'
     ),
@@ -63,7 +69,7 @@ PATTERNS: Dict[str, Pattern] = {
 
 def urlify(pretty_string: str) -> str:
     """Transform a string into bandcamp url."""
-    name = pretty_string.lower().replace("'", "")
+    name = pretty_string.lower().replace("'", "").replace(".", "")
     return re.sub("--+", "-", re.sub(r"\W", "-", name, flags=re.ASCII)).strip("-")
 
 
@@ -93,16 +99,18 @@ class Helpers:
 
         # remove catalognum if given
         if catalognum:
-            name = name.replace(catalognum, "").strip(", ")
+            name = re.sub(rf" ?[\[(]{catalognum}[\])]", "", name)
+
+        name = name.replace("- Reworked", "Reworked")
 
         # remove leading numerical index if found
-        name = re.sub(r"^[01]?[0-9][. ]\s?(?=[A-Z])", "", name).strip(", ")
+        name = re.sub(r"^[01][0-9]?([ .]|\.\s)(?=[A-Z])", "", name).strip(", ")
 
         # match track alt and remove it from the name
-        match = PATTERNS["track_alt"].match(name)
+        match = PATTERNS["track_alt"].search(name)
         if match:
             track_alt = match.expand(r"\1")
-            track["track_alt"] = track_alt
+            track["track_alt"] = track_alt.upper()
             name = name.replace(track_alt, "")
 
         # do not strip a period from the end since it could end with an abbrev
@@ -189,6 +197,8 @@ class Helpers:
             # Remove duplicate closing parens if they follow a space
             # or enclose mix/edit info and are at the end
             (r" \)+|(?<=(?i:.mix|edit))\)+$", ")"),
+            # remove endings like (200 bpm)
+            (r"\([0-9]+\s?bpm\)$", ""),
             (r'"', ""),
         ]:
             name = re.sub(pat, repl, name)
@@ -203,6 +213,7 @@ class Helpers:
             "various artists",
             "various artist",
             "free download",
+            "remixed",
             "free dl",
             "free)",
             "vinyl",
@@ -221,16 +232,13 @@ class Helpers:
         def clean(patstr: str, text: str) -> str:
             return re.sub(patstr, "", text)
 
-        return clean(empty_parens, clean(rubbish, name)).strip("/-|(.: ") or default
+        return clean(empty_parens, clean(rubbish, name)).strip("/-|(:' ") or default
 
     @staticmethod
     def get_genre(keyword: str) -> str:
         genre = ""
         if keyword.casefold() in GENRES:
-            if keyword[0].islower():
-                genre = keyword.capitalize()
-            else:
-                genre = keyword
+            genre = keyword.lower().capitalize()
 
         parts = list(map(str.strip, keyword.split(" ")))
         if len(parts) > 1 and all(map(lambda x: x in GENRES, parts)):
@@ -238,7 +246,9 @@ class Helpers:
 
         if len(genre) and " " in genre:
             gsplit = genre.split(" ")
-            return " ".join(map(lambda x: x.capitalize() if x[0].lower() else x, gsplit))
+            return " ".join(
+                map(lambda x: x.lower().capitalize() if len(x) > 3 else x, gsplit)
+            )
         return genre
 
     @staticmethod
@@ -261,21 +271,21 @@ class Helpers:
 
 
 class Metaguru(Helpers):
-    html: str
     meta: JSONDict
     include_all_tracks: bool
 
     _media: Dict[str, str]
     _singleton = False
+    _discogs: "Optional[beetsplug.discogs.DiscogsClient]" = None
+    _release: "Optional[beetsplug.discogs.Release]" = None
 
     def __init__(
         self, html: str, media_prefs: str = DEFAULT_MEDIA, include_all_tracks: bool = True
     ) -> None:
-        self.html = html
         self.meta = {}
         self.include_all_tracks = include_all_tracks
 
-        match = re.search(PATTERNS["meta"], html)
+        match = PATTERNS["meta"].search(html)
         if match:
             self.meta = json.loads(match.group())
 
@@ -296,15 +306,17 @@ class Metaguru(Helpers):
         """Return album and media description unless they start with a generic message.
         If credits exist, append them too.
         """
+        parts = [self.meta.get("description", "")]
+
+        media = self._media.get("description", "")
+        if self.media_name != DEFAULT_MEDIA and media:
+            parts.append("Media: " + media)
+
         _credits = self.meta.get("creditText", "")
-        parts = [
-            self.meta.get("description", ""),
-            "" if self.media_name == DEFAULT_MEDIA else self._media.get("description"),
-            "Credits: " + _credits if _credits else "",
-        ]
-        return reduce(lambda x, y: f"{x}\n - {y}", filter(truth, parts), "").replace(
-            "\r", ""
-        )
+        if _credits:
+            parts.append("Credits: " + _credits)
+
+        return "\n".join(parts).replace("\r", "")
 
     @cached_property
     def album_name(self) -> str:
@@ -337,32 +349,32 @@ class Metaguru(Helpers):
 
     @cached_property
     def bandcamp_albumartist(self) -> str:
-        match = re.search(r"Artist:([^\n]+)", self.description)
+        match = re.search(r"Artists?:([^\n]+)", self.description)
         if match:
             return str(match.groups()[0].strip())
 
-        albumartist = self.meta["byArtist"]["name"].replace("various", VA)
-        album = self.album_name
-        if self.label == albumartist:
-            albumartist = (
-                self.parse_track_name(album, self.catalognum).get("artist") or albumartist
-            )
+        return self.meta["byArtist"]["name"]
 
-        return re.sub(r"(?i:, ft.*remix.*)", "", albumartist)
+    @cached_property
+    def is_va(self) -> bool:
+        # or len(self.track_artists) == len(self.tracks)
+        # or (
+        #     len(self.track_artists) > 1
+        #     and not {*self.bandcamp_albumartist.split(", ")}.issubset(
+        #         self.track_artists
+        #     )
+        #     and len(self.tracks) >= 4
+        # )
+        return bool(
+            re.search(r"-(v.?a|various|vol(ume)?)", self.album_id)
+            or re.search(r"(?i:(v.?a|various|vol(ume)?))", self.bandcamp_albumartist)
+        )
 
-    @property
+    @cached_property
     def image(self) -> str:
         # TODO: Need to test
         image = self.meta.get("image", "")
         return image[0] if isinstance(image, list) else image
-
-    @property
-    def lyrics(self) -> Optional[str]:
-        # TODO: Need to test
-        matches = re.findall(PATTERNS["lyrics"], self.html)
-        if not matches:
-            return None
-        return "\n".join(json.loads(m).get("text") for m in matches)
 
     @cached_property
     def release_date(self) -> date:
@@ -406,6 +418,34 @@ class Metaguru(Helpers):
             return WORLDWIDE
 
     @cached_property
+    def albumartist(self) -> str:
+        """Handle various artists and albums that have a single artist."""
+        if self.is_va:
+            return VA
+
+        # albumartist = re.sub(
+        #     r"([vV]arious|V/?A|V[.]A[.]|Various Artist)$",
+        #     VA,
+        #     self.meta["byArtist"]["name"],
+        # )
+        albumartist = self.bandcamp_albumartist
+        album = self.album_name
+        label = self.label
+        if label == albumartist or " - " in album:
+            albumartist = (
+                self.parse_track_name(
+                    re.sub(rf"{label}[ -]+", "", album), self.catalognum
+                ).get("artist")
+                or albumartist
+            )
+        return re.sub(r"(?i:(, ft| ?\(incl\.).*remix.*)", "", albumartist)
+        # tartists = self.track_artists
+        # if len(tartists) == 1:
+        #     first_tartist = tartists.copy().pop()
+        #     if first_tartist != self.label:
+        #         return first_tartist
+
+    @cached_property
     def tracks(self) -> List[JSONDict]:
         """Parse relevant details from the tracks' JSON."""
         if self._singleton:
@@ -413,7 +453,7 @@ class Metaguru(Helpers):
         else:
             raw_tracks = self.meta["track"].get("itemListElement", [])
 
-        albumartist = self.bandcamp_albumartist
+        albumartist = self.albumartist
         catalognum = self.catalognum
         tracks = []
         for raw_track in raw_tracks:
@@ -432,6 +472,9 @@ class Metaguru(Helpers):
             track["artist"] = self.get_track_artist(
                 track["artist"], raw_item, albumartist  # type: ignore
             )
+            lyrics = raw_item.get("recordingOf", {}).get("lyrics", {}).get("text")
+            if lyrics:
+                track["lyrics"] = lyrics.replace("\r", "")
 
             tracks.append(track)
 
@@ -449,25 +492,23 @@ class Metaguru(Helpers):
 
     @property
     def is_lp(self) -> bool:
-        return "LP" in self.album_name or "LP" in self.disctitle
+        return bool(re.search(r"[\[( ]LP", self.album_name + self.disctitle))
 
     @cached_property
     def is_ep(self) -> bool:
-        return "EP" in self.album_name or "EP" in self.disctitle
+        return bool(re.search(r"[\[( ]EP", self.album_name + self.disctitle))
 
     @cached_property
-    def is_va(self) -> bool:
-        return (
-            VA.casefold() in self.album_name.casefold()
-            or len(self.track_artists) == len(self.tracks)
-            or (
-                len(self.track_artists) > 1
-                and not {*self.bandcamp_albumartist.split(", ")}.issubset(
-                    self.track_artists
-                )
-                and len(self.tracks) >= 4
-            )
-        )
+    def albumtype(self) -> str:
+        if self.is_lp:
+            return "album"
+        if self.is_ep:
+            return "ep"
+        if self.is_va:
+            return "compilation"
+        if self.is_single:
+            return "single"
+        return "album"
 
     @cached_property
     def genre(self) -> Optional[str]:
@@ -488,50 +529,23 @@ class Metaguru(Helpers):
         return ", ".join(sorted(genres)) or None
 
     @cached_property
-    def albumartist(self) -> str:
-        """Handle various artists and albums that have a single artist."""
-        if self.albumtype == "compilation":
-            return VA
-        tartists = self.track_artists
-        if len(tartists) == 1:
-            first_tartist = tartists.copy().pop()
-            if first_tartist != self.label:
-                return first_tartist
-        return self.bandcamp_albumartist
-
-    @cached_property
-    def albumtype(self) -> str:
-        if self.is_lp:
-            return "album"
-        if self.is_ep:
-            return "ep"
-        if self.is_single:
-            return "single"
-        if self.is_va:
-            return "compilation"
-        return "album"
-
-    @cached_property
     def clean_album_name(self) -> str:
         args = [self.catalognum] if self.catalognum else []
-        if not self._singleton:
-            args.append(self.albumartist)
         if not self.albumtype == "compilation":
             args.append(self.label)
+            if not self._singleton:
+                args.append(self.albumartist)
         return self.clean_name(self.album_name, *args, remove_extra=True)
 
     @property
     def _common(self) -> JSONDict:
         return dict(
-            data_source=DATA_SOURCE,
-            media=self.media_name,
-            data_url=self.album_id,
-            artist_id=self.artist_id,
+            data_source=DATA_SOURCE, media=self.media_name, artist_id=self.artist_id
         )
 
     @property
     def _common_album(self) -> JSONDict:
-        return dict(
+        common_data = dict(
             year=self.release_date.year,
             month=self.release_date.month,
             day=self.release_date.day,
@@ -543,6 +557,10 @@ class Metaguru(Helpers):
             country=self.country,
             genre=self.genre,
         )
+        if self.description:
+            common_data["comments"] = self.description
+
+        return common_data
 
     def _trackinfo(self, track: JSONDict, **kwargs: Any) -> TrackInfo:
         track.pop("digital_only")
@@ -581,7 +599,7 @@ class Metaguru(Helpers):
 
         total = len(filtered_tracks)
         _tracks = [self._trackinfo(t.copy(), medium_total=total) for t in filtered_tracks]
-        return AlbumInfo(
+        album = AlbumInfo(
             **self._common,
             **self._common_album,
             artist=self.albumartist,
@@ -590,3 +608,5 @@ class Metaguru(Helpers):
             mediums=self.mediums,
             tracks=_tracks,
         )
+        # album.update(**self.discogs_data)
+        return album
