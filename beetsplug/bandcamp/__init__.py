@@ -146,8 +146,10 @@ class BandcampRequestsHandler:
 
 
 def _from_bandcamp(clue: str) -> bool:
-    return ".bandcamp." in clue or (
-        clue.startswith("http") and ("/album/" in clue or "/track/" in clue)
+    return (
+        "soundcloud" in clue
+        or ".bandcamp." in clue
+        or (clue.startswith("http") and ("/album/" in clue or "/track/" in clue))
     )
 
 
@@ -163,7 +165,6 @@ class BandcampAlbumArt(BandcampRequestsHandler, fetchart.RemoteArtSource):
         """Return the url for the cover from the bandcamp album page.
         This only returns cover art urls for bandcamp albums (by id).
         """
-        console.print(paths)
         if hasattr(album, "art_source") and album.art_source == DATA_SOURCE:
             self._info("Art cover is already present")
         elif not _from_bandcamp(album.mb_albumid):
@@ -188,7 +189,7 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         self.config.add(DEFAULT_CONFIG.copy())
 
         self.excluded_extra_fields = set(self.config["exclude_extra_fields"].get())
-        self.register_listener("before_choose_candidate", self.append_discogs_data)
+        # self.register_listener("before_choose_candidate", self.append_discogs_data)
         self.register_listener("pluginload", self.loaded)
         self._gurucache = dict()
 
@@ -281,15 +282,21 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
 
     def album_for_id(self, album_id: str) -> Optional[AlbumInfo]:
         """Fetch an album by its bandcamp ID."""
+        print(self)
+        print(album_id)
         if _from_bandcamp(album_id):
             return self.get_album_info(album_id)
+        if "soundcloud" in album_id:
+            return self.get_track_info(album_id)
 
         self._info("Not a bandcamp URL, skipping")
         return None
 
     def track_for_id(self, track_id: str) -> Optional[TrackInfo]:
         """Fetch a track by its bandcamp ID."""
-        if _from_bandcamp(track_id):
+        print(self)
+        print(track_id)
+        if _from_bandcamp(track_id) or "soundcloud" in track_id:
             return self.get_track_info(track_id)
 
         self._info("Not a bandcamp URL, skipping")
@@ -310,6 +317,7 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         """Return an AlbumInfo object for a bandcamp album page.
         If track url is given by mistake, find and fetch the album url instead.
         """
+        # https://soundcloud.com/paul-copping/the-right-frame-of-mind
         if "/track/" in url:
             match = re.search(r'inAlbum.+(https://[^/]+/album/[^#?"]+)', self._get(url))
             if match:
@@ -322,6 +330,45 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
 
     def get_track_info(self, url: str) -> Optional[TrackInfo]:
         """Returns a TrackInfo object for a bandcamp track page."""
+        if "soundcloud" in url:
+            import json
+
+            from beets.autotag import TrackInfo
+            from dateutil.parser import isoparse
+
+            data = json.loads(re.search(r"\[\{[^<]+[^;<)]", self._get(url)).group())
+            dat = data[-1]["data"]
+            user = dat["user"]
+            date = isoparse(dat["display_date"])
+            artist = user.get("full_name") or user.get("username")
+            desc = [
+                "Artwork: " + dat["artwork_url"],
+                "Description: \n" + dat.get("description"),
+                "Visual: " + user["visuals"]["visuals"][0]["visual_url"],
+            ]
+            return TrackInfo(
+                album_id=url,
+                album=dat.get("title"),
+                albumtype=dat.get("track_format"),
+                artist_id=user["permalink_url"],
+                albumartist=artist,
+                artist=artist,
+                track_id=url,
+                index=1,
+                media="Digital Media",
+                data_source="soundcloud",
+                data_url=url,
+                genre=dat.get("genre") or None,
+                title=dat["title"],
+                label=dat.get("label_name") or "",
+                country=user.get("country_code"),
+                comments="\n\n".join(desc),
+                length=round(dat["duration"] / 1000),
+                day=date.day,
+                month=date.month,
+                year=date.year,
+            )
+
         guru = self.guru(url)
         return self.handle(guru, "singleton", url) if guru else None
 
@@ -364,7 +411,7 @@ def main() -> int:
     url = sys.argv[1]
     pl = BandcampPlugin()
     try:
-        album = pl.get_album_info(url)
+        album = pl.get_album_info(url) or pl.get_track_info(url)
         assert album
     except Exception as exc:
         console.print_exception(

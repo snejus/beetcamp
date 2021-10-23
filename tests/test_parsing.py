@@ -292,6 +292,8 @@ def test_parse_country(name, expected):
         ("Counterspell [HMX005]", "", "", "", "HMX005"),
         ("3: Flight Of The Behemoth", "", "", "SUNN O)))", ""),
         ("[CAT001]", "", "", "\\m/ records", "CAT001"),
+        ("[CAT001]", "", "", "\\m/ records", "CAT001"),
+        ("SHURSH(User-474271262 Remix)", "", "", "", ""),
     ],
 )
 def test_parse_catalognum(album, disctitle, description, label, expected):

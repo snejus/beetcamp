@@ -13,6 +13,8 @@ from cached_property import cached_property
 from pkg_resources import get_distribution, parse_version
 from pycountry import countries, subdivisions
 from rich.console import Console
+from rich.panel import Panel
+from rich.table import Table
 
 from .genres_lookup import GENRES
 
@@ -45,7 +47,7 @@ MEDIA_MAP = {
 }
 VA = "Various Artists"
 
-_catalognum = r"(\b[A-Za-z]([^-.\s\d]|[.-][^0-9])+(([-.]?|[A-Z]\s)\d+|\s\d{2,})[A-Z]?(?:[.-]?\d|CD)?\b)"  # noqa
+_catalognum = r"(\b[A-Za-z]([^()-.\s\d]|[.-][^0-9])+(([-.]?|[A-Z]\s)\d+|\s\d{2,})[A-Z]?(?:[.-]?\d|CD)?\b)"  # noqa
 _exclusive = r"[*\[( -]*(bandcamp|digi(tal)?)[ -](digital )?(only|bonus|exclusive)[*\])]?"
 _catalognum_header = r"(?:(?:Cat|Catalog)(?:ue)?(?: (?:Number|N[or]))?|Cat N[or])\.?:"
 PATTERNS: Dict[str, Pattern] = {
@@ -65,6 +67,18 @@ PATTERNS: Dict[str, Pattern] = {
         r'(?P<count>(?i:[1-5]|single|double|triple))(LP)? ?x? ?((7|10|12)" )?Vinyl'
     ),
 }
+
+
+def get_country(location: str) -> str:
+    try:
+        name = normalize("NFKD", location).encode("ascii", "ignore").decode()
+        return (
+            COUNTRY_OVERRIDES.get(name)
+            or getattr(countries.get(name=name, default=object), "alpha_2", None)
+            or subdivisions.lookup(name).country_code
+        )
+    except (ValueError, LookupError):
+        return WORLDWIDE
 
 
 def urlify(pretty_string: str) -> str:
@@ -99,6 +113,7 @@ class Helpers:
 
         # remove catalognum if given
         if catalognum:
+            catalognum = re.escape(catalognum)
             name = re.sub(rf" ?[\[(]{catalognum}[\])]", "", name)
 
         name = name.replace("- Reworked", "Reworked")
@@ -366,7 +381,8 @@ class Metaguru(Helpers):
         #     and len(self.tracks) >= 4
         # )
         return bool(
-            re.search(r"-(v.?a|various|vol(ume)?)", self.album_id)
+            not self._singleton
+            and re.search(r"-(v.?a|various|vol(ume)?)", self.album_id)
             or re.search(r"(?i:(v.?a|various|vol(ume)?))", self.bandcamp_albumartist)
         )
 
@@ -406,16 +422,9 @@ class Metaguru(Helpers):
 
     @cached_property
     def country(self) -> str:
-        try:
-            loc = self.meta["publisher"]["foundingLocation"]["name"].rpartition(", ")[-1]
-            name = normalize("NFKD", loc).encode("ascii", "ignore").decode()
-            return (
-                COUNTRY_OVERRIDES.get(name)
-                or getattr(countries.get(name=name, default=object), "alpha_2", None)
-                or subdivisions.lookup(name).country_code
-            )
-        except (ValueError, LookupError):
-            return WORLDWIDE
+        return get_country(
+            self.meta["publisher"]["foundingLocation"]["name"].rpartition(", ")[-1]
+        )
 
     @cached_property
     def albumartist(self) -> str:
@@ -461,14 +470,18 @@ class Metaguru(Helpers):
             index = raw_track.get("position") or 1
             name, digital_only = self.clean_digital_only_track(raw_item["name"])
             name = self.clean_name(name, *filter(truth, [self.catalognum]))
-            track = dict(
-                digital_only=digital_only,
-                index=index,
-                medium_index=index,
-                track_id=raw_item.get("@id"),
-                length=self.get_duration(raw_item) or None,
-                **self.parse_track_name(name, catalognum),
-            )
+            try:
+                track = dict(
+                    digital_only=digital_only,
+                    index=index,
+                    medium_index=index,
+                    track_id=raw_item.get("@id"),
+                    length=self.get_duration(raw_item) or None,
+                    **self.parse_track_name(name, catalognum),
+                )
+            except Exception:
+                console.print_exception(show_locals=True, extra_lines=8)
+
             track["artist"] = self.get_track_artist(
                 track["artist"], raw_item, albumartist  # type: ignore
             )
@@ -588,6 +601,16 @@ class Metaguru(Helpers):
             kwargs["album"] = "{} - {}".format(track["artist"], track["title"])
 
         return self._trackinfo(track, medium_total=1, **kwargs)
+        # track = self._trackinfo(track, medium_total=1, **kwargs)
+        # table = Table(show_header=False, border_style="black")
+        # for key, val in track.items():
+        # if val:
+        # table.add_row(str(key), str(val))
+        # table.columns[0].style = "bold cyan"
+        # console.print(Panel(table, title=track["album"]))
+
+        # return self._trackinfo(track, medium_total=1, **kwargs)
+        # return track
 
     @property
     def album(self) -> AlbumInfo:
