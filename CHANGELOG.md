@@ -1,15 +1,14 @@
-### Updated
+## [0.11.0-alpha.0] 2021-09-13
 
-- `track.artist`: when bandcamp specify multiple albumartists, check each of them whether
-  their names appear in the track title, and only includes matching ones, for example
+### Added
 
+- Added an entrypoint for `beetcamp`: if the package is in your `$PATH`, bandcamp
+  metadata can be obtained directly as a JSON
+
+  ```bash
+  beetcamp <bandcamp-url>
+  # {"album": "some album", ...}
   ```
-  Main Artist - Title (Someone Remix) ->
-    albumartist: Main Artist
-    artist: Main Artist, Someone
-    title: Title (Someone Remix)
-  ```
-
 
 ## [0.10.1] 2021-09-13
 

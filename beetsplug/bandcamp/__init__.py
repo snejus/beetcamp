@@ -312,3 +312,22 @@ class BandcampPlugin(
                 page += 1
                 continue
             break
+
+
+def main():
+    import sys
+    import json
+
+    if len(sys.argv) < 2:
+        raise Exception("bandcamp url is required")
+    url = sys.argv[1]
+    pl = BandcampPlugin()
+    album = pl.album_for_id(url) or pl.track_for_id(url)
+    if not album:
+        raise Exception("Failed to find a release under the given url")
+
+    print(json.dumps(album))
+
+
+if __name__ == "__main__":
+    main()
