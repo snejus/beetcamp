@@ -345,12 +345,16 @@ class Metaguru(Helpers):
         return "\n".join(json.loads(m).get("text") for m in matches)
 
     @cached_property
-    def release_date(self) -> date:
+    def release_date(self) -> Optional[date]:
         """Parse the datestring that takes the format like below and return date object.
         {"datePublished": "17 Jul 2020 00:00:00 GMT"}
+
+        If the field is not found, return None.
         """
-        date_part = re.sub(r"\s[0-9]{2}:.+", "", self.meta["datePublished"])
-        return datetime.strptime(date_part, "%d %b %Y").date()
+        date = self.meta.get("datePublished")
+        if date:
+            return datetime.strptime(re.sub(r"[0-9]{2}:.+", "", date), "%d %b %Y").date()
+        return date
 
     @cached_property
     def media_name(self) -> str:
@@ -493,17 +497,20 @@ class Metaguru(Helpers):
 
     @property
     def _common_album(self) -> JSONDict:
-        return dict(
-            year=self.release_date.year,
-            month=self.release_date.month,
-            day=self.release_date.day,
+        reldate = self.release_date
+        common_data = dict(
             label=self.label,
             catalognum=self.catalognum,
             albumtype=self.albumtype,
             album=self.clean_album_name,
-            albumstatus=OFFICIAL if self.release_date <= date.today() else PROMO,
+            albumstatus=OFFICIAL if reldate and reldate <= date.today() else PROMO,
             country=self.country,
         )
+
+        if reldate:
+            common_data.update(year=reldate.year, month=reldate.month, day=reldate.day)
+
+        return common_data
 
     def _trackinfo(self, track: JSONDict, **kwargs: Any) -> TrackInfo:
         track.pop("digital_only")
