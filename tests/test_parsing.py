@@ -1,5 +1,6 @@
 """Module for tests related to parsing."""
 import json
+from datetime import date
 
 import pytest
 from beetsplug.bandcamp._metaguru import Helpers, Metaguru, urlify
@@ -363,3 +364,12 @@ def test_bundles_get_excluded():
         ]
     }
     assert set(Helpers._get_media_index(meta)) == {"Vinyl"}
+
+
+@pytest.mark.parametrize(
+    ("date", "expected"), [("08 Dec 2020 00:00:00 GMT", date(2020, 12, 8)), (None, None)]
+)
+def test_handles_missing_publish_date(date, expected):
+    guru = Metaguru("")
+    guru.meta = {"datePublished": date}
+    assert guru.release_date == expected

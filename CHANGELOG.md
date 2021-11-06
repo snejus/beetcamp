@@ -10,6 +10,11 @@
   # {"album": "some album", ...}
   ```
 
+### Fixed
+
+- Nowadays it is possible that the `datePublished` field is not given in the release JSON
+  data - this is now handled gracefully.
+
 ## [0.10.1] 2021-09-13
 
 ### Fixed

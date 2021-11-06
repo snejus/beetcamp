@@ -241,7 +241,7 @@ class Helpers:
 
 
 class Metaguru(Helpers):
-    html: str
+    html: Optional[str]
     meta: JSONDict
     include_all_tracks: bool
 
@@ -353,7 +353,7 @@ class Metaguru(Helpers):
         """
         date = self.meta.get("datePublished")
         if date:
-            return datetime.strptime(re.sub(r"[0-9]{2}:.+", "", date), "%d %b %Y").date()
+            return datetime.strptime(re.sub(r" [0-9]{2}:.+", "", date), "%d %b %Y").date()
         return date
 
     @cached_property
