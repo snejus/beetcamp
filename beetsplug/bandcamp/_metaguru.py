@@ -53,16 +53,17 @@ PATTERNS: Dict[str, Pattern] = {
     "digital": re.compile(
         r"""
         # either
-            ^DIGI(TAL)?\.?\  # the title starts this way
-            (\d+\.\ ?)?   # which may be followed by an index
-        | (?i:  # or, with ignorecase in place, ...
-            [ *\[\(-]+                    # there is some special delimiter
-            (bandcamp|digi(tal)?)         # followed by either of these
-            (
-              [)\]]$                      # either terminating immediately
-              |.*(only|bonus|exclusive).* # or ending with some big VIP word
-            )
+        (^                  # start of the title
+          DIGI(TAL)?[.]?[ ] # note all capitals (otherwise we may match actual titles)
+          (\d+[.][ ]?)?     # which may be followed by an index
+        ) | (?i:            # or, with ignorecase in place, ...
+          [ *\[\(-]+                    # there is some special delimiter
+          (bandcamp|digi(tal)?)         # followed by either of these two
+          (
+            [)\]]$                      # either closed immediately
+            |.*(only|bonus|exclusive).* # or ending with some big VIP word
           )
+        )
         """,
         re.VERBOSE,
     ),
@@ -123,7 +124,7 @@ class Helpers:
         # do not strip a period from the end since it could end with an abbrev
         name = name.lstrip(".")
         # in most cases that's the delimiter between the artist and the title
-        parts = re.split(r"\s-\s|\s?-\s|\s-\s?", name.strip(",- "))
+        parts = re.split(r"\s?-\s|\s-\s?", name.strip(",- "))
 
         # title is always given
         track["title"] = parts.pop(-1)
