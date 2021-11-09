@@ -255,7 +255,7 @@ class Helpers:
         valid_mb_genre = partial(op.contains, GENRES)
         for kw in keywords:
             words = list(map(str.strip, kw.split(" ")))
-            if kw not in genres and all(map(valid_mb_genre, words)):
+            if kw not in genres and any(map(valid_mb_genre, words)):
                 genres.append(kw)
 
         def valid_genre(genre: str) -> bool:
