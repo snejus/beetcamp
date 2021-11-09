@@ -74,6 +74,8 @@ class ReleaseInfo:
             media=self.media,
             data_source=DATA_SOURCE,
             tracks=[TrackInfo(**self.track_data(**dict(t))) for t in iter_tracks],
+            genre=kwargs.get("genre"),
+            style=kwargs.get("style"),
         )
 
 
@@ -100,6 +102,8 @@ def single_track_release() -> ReleaseInfo:
         month=11,
         day=9,
         country="SE",
+        genre=None,
+        style=None,
     )
     return info
 
@@ -127,6 +131,8 @@ def single_only_track_name() -> ReleaseInfo:
         month=1,
         day=10,
         country="RU",
+        genre="techno, trance",
+        style="electronic",
     )
     return info
 
@@ -157,6 +163,8 @@ def single_track_album_search() -> Tuple[str, ReleaseInfo]:
         va=False,
         country="NO",
         mediums=1,
+        genre=None,
+        style=None,
     )
     return track_url, info
 
@@ -194,6 +202,8 @@ def album() -> ReleaseInfo:
         va=False,
         country="NO",
         mediums=1,
+        genre=None,
+        style=None,
     )
     return info
 
@@ -264,6 +274,8 @@ def album_with_track_alt() -> ReleaseInfo:
         va=False,
         country="GB",
         mediums=1,
+        genre=None,
+        style=None,
     )
     return info
 
@@ -382,6 +394,8 @@ def compilation() -> ReleaseInfo:
         va=True,
         country="DE",
         mediums=1,
+        genre="techno, trance",
+        style="electronic",
     )
     return info
 
@@ -426,6 +440,8 @@ def artist_mess() -> ReleaseInfo:
         va=False,
         country="NU",
         mediums=1,
+        genre="experimental, psytrance",
+        style="electronic",
     )
     return info
 
@@ -479,6 +495,8 @@ def ep() -> ReleaseInfo:
         va=False,
         country="DE",
         mediums=1,
+        genre="experimental, techno",
+        style="electronic",
     )
     return info
 
@@ -515,6 +533,8 @@ def description_meta() -> ReleaseInfo:
         va=False,
         country="PT",
         mediums=1,
+        genre="ambient, electro, rave, techno, trance",
+        style="electronic",
     )
     return info
 
@@ -558,6 +578,8 @@ def single_with_remixes() -> ReleaseInfo:
         va=False,
         country="DE",
         mediums=1,
+        genre=None,
+        style="electronic",
     )
     return info
 
@@ -602,6 +624,8 @@ def remix_artists() -> ReleaseInfo:
         va=False,
         country="FR",
         mediums=1,
+        genre="techno",
+        style="electronic",
     )
     return info
 
@@ -688,6 +712,8 @@ def edge_cases() -> ReleaseInfo:
         va=True,
         country="NL",
         mediums=1,
+        genre="experimental electronic, experimental techno",
+        style="electronic",
     )
     return info
 
@@ -750,5 +776,7 @@ def issues_18() -> ReleaseInfo:
         va=False,
         country="US",
         mediums=1,
+        genre=None,
+        style=None,
     )
     return info

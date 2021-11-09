@@ -258,7 +258,7 @@ class Helpers:
         """
 
         def is_bundle(fmt: JSONDict) -> bool:
-            return "bundle" in fmt["name"].casefold()
+            return "bundle" in (fmt.get("name") or "").casefold()
 
         media: Dict[str, JSONDict] = {}
         for _format in it.filterfalse(is_bundle, meta["albumRelease"]):
@@ -272,16 +272,16 @@ class Helpers:
 
 
 class Metaguru(Helpers):
-    html: Optional[str]
+    html: str
     meta: JSONDict
     config: JSONDict
 
     _media: Dict[str, str]
     _singleton = False
 
-    def __init__(self, html: str, config: JSONDict = dict()) -> None:
+    def __init__(self, html, config=None) -> None:
         self.html = html
-        self.config = config
+        self.config = config or {}
         self.meta = {}
         match = PATTERNS["meta"].search(html)
         if match:
@@ -358,13 +358,13 @@ class Metaguru(Helpers):
 
         return re.sub(r"(?i:, ft.*remix.*)", "", albumartist)
 
-    @property
+    @cached_property
     def image(self) -> str:
         # TODO: Need to test
         image = self.meta.get("image", "")
         return image[0] if isinstance(image, list) else image
 
-    @property
+    @cached_property
     def lyrics(self) -> Optional[str]:
         # TODO: Need to test
         matches = re.findall(PATTERNS["lyrics"], self.html)
@@ -455,11 +455,11 @@ class Metaguru(Helpers):
         artists.discard("")
         return artists
 
-    @property
+    @cached_property
     def is_single(self) -> bool:
         return self._singleton or len(set(t.get("main_title") for t in self.tracks)) == 1
 
-    @property
+    @cached_property
     def is_lp(self) -> bool:
         return "LP" in self.album_name or "LP" in self.disctitle
 
@@ -506,11 +506,13 @@ class Metaguru(Helpers):
         return "album"
 
     @cached_property
-    def style(self) -> str:
+    def style(self) -> Optional[str]:
         """Extract bandcamp genre tag from the metadata."""
-        tag = self.meta.get("publisher", {}).get("genre") or ""
         # expecting the following form: https://bandcamp.com/tag/folk
-        return tag.split("/")[-1]
+        tag_url = self.meta.get("publisher", {}).get("genre")
+        if tag_url:
+            return tag_url.split("/")[-1]
+        return None
 
     @cached_property
     def genre(self) -> Optional[str]:
@@ -538,7 +540,7 @@ class Metaguru(Helpers):
     @property
     def _common_album(self) -> JSONDict:
         reldate = self.release_date
-        common_data = dict(
+        common_data: JSONDict = dict(
             label=self.label,
             catalognum=self.catalognum,
             albumtype=self.albumtype,
@@ -584,10 +586,11 @@ class Metaguru(Helpers):
     @property
     def album(self) -> AlbumInfo:
         """Return album for the appropriate release format."""
+        tracks: Iterable[JSONDict] = self.tracks
         if self.config.get("include_digital_only_tracks"):
-            tracks = list(it.filterfalse(op.itemgetter("digital_only"), self.tracks))
-        else:
-            tracks = self.tracks
+            tracks = it.filterfalse(op.itemgetter("digital_only"), tracks)
+
+        tracks = list(map(op.methodcaller("copy"), tracks))
 
         form_trackinfo = partial(self._trackinfo, medium_total=len(tracks))
         return AlbumInfo(
