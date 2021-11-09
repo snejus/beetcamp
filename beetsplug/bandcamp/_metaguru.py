@@ -283,7 +283,7 @@ class Metaguru(Helpers):
         self.html = html
         self.config = config or {}
         self.meta = {}
-        match = PATTERNS["meta"].search(html)
+        match = re.search(PATTERNS["meta"], html)
         if match:
             self.meta = json.loads(match.group())
 
@@ -294,7 +294,7 @@ class Metaguru(Helpers):
             pass
         else:
             # if preference is given and the format is available, use it
-            for preference in config["preferred_media"].split(","):
+            for preference in (self.config.get("preferred_media") or "").split(","):
                 if preference in media_index:
                     self._media = media_index[preference]
                     break
