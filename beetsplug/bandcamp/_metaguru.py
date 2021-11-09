@@ -240,7 +240,7 @@ class Helpers:
         return clean(empty_parens, clean(rubbish, name)).strip("/-|([ ") or default
 
     @staticmethod
-    def get_genre(keywords: Iterable[str]) -> Optional[str]:
+    def get_genre(keywords: Iterable[str]) -> Iterable[str]:
         """Verify each keyword against the list of MusicBrainz genres and return
         a comma-delimited list of valid ones, with two exceptions:
           * If each of the words within the keyword is a valid genre, treat the keyword
@@ -264,7 +264,7 @@ class Helpers:
 
             return not any(filter(within_another, genres))  # type: ignore
 
-        return ", ".join(filter(valid_genre, genres)) or None
+        return filter(valid_genre, genres)
 
     @staticmethod
     def _get_media_reference(meta: JSONDict) -> JSONDict:
@@ -524,15 +524,29 @@ class Metaguru(Helpers):
     def style(self) -> Optional[str]:
         """Extract bandcamp genre tag from the metadata."""
         # expecting the following form: https://bandcamp.com/tag/folk
-        tag_url = self.meta.get("publisher", {}).get("genre")
+        tag_url = self.meta.get("publisher", {}).get("genre") or ""
+        style = None
         if tag_url:
-            return tag_url.split("/")[-1]
-        return None
+            style = tag_url.split("/")[-1]
+            if self.config["genre"]["capitalize"]:
+                style = style.capitalize()
+        return style
 
     @cached_property
     def genre(self) -> Optional[str]:
-        not_eq_style = partial(op.ne, self.style)
-        return self.get_genre(filter(not_eq_style, map(str.lower, self.meta["keywords"])))
+        kws: Iterable[str] = map(str.lower, self.meta["keywords"])
+        if self.style:
+            exclude_style = partial(op.ne, self.style.lower())
+            kws = filter(exclude_style, kws)
+        genres = self.get_genre(kws)
+
+        genre_cfg = self.config["genre"]
+        if genre_cfg["capitalize"]:
+            genres = map(str.capitalize, genres)
+        if genre_cfg["maximum"]:
+            genres = it.islice(genres, genre_cfg["maximum"])
+
+        return ", ".join(genres) or None
 
     @cached_property
     def clean_album_name(self) -> str:

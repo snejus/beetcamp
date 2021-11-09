@@ -780,3 +780,8 @@ def issues_18() -> ReleaseInfo:
         style=None,
     )
     return info
+
+
+@pytest.fixture(name="genre_config")
+def _genre_config():
+    return {"genre": {"capitalize": False, "maximum": 0}}

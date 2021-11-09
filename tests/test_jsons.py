@@ -36,9 +36,9 @@ def check(actual, expected) -> None:
     map(lazy_fixture, ["single_track_release", "single_only_track_name"]),
     indirect=["release"],
 )
-def test_parse_single_track_release(release):
+def test_parse_single_track_release(release, genre_config):
     html, expected = release
-    guru = Metaguru(html)
+    guru = Metaguru(html, genre_config)
 
     check(guru.singleton, expected.singleton)
 
@@ -62,9 +62,9 @@ def test_parse_single_track_release(release):
     ),
     indirect=["release"],
 )
-def test_parse_various_types(release):
+def test_parse_various_types(release, genre_config):
     html, expected_release = release
-    config = {"preferred_media": expected_release.media}
+    config = {**genre_config, "preferred_media": expected_release.media}
     guru = Metaguru(html, config)
 
     actual_album = guru.album

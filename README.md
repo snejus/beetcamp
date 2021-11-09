@@ -46,17 +46,20 @@ Navigate to your `beets` virtual environment and install the plug-in with
 
 # Configuration
 
-## Example
+## Default
 
 ```yaml
 bandcamp:
   preferred_media: Vinyl,CD,Cassette
   include_digital_only_tracks: true
   search_max: 5
-  art: true
+  art: yes
   exclude_extra_fields:
     - lyrics
     - comments
+  genre:
+    capitalize: no
+    maximum: 0
 ```
 
 ---
@@ -130,6 +133,23 @@ bandcamp:
     - lyrics
     - comments
 ```
+
+#### `genre` (new since 0.11.0)
+
+- Type: **object**
+- Default:
+  ```yaml
+  genre:
+    capitalize: no
+    maximum: 0  # no maximum
+  ```
+
+**genre.capitalize** is self explanatory: **Classical, Techno** vs **classical, techno**.
+For consistency, this option also applies to the `style` field.
+
+**genre.maximum** allows to cap the maximum number of genres returned. This may be of
+value in those cases where artists/labels begin the list with the most relevant keywords,
+however be aware it is rarely the case.
 
 # Usage
 

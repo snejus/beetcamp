@@ -1,6 +1,7 @@
 ## [0.11.0-alpha.0] 2021-09-13
 
 ### Added
+
 - An entrypoint for `beetcamp`: if the package is in your `$PATH`, bandcamp
   metadata can be obtained directly as a JSON
 
@@ -9,24 +10,41 @@
   # {"album": "some album", ..., "tracks": [{"title": ...}, ... ]}
   ```
 
-- Two more MusicBrainz fields are now populated:
-  1. `style`: the tag/genre that bandcamp categorize the release as
-  2. `genre`: comma-delimited list of release **keywords** that match any [musicbrainz
-     genres].
-     Additionally, since in some cases a keyword is more specific than what's covered by
-     the MB list of genres, we also consider cases where the entire keyword does not match
-     a genre but every word in it does. For example, the combination `techno trance` is
-     not listed as a genre, but `techno` and `trance` in isolation are - therefore we
-     treat the combination as a valid (sub-)genre.
+  This has mostly been useful in scripts: for example, in my case it bridges the metadata
+  gap between mpd and a last.fm scrobbler in those cases when music has not yet made it
+  into the beets library.
 
+- Two more MusicBrainz fields now get populated:
+
+  - `style`: the tag/genre that bandcamp categorize the release as
+  - `genre`: comma-delimited list of release **keywords** that match any [musicbrainz
+    genres].
+
+    Additionally, since in some cases a keyword is more specific than what's covered by
+    the MB list of genres, we also consider cases where the entire keyword does not match
+    a genre but every word in it does. For example, the combination `techno trance` is
+    not listed as a genre, but `techno` and `trance` in isolation are - therefore we
+    treat the combination as a valid (sub-)genre.
+
+  This comes with some configuration options, see the defaults below:
+
+  ```yaml
+  bandcamp:
+    ...
+    genre:
+      capitalise: no
+      maximum: 0  # no limit
+  ```
+
+  See the readme for a bit more information about them.
 
 ### Updated
 
-* `track_alt`: allow **B2 Title** where _B2_ is followed by a space
-* `catalognum`: include **Catalog:** as a valid header
-* `track.title` digital-only cleanup, remove:
-  * **DIGITAL** from the front of the title
-  * **digital-only** and **(digital)** from the end
+- `track_alt`: allow **B2 Title** where _B2_ is followed by a space
+- `catalognum`: include **Catalog:** as a valid header
+- `track.title` digital-only cleanup, remove:
+  - **DIGITAL** from the front of the title
+  - **digital-only** and **(digital)** from the end
 
 ### Fixed
 
