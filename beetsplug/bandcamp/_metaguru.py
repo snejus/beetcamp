@@ -53,14 +53,18 @@ PATTERNS: Dict[str, Pattern] = {
     "digital": re.compile(
         r"""
         # either
-            ^digi\       # the title starts with digi
-            (\d+\.\ ?)?  # which may be followed by an index
-        | # or
-            [ *\[\(-]+  # there is some special delimiter
-            (bandcamp|digi(tal)?).*   # followed by either of these
-            (only|bonus|exclusive).*  # ending with some big VIP word
+            ^DIGI(TAL)?\.?\  # the title starts this way
+            (\d+\.\ ?)?   # which may be followed by an index
+        | (?i:  # or, with ignorecase in place, ...
+            [ *\[\(-]+                    # there is some special delimiter
+            (bandcamp|digi(tal)?)         # followed by either of these
+            (
+              [)\]]$                      # either terminating immediately
+              |.*(only|bonus|exclusive).* # or ending with some big VIP word
+            )
+          )
         """,
-        re.VERBOSE | re.IGNORECASE,
+        re.VERBOSE,
     ),
     "lyrics": re.compile(r'"lyrics":({[^}]*})'),
     "clean_incl": re.compile(r"(?i:(\(?incl[^)]+\)?|\([^)]+remix[^)]+\)))"),
