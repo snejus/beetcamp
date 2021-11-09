@@ -1,10 +1,11 @@
 """Module for parsing bandcamp metadata."""
+import itertools as it
 import json
+import operator as op
 import re
 from datetime import date, datetime
 from functools import partial, reduce
 from math import floor
-from operator import ne, truth, contains
 from typing import Any, Dict, Iterable, List, Optional, Pattern, Set, Tuple
 from unicodedata import normalize
 
@@ -236,7 +237,7 @@ class Helpers:
         """
         # use a list to keep the initial order
         genres: List[str] = []
-        valid_mb_genre = partial(contains, GENRES)
+        valid_mb_genre = partial(op.contains, GENRES)
         for kw in keywords:
             words = list(map(str.strip, kw.split(" ")))
             if kw not in genres and all(map(valid_mb_genre, words)):
@@ -251,16 +252,17 @@ class Helpers:
         return ", ".join(filter(valid_genre, genres)) or None
 
     @staticmethod
-    def _get_media_index(meta: JSONDict) -> JSONDict:
+    def _get_media_reference(meta: JSONDict) -> JSONDict:
         """Get release media from the metadata, excluding bundles.
         Return a dictionary with a human mapping (Digital|CD|Vinyl|Cassette) -> media.
         """
-        media: JSONDict = {}
-        for _format in meta["albumRelease"]:
-            try:
-                if "bundle" in _format["name"].casefold():
-                    raise KeyError
 
+        def is_bundle(fmt: JSONDict) -> bool:
+            return "bundle" in fmt["name"].casefold()
+
+        media: Dict[str, JSONDict] = {}
+        for _format in it.filterfalse(is_bundle, meta["albumRelease"]):
+            try:
                 medium = _format["musicReleaseFormat"]
             except KeyError:
                 continue
@@ -272,30 +274,27 @@ class Helpers:
 class Metaguru(Helpers):
     html: Optional[str]
     meta: JSONDict
-    include_all_tracks: bool
+    config: JSONDict
 
     _media: Dict[str, str]
     _singleton = False
 
-    def __init__(
-        self, html: str, media_prefs: str = DEFAULT_MEDIA, include_all_tracks: bool = True
-    ) -> None:
+    def __init__(self, html: str, config: JSONDict = dict()) -> None:
         self.html = html
+        self.config = config
         self.meta = {}
-        self.include_all_tracks = include_all_tracks
-
-        match = re.search(PATTERNS["meta"], html)
+        match = PATTERNS["meta"].search(html)
         if match:
             self.meta = json.loads(match.group())
 
         self._media = self.meta.get("albumRelease", [{}])[0]
         try:
-            media_index = self._get_media_index(self.meta)
+            media_index = self._get_media_reference(self.meta)
         except (KeyError, AttributeError):
             pass
         else:
             # if preference is given and the format is available, use it
-            for preference in media_prefs.split(","):
+            for preference in config["preferred_media"].split(","):
                 if preference in media_index:
                     self._media = media_index[preference]
                     break
@@ -311,7 +310,7 @@ class Metaguru(Helpers):
             "" if self.media_name == DEFAULT_MEDIA else self._media.get("description"),
             "Credits: " + _credits if _credits else "",
         ]
-        return reduce(lambda x, y: f"{x}\n - {y}", filter(truth, parts), "").replace(
+        return reduce(lambda x, y: f"{x}\n - {y}", filter(op.truth, parts), "").replace(
             "\r", ""
         )
 
@@ -433,7 +432,7 @@ class Metaguru(Helpers):
             raw_item = raw_track["item"]
             index = raw_track.get("position") or 1
             name, digital_only = self.clean_digital_only_track(raw_item["name"])
-            name = self.clean_name(name, *filter(truth, [self.catalognum, self.label]))
+            name = self.clean_name(name, *filter(op.truth, [self.catalognum, self.label]))
             track = dict(
                 digital_only=digital_only,
                 index=index,
@@ -515,7 +514,7 @@ class Metaguru(Helpers):
 
     @cached_property
     def genre(self) -> Optional[str]:
-        not_eq_style = partial(ne, self.style)
+        not_eq_style = partial(op.ne, self.style)
         return self.get_genre(filter(not_eq_style, map(str.lower, self.meta["keywords"])))
 
     @cached_property
@@ -585,13 +584,12 @@ class Metaguru(Helpers):
     @property
     def album(self) -> AlbumInfo:
         """Return album for the appropriate release format."""
-        if self.media_name == DEFAULT_MEDIA or self.include_all_tracks:
-            filtered_tracks = self.tracks
+        if self.config.get("include_digital_only_tracks"):
+            tracks = list(it.filterfalse(op.itemgetter("digital_only"), self.tracks))
         else:
-            filtered_tracks = [t for t in self.tracks if not t["digital_only"]]
+            tracks = self.tracks
 
-        total = len(filtered_tracks)
-        _tracks = [self._trackinfo(t.copy(), medium_total=total) for t in filtered_tracks]
+        form_trackinfo = partial(self._trackinfo, medium_total=len(tracks))
         return AlbumInfo(
             **self._common,
             **self._common_album,
@@ -599,5 +597,5 @@ class Metaguru(Helpers):
             album_id=self.album_id,
             va=self.albumtype == "compilation",
             mediums=self.mediums,
-            tracks=_tracks,
+            tracks=list(map(form_trackinfo, tracks)),
         )

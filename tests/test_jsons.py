@@ -64,7 +64,8 @@ def test_parse_single_track_release(release):
 )
 def test_parse_various_types(release):
     html, expected_release = release
-    guru = Metaguru(html, expected_release.media)
+    config = {"preferred_media": expected_release.media}
+    guru = Metaguru(html, config)
 
     actual_album = guru.album
     expected_album = expected_release.albuminfo

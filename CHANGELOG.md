@@ -2,13 +2,25 @@
 
 ### Added
 
-- Added an entrypoint for `beetcamp`: if the package is in your `$PATH`, bandcamp
+- An entrypoint for `beetcamp`: if the package is in your `$PATH`, bandcamp
   metadata can be obtained directly as a JSON
 
   ```bash
   beetcamp <bandcamp-url>
-  # {"album": "some album", ...}
+  # {"album": "some album", ..., "tracks": [{"title": ...}, ... ]}
   ```
+
+- Two more MusicBrainz fields can now be populated:
+  1. `style`: the tag/genre that bandcamp categorize the release as
+  2. `genre`: comma-delimited list of release **keywords** that match any [musicbrainz
+     genres].
+     Additionally, since in some cases a keyword is more specific than what's covered by
+     the MB list of genres, we also consider cases where the entire keyword does not match
+     a genre but every word in it does. For example, the combination `techno trance` is
+     not listed as a genre, but `techno` and `trance` in isolation are - therefore we
+     treat the combination as a valid (sub-)genre.
+
+[musicbrainz genres]: https://beta.musicbrainz.org/genres
 
 ### Fixed
 

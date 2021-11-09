@@ -182,11 +182,7 @@ class BandcampPlugin(
         if not html:
             html = self._get(url)
         if html:
-            self._gurucache[url] = Metaguru(
-                html,
-                self.config["preferred_media"].as_str(),
-                self.config["include_digital_only_tracks"].get(),
-            )
+            self._gurucache[url] = Metaguru(html, self.config.flatten())
         return self._gurucache.get(url)
 
     def loaded(self) -> None:
@@ -315,8 +311,8 @@ class BandcampPlugin(
 
 
 def main():
-    import sys
     import json
+    import sys
 
     if len(sys.argv) < 2:
         raise Exception("bandcamp url is required")

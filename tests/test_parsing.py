@@ -54,7 +54,8 @@ def test_description(descr, disctitle, creds, expected):
         creditText=creds,
         dateModified="doesntmatter",
     )
-    guru = Metaguru(json.dumps(meta), media_prefs="Vinyl")
+    config = {"preferred_media": "Vinyl"}
+    guru = Metaguru(json.dumps(meta), config)
     assert guru.description == expected, vars(guru)
 
 
@@ -355,7 +356,7 @@ def test_bundles_get_excluded():
             {"name": "Vinyl", "musicReleaseFormat": "VinylFormat"},
         ]
     }
-    assert set(Helpers._get_media_index(meta)) == {"Vinyl"}
+    assert set(Helpers._get_media_reference(meta)) == {"Vinyl"}
 
 
 @pytest.mark.parametrize(
