@@ -98,6 +98,8 @@ def test_convert_title(title, expected):
         (("B2 - Artist - Title",), ("B2", "Artist", "Title", "Title")),
         (("1. Artist - Title",), (None, "Artist", "Title", "Title")),
         (("1.Artist - Title",), (None, "Artist", "Title", "Title")),
+        (("A2.  Two Spaces",), ("A2", None, "Two Spaces", "Two Spaces")),
+        (("D1 No Punct",), ("D1", None, "No Punct", "No Punct")),
         (
             ("DJ BEVERLY HILL$ - Raw Steeze",),
             (None, "DJ BEVERLY HILL$", "Raw Steeze", "Raw Steeze"),
@@ -134,7 +136,6 @@ def test_convert_title(title, expected):
             ("UNREALNUMBERS -Karaburan",),
             (None, "UNREALNUMBERS", "Karaburan", "Karaburan"),
         ),
-        (("A2.  Two Spaces",), ("A2", None, "Two Spaces", "Two Spaces")),
         (
             ("Ellie Goulding- Starry Eyed ( ROWDIBOÏ EDIT))",),
             (None, "Ellie Goulding", "Starry Eyed (ROWDIBOÏ EDIT)", "Starry Eyed"),

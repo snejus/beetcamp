@@ -1,7 +1,6 @@
 ## [0.11.0-alpha.0] 2021-09-13
 
 ### Added
-
 - An entrypoint for `beetcamp`: if the package is in your `$PATH`, bandcamp
   metadata can be obtained directly as a JSON
 
@@ -10,7 +9,7 @@
   # {"album": "some album", ..., "tracks": [{"title": ...}, ... ]}
   ```
 
-- Two more MusicBrainz fields can now be populated:
+- Two more MusicBrainz fields are now populated:
   1. `style`: the tag/genre that bandcamp categorize the release as
   2. `genre`: comma-delimited list of release **keywords** that match any [musicbrainz
      genres].
@@ -20,12 +19,18 @@
      not listed as a genre, but `techno` and `trance` in isolation are - therefore we
      treat the combination as a valid (sub-)genre.
 
-[musicbrainz genres]: https://beta.musicbrainz.org/genres
+
+### Updated
+
+* `track_alt`: allow **B2 Title** where _B2_ is followed by a space
+* `catalognum`: include **Catalog:** as a valid header
 
 ### Fixed
 
 - Nowadays it is possible that the `datePublished` field is not given in the release JSON
   data - this is now handled gracefully.
+
+[musicbrainz genres]: https://beta.musicbrainz.org/genres
 
 ## [0.10.1] 2021-09-13
 
