@@ -2,25 +2,39 @@
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=snejus_beets-bandcamp&metric=alert_status)](https://sonarcloud.io/dashboard?id=snejus_beets-bandcamp)
 [![Coverage Status](https://coveralls.io/repos/github/snejus/beetcamp/badge.svg?branch=master)](https://coveralls.io/github/snejus/beetcamp?branch=master)
 
-Plug-in for [beets](https://github.com/beetbox/beets) to use Bandcamp as
-an autotagger source.
+Plug-in for [beets] to use Bandcamp as an autotagger source. It mostly focuses on
 
-This is an up-to-date fork of [unrblt/beets-bandcamp](https://github.com/unrblt/beets-bandcamp)
+- Staying up-to-date with information Bandcamp provide in the JSON metadata
+- Parsing **all possible** (if relevant) metadata from various places
+  - For example, a catalog number given in the release or media description
+- Correctness of the data
+  - For example, determining artist names from various artists releases
+- Compliance with MusicBrainz fields format, to remove the need for pre-processing if, for
+  example, one wishes to upload the metadata to MB.
+
+Thanks to [unrblt] for [beets-bandcamp] providing the idea and initial implementation.
+
+[beets]: https://github.com/beetbox/beets
+[unrblt]: https://github.com/unrblt
+[beets-bandcamp]: https://github.com/unrblt/beets-bandcamp
 
 # Installation
 
 ## Recommended method
 
 1. Install `beets` with `pipx` so that it's isolated from your system and other projects
+
 ```bash
 pipx install beets
 ```
 
 2. Inject `beetcamp` and other dependencies that you need
+
 ```bash
 pipx inject beets beetcamp [python-mpd2 ...]
 ```
-and add `bandcamp` to the `plugins` list to your beets configuration file.
+
+3. Add `bandcamp` to the `plugins` list to your beets configuration file.
 
 ## Otherwise
 
@@ -30,20 +44,19 @@ Navigate to your `beets` virtual environment and install the plug-in with
    pip install beetcamp
 ```
 
-
 # Configuration
 
 ## Example
 
 ```yaml
 bandcamp:
-    preferred_media: Vinyl,CD,Cassette
-    include_digital_only_tracks: true
-    search_max: 5
-    art: true
-    exclude_extra_fields:
-      - lyrics
-      - comments
+  preferred_media: Vinyl,CD,Cassette
+  include_digital_only_tracks: true
+  search_max: 5
+  art: true
+  exclude_extra_fields:
+    - lyrics
+    - comments
 ```
 
 ---
@@ -109,12 +122,13 @@ an easy way to preview them before they get applied, you can ignore them if you 
 irrelevant or inaccurate.
 
 For example, if you wanted to ignore all the goodies you can specify
+
 ```yaml
 bandcamp:
-    search_max: 5
-    exclude_extra_fields:
-      - lyrics
-      - comments
+  search_max: 5
+  exclude_extra_fields:
+    - lyrics
+    - comments
 ```
 
 # Usage
@@ -122,43 +136,40 @@ bandcamp:
 This plug-in uses the Bandcamp URL as id (for both albums and songs). If no matching
 release is found when importing you can select `enter Id` and paste the Bandcamp URL.
 
-## Currently supported / returned data
+## Supported metadata
 
-| field            | is extra | singleton track | album track | album |
-|-----------------:|:--------:|:---------------:|:-----------:|:-----:|
-| `album`          |          | ✔~              |             | ✔     |
-| `album_id`       |          |                 |             | ✔     |
-| `albumartist`    |          | ✔               | ✔           | ✔     |
-| `albumstatus`    |          | ✔~              |             | ✔     |
-| `albumtype`      |          | ✔~              |             | ✔     |
-| `artist`         |          | ✔               | ✔           | ✔     |
-| `artist_id`      |          | ✔               | ✔           |       |
-| `catalognum`     |          | ✔~              |             | ✔     |
-| + `comments`     | ✔        | ✔               | ✔           |       |
-| `country`        |          | ✔~              |             | ✔     |
-| `day`            |          | ✔~              |             | ✔     |
-| `disctitle`      |          | ✔~              | ✔           |       |
-| `image`          |          | ✔               | ✔           | ✔     |
-| `index`          |          | ✔               | ✔           |       |
-| `label`          |          | ✔~              | ✔           | ✔     |
-| `length`         |          | ✔               | ✔           |       |
-| `lyrics`         | ✔        | ✔               | ✔           |       |
-| `media`          |          | ✔~              | ✔           | ✔     |
-| `medium`         |          | ✔~              | ✔           |       |
-| `mediums`        |          |                 |             | ✔     |
-| * `medium_index` |          | ✔~              | ✔           |       |
-| * `medium_total` |          | ✔~              | ✔           |       |
-| `month`          |          | ✔~              |             | ✔     |
-| `title`          |          | ✔               | ✔           |       |
-| `track_alt`      |          | ✔               | ✔           |       |
-| `va`             |          |                 |             | ✔     |
-| `year`           |          | ✔~              |             | ✔     |
+|          field | is extra | singleton | album track | album |                                        note                                         |
+| -------------: | :------: | :-------: | :---------: | :---: | :---------------------------------------------------------------------------------: |
+|        `album` |          |    \*✔    |             |   ✔   |                                                                                     |
+|     `album_id` |          |           |             |   ✔   |                                                                                     |
+|  `albumartist` |          |      ✔    |      ✔      |   ✔   |                                                                                     |
+|  `albumstatus` |          |    \*✔    |             |   ✔   |                                                                                     |
+|    `albumtype` |          |    \*✔    |             |   ✔   |                                                                                     |
+|       `artist` |          |      ✔    |      ✔      |   ✔   |                                                                                     |
+|    `artist_id` |          |      ✔    |      ✔      |       |                                                                                     |
+|   `catalognum` |          |    \*✔    |             |   ✔   |                                                                                     |
+|     `comments` |    ✔     |      ✔    |      ✔      |       |                     release and media descriptions, and credits                     |
+|      `country` |          |    \*✔    |             |   ✔   |                                                                                     |
+|          `day` |          |    \*✔    |             |   ✔   |                                                                                     |
+|    `disctitle` |          |    \*✔    |      ✔      |       |                                                                                     |
+|        `genre` |          |    \*✔    |             |   ✔   |    comma-delimited list of **release keywords** which match [musicbrainz genres]    |
+|        `image` |          |      ✔    |      ✔      |   ✔   |                                                                                     |
+|        `index` |          |      ✔    |      ✔      |       |                                                                                     |
+|        `label` |          |    \*✔    |      ✔      |   ✔   |                                                                                     |
+|       `length` |          |      ✔    |      ✔      |       |                                                                                     |
+|       `lyrics` |    ✔     |      ✔    |      ✔      |       |                                                                                     |
+|        `media` |          |    \*✔    |      ✔      |   ✔   |                                                                                     |
+|       `medium` |          |    \*✔    |      ✔      |       |                                                                                     |
+|      `mediums` |          |           |             |   ✔   |                                                                                     |
+| `medium_index` |          |    \*✔    |      ✔      |       | likely to be inaccurate, since it depends on information in the release description |
+| `medium_total` |          |    \*✔    |      ✔      |       |                                      see above                                      |
+|        `month` |          |    \*✔    |             |   ✔   |                                                                                     |
+|        `style` |          |    \*✔    |             |   ✔   |                                 Bandcamp genre tag                                  |
+|        `title` |          |      ✔    |      ✔      |       |                                                                                     |
+|    `track_alt` |          |      ✔    |      ✔      |       |                                                                                     |
+|           `va` |          |           |             |   ✔   |                                                                                     |
+|         `year` |          |    \*✔    |             |   ✔   |                                                                                     |
 
-**\+** `comments` field gets populated with the release description.
+**\*** These singleton fields are available if you use `beets` version `1.5` or higher.
 
-**\*** are likely to be inaccurate, since Bandcamp does not provide this data,
-  therefore they depend on artists providing some clues in the descriptions of
-  their releases. This is only relevant if you have `per_disc_numbering` set to
-  `True` in the global beets configuration.
-
-**\~** These singleton fields are available if you use `beets` version `1.5` or higher.
+[musicbrainz genres]: https://beta.musicbrainz.org/genres

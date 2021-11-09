@@ -2,16 +2,18 @@
 import json
 import re
 from datetime import date, datetime
-from functools import reduce
+from functools import partial, reduce
 from math import floor
-from operator import truth
-from typing import Any, Dict, List, Optional, Pattern, Set, Tuple
+from operator import ne, truth, contains
+from typing import Any, Dict, Iterable, List, Optional, Pattern, Set, Tuple
 from unicodedata import normalize
 
 from beets.autotag.hooks import AlbumInfo, TrackInfo
 from cached_property import cached_property
 from pkg_resources import get_distribution, parse_version
 from pycountry import countries, subdivisions
+
+from .genres_lookup import GENRES
 
 NEW_BEETS = get_distribution("beets").parsed_version >= parse_version("1.5.0")
 
@@ -220,6 +222,33 @@ class Helpers:
             return re.sub(patstr, "", text)
 
         return clean(empty_parens, clean(rubbish, name)).strip("/-|([ ") or default
+
+    @staticmethod
+    def get_genre(keywords: Iterable[str]) -> Optional[str]:
+        """Verify each keyword against the list of MusicBrainz genres and return
+        a comma-delimited list of valid ones, with two exceptions:
+          * If each of the words within the keyword is a valid genre, treat the keyword
+            as a valid genre since it is effectively a subgenre.
+          * If the list of keywords contains such subgenre (as above), exclude its words
+            when they appear on their own. For example,
+            >>> get_genre(['house', 'garage house', 'glitch'])
+            'garage house, glitch'
+        """
+        # use a list to keep the initial order
+        genres: List[str] = []
+        valid_mb_genre = partial(contains, GENRES)
+        for kw in keywords:
+            words = list(map(str.strip, kw.split(" ")))
+            if kw not in genres and all(map(valid_mb_genre, words)):
+                genres.append(kw)
+
+        def valid_genre(genre: str) -> bool:
+            def within_another(another: str) -> bool:
+                return genre != another and genre in another
+
+            return not any(filter(within_another, genres))  # type: ignore
+
+        return ", ".join(filter(valid_genre, genres)) or None
 
     @staticmethod
     def _get_media_index(meta: JSONDict) -> JSONDict:
@@ -478,6 +507,18 @@ class Metaguru(Helpers):
         return "album"
 
     @cached_property
+    def style(self) -> str:
+        """Extract bandcamp genre tag from the metadata."""
+        tag = self.meta.get("publisher", {}).get("genre") or ""
+        # expecting the following form: https://bandcamp.com/tag/folk
+        return tag.split("/")[-1]
+
+    @cached_property
+    def genre(self) -> Optional[str]:
+        not_eq_style = partial(ne, self.style)
+        return self.get_genre(filter(not_eq_style, map(str.lower, self.meta["keywords"])))
+
+    @cached_property
     def clean_album_name(self) -> str:
         args = [self.catalognum] if self.catalognum else []
         if not self.albumtype == "compilation":
@@ -505,6 +546,8 @@ class Metaguru(Helpers):
             album=self.clean_album_name,
             albumstatus=OFFICIAL if reldate and reldate <= date.today() else PROMO,
             country=self.country,
+            style=self.style,
+            genre=self.genre,
         )
 
         if reldate:

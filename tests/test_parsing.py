@@ -14,6 +14,7 @@ pytestmark = pytest.mark.parsing
 console = Console(
     color_system="truecolor", force_terminal=True, force_interactive=True, highlight=True
 )
+_p = pytest.param
 
 
 def print_result(case, expected, result):
@@ -199,15 +200,6 @@ def test_track_artists(artists, expected):
 
 
 @pytest.mark.parametrize(
-    ("artists", "expected"), [(["4.44.444.8", "4.44.444.8"], {"4.44.444.8"})]
-)
-def test_track_artists(artists, expected):
-    guru = Metaguru("")
-    guru.tracks = [{"artist": a} for a in artists]
-    assert guru.track_artists == expected
-
-
-@pytest.mark.parametrize(
     ("name", "expected_digital_only", "expected_name"),
     [
         ("Artist - Track [Digital Bonus]", True, "Artist - Track"),
@@ -373,3 +365,27 @@ def test_handles_missing_publish_date(date, expected):
     guru = Metaguru("")
     guru.meta = {"datePublished": date}
     assert guru.release_date == expected
+
+
+def test_style():
+    guru = Metaguru("")
+    guru.meta = {"publisher": {"genre": "bandcamp.com/tag/folk"}}
+    assert guru.style == "folk"
+
+
+@pytest.mark.parametrize(
+    ("keywords", "expected_genre"),
+    [
+        _p(["house"], "house", id="single genre keyword"),
+        _p(["house techno"], "house techno", id="single genre keyword two words"),
+        _p(["house", "techno"], "house, techno", id="two genre keywords"),
+        _p(["techno", "house"], "techno, house", id="follows initial order"),
+        _p(["techno", "techno"], "techno", id="duplicate keyword"),
+        _p(["house techno", "techno"], "house techno", id="more specific subgenre"),
+        _p(["bleepy techno"], None, id="word not a genre"),
+        _p(["United Kingdom"], None, id="irrelevant"),
+        _p([], None, id="empty"),
+    ],
+)
+def test_genre(keywords, expected_genre):
+    assert Metaguru.get_genre(keywords) == expected_genre
