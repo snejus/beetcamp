@@ -41,7 +41,6 @@ MEDIA_MAP = {
 VA = "Various Artists"
 
 _catalognum = r"(\b[A-Za-z]([^-.\s\d]|[.-][^0-9])+(([-.]?|[A-Z]\s)\d+|\s\d{2,})[A-Z]?(?:[.-]?\d|CD)?\b)"  # noqa
-_exclusive = r"[*\[( -]*(bandcamp|digi(tal)?)[ -](digital )?(only|bonus|exclusive)[*\])]?"
 _catalognum_header = r"(?:Catalog(?:ue)?(?: (?:Number|N[or]))?|Cat N[or])\.?:"
 PATTERNS: Dict[str, Pattern] = {
     "meta": re.compile(r".*dateModified.*", flags=re.MULTILINE),
@@ -51,7 +50,18 @@ PATTERNS: Dict[str, Pattern] = {
     "catalognum_excl": re.compile(
         r"(?i:vol(ume)?|artists|\bva\d+|vinyl|triple|ep 12)|202[01]|(^|\s)C\d\d|\d+/\d+"
     ),
-    "digital": re.compile(rf"^DIGI (\d+\.\s?)?|(?i:{_exclusive})"),
+    "digital": re.compile(
+        r"""
+        # either
+            ^digi\       # the title starts with digi
+            (\d+\.\ ?)?  # which may be followed by an index
+        | # or
+            [ *\[\(-]+  # there is some special delimiter
+            (bandcamp|digi(tal)?).*   # followed by either of these
+            (only|bonus|exclusive).*  # ending with some big VIP word
+        """,
+        re.VERBOSE | re.IGNORECASE,
+    ),
     "lyrics": re.compile(r'"lyrics":({[^}]*})'),
     "clean_incl": re.compile(r"(?i:(\(?incl[^)]+\)?|\([^)]+remix[^)]+\)))"),
     "remix_or_ft": re.compile(r"\s(?i:(\[|\().*(mix|edit)|f(ea)?t\.).*"),
@@ -81,7 +91,7 @@ class Helpers:
     @staticmethod
     def clean_digital_only_track(name: str) -> Tuple[str, bool]:
         """Return cleaned title and whether this track is digital-only."""
-        clean_name = re.sub(PATTERNS["digital"], "", name)
+        clean_name = PATTERNS["digital"].sub("", name)
         if clean_name != name:
             return clean_name, True
         return clean_name, False

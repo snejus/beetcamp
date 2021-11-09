@@ -218,8 +218,8 @@ def test_track_artists(artists, expected):
 )
 def test_check_digital_only(name, expected_digital_only, expected_name):
     actual_name, actual_digi_only = Metaguru.clean_digital_only_track(name)
-    assert actual_digi_only == expected_digital_only
     assert actual_name == expected_name
+    assert actual_digi_only == expected_digital_only
 
 
 @pytest.mark.parametrize(

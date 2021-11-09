@@ -24,6 +24,7 @@
 
 * `track_alt`: allow **B2 Title** where _B2_ is followed by a space
 * `catalognum`: include **Catalog:** as a valid header
+* `track.title`: remove instances of `*digital-only`
 
 ### Fixed
 
