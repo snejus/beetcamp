@@ -5,7 +5,7 @@ from typing import Optional, Tuple
 
 import pytest
 from beets.autotag.hooks import AlbumInfo, TrackInfo
-from beetsplug.bandcamp._metaguru import DATA_SOURCE, DEFAULT_MEDIA, NEW_BEETS, OFFICIAL
+from beetsplug.bandcamp._metaguru import DATA_SOURCE, DIGI_MEDIA, NEW_BEETS, OFFICIAL
 
 
 @dataclass
@@ -85,7 +85,7 @@ def single_track_release() -> ReleaseInfo:
     info = ReleaseInfo(
         artist_id="https://mega-tech.bandcamp.com",
         album_id="https://mega-tech.bandcamp.com/track/arangel",
-        media=DEFAULT_MEDIA,
+        media=DIGI_MEDIA,
         disctitle=None,
     )
     info.set_singleton(
@@ -114,7 +114,7 @@ def single_only_track_name() -> ReleaseInfo:
     info = ReleaseInfo(
         artist_id="https://gutkeinforu.bandcamp.com",
         album_id="https://gutkeinforu.bandcamp.com/track/oenera",
-        media=DEFAULT_MEDIA,
+        media=DIGI_MEDIA,
         disctitle=None,
     )
     info.set_singleton(
@@ -286,7 +286,7 @@ def compilation() -> ReleaseInfo:
     info = ReleaseInfo(
         artist_id="https://ismusberlin.bandcamp.com",
         album_id="https://ismusberlin.bandcamp.com/album/ismva0033",
-        media=DEFAULT_MEDIA,
+        media=DIGI_MEDIA,
         disctitle=None,
     )
     albumartist = "Various Artists"
@@ -406,7 +406,7 @@ def artist_mess() -> ReleaseInfo:
     info = ReleaseInfo(
         artist_id="https://psykovsky.bandcamp.com",
         album_id="https://psykovsky.bandcamp.com/album/ksolntsu",
-        media=DEFAULT_MEDIA,
+        media=DIGI_MEDIA,
         disctitle=None,
     )
     # fmt: off

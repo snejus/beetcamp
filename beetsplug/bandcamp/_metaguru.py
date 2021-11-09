@@ -31,12 +31,12 @@ COUNTRY_OVERRIDES = {
 }
 DATA_SOURCE = "bandcamp"
 WORLDWIDE = "XW"
-DEFAULT_MEDIA = "Digital Media"
+DIGI_MEDIA = "Digital Media"
 MEDIA_MAP = {
     "VinylFormat": "Vinyl",
     "CDFormat": "CD",
     "CassetteFormat": "Cassette",
-    "DigitalFormat": DEFAULT_MEDIA,
+    "DigitalFormat": DIGI_MEDIA,
 }
 VA = "Various Artists"
 
@@ -321,7 +321,7 @@ class Metaguru(Helpers):
         _credits = self.meta.get("creditText", "")
         parts = [
             self.meta.get("description", ""),
-            "" if self.media_name == DEFAULT_MEDIA else self._media.get("description"),
+            "" if self.media_name == DIGI_MEDIA else self._media.get("description"),
             "Credits: " + _credits if _credits else "",
         ]
         return reduce(lambda x, y: f"{x}\n - {y}", filter(op.truth, parts), "").replace(
@@ -401,12 +401,12 @@ class Metaguru(Helpers):
     @cached_property
     def media_name(self) -> str:
         """Return the human-readable version of the media format."""
-        return MEDIA_MAP.get(self._media.get("musicReleaseFormat", ""), DEFAULT_MEDIA)
+        return MEDIA_MAP.get(self._media.get("musicReleaseFormat", ""), DIGI_MEDIA)
 
     @cached_property
     def disctitle(self) -> str:
         """Return medium's disc title if found."""
-        return "" if self.media_name == DEFAULT_MEDIA else self._media.get("name", "")
+        return "" if self.media_name == DIGI_MEDIA else self._media.get("name", "")
 
     @cached_property
     def mediums(self) -> int:
@@ -601,7 +601,8 @@ class Metaguru(Helpers):
     def album(self) -> AlbumInfo:
         """Return album for the appropriate release format."""
         tracks: Iterable[JSONDict] = self.tracks
-        if self.config.get("include_digital_only_tracks"):
+        include_digi = self.config.get("include_digital_only_tracks")
+        if not include_digi and self.media_name != DIGI_MEDIA:
             tracks = it.filterfalse(op.itemgetter("digital_only"), tracks)
 
         tracks = list(map(op.methodcaller("copy"), tracks))

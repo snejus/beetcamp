@@ -31,12 +31,12 @@ from beets.autotag.hooks import AlbumInfo, TrackInfo
 from beets.importer import ImportTask
 from beetsplug import fetchart  # type: ignore[attr-defined]
 
-from ._metaguru import DATA_SOURCE, DEFAULT_MEDIA, Metaguru, urlify
+from ._metaguru import DATA_SOURCE, DIGI_MEDIA, Metaguru, urlify
 
 JSONDict = Dict[str, Any]
 
 DEFAULT_CONFIG: JSONDict = {
-    "preferred_media": DEFAULT_MEDIA,
+    "preferred_media": DIGI_MEDIA,
     "include_digital_only_tracks": True,
     "search_max": 10,
     "lyrics": False,
