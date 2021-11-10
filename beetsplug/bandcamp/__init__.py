@@ -19,16 +19,14 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import logging
 import re
-from functools import partial
 from html import unescape
 from operator import truth
-from typing import Any, Callable, Dict, Iterator, List, Optional, Sequence, Set
+from typing import Any, Dict, Iterator, List, Optional, Sequence, Set
 
 import requests
 import six
-from beets import __version__, config, library, plugins
+from beets import __version__, library, plugins
 from beets.autotag.hooks import AlbumInfo, TrackInfo
-from beets.importer import ImportTask
 from beetsplug import fetchart  # type: ignore[attr-defined]
 
 from ._metaguru import DATA_SOURCE, DIGI_MEDIA, Metaguru, urlify
@@ -117,61 +115,16 @@ def _from_bandcamp(clue: str) -> bool:
     )
 
 
-class BandcampAdditionalData:
-    write: bool
-    excluded_extra_fields: Set[str]
-    guru: Callable
-    _info: Callable
-
-    def verify_and_add(
-        self, item: library.Item, get_data: Callable[[str], str], excluded: Set[str]
-    ) -> None:
-        name = "Additional data"
-        for bandcamp_field in set(ADDITIONAL_DATA_MAP).difference(excluded):
-            item_field = ADDITIONAL_DATA_MAP[bandcamp_field]
-
-            if not getattr(item, item_field, None) or (
-                item_field == "comments" and item.comments.startswith("Visit http")
-            ):
-                new_value = get_data(bandcamp_field)
-                if new_value:
-                    item.update({item_field: new_value})
-                    self._info("{}: obtained {} for {}", name, bandcamp_field, item)
-                else:
-                    self._info("{}: {} not found for {}", name, bandcamp_field, item)
-            else:
-                self._info("{}: {}: already present on {}", name, item_field, item)
-        return item
-
-    def _add_additional_data(self, item: library.Item) -> None:
-        """If not excluded, fetch and store:
-        * lyrics
-        * release description as comments
-        """
-        get_data_call = partial(getattr, self.guru(item.mb_albumid or item.mb_trackid))
-        return self.verify_and_add(item, get_data_call, self.excluded_extra_fields)
-
-
-class BandcampPlugin(
-    BandcampRequestsHandler, plugins.BeetsPlugin, BandcampAdditionalData
-):
+class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
     _gurucache: Dict[str, Metaguru]
 
     def __init__(self) -> None:
         super().__init__()
         self.config.add(DEFAULT_CONFIG.copy())
 
-        self.write = config["import"]["write"].get()
         self.excluded_extra_fields = set(self.config["exclude_extra_fields"].get())
-        self.register_listener("import_task_apply", self.add_additional_data)
         self.register_listener("pluginload", self.loaded)
         self._gurucache = dict()
-
-    def add_additional_data(self, task: ImportTask) -> None:
-        """Import hook for fetching additional data from bandcamp."""
-        for item in task.items:
-            if _from_bandcamp(item.mb_albumid or item.mb_trackid):
-                self._add_additional_data(item)
 
     def guru(self, url: str, html: Optional[str] = None) -> Optional[Metaguru]:
         """Return cached guru. If there isn't one, fetch the url if html isn't
