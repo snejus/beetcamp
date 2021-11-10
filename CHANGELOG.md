@@ -34,6 +34,7 @@
     genre:
       capitalise: no
       maximum: 0  # no limit
+      mode: progressive
   ```
 
   See the readme for a bit more information about them.

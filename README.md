@@ -70,7 +70,7 @@ bandcamp:
 - Type: **string**
 - Default: `Digital`
 
-A comma-separated list of media to prioritise when fetching albums. For example:
+A comma-separated list of media to prioritize when fetching albums. For example:
 `preferred_media: Vinyl,Cassette` will ignore `CD`, check for a `Vinyl`, and then for a
 `Cassette`, in the end defaulting to `Digital` (always available) if none of the two are
 found. Any combination of the following is supported: `Vinyl`, `CD`, `Cassette`,
@@ -148,16 +148,16 @@ bandcamp:
     mode: progressive
   ```
 
-**genre.capitalize** is self explanatory: **Classical, Techno** vs **classical, techno**.
+**genre.capitalize**: **Classical, Techno** instead of default **classical, techno**.
 For consistency, this option also applies to the `style` field.
 
-**genre.maximum** allows to cap the maximum number of genres returned. This may be of
+**genre.maximum** caps the maximum number of included genres. This may be of
 value in those cases where artists/labels begin the list with the most relevant keywords,
 however be aware it is rarely the case.
 
-**genre.mode** accepts one of the following options: **classical** or **progressive** or
-**psychedelic**, where each later one features an increase in flexibility deciding what is
-a valid genre and what is not. See below.
+**genre.mode** accepts one of the following options: **classical** (less genres) or **progressive** or
+**psychedelic** (more genres). Each later one is more flexible regarding what is a valid
+genre and what is not. See below.
 
 We can place all keywords into the following buckets:
 
