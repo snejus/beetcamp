@@ -11,10 +11,7 @@ from rich.text import Text
 
 pytestmark = pytest.mark.parsing
 
-console = Console(
-    color_system="truecolor", force_terminal=True, force_interactive=True, highlight=True
-)
-_p = pytest.param
+console = Console(force_terminal=True, force_interactive=True)
 
 
 def print_result(case, expected, result):
@@ -370,48 +367,3 @@ def test_handles_missing_publish_date(date, expected):
     guru = Metaguru("")
     guru.meta = {"datePublished": date}
     assert guru.release_date == expected
-
-
-def test_style(genre_config):
-    guru = Metaguru("", genre_config)
-    guru.meta = {"publisher": {"genre": "bandcamp.com/tag/folk"}}
-    assert guru.style == "folk"
-
-
-@pytest.mark.parametrize(
-    ("keywords", "expected_genre"),
-    [
-        _p(["house"], ["house"], id="single genre keyword"),
-        _p(["house techno"], ["house techno"], id="single genre keyword two words"),
-        _p(["house", "techno"], ["house", "techno"], id="two genre keywords"),
-        _p(["techno", "house"], ["techno", "house"], id="follows initial order"),
-        _p(["techno", "techno"], ["techno"], id="duplicate keyword"),
-        _p(["house techno", "techno"], ["house techno"], id="more specific subgenre"),
-        _p(["bleepy techno"], [], id="word not a genre"),
-        _p(["United Kingdom"], [], id="irrelevant"),
-        _p([], [], id="empty"),
-    ],
-)
-def test_genre(keywords, expected_genre):
-    assert list(Metaguru.get_genre(keywords)) == expected_genre
-
-
-@pytest.mark.parametrize(
-    ("capitalize", "maximum", "expected"),
-    [
-        (True, 0, "Folk, House, Grime, Trance"),
-        (True, 3, "Folk, House, Grime"),
-        (False, 2, "folk, house"),
-    ],
-)
-def test_genre_config(capitalize, maximum, expected):
-    meta = {
-        "keywords": ["paris", "dubstep", "folk", "House", "grime", "Trance"],
-        "publisher": {"genre": "https://bandcamp.com/tag/dubstep"},
-    }
-    config = {"genre": {"capitalize": capitalize, "maximum": maximum}}
-    guru = Metaguru("", config)
-    guru.meta = meta
-
-    assert guru.style == ("Dubstep" if capitalize else "dubstep")
-    assert guru.genre == expected

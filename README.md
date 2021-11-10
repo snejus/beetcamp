@@ -58,6 +58,7 @@ bandcamp:
     - lyrics
     - comments
   genre:
+    mode: progressive # classical, progressive or psychedelic
     capitalize: no
     maximum: 0
 ```
@@ -134,6 +135,8 @@ bandcamp:
     - comments
 ```
 
+---
+
 #### `genre` (new since 0.11.0)
 
 - Type: **object**
@@ -141,7 +144,8 @@ bandcamp:
   ```yaml
   genre:
     capitalize: no
-    maximum: 0  # no maximum
+    maximum: 0 # no maximum
+    mode: progressive
   ```
 
 **genre.capitalize** is self explanatory: **Classical, Techno** vs **classical, techno**.
@@ -150,6 +154,51 @@ For consistency, this option also applies to the `style` field.
 **genre.maximum** allows to cap the maximum number of genres returned. This may be of
 value in those cases where artists/labels begin the list with the most relevant keywords,
 however be aware it is rarely the case.
+
+**genre.mode** accepts one of the following options: **classical** or **progressive** or
+**psychedelic**, where each later one features an increase in flexibility deciding what is
+a valid genre and what is not. See below.
+
+We can place all keywords into the following buckets:
+
+| type  |                                      |                                                                      |
+| :---: | ------------------------------------ | -------------------------------------------------------------------- |
+| **1** | **`genre`**                          | a valid single-word musicbrainz genre                                |
+| **1** | **`more specific genre`**            | a valid musicbrainz genre made of multiple words                     |
+| **2** | **`somegenre`** **`someothergenre`** | each of the words is a valid musicbrainz genre, but the combo is not |
+| **3** | very specific **`genre`**            | not all words are valid genres, but the very last one is             |
+| **4** | maybe **`genre`** but                | but it is followed by noise at the end                               |
+| **4** | some sort of location                | irrelevant                                                           |
+
+- **classical** mode strictly follows the musicbrainz list of genres, therefore it covers
+  **type 1** only
+- **progressive** mode, in addition to the above, takes into account each of the words that
+  make up the keyword and will be fine as long as each of those words maps to some sort of
+  genre from the musicbrainz list. It covers **types 1 and 2**.
+- **psychedelic** (or **noise**) mode, in addition to the above, treats the keyword as a
+  valid genre as long as **the last word** in it maps to some genre - covering **types 1 to 3**.
+  This one should include the hottest genre naming trends but is also liable to covering the
+  latest `<some-label>-<genre>` or `<some-city>-<some-very-generic-genre>` trends which may
+  not be ideal. It should though be the best option for those who enjoy detailed, fine-grained
+  stats.
+- **type 4** is ignored in each case.
+
+See below for some examples and a comparison between the modes.
+
+|  type | keyword                 | classical | progressive | psychedelic |
+| ----: | ----------------------- | :-------: | :---------: | :---------: |
+| **1** | **`techno`**            |     ✔     |      ✔      |      ✔      |
+| **1** | **`funk`**              |     ✔     |      ✔      |      ✔      |
+| **1** | **`ambient`**           |     ✔     |      ✔      |      ✔      |
+| **1** | **`noise`**             |     ✔     |      ✔      |      ✔      |
+| **1** | **`ambient techno`**    |     ✔     |      ✔      |      ✔      |
+| **2** | **`techno`** **`funk`** |     ✖     |      ✔      |      ✔      |
+| **4** | funky                   |     ✖     |      ✖      |      ✖      |
+| **4** | bleep                   |     ✖     |      ✖      |      ✖      |
+| **3** | funky **`techno`**      |     ✖     |      ✖      |      ✔      |
+| **4** | bleepy beep             |     ✖     |      ✖      |      ✖      |
+| **3** | bleepy beep **`noise`** |     ✖     |      ✖      |      ✔      |
+| **4** | bleepy **`noise`** beep |     ✖     |      ✖      |      ✖      |
 
 # Usage
 
@@ -162,22 +211,22 @@ release is found when importing you can select `enter Id` and paste the Bandcamp
 | -------------: | :------: | :-------: | :---------: | :---: | :---------------------------------------------------------------------------------: |
 |        `album` |          |    \*✔    |             |   ✔   |                                                                                     |
 |     `album_id` |          |           |             |   ✔   |                                                                                     |
-|  `albumartist` |          |      ✔    |      ✔      |   ✔   |                                                                                     |
+|  `albumartist` |          |     ✔     |      ✔      |   ✔   |                                                                                     |
 |  `albumstatus` |          |    \*✔    |             |   ✔   |                                                                                     |
 |    `albumtype` |          |    \*✔    |             |   ✔   |                                                                                     |
-|       `artist` |          |      ✔    |      ✔      |   ✔   |                                                                                     |
-|    `artist_id` |          |      ✔    |      ✔      |       |                                                                                     |
+|       `artist` |          |     ✔     |      ✔      |   ✔   |                                                                                     |
+|    `artist_id` |          |     ✔     |      ✔      |       |                                                                                     |
 |   `catalognum` |          |    \*✔    |             |   ✔   |                                                                                     |
-|     `comments` |    ✔     |      ✔    |      ✔      |       |                     release and media descriptions, and credits                     |
+|     `comments` |    ✔     |     ✔     |      ✔      |       |                     release and media descriptions, and credits                     |
 |      `country` |          |    \*✔    |             |   ✔   |                                                                                     |
 |          `day` |          |    \*✔    |             |   ✔   |                                                                                     |
 |    `disctitle` |          |    \*✔    |      ✔      |       |                                                                                     |
 |        `genre` |          |    \*✔    |             |   ✔   |    comma-delimited list of **release keywords** which match [musicbrainz genres]    |
-|        `image` |          |      ✔    |      ✔      |   ✔   |                                                                                     |
-|        `index` |          |      ✔    |      ✔      |       |                                                                                     |
+|        `image` |          |     ✔     |      ✔      |   ✔   |                                                                                     |
+|        `index` |          |     ✔     |      ✔      |       |                                                                                     |
 |        `label` |          |    \*✔    |      ✔      |   ✔   |                                                                                     |
-|       `length` |          |      ✔    |      ✔      |       |                                                                                     |
-|       `lyrics` |    ✔     |      ✔    |      ✔      |       |                                                                                     |
+|       `length` |          |     ✔     |      ✔      |       |                                                                                     |
+|       `lyrics` |    ✔     |     ✔     |      ✔      |       |                                                                                     |
 |        `media` |          |    \*✔    |      ✔      |   ✔   |                                                                                     |
 |       `medium` |          |    \*✔    |      ✔      |       |                                                                                     |
 |      `mediums` |          |           |             |   ✔   |                                                                                     |
@@ -185,8 +234,8 @@ release is found when importing you can select `enter Id` and paste the Bandcamp
 | `medium_total` |          |    \*✔    |      ✔      |       |                                      see above                                      |
 |        `month` |          |    \*✔    |             |   ✔   |                                                                                     |
 |        `style` |          |    \*✔    |             |   ✔   |                                 Bandcamp genre tag                                  |
-|        `title` |          |      ✔    |      ✔      |       |                                                                                     |
-|    `track_alt` |          |      ✔    |      ✔      |       |                                                                                     |
+|        `title` |          |     ✔     |      ✔      |       |                                                                                     |
+|    `track_alt` |          |     ✔     |      ✔      |       |                                                                                     |
 |           `va` |          |           |             |   ✔   |                                                                                     |
 |         `year` |          |    \*✔    |             |   ✔   |                                                                                     |
 

@@ -240,22 +240,35 @@ class Helpers:
         return clean(empty_parens, clean(rubbish, name)).strip("/-|([ ") or default
 
     @staticmethod
-    def get_genre(keywords: Iterable[str]) -> Iterable[str]:
+    def get_genre(keywords: Iterable[str], mode: str) -> Iterable[str]:
         """Verify each keyword against the list of MusicBrainz genres and return
-        a comma-delimited list of valid ones, with two exceptions:
-          * If each of the words within the keyword is a valid genre, treat the keyword
-            as a valid genre since it is effectively a subgenre.
-          * If the list of keywords contains such subgenre (as above), exclude its words
-            when they appear on their own. For example,
-            >>> get_genre(['house', 'garage house', 'glitch'])
+        a comma-delimited list of valid ones, where validity depends on the mode:
+          * classical: valid only if the entire keyword is found in the MB genres list
+          * progressive: above + if each of the words is a valid MB genre since it is
+            effectively a subgenre.
+          * psychedelic: above + if the last word is a valid MB genre
+
+        If a keyword is part of another keyword (genre within a sub-genre), exclude it.
+        For example,
+            >>> get_genre(['house', 'garage house', 'glitch'], "classical")
             'garage house, glitch'
         """
         # use a list to keep the initial order
         genres: List[str] = []
         valid_mb_genre = partial(op.contains, GENRES)
+
+        def valid_for_mode(kw: str) -> bool:
+            if mode == "classical":
+                return kw in GENRES
+
+            words = map(str.strip, kw.split(" "))
+            if mode == "progressive":
+                return kw in GENRES or all(map(valid_mb_genre, words))
+
+            return valid_mb_genre(kw) or valid_mb_genre(list(words)[-1])
+
         for kw in keywords:
-            words = list(map(str.strip, kw.split(" ")))
-            if kw not in genres and any(map(valid_mb_genre, words)):
+            if kw not in genres and valid_for_mode(kw):
                 genres.append(kw)
 
         def valid_genre(genre: str) -> bool:
@@ -538,9 +551,9 @@ class Metaguru(Helpers):
         if self.style:
             exclude_style = partial(op.ne, self.style.lower())
             kws = filter(exclude_style, kws)
-        genres = self.get_genre(kws)
 
         genre_cfg = self.config["genre"]
+        genres = self.get_genre(kws, genre_cfg["mode"])
         if genre_cfg["capitalize"]:
             genres = map(str.capitalize, genres)
         if genre_cfg["maximum"]:
