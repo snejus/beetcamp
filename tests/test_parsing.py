@@ -46,7 +46,7 @@ def print_result(case, expected, result):
         _p("stuff", "sick vinyl", "creds", "stuff\nsick vinyl\ncreds", id="all"),
     ],
 )
-def test_description(descr, disctitle, creds, expected):
+def test_comments(descr, disctitle, creds, expected):
     meta = dict(
         description=descr,
         albumRelease=[{"musicReleaseFormat": "VinylFormat", "description": disctitle}],
@@ -55,7 +55,7 @@ def test_description(descr, disctitle, creds, expected):
     )
     config = {"preferred_media": "Vinyl", "comments_separator": "\n"}
     guru = Metaguru(json.dumps(meta), config)
-    assert guru.description == expected, vars(guru)
+    assert guru.comments == expected, vars(guru)
 
 
 @pytest.mark.parametrize(

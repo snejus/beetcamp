@@ -7,7 +7,7 @@ from typing import Optional, Tuple
 import pytest
 from beets.autotag.hooks import AlbumInfo, TrackInfo
 from beetsplug.bandcamp import DEFAULT_CONFIG
-from beetsplug.bandcamp._metaguru import DATA_SOURCE, DIGI_MEDIA, NEW_BEETS, OFFICIAL
+from beetsplug.bandcamp._metaguru import DATA_SOURCE, DIGI_MEDIA, NEW_BEETS
 
 
 @dataclass
@@ -82,7 +82,7 @@ class ReleaseInfo:
             catalognum=kwargs["catalognum"],
             country=kwargs["country"],
             mediums=kwargs["mediums"],
-            albumstatus=OFFICIAL,
+            albumstatus="Official",
             media=self.media,
             data_source=DATA_SOURCE,
             tracks=[TrackInfo(**self.track_data(**dict(t))) for t in iter_tracks],
@@ -843,4 +843,4 @@ def issues_18() -> ReleaseInfo:
 
 @pytest.fixture(name="beets_config")
 def _beets_config():
-    return deepcopy({**DEFAULT_CONFIG, "excluded_extra_fields": ["comments"]})
+    return deepcopy({**DEFAULT_CONFIG, "exclude_extra_fields": ["comments"]})

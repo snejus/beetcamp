@@ -117,7 +117,6 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         super().__init__()
         self.config.add(DEFAULT_CONFIG.copy())
 
-        self.excluded_extra_fields = set(self.config["exclude_extra_fields"].get())
         self.register_listener("pluginload", self.loaded)
         self._gurucache = dict()
 

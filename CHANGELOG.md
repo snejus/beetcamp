@@ -40,6 +40,9 @@
 
 ### Updated
 
+- `excluded_extra_fields` configuration option has been extended to support every track
+  field and most of album fields. See the readme for more information.
+
 - The hook for additional data has been removed since `lyrics` and `description` are now
   retrieved immediately. They can be inspected like every other field, through, for
   example, the **`edit (C)andidates`** action during the import.

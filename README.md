@@ -55,7 +55,7 @@ bandcamp:
   search_max: 5
   art: yes
   comments_separator: "\n---\n"
-  exclude_extra_fields:
+  exclude_extra_fields: []
   genre:
     mode: progressive # classical, progressive or psychedelic
     capitalize: no
@@ -132,13 +132,8 @@ field. By default you would get
 - Type: **list**
 - Default: _`empty`_
 
-The data that is added **after** the core auto tagging process is considered extra:
-(currently) `lyrics` and `comments` (release description) fields (see [the data
-table](#currently-supported--returned-data) for the complete list). Since there yet isn't
-an easy way to preview them before they get applied, you can ignore them if you find them
-irrelevant or inaccurate.
-
-For example, if you wanted to ignore all the goodies you can specify
+List of fields that you _do not_ want to see in the metadata. For example, if you find the
+inclusion of `comments` irrelevant and are not interested in lyrics, you could specify
 
 ```yaml
 bandcamp:
@@ -147,6 +142,9 @@ bandcamp:
     - lyrics
     - comments
 ```
+and the plugin will skip them.
+
+You cannot exclude `album`, `album_id`, `artist_id`, `media` and `data_url` album fields.
 
 ---
 
@@ -170,7 +168,7 @@ however be aware it is rarely the case.
 
 **genre.mode** accepts one of the following options: **classical** (less genres) or **progressive** or
 **psychedelic** (more genres). Each later one is more flexible regarding what is a valid
-genre and what is not. See below.
+genre and what is not. See below (we use the list of [musicbrainz genres] for reference).
 
 We can place all keywords into the following buckets:
 
@@ -215,42 +213,43 @@ See below for some examples and a comparison between the modes.
 
 # Usage
 
-This plug-in uses the Bandcamp URL as id (for both albums and songs). If no matching
-release is found when importing you can select `enter Id` and paste the Bandcamp URL.
+This plug-in uses Bandcamp release URL as `album_id` (`.../album/...` for albums and
+`.../track/...` for singletons). If no matching release is found during the import you can
+select `enter Id` and paste the URL that you have.
 
 ## Supported metadata
 
-|          field | is extra | singleton | album track | album |                                        note                                         |
-| -------------: | :------: | :-------: | :---------: | :---: | :---------------------------------------------------------------------------------: |
-|        `album` |          |    \*✔    |             |   ✔   |                                                                                     |
-|     `album_id` |          |           |             |   ✔   |                                                                                     |
-|  `albumartist` |          |     ✔     |      ✔      |   ✔   |                                                                                     |
-|  `albumstatus` |          |    \*✔    |             |   ✔   |                                                                                     |
-|    `albumtype` |          |    \*✔    |             |   ✔   |                                                                                     |
-|       `artist` |          |     ✔     |      ✔      |   ✔   |                                                                                     |
-|    `artist_id` |          |     ✔     |      ✔      |       |                                                                                     |
-|   `catalognum` |          |    \*✔    |             |   ✔   |                                                                                     |
-|     `comments` |    ✔     |     ✔     |      ✔      |       |                     release and media descriptions, and credits                     |
-|      `country` |          |    \*✔    |             |   ✔   |                                                                                     |
-|          `day` |          |    \*✔    |             |   ✔   |                                                                                     |
-|    `disctitle` |          |    \*✔    |      ✔      |       |                                                                                     |
-|        `genre` |          |    \*✔    |             |   ✔   |    comma-delimited list of **release keywords** which match [musicbrainz genres]    |
-|        `image` |          |     ✔     |      ✔      |   ✔   |                                                                                     |
-|        `index` |          |     ✔     |      ✔      |       |                                                                                     |
-|        `label` |          |    \*✔    |      ✔      |   ✔   |                                                                                     |
-|       `length` |          |     ✔     |      ✔      |       |                                                                                     |
-|       `lyrics` |    ✔     |     ✔     |      ✔      |       |                                                                                     |
-|        `media` |          |    \*✔    |      ✔      |   ✔   |                                                                                     |
-|       `medium` |          |    \*✔    |      ✔      |       |                                                                                     |
-|      `mediums` |          |           |             |   ✔   |                                                                                     |
-| `medium_index` |          |    \*✔    |      ✔      |       | likely to be inaccurate, since it depends on information in the release description |
-| `medium_total` |          |    \*✔    |      ✔      |       |                                      see above                                      |
-|        `month` |          |    \*✔    |             |   ✔   |                                                                                     |
-|        `style` |          |    \*✔    |             |   ✔   |                                 Bandcamp genre tag                                  |
-|        `title` |          |     ✔     |      ✔      |       |                                                                                     |
-|    `track_alt` |          |     ✔     |      ✔      |       |                                                                                     |
-|           `va` |          |           |             |   ✔   |                                                                                     |
-|         `year` |          |    \*✔    |             |   ✔   |                                                                                     |
+|          field | singleton | album track | album |                                        note                                         |
+| -------------: | :-------: | :---------: | :---: | :---------------------------------------------------------------------------------: |
+|        `album` |    \*✔    |             |   ✔   |                                                                                     |
+|     `album_id` |           |             |   ✔   |                                release bandcamp URL                                 |
+|  `albumartist` |     ✔     |             |   ✔   |                                                                                     |
+|  `albumstatus` |    \*✔    |             |   ✔   |                                                                                     |
+|    `albumtype` |    \*✔    |             |   ✔   |                                                                                     |
+|       `artist` |     ✔     |      ✔      |   ✔   |                                                                                     |
+|    `artist_id` |     ✔     |             |   ✔   |                               publisher bandcamp URL                                |
+|   `catalognum` |    \*✔    |             |   ✔   |                                                                                     |
+|     `comments` |     ✔     |             |   ✔   |                     release and media descriptions, and credits                     |
+|      `country` |    \*✔    |             |   ✔   |                                                                                     |
+|          `day` |    \*✔    |             |   ✔   |                                                                                     |
+|    `disctitle` |    \*✔    |      ✔      |       |                                                                                     |
+|        `genre` |    \*✔    |             |   ✔   |    comma-delimited list of **release keywords** which match [musicbrainz genres]    |
+|        `image` |     ✔     |             |   ✔   |                                                                                     |
+|        `index` |     ✔     |      ✔      |       |                                                                                     |
+|        `label` |    \*✔    |             |   ✔   |                                                                                     |
+|       `length` |     ✔     |      ✔      |       |                                                                                     |
+|       `lyrics` |     ✔     |      ✔      |       |                                                                                     |
+|        `media` |    \*✔    |      ✔      |   ✔   |                                                                                     |
+|       `medium` |    \*✔    |      ✔      |       |                                                                                     |
+|      `mediums` |           |             |   ✔   |                                                                                     |
+| `medium_index` |    \*✔    |      ✔      |       | likely to be inaccurate, since it depends on information in the release description |
+| `medium_total` |    \*✔    |      ✔      |       |                                      see above                                      |
+|        `month` |    \*✔    |             |   ✔   |                                                                                     |
+|        `style` |    \*✔    |             |   ✔   |                                 Bandcamp genre tag                                  |
+|        `title` |     ✔     |      ✔      |       |                                                                                     |
+|    `track_alt` |     ✔     |      ✔      |       |                                                                                     |
+|           `va` |           |             |   ✔   |                                                                                     |
+|         `year` |    \*✔    |             |   ✔   |                                                                                     |
 
 **\*** These singleton fields are available if you use `beets` version `1.5` or higher.
 
