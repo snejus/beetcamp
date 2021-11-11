@@ -46,7 +46,7 @@ DEFAULT_CONFIG: JSONDict = {
 SEARCH_URL = "https://bandcamp.com/search?q={0}&page={1}"
 ALBUM_URL_IN_TRACK = re.compile(r'inAlbum":{[^}]*"@id":"([^"]*)"')
 SEARCH_ITEM_PAT = 'href="(https://[^/]*/{}/[^?]*)'
-USER_AGENT = "beets/{} +http://beets.radbox.org/".format(__version__)
+USER_AGENT = f"beets/{__version__} +http://beets.radbox.org/"
 ALBUM_SEARCH = "album"
 ARTIST_SEARCH = "band"
 TRACK_SEARCH = "track"
@@ -118,7 +118,7 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         self.config.add(DEFAULT_CONFIG.copy())
 
         self.register_listener("pluginload", self.loaded)
-        self._gurucache = dict()
+        self._gurucache = {}
 
     def guru(self, url: str, html: Optional[str] = None) -> Optional[Metaguru]:
         """Return cached guru. If there isn't one, fetch the url if html isn't
@@ -155,7 +155,7 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         if item.comments.startswith("Visit"):
             match = re.search(r"https:[/a-z.-]+com", item.comments)
             if match:
-                url = "{}/{}/{}".format(match.group(), _type, urlify(name))
+                url = f"{match.group()}/{_type}/{urlify(name)}"
                 self._info("Trying our guess {} before searching", url)
                 return url
         return ""

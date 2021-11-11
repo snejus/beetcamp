@@ -227,7 +227,7 @@ class Helpers:
         # handle special chars
         excl = "|".join(map(re.escape, exclude))
 
-        rubbish = r"(?i:\b({})(\b|$))".format(excl)
+        rubbish = fr"(?i:\b({excl})(\b|$))"
         empty_parens = r"\(\)|\[\]"
         default = next(iter([*args, name]))
 
@@ -396,10 +396,10 @@ class Metaguru(Helpers):
 
         If the field is not found, return None.
         """
-        date = self.meta.get("datePublished")
-        if date:
-            return datetime.strptime(re.sub(r" [0-9]{2}:.+", "", date), "%d %b %Y").date()
-        return date
+        rel = self.meta.get("datePublished")
+        if rel:
+            return datetime.strptime(re.sub(r" [0-9]{2}:.+", "", rel), "%d %b %Y").date()
+        return rel
 
     @cached_property
     def albumstatus(self) -> str:
