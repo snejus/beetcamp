@@ -40,6 +40,7 @@ DEFAULT_CONFIG: JSONDict = {
     "art": False,
     "exclude_extra_fields": [],
     "genre": {"capitalize": False, "maximum": 0, "mode": "progressive"},
+    "comments_separator": "\n---\n"
 }
 
 SEARCH_URL = "https://bandcamp.com/search?q={0}&page={1}"

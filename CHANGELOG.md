@@ -20,12 +20,6 @@
   - `genre`: comma-delimited list of release **keywords** that match any [musicbrainz
     genres].
 
-    Additionally, since in some cases a keyword is more specific than what's covered by
-    the MB list of genres, we also consider cases where the entire keyword does not match
-    a genre but every word in it does. For example, the combination `techno trance` is
-    not listed as a genre, but `techno` and `trance` in isolation are - therefore we
-    treat the combination as a valid (sub-)genre.
-
   This comes with some configuration options, see the defaults below:
 
   ```yaml
@@ -34,21 +28,32 @@
     genre:
       capitalise: no
       maximum: 0  # no limit
-      mode: progressive
+      mode: progressive  # classical, progressive or psychedelic
   ```
 
-  See the readme for a bit more information about them.
+  See the readme for information about the different modes of operation.
+
+- New configuration option `comments_separator` to separate release, media
+  descriptions and credits. Default: `\n---\n`. Comments formatting has been
+  changing with every release without a good reason - this should stop. Ultimately it is
+  one's personal choice how they want the formatting to look like.
 
 ### Updated
 
+- The hook for additional data has been removed since `lyrics` and `description` are now
+  retrieved immediately. They can be inspected like every other field, through, for
+  example, the **`edit (C)andidates`** action during the import.
+
 - `track_alt`: allow **B2 Title** where _B2_ is followed by a space
-- `catalognum`: include **Catalog:** as a valid header
+- `catalognum`: include **Catalog:** as a valid header when parsing the description
 - `track.title` digital-only cleanup, remove:
   - **DIGITAL** from the front of the title
   - **digital-only** and **(digital)** from the end
 
 ### Fixed
 
+- `lyrics`: instead of parsing the HTML, lyrics are now reliably retrieved from the JSON
+  data and added to each track where applicable.
 - Nowadays it is possible that the `datePublished` field is not given in the release JSON
   data - this is now handled gracefully.
 

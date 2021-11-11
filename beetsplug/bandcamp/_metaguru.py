@@ -4,7 +4,7 @@ import json
 import operator as op
 import re
 from datetime import date, datetime
-from functools import partial, reduce
+from functools import partial
 from math import floor
 from typing import Any, Dict, Iterable, List, Optional, Pattern, Set, Tuple
 from unicodedata import normalize
@@ -90,7 +90,7 @@ class Helpers:
         if not match:
             return 1
         count: str = match.groupdict()["count"]
-        return int(count) if count.isdigit() else conv[count.casefold()]
+        return int(count) if count.isdigit() else conv[count.lower()]
 
     @staticmethod
     def clean_digital_only_track(name: str) -> Tuple[str, bool]:
@@ -302,6 +302,7 @@ class Metaguru(Helpers):
     html: str
     meta: JSONDict
     config: JSONDict
+    excluded_fields: Set[str]
 
     _media: Dict[str, str]
     _singleton = False
@@ -310,6 +311,7 @@ class Metaguru(Helpers):
         self.html = html
         self.config = config or {}
         self.meta = {}
+        self.excluded_fields = set(self.config.get("excluded_extra_fields") or [])
         match = re.search(PATTERNS["meta"], html)
         if match:
             self.meta = json.loads(match.group())
@@ -328,18 +330,16 @@ class Metaguru(Helpers):
 
     @cached_property
     def description(self) -> str:
-        """Return album and media description unless they start with a generic message.
-        If credits exist, append them too.
+        """Return release, media descriptions and credits separated by
+        the configured separator string.
         """
-        _credits = self.meta.get("creditText", "")
-        parts = [
-            self.meta.get("description", ""),
-            "" if self.media_name == DIGI_MEDIA else self._media.get("description"),
-            "Credits: " + _credits if _credits else "",
-        ]
-        return reduce(lambda x, y: f"{x}\n - {y}", filter(op.truth, parts), "").replace(
-            "\r", ""
-        )
+        parts = [self.meta.get("description")]
+        if self.media_name != DIGI_MEDIA:
+            parts.append(self._media.get("description"))
+
+        parts.append(self.meta.get("creditText"))
+        sep = self.config["comments_separator"]
+        return sep.join(filter(op.truth, parts)).replace("\r", "")
 
     @cached_property
     def album_name(self) -> str:
@@ -591,6 +591,8 @@ class Metaguru(Helpers):
 
         if reldate:
             common_data.update(year=reldate.year, month=reldate.month, day=reldate.day)
+        if self.description and "comments" not in self.excluded_fields:
+            common_data["comments"] = self.description
 
         return common_data
 

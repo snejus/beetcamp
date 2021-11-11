@@ -54,6 +54,7 @@ bandcamp:
   include_digital_only_tracks: true
   search_max: 5
   art: yes
+  comments_separator: "\n---\n"
   exclude_extra_fields:
   genre:
     mode: progressive # classical, progressive or psychedelic
@@ -111,6 +112,20 @@ Add a source to the
 download album art for Bandcamp albums (requires `FetchArt` plug-in enabled).
 
 ---
+
+#### `comments_separator`
+
+- Type: **string**
+- Default: `"\n---\n"`.
+
+The separator that divides release, media descriptions and credits within the `comments`
+field. By default you would get
+
+    Description
+    ---
+    Media description
+    ---
+    Credits
 
 #### `exclude_extra_fields`
 

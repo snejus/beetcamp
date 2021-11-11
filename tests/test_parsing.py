@@ -12,6 +12,7 @@ from rich.text import Text
 pytestmark = pytest.mark.parsing
 
 console = Console(force_terminal=True, force_interactive=True)
+_p = pytest.param
 
 
 def print_result(case, expected, result):
@@ -38,10 +39,11 @@ def print_result(case, expected, result):
 @pytest.mark.parametrize(
     ("descr", "disctitle", "creds", "expected"),
     [
-        ("", "", "", ""),
-        ("hello", "", "", "\n - hello"),
-        ("", "sick vinyl", "", "\n - sick vinyl"),
-        ("sickest vinyl", "sick vinyl", "", "\n - sickest vinyl\n - sick vinyl"),
+        _p("", "", "", "", id="empty"),
+        _p("hello", "", "", "hello", id="only main desc"),
+        _p("", "sick vinyl", "", "sick vinyl", id="only media desc"),
+        _p("", "", "credit", "credit", id="only credits"),
+        _p("stuff", "sick vinyl", "creds", "stuff\nsick vinyl\ncreds", id="all"),
     ],
 )
 def test_description(descr, disctitle, creds, expected):
@@ -51,7 +53,7 @@ def test_description(descr, disctitle, creds, expected):
         creditText=creds,
         dateModified="doesntmatter",
     )
-    config = {"preferred_media": "Vinyl"}
+    config = {"preferred_media": "Vinyl", "comments_separator": "\n"}
     guru = Metaguru(json.dumps(meta), config)
     assert guru.description == expected, vars(guru)
 

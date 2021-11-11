@@ -2,8 +2,8 @@ import pytest
 from beetsplug.bandcamp._metaguru import Metaguru
 
 
-def test_style(genre_config):
-    guru = Metaguru("", genre_config)
+def test_style(beets_config):
+    guru = Metaguru("", beets_config)
     guru.meta = {"publisher": {"genre": "bandcamp.com/tag/folk"}}
     assert guru.style == "folk"
 
@@ -67,14 +67,13 @@ def test_genre(keywords, mode, mode_result):
         (False, 2, "folk, house"),
     ],
 )
-def test_genre_config(capitalize, maximum, expected, genre_config):
+def test_beets_config(capitalize, maximum, expected, beets_config):
     meta = {
         "keywords": ["paris", "dubstep", "folk", "House", "grime", "Trance"],
         "publisher": {"genre": "https://bandcamp.com/tag/dubstep"},
     }
-    config = genre_config.copy()
-    config["genre"].update({"capitalize": capitalize, "maximum": maximum})
-    guru = Metaguru("", config)
+    beets_config["genre"].update({"capitalize": capitalize, "maximum": maximum})
+    guru = Metaguru("", beets_config)
     guru.meta = meta
 
     assert guru.style == ("Dubstep" if capitalize else "dubstep")
