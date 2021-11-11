@@ -35,6 +35,7 @@ class ReleaseInfo:
             medium_index=kget("index"),
             medium_total=kget("medium_total"),
             disctitle=self.disctitle,
+            lyrics=kget("lyrics"),
         )
 
     def set_singleton(self, artist: str, title: str, length: int, **kwargs) -> None:
@@ -51,7 +52,16 @@ class ReleaseInfo:
         self.singleton = TrackInfo(**data)
 
     def set_albuminfo(self, tracks, **kwargs):
-        fields = ["medium_total", "index", "title_id", "artist", "title", "length", "alt"]
+        fields = [
+            "medium_total",
+            "index",
+            "title_id",
+            "artist",
+            "title",
+            "length",
+            "alt",
+            "lyrics",
+        ]
         iter_tracks = [
             zip(fields, (len(tracks), idx, *track)) for idx, track in enumerate(tracks, 1)
         ]
@@ -411,6 +421,53 @@ def artist_mess() -> ReleaseInfo:
     )
     # fmt: off
     albumartist = "Psykovsky & Friends"
+    lyrics = '''Little lark
+
+all alone
+
+cannot find his way
+
+Through the wheat fields
+
+he will wander
+
+searching all the day
+
+"Oh mother!
+
+Please come find me!”
+
+He calls to the sky
+
+The wheat
+
+rustling ‘round him
+
+is the only reply
+
+He’s forgotten
+
+how to find his way
+
+back to the nest
+
+Little lark
+
+all alone now
+
+in the fields he rests
+
+Through the dark
+
+the fox hounding
+
+in the moonlight
+
+After sunset
+
+all that’s left is
+
+forlorn twilight'''
     tracks = [
         ("ela-na-pame", "Psykovsky & Orestis", "Ela Na Pame", 518, None),
         ("stone-sea", "Psykovsky & Luuli", "Stone Sea", 673, None),
@@ -421,7 +478,7 @@ def artist_mess() -> ReleaseInfo:
         ("many-many-krishnas", "Psykovsky & Orestis & Jobaba", "Many Many Krishnas", 729, None),  # noqa
         ("prem-i-um", "Psykovsky & Kashyyyk & Arcek", "Prem I Um", 409, None),
         ("now-here-nowhere", "Psykovsky & Arcek", "Now Here Nowhere", 557, None),
-        ("holy-black-little-lark", "Psykovsky & Maleficium & Seeasound", "Holy Black / Little Lark", 1087, None),  # noqa
+        ("holy-black-little-lark", "Psykovsky & Maleficium & Seeasound", "Holy Black / Little Lark", 1087, None, lyrics),  # noqa
         ("worlds-of-wisdom", albumartist, "Worlds Of Wisdom", 408, None),
         ("pc-transmission", albumartist, "PC Transmission", 561, None),
         ("rs-lightmusic", albumartist, "RS Lightmusic", 411, None),

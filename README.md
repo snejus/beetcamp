@@ -55,8 +55,6 @@ bandcamp:
   search_max: 5
   art: yes
   exclude_extra_fields:
-    - lyrics
-    - comments
   genre:
     mode: progressive # classical, progressive or psychedelic
     capitalize: no

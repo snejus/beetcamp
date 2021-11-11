@@ -67,7 +67,6 @@ PATTERNS: Dict[str, Pattern] = {
         """,
         re.VERBOSE,
     ),
-    "lyrics": re.compile(r'"lyrics":({[^}]*})'),
     "clean_incl": re.compile(r"(?i:(\(?incl[^)]+\)?|\([^)]+remix[^)]+\)))"),
     "remix_or_ft": re.compile(r"\s(?i:(\[|\().*(mix|edit)|f(ea)?t\.).*"),
     "track_alt": re.compile(r"([ABCDEFGH]{1,3}[0-9])(\.|.?-\s|\s)"),
@@ -393,14 +392,6 @@ class Metaguru(Helpers):
         return image[0] if isinstance(image, list) else image
 
     @cached_property
-    def lyrics(self) -> Optional[str]:
-        # TODO: Need to test
-        matches = re.findall(PATTERNS["lyrics"], self.html)
-        if not matches:
-            return None
-        return "\n".join(json.loads(m).get("text") for m in matches)
-
-    @cached_property
     def release_date(self) -> Optional[date]:
         """Parse the datestring that takes the format like below and return date object.
         {"datePublished": "17 Jul 2020 00:00:00 GMT"}
@@ -472,6 +463,11 @@ class Metaguru(Helpers):
             track["artist"] = self.get_track_artist(
                 track["artist"], raw_item, albumartist  # type: ignore
             )
+            lyrics = raw_item.get("recordingOf", {}).get("lyrics", {}).get("text")
+            if lyrics:
+                track["lyrics"] = lyrics.replace("\r", "")
+            else:
+                track["lyrics"] = None
 
             tracks.append(track)
 

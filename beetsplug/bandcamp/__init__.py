@@ -37,7 +37,6 @@ DEFAULT_CONFIG: JSONDict = {
     "preferred_media": DIGI_MEDIA,
     "include_digital_only_tracks": True,
     "search_max": 10,
-    "lyrics": False,
     "art": False,
     "exclude_extra_fields": [],
     "genre": {"capitalize": False, "maximum": 0, "mode": "progressive"},
@@ -50,11 +49,6 @@ USER_AGENT = "beets/{} +http://beets.radbox.org/".format(__version__)
 ALBUM_SEARCH = "album"
 ARTIST_SEARCH = "band"
 TRACK_SEARCH = "track"
-
-ADDITIONAL_DATA_MAP: Dict[str, str] = {
-    "lyrics": "lyrics",
-    "description": "comments",
-}
 
 
 class BandcampRequestsHandler:
