@@ -237,7 +237,7 @@ class Helpers:
         return clean(empty_parens, clean(rubbish, name)).strip("/-|([ ") or default
 
     @staticmethod
-    def get_genre(keywords: Iterable[str], mode: str) -> Iterable[str]:
+    def get_genre(keywords: Iterable[str], config: JSONDict) -> Iterable[str]:
         """Verify each keyword against the list of MusicBrainz genres and return
         a comma-delimited list of valid ones, where validity depends on the mode:
           * classical: valid only if the entire keyword is found in the MB genres list
@@ -254,27 +254,40 @@ class Helpers:
         genres: List[str] = []
         valid_mb_genre = partial(op.contains, GENRES)
 
+        def is_included(kw: str) -> bool:
+            return any(map(lambda x: re.search(x, kw), config["always_include"]))
+
         def valid_for_mode(kw: str) -> bool:
-            if mode == "classical":
+            if config["mode"] == "classical":
                 return kw in GENRES
 
             words = map(str.strip, kw.split(" "))
-            if mode == "progressive":
+            if config["mode"] == "progressive":
                 return kw in GENRES or all(map(valid_mb_genre, words))
 
             return valid_mb_genre(kw) or valid_mb_genre(list(words)[-1])
 
-        for kw in keywords:
-            if kw not in genres and valid_for_mode(kw):
+        # expand badly delimited keywords
+        split_kw = partial(re.split, r"[.] | #")
+        for kw in it.chain(*map(split_kw, keywords)):
+            # remove full stops and hashes and ensure the expected form of 'and'
+            kw = re.sub("[.#]", "", str(kw)).replace("&", "and")
+            if kw not in genres and (is_included(kw) or valid_for_mode(kw)):
                 genres.append(kw)
 
-        def valid_genre(genre: str) -> bool:
-            def within_another(another: str) -> bool:
-                return genre != another and genre in another
+        unique_genres = set(genres)
 
-            return not any(filter(within_another, genres))  # type: ignore
+        def duplicate(genre: str) -> bool:
+            """Return True if genre is contained within another genre or if,
+            having removed spaces from every other, there is a duplicate found.
+            It is done this way so that 'dark folk' is kept while 'darkfolk' is removed,
+            and not the other way around.
+            """
+            others = unique_genres - {genre}
+            others = others.union(map(lambda x: x.replace(" ", ""), others))
+            return any(map(lambda x: genre in x, others))
 
-        return filter(valid_genre, genres)
+        return it.filterfalse(duplicate, genres)
 
     @staticmethod
     def _get_media_reference(meta: JSONDict) -> JSONDict:
@@ -556,7 +569,7 @@ class Metaguru(Helpers):
             kws = filter(exclude_style, kws)
 
         genre_cfg = self.config["genre"]
-        genres = self.get_genre(kws, genre_cfg["mode"])
+        genres = self.get_genre(kws, genre_cfg)
         if genre_cfg["capitalize"]:
             genres = map(str.capitalize, genres)
         if genre_cfg["maximum"]:

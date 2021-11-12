@@ -57,9 +57,10 @@ bandcamp:
   comments_separator: "\n---\n"
   exclude_extra_fields: []
   genre:
-    mode: progressive # classical, progressive or psychedelic
     capitalize: no
     maximum: 0
+    always_include: []
+    mode: progressive # classical, progressive or psychedelic
 ```
 
 ---
@@ -157,6 +158,7 @@ You cannot exclude `album`, `album_id`, `artist_id`, `media` and `data_url` albu
     capitalize: no
     maximum: 0 # no maximum
     mode: progressive
+    always_include: []
   ```
 
 **genre.capitalize**: **Classical, Techno** instead of default **classical, techno**.
@@ -170,6 +172,16 @@ however be aware it is rarely the case.
 **psychedelic** (more genres). Each later one is more flexible regarding what is a valid
 genre and what is not. See below (we use the list of [musicbrainz genres] for reference).
 
+**genre.always_include**: genre patterns that override the mode and always match
+successfully. For example, if you want to bypass checks for every keyword that ends with
+`core`, you could specify
+```yaml
+  genre:
+    always_include:
+      - "core$"
+```
+
+##### `genre` modes
 We can place all keywords into the following buckets:
 
 | type  |                                      |                                                                      |
@@ -192,7 +204,7 @@ We can place all keywords into the following buckets:
   latest `<some-label>-<genre>` or `<some-city>-<some-very-generic-genre>` trends which may
   not be ideal. It should though be the best option for those who enjoy detailed, fine-grained
   stats.
-- **type 4** is ignored in each case.
+- **type 4** is ignored in each case (can be overridden and included through the `genre.include` option).
 
 See below for some examples and a comparison between the modes.
 

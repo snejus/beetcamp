@@ -28,10 +28,11 @@
     genre:
       capitalise: no
       maximum: 0  # no limit
+      always_include: []
       mode: progressive  # classical, progressive or psychedelic
   ```
 
-  See the readme for information about the different modes of operation.
+  See the readme for information about the different options.
 
 - New configuration option `comments_separator` to separate release, media
   descriptions and credits. Default: `\n---\n`. Comments formatting has been
