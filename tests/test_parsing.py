@@ -216,6 +216,8 @@ def test_track_artists(artists, expected):
         ("DIGITAL 2. Track", True, "Track"),
         ("Track (digital)", True, "Track"),
         ("Bonus : Track", True, "Track"),
+        ("Bonus Rave Tool", False, "Bonus Rave Tool"),
+        ("TROPICOFRIO - DIGITAL DRIVER", False, "TROPICOFRIO - DIGITAL DRIVER"),
     ],
 )
 def test_check_digital_only(name, expected_digital_only, expected_name):

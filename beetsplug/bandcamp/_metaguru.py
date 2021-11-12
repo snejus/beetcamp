@@ -49,8 +49,8 @@ PATTERNS: Dict[str, Pattern] = {
         r"(?i:vol(ume)?|artists|\bva\d+|vinyl|triple|ep 12)|202[01]|(^|\s)C\d\d|\d+/\d+"
     ),
     "digital": [  # type: ignore
-        re.compile(r"^(DIGI(TAL)?[\d. ]*|Bonus)\W*"),
-        re.compile(r"(?i:[^\w\)]+(bandcamp|digi(tal)?\W*)(\W*(only|bonus|exclusive)\W*)?)")  # noqa
+        re.compile(r"^(DIGI(TAL)? ?[\d.]+|Bonus\W{2,})\W*"),
+        re.compile(r"(?i:[^\w\)]+(bandcamp[^-]+|digi(tal)?)(\W*(\W+|only|bonus|exclusive)\W*$))")  # noqa
     ],
     "clean_incl": re.compile(r"(?i:(\(?incl[^)]+\)?|\([^)]+remix[^)]+\)))"),
     "remix_or_ft": re.compile(r"\s(?i:[\[\(].*(mix|edit)|f(ea)?t\.).*"),
@@ -83,7 +83,6 @@ class Helpers:
         clean_name = name
         for pat in PATTERNS["digital"]:  # type: ignore
             clean_name = pat.sub("", clean_name)
-        clean_name = clean_name.strip(" .")
         if clean_name != name:
             return clean_name, True
         return clean_name, False
