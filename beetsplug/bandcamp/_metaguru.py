@@ -6,10 +6,9 @@ import re
 from datetime import date, datetime
 from functools import partial
 from math import floor
-from typing import Any, Dict, Iterable, List, Optional, Pattern, Set, Tuple, Union
+from typing import Any, Dict, Iterable, List, Optional, Pattern, Set, Tuple
 from unicodedata import normalize
 
-import regex as rgx
 from beets.autotag.hooks import AlbumInfo, TrackInfo
 from cached_property import cached_property
 from pkg_resources import get_distribution, parse_version
