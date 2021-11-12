@@ -51,7 +51,7 @@
 - `track_alt`: allow **B2 Title** where _B2_ is followed by a space
 - `catalognum`: include **Catalog:** as a valid header when parsing the description
 - `track.title` digital-only cleanup, remove:
-  - **DIGITAL** from the front of the title
+  - **DIGITAL** and **Bonus** from the front of the title
   - **digital-only** and **(digital)** from the end
 
 ### Fixed

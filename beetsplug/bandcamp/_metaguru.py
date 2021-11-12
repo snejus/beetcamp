@@ -6,9 +6,10 @@ import re
 from datetime import date, datetime
 from functools import partial
 from math import floor
-from typing import Any, Dict, Iterable, List, Optional, Pattern, Set, Tuple
+from typing import Any, Dict, Iterable, List, Optional, Pattern, Set, Tuple, Union
 from unicodedata import normalize
 
+import regex as rgx
 from beets.autotag.hooks import AlbumInfo, TrackInfo
 from cached_property import cached_property
 from pkg_resources import get_distribution, parse_version
@@ -48,22 +49,10 @@ PATTERNS: Dict[str, Pattern] = {
     "catalognum_excl": re.compile(
         r"(?i:vol(ume)?|artists|\bva\d+|vinyl|triple|ep 12)|202[01]|(^|\s)C\d\d|\d+/\d+"
     ),
-    "digital": re.compile(
-        r"""
-(
-    # either begins with DIGI(TAL) (note all caps, otherwise we may match titles)
-    # and may be followed by an index
-    ^(DIGI|DIGITAL)\.?\ (\d+\.\ ?)?
-  | # there is some special delimiter followed by either of these three
-    [- *\[\(]+(?i:bandcamp.*|digi|digital)
-    (
-        [)\]]$                          # either closed immediately
-      | \W+(?i:only|bonus|exclusive).*  # or ending with some big VIP word
-    )
-)
-        """,
-        re.VERBOSE,
-    ),
+    "digital": [  # type: ignore
+        re.compile(r"^(DIGI(TAL)?[\d. ]*|Bonus)\W*"),
+        re.compile(r"(?i:[^\w\)]+(bandcamp|digi(tal)?\W*)(\W*(only|bonus|exclusive)\W*)?)")  # noqa
+    ],
     "clean_incl": re.compile(r"(?i:(\(?incl[^)]+\)?|\([^)]+remix[^)]+\)))"),
     "remix_or_ft": re.compile(r"\s(?i:[\[\(].*(mix|edit)|f(ea)?t\.).*"),
     "track_alt": re.compile(r"([ABCDEFGH]{1,3}[0-9])(\.|.?-\s|\s)"),
@@ -92,7 +81,10 @@ class Helpers:
     @staticmethod
     def clean_digital_only_track(name: str) -> Tuple[str, bool]:
         """Return cleaned title and whether this track is digital-only."""
-        clean_name = PATTERNS["digital"].sub("", name)
+        clean_name = name
+        for pat in PATTERNS["digital"]:  # type: ignore
+            clean_name = pat.sub("", clean_name)
+        clean_name = clean_name.strip(" .")
         if clean_name != name:
             return clean_name, True
         return clean_name, False
