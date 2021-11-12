@@ -1,25 +1,40 @@
 [![image](http://img.shields.io/pypi/v/beetcamp.svg)](https://pypi.python.org/pypi/beetcamp)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=snejus_beets-bandcamp&metric=alert_status)](https://sonarcloud.io/dashboard?id=snejus_beets-bandcamp)
+[![Coverage Status](https://coveralls.io/repos/github/snejus/beetcamp/badge.svg?branch=master)](https://coveralls.io/github/snejus/beetcamp?branch=master)
 
-Plug-in for [beets](https://github.com/beetbox/beets) to use Bandcamp as
-an autotagger source.
+Plug-in for [beets] to use Bandcamp as an autotagger source. It mostly focuses on
 
-This is an up-to-date fork of [unrblt/beets-bandcamp](https://github.com/unrblt/beets-bandcamp)
+- Staying up-to-date with information Bandcamp provide in the JSON metadata
+- Parsing **all possible** (if relevant) metadata from various places
+  - For example, a catalog number given in the release or media description
+- Correctness of the data
+  - For example, determining artist names from various artists releases
+- Compliance with MusicBrainz fields format, to remove the need for pre-processing if, for
+  example, one wishes to upload the metadata to MB.
+
+Thanks to [unrblt] for [beets-bandcamp] providing the idea and initial implementation.
+
+[beets]: https://github.com/beetbox/beets
+[unrblt]: https://github.com/unrblt
+[beets-bandcamp]: https://github.com/unrblt/beets-bandcamp
 
 # Installation
 
 ## Recommended method
 
 1. Install `beets` with `pipx` so that it's isolated from your system and other projects
+
 ```bash
 pipx install beets
 ```
 
 2. Inject `beetcamp` and other dependencies that you need
+
 ```bash
 pipx inject beets beetcamp [python-mpd2 ...]
 ```
-and add `bandcamp` to the `plugins` list to your beets configuration file.
+
+3. Add `bandcamp` to the `plugins` list to your beets configuration file.
 
 ## Otherwise
 
@@ -29,20 +44,23 @@ Navigate to your `beets` virtual environment and install the plug-in with
    pip install beetcamp
 ```
 
-
 # Configuration
 
-## Example
+## Default
 
 ```yaml
 bandcamp:
-    preferred_media: Vinyl,CD,Cassette
-    include_digital_only_tracks: true
-    search_max: 5
-    art: true
-    exclude_extra_fields:
-      - lyrics
-      - comments
+  preferred_media: Vinyl,CD,Cassette
+  include_digital_only_tracks: true
+  search_max: 5
+  art: yes
+  comments_separator: "\n---\n"
+  exclude_extra_fields: []
+  genre:
+    capitalize: no
+    maximum: 0
+    always_include: []
+    mode: progressive # classical, progressive or psychedelic
 ```
 
 ---
@@ -52,7 +70,7 @@ bandcamp:
 - Type: **string**
 - Default: `Digital`
 
-A comma-separated list of media to prioritise when fetching albums. For example:
+A comma-separated list of media to prioritize when fetching albums. For example:
 `preferred_media: Vinyl,Cassette` will ignore `CD`, check for a `Vinyl`, and then for a
 `Cassette`, in the end defaulting to `Digital` (always available) if none of the two are
 found. Any combination of the following is supported: `Vinyl`, `CD`, `Cassette`,
@@ -96,68 +114,155 @@ download album art for Bandcamp albums (requires `FetchArt` plug-in enabled).
 
 ---
 
+#### `comments_separator`
+
+- Type: **string**
+- Default: `"\n---\n"`.
+
+The separator that divides release, media descriptions and credits within the `comments`
+field. By default you would get
+
+    Description
+    ---
+    Media description
+    ---
+    Credits
+
 #### `exclude_extra_fields`
 
 - Type: **list**
 - Default: _`empty`_
 
-The data that is added **after** the core auto tagging process is considered extra:
-(currently) `lyrics` and `comments` (release description) fields (see [the data
-table](#currently-supported--returned-data) for the complete list). Since there yet isn't
-an easy way to preview them before they get applied, you can ignore them if you find them
-irrelevant or inaccurate.
+List of fields that you _do not_ want to see in the metadata. For example, if you find the
+inclusion of `comments` irrelevant and are not interested in lyrics, you could specify
 
-For example, if you wanted to ignore all the goodies you can specify
 ```yaml
 bandcamp:
-    search_max: 5
-    exclude_extra_fields:
-      - lyrics
-      - comments
+  search_max: 5
+  exclude_extra_fields:
+    - lyrics
+    - comments
 ```
+and the plugin will skip them.
+
+You cannot exclude `album`, `album_id`, `artist_id`, `media` and `data_url` album fields.
+
+---
+
+#### `genre` (new since 0.11.0)
+
+- Type: **object**
+- Default:
+  ```yaml
+  genre:
+    capitalize: no
+    maximum: 0 # no maximum
+    mode: progressive
+    always_include: []
+  ```
+
+**genre.capitalize**: **Classical, Techno** instead of default **classical, techno**.
+For consistency, this option also applies to the `style` field.
+
+**genre.maximum** caps the maximum number of included genres. This may be of
+value in those cases where artists/labels begin the list with the most relevant keywords,
+however be aware it is rarely the case.
+
+**genre.mode** accepts one of the following options: **classical** (less genres) or **progressive** or
+**psychedelic** (more genres). Each later one is more flexible regarding what is a valid
+genre and what is not. See below (we use the list of [musicbrainz genres] for reference).
+
+**genre.always_include**: genre patterns that override the mode and always match
+successfully. For example, if you want to bypass checks for every keyword that ends with
+`core`, you could specify
+```yaml
+  genre:
+    always_include:
+      - "core$"
+```
+
+##### `genre` modes
+We can place all keywords into the following buckets:
+
+| type  |                                      |                                                                      |
+| :---: | ------------------------------------ | -------------------------------------------------------------------- |
+| **1** | **`genre`**                          | a valid single-word musicbrainz genre                                |
+| **1** | **`more specific genre`**            | a valid musicbrainz genre made of multiple words                     |
+| **2** | **`somegenre`** **`someothergenre`** | each of the words is a valid musicbrainz genre, but the combo is not |
+| **3** | very specific **`genre`**            | not all words are valid genres, but the very last one is             |
+| **4** | maybe **`genre`** but                | but it is followed by noise at the end                               |
+| **4** | some sort of location                | irrelevant                                                           |
+
+- **classical** mode strictly follows the musicbrainz list of genres, therefore it covers
+  **type 1** only
+- **progressive** mode, in addition to the above, takes into account each of the words that
+  make up the keyword and will be fine as long as each of those words maps to some sort of
+  genre from the musicbrainz list. It covers **types 1 and 2**.
+- **psychedelic** (or **noise**) mode, in addition to the above, treats the keyword as a
+  valid genre as long as **the last word** in it maps to some genre - covering **types 1 to 3**.
+  This one should include the hottest genre naming trends but is also liable to covering the
+  latest `<some-label>-<genre>` or `<some-city>-<some-very-generic-genre>` trends which may
+  not be ideal. It should though be the best option for those who enjoy detailed, fine-grained
+  stats.
+- **type 4** is ignored in each case (can be overridden and included through the `genre.include` option).
+
+See below for some examples and a comparison between the modes.
+
+|  type | keyword                 | classical | progressive | psychedelic |
+| ----: | ----------------------- | :-------: | :---------: | :---------: |
+| **1** | **`techno`**            |     ✔     |      ✔      |      ✔      |
+| **1** | **`funk`**              |     ✔     |      ✔      |      ✔      |
+| **1** | **`ambient`**           |     ✔     |      ✔      |      ✔      |
+| **1** | **`noise`**             |     ✔     |      ✔      |      ✔      |
+| **1** | **`ambient techno`**    |     ✔     |      ✔      |      ✔      |
+| **2** | **`techno`** **`funk`** |     ✖     |      ✔      |      ✔      |
+| **4** | funky                   |     ✖     |      ✖      |      ✖      |
+| **4** | bleep                   |     ✖     |      ✖      |      ✖      |
+| **3** | funky **`techno`**      |     ✖     |      ✖      |      ✔      |
+| **4** | bleepy beep             |     ✖     |      ✖      |      ✖      |
+| **3** | bleepy beep **`noise`** |     ✖     |      ✖      |      ✔      |
+| **4** | bleepy **`noise`** beep |     ✖     |      ✖      |      ✖      |
 
 # Usage
 
-This plug-in uses the Bandcamp URL as id (for both albums and songs). If no matching
-release is found when importing you can select `enter Id` and paste the Bandcamp URL.
+This plug-in uses Bandcamp release URL as `album_id` (`.../album/...` for albums and
+`.../track/...` for singletons). If no matching release is found during the import you can
+select `enter Id` and paste the URL that you have.
 
-## Currently supported / returned data
+## Supported metadata
 
-| field            | is extra | singleton track | album track | album |
-|-----------------:|:--------:|:---------------:|:-----------:|:-----:|
-| `album`          |          | ✔~              |             | ✔     |
-| `album_id`       |          |                 |             | ✔     |
-| `albumartist`    |          | ✔               | ✔           | ✔     |
-| `albumstatus`    |          | ✔~              |             | ✔     |
-| `albumtype`      |          | ✔~              |             | ✔     |
-| `artist`         |          | ✔               | ✔           | ✔     |
-| `artist_id`      |          | ✔               | ✔           |       |
-| `catalognum`     |          | ✔~              |             | ✔     |
-| + `comments`     | ✔        | ✔               | ✔           |       |
-| `country`        |          | ✔~              |             | ✔     |
-| `day`            |          | ✔~              |             | ✔     |
-| `disctitle`      |          | ✔~              | ✔           |       |
-| `image`          |          | ✔               | ✔           | ✔     |
-| `index`          |          | ✔               | ✔           |       |
-| `label`          |          | ✔~              | ✔           | ✔     |
-| `length`         |          | ✔               | ✔           |       |
-| `lyrics`         | ✔        | ✔               | ✔           |       |
-| `media`          |          | ✔~              | ✔           | ✔     |
-| `medium`         |          | ✔~              | ✔           |       |
-| `mediums`        |          |                 |             | ✔     |
-| * `medium_index` |          | ✔~              | ✔           |       |
-| * `medium_total` |          | ✔~              | ✔           |       |
-| `month`          |          | ✔~              |             | ✔     |
-| `title`          |          | ✔               | ✔           |       |
-| `track_alt`      |          | ✔               | ✔           |       |
-| `va`             |          |                 |             | ✔     |
-| `year`           |          | ✔~              |             | ✔     |
+|          field | singleton | album track | album |                                        note                                         |
+| -------------: | :-------: | :---------: | :---: | :---------------------------------------------------------------------------------: |
+|        `album` |    \*✔    |             |   ✔   |                                                                                     |
+|     `album_id` |           |             |   ✔   |                                release bandcamp URL                                 |
+|  `albumartist` |     ✔     |             |   ✔   |                                                                                     |
+|  `albumstatus` |    \*✔    |             |   ✔   |                                                                                     |
+|    `albumtype` |    \*✔    |             |   ✔   |                                                                                     |
+|       `artist` |     ✔     |      ✔      |   ✔   |                                                                                     |
+|    `artist_id` |     ✔     |             |   ✔   |                               publisher bandcamp URL                                |
+|   `catalognum` |    \*✔    |             |   ✔   |                                                                                     |
+|     `comments` |     ✔     |             |   ✔   |                     release and media descriptions, and credits                     |
+|      `country` |    \*✔    |             |   ✔   |                                                                                     |
+|          `day` |    \*✔    |             |   ✔   |                                                                                     |
+|    `disctitle` |    \*✔    |      ✔      |       |                                                                                     |
+|        `genre` |    \*✔    |             |   ✔   |    comma-delimited list of **release keywords** which match [musicbrainz genres]    |
+|        `image` |     ✔     |             |   ✔   |                                                                                     |
+|        `index` |     ✔     |      ✔      |       |                                                                                     |
+|        `label` |    \*✔    |             |   ✔   |                                                                                     |
+|       `length` |     ✔     |      ✔      |       |                                                                                     |
+|       `lyrics` |     ✔     |      ✔      |       |                                                                                     |
+|        `media` |    \*✔    |      ✔      |   ✔   |                                                                                     |
+|       `medium` |    \*✔    |      ✔      |       |                                                                                     |
+|      `mediums` |           |             |   ✔   |                                                                                     |
+| `medium_index` |    \*✔    |      ✔      |       | likely to be inaccurate, since it depends on information in the release description |
+| `medium_total` |    \*✔    |      ✔      |       |                                      see above                                      |
+|        `month` |    \*✔    |             |   ✔   |                                                                                     |
+|        `style` |    \*✔    |             |   ✔   |                                 Bandcamp genre tag                                  |
+|        `title` |     ✔     |      ✔      |       |                                                                                     |
+|    `track_alt` |     ✔     |      ✔      |       |                                                                                     |
+|           `va` |           |             |   ✔   |                                                                                     |
+|         `year` |    \*✔    |             |   ✔   |                                                                                     |
 
-**\+** `comments` field gets populated with the release description.
+**\*** These singleton fields are available if you use `beets` version `1.5` or higher.
 
-**\*** are likely to be inaccurate, since Bandcamp does not provide this data,
-  therefore they depend on artists providing some clues in the descriptions of
-  their releases. This is only relevant if you have `per_disc_numbering` set to
-  `True` in the global beets configuration.
-
-**\~** These singleton fields are available if you use `beets` version `1.5` or higher.
+[musicbrainz genres]: https://beta.musicbrainz.org/genres

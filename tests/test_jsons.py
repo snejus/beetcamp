@@ -36,9 +36,9 @@ def check(actual, expected) -> None:
     map(lazy_fixture, ["single_track_release", "single_only_track_name"]),
     indirect=["release"],
 )
-def test_parse_single_track_release(release):
+def test_parse_single_track_release(release, beets_config):
     html, expected = release
-    guru = Metaguru(html)
+    guru = Metaguru(html, beets_config)
 
     check(guru.singleton, expected.singleton)
 
@@ -62,9 +62,10 @@ def test_parse_single_track_release(release):
     ),
     indirect=["release"],
 )
-def test_parse_various_types(release):
+def test_parse_various_types(release, beets_config):
     html, expected_release = release
-    guru = Metaguru(html, expected_release.media)
+    beets_config["preferred_media"] = expected_release.media
+    guru = Metaguru(html, beets_config)
 
     actual_album = guru.album
     expected_album = expected_release.albuminfo

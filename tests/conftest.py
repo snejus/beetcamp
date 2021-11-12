@@ -1,11 +1,13 @@
 """Data prep / fixtures for tests."""
+from copy import deepcopy
 from dataclasses import dataclass
 from datetime import date
 from typing import Optional, Tuple
 
 import pytest
 from beets.autotag.hooks import AlbumInfo, TrackInfo
-from beetsplug.bandcamp._metaguru import DATA_SOURCE, DEFAULT_MEDIA, NEW_BEETS, OFFICIAL
+from beetsplug.bandcamp import DEFAULT_CONFIG
+from beetsplug.bandcamp._metaguru import DATA_SOURCE, DIGI_MEDIA, NEW_BEETS
 
 
 @dataclass
@@ -35,6 +37,7 @@ class ReleaseInfo:
             medium_index=kget("index"),
             medium_total=kget("medium_total"),
             disctitle=self.disctitle,
+            lyrics=kget("lyrics"),
         )
 
     def set_singleton(self, artist: str, title: str, length: int, **kwargs) -> None:
@@ -51,7 +54,16 @@ class ReleaseInfo:
         self.singleton = TrackInfo(**data)
 
     def set_albuminfo(self, tracks, **kwargs):
-        fields = ["medium_total", "index", "title_id", "artist", "title", "length", "alt"]
+        fields = [
+            "medium_total",
+            "index",
+            "title_id",
+            "artist",
+            "title",
+            "length",
+            "alt",
+            "lyrics",
+        ]
         iter_tracks = [
             zip(fields, (len(tracks), idx, *track)) for idx, track in enumerate(tracks, 1)
         ]
@@ -70,10 +82,12 @@ class ReleaseInfo:
             catalognum=kwargs["catalognum"],
             country=kwargs["country"],
             mediums=kwargs["mediums"],
-            albumstatus=OFFICIAL,
+            albumstatus="Official",
             media=self.media,
             data_source=DATA_SOURCE,
             tracks=[TrackInfo(**self.track_data(**dict(t))) for t in iter_tracks],
+            genre=kwargs.get("genre"),
+            style=kwargs.get("style"),
         )
 
 
@@ -83,7 +97,7 @@ def single_track_release() -> ReleaseInfo:
     info = ReleaseInfo(
         artist_id="https://mega-tech.bandcamp.com",
         album_id="https://mega-tech.bandcamp.com/track/arangel",
-        media=DEFAULT_MEDIA,
+        media=DIGI_MEDIA,
         disctitle=None,
     )
     info.set_singleton(
@@ -100,6 +114,8 @@ def single_track_release() -> ReleaseInfo:
         month=11,
         day=9,
         country="SE",
+        genre=None,
+        style=None,
     )
     return info
 
@@ -110,7 +126,7 @@ def single_only_track_name() -> ReleaseInfo:
     info = ReleaseInfo(
         artist_id="https://gutkeinforu.bandcamp.com",
         album_id="https://gutkeinforu.bandcamp.com/track/oenera",
-        media=DEFAULT_MEDIA,
+        media=DIGI_MEDIA,
         disctitle=None,
     )
     info.set_singleton(
@@ -127,6 +143,8 @@ def single_only_track_name() -> ReleaseInfo:
         month=1,
         day=10,
         country="RU",
+        genre="techno, trance",
+        style="electronic",
     )
     return info
 
@@ -157,6 +175,8 @@ def single_track_album_search() -> Tuple[str, ReleaseInfo]:
         va=False,
         country="NO",
         mediums=1,
+        genre=None,
+        style=None,
     )
     return track_url, info
 
@@ -194,6 +214,8 @@ def album() -> ReleaseInfo:
         va=False,
         country="NO",
         mediums=1,
+        genre=None,
+        style=None,
     )
     return info
 
@@ -264,6 +286,8 @@ def album_with_track_alt() -> ReleaseInfo:
         va=False,
         country="GB",
         mediums=1,
+        genre=None,
+        style=None,
     )
     return info
 
@@ -274,7 +298,7 @@ def compilation() -> ReleaseInfo:
     info = ReleaseInfo(
         artist_id="https://ismusberlin.bandcamp.com",
         album_id="https://ismusberlin.bandcamp.com/album/ismva0033",
-        media=DEFAULT_MEDIA,
+        media=DIGI_MEDIA,
         disctitle=None,
     )
     albumartist = "Various Artists"
@@ -382,6 +406,8 @@ def compilation() -> ReleaseInfo:
         va=True,
         country="DE",
         mediums=1,
+        genre="techno, trance",
+        style="electronic",
     )
     return info
 
@@ -392,11 +418,58 @@ def artist_mess() -> ReleaseInfo:
     info = ReleaseInfo(
         artist_id="https://psykovsky.bandcamp.com",
         album_id="https://psykovsky.bandcamp.com/album/ksolntsu",
-        media=DEFAULT_MEDIA,
+        media=DIGI_MEDIA,
         disctitle=None,
     )
     # fmt: off
     albumartist = "Psykovsky & Friends"
+    lyrics = '''Little lark
+
+all alone
+
+cannot find his way
+
+Through the wheat fields
+
+he will wander
+
+searching all the day
+
+"Oh mother!
+
+Please come find me!”
+
+He calls to the sky
+
+The wheat
+
+rustling ‘round him
+
+is the only reply
+
+He’s forgotten
+
+how to find his way
+
+back to the nest
+
+Little lark
+
+all alone now
+
+in the fields he rests
+
+Through the dark
+
+the fox hounding
+
+in the moonlight
+
+After sunset
+
+all that’s left is
+
+forlorn twilight'''
     tracks = [
         ("ela-na-pame", "Psykovsky & Orestis", "Ela Na Pame", 518, None),
         ("stone-sea", "Psykovsky & Luuli", "Stone Sea", 673, None),
@@ -407,7 +480,7 @@ def artist_mess() -> ReleaseInfo:
         ("many-many-krishnas", "Psykovsky & Orestis & Jobaba", "Many Many Krishnas", 729, None),  # noqa
         ("prem-i-um", "Psykovsky & Kashyyyk & Arcek", "Prem I Um", 409, None),
         ("now-here-nowhere", "Psykovsky & Arcek", "Now Here Nowhere", 557, None),
-        ("holy-black-little-lark", "Psykovsky & Maleficium & Seeasound", "Holy Black / Little Lark", 1087, None),  # noqa
+        ("holy-black-little-lark", "Psykovsky & Maleficium & Seeasound", "Holy Black / Little Lark", 1087, None, lyrics),  # noqa
         ("worlds-of-wisdom", albumartist, "Worlds Of Wisdom", 408, None),
         ("pc-transmission", albumartist, "PC Transmission", 561, None),
         ("rs-lightmusic", albumartist, "RS Lightmusic", 411, None),
@@ -426,6 +499,8 @@ def artist_mess() -> ReleaseInfo:
         va=False,
         country="NU",
         mediums=1,
+        genre="experimental, psytrance",
+        style="electronic",
     )
     return info
 
@@ -479,6 +554,8 @@ def ep() -> ReleaseInfo:
         va=False,
         country="DE",
         mediums=1,
+        genre="experimental, techno",
+        style="electronic",
     )
     return info
 
@@ -515,6 +592,8 @@ def description_meta() -> ReleaseInfo:
         va=False,
         country="PT",
         mediums=1,
+        genre="ambient, electro, rave, techno, trance",
+        style="electronic",
     )
     return info
 
@@ -558,6 +637,8 @@ def single_with_remixes() -> ReleaseInfo:
         va=False,
         country="DE",
         mediums=1,
+        genre=None,
+        style="electronic",
     )
     return info
 
@@ -602,6 +683,8 @@ def remix_artists() -> ReleaseInfo:
         va=False,
         country="FR",
         mediums=1,
+        genre="techno",
+        style="electronic",
     )
     return info
 
@@ -688,6 +771,8 @@ def edge_cases() -> ReleaseInfo:
         va=True,
         country="NL",
         mediums=1,
+        genre="experimental electronic, experimental techno",
+        style="electronic",
     )
     return info
 
@@ -750,5 +835,12 @@ def issues_18() -> ReleaseInfo:
         va=False,
         country="US",
         mediums=1,
+        genre=None,
+        style=None,
     )
     return info
+
+
+@pytest.fixture(name="beets_config")
+def _beets_config():
+    return deepcopy({**DEFAULT_CONFIG, "exclude_extra_fields": ["comments"]})

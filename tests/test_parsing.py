@@ -1,5 +1,6 @@
 """Module for tests related to parsing."""
 import json
+from datetime import date
 
 import pytest
 from beetsplug.bandcamp._metaguru import Helpers, Metaguru, urlify
@@ -10,9 +11,8 @@ from rich.text import Text
 
 pytestmark = pytest.mark.parsing
 
-console = Console(
-    color_system="truecolor", force_terminal=True, force_interactive=True, highlight=True
-)
+console = Console(force_terminal=True, force_interactive=True)
+_p = pytest.param
 
 
 def print_result(case, expected, result):
@@ -39,21 +39,23 @@ def print_result(case, expected, result):
 @pytest.mark.parametrize(
     ("descr", "disctitle", "creds", "expected"),
     [
-        ("", "", "", ""),
-        ("hello", "", "", "\n - hello"),
-        ("", "sick vinyl", "", "\n - sick vinyl"),
-        ("sickest vinyl", "sick vinyl", "", "\n - sickest vinyl\n - sick vinyl"),
+        _p("", "", "", "", id="empty"),
+        _p("hello", "", "", "hello", id="only main desc"),
+        _p("", "sick vinyl", "", "sick vinyl", id="only media desc"),
+        _p("", "", "credit", "credit", id="only credits"),
+        _p("stuff", "sick vinyl", "creds", "stuff\nsick vinyl\ncreds", id="all"),
     ],
 )
-def test_description(descr, disctitle, creds, expected):
+def test_comments(descr, disctitle, creds, expected):
     meta = dict(
         description=descr,
         albumRelease=[{"musicReleaseFormat": "VinylFormat", "description": disctitle}],
         creditText=creds,
         dateModified="doesntmatter",
     )
-    guru = Metaguru(json.dumps(meta), media_prefs="Vinyl")
-    assert guru.description == expected, vars(guru)
+    config = {"preferred_media": "Vinyl", "comments_separator": "\n"}
+    guru = Metaguru(json.dumps(meta), config)
+    assert guru.comments == expected, vars(guru)
 
 
 @pytest.mark.parametrize(
@@ -95,6 +97,8 @@ def test_convert_title(title, expected):
         (("B2 - Artist - Title",), ("B2", "Artist", "Title", "Title")),
         (("1. Artist - Title",), (None, "Artist", "Title", "Title")),
         (("1.Artist - Title",), (None, "Artist", "Title", "Title")),
+        (("A2.  Two Spaces",), ("A2", None, "Two Spaces", "Two Spaces")),
+        (("D1 No Punct",), ("D1", None, "No Punct", "No Punct")),
         (
             ("DJ BEVERLY HILL$ - Raw Steeze",),
             (None, "DJ BEVERLY HILL$", "Raw Steeze", "Raw Steeze"),
@@ -131,7 +135,6 @@ def test_convert_title(title, expected):
             ("UNREALNUMBERS -Karaburan",),
             (None, "UNREALNUMBERS", "Karaburan", "Karaburan"),
         ),
-        (("A2.  Two Spaces",), ("A2", None, "Two Spaces", "Two Spaces")),
         (
             ("Ellie Goulding- Starry Eyed ( ROWDIBOÏ EDIT))",),
             (None, "Ellie Goulding", "Starry Eyed (ROWDIBOÏ EDIT)", "Starry Eyed"),
@@ -209,12 +212,18 @@ def test_track_artists(artists, expected):
         ("Hello - DIGITAL ONLY", True, "Hello"),
         ("Hello *digital bonus*", True, "Hello"),
         ("Only a Goodbye", False, "Only a Goodbye"),
+        ("Track *digital-only", True, "Track"),
+        ("DIGITAL 2. Track", True, "Track"),
+        ("Track (digital)", True, "Track"),
+        ("Bonus : Track", True, "Track"),
+        ("Bonus Rave Tool", False, "Bonus Rave Tool"),
+        ("TROPICOFRIO - DIGITAL DRIVER", False, "TROPICOFRIO - DIGITAL DRIVER"),
     ],
 )
 def test_check_digital_only(name, expected_digital_only, expected_name):
     actual_name, actual_digi_only = Metaguru.clean_digital_only_track(name)
-    assert actual_digi_only == expected_digital_only
     assert actual_name == expected_name
+    assert actual_digi_only == expected_digital_only
 
 
 @pytest.mark.parametrize(
@@ -272,6 +281,7 @@ def test_parse_country(name, expected):
         ("UTC-003", "", "Cat No: TE0029", "", "TE0029"),
         ("UTC-003", "", "Cat Nr.: TE0029", "", "TE0029"),
         ("UTC-003", "", "Catalogue:CTU-300", "", "CTU-300"),
+        ("Emotional Shutdown", "", "Catalog: SCTR007", "", "SCTR007"),
         ("", "LP | ostgutlp31", "", "", "ostgutlp31"),
         ("Album VA001", "", "", "", ""),
         ("Album MVA001", "", "", "", "MVA001"),
@@ -352,4 +362,13 @@ def test_bundles_get_excluded():
             {"name": "Vinyl", "musicReleaseFormat": "VinylFormat"},
         ]
     }
-    assert set(Helpers._get_media_index(meta)) == {"Vinyl"}
+    assert set(Helpers._get_media_reference(meta)) == {"Vinyl"}
+
+
+@pytest.mark.parametrize(
+    ("date", "expected"), [("08 Dec 2020 00:00:00 GMT", date(2020, 12, 8)), (None, None)]
+)
+def test_handles_missing_publish_date(date, expected):
+    guru = Metaguru("")
+    guru.meta = {"datePublished": date}
+    assert guru.release_date == expected

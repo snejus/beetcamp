@@ -1,3 +1,68 @@
+## [0.11.0] 2021-11-12
+
+### Added
+
+- An entrypoint for `beetcamp`: if the package is in your `$PATH`, bandcamp
+  metadata can be obtained directly as a JSON
+
+  ```bash
+  beetcamp <bandcamp-url>
+  # {"album": "some album", ..., "tracks": [{"title": ...}, ... ]}
+  ```
+
+  This has mostly been useful in scripts: for example, in my case it bridges the metadata
+  gap between mpd and a last.fm scrobbler in those cases when music has not yet made it
+  into the beets library.
+
+- Two more MusicBrainz fields now get populated:
+
+  - `style`: the tag/genre that bandcamp categorize the release as
+  - `genre`: comma-delimited list of release **keywords** that match any [musicbrainz
+    genres].
+
+  This comes with some configuration options, see the defaults below:
+
+  ```yaml
+  bandcamp:
+    ...
+    genre:
+      capitalise: no
+      maximum: 0  # no limit
+      always_include: []
+      mode: progressive  # classical, progressive or psychedelic
+  ```
+
+  See the readme for information about the different options.
+
+- New configuration option `comments_separator` to separate release, media
+  descriptions and credits. Default: `\n---\n`. Comments formatting has been
+  changing with every release without a good reason - this should stop. Ultimately it is
+  one's personal choice how they want the formatting to look like.
+
+### Updated
+
+- `excluded_extra_fields` configuration option has been extended to support every track
+  field and most of album fields. See the readme for more information.
+
+- The hook for additional data has been removed since `lyrics` and `description` are now
+  retrieved immediately. They can be inspected like every other field, through, for
+  example, the **`edit (C)andidates`** action during the import.
+
+- `track_alt`: allow **B2 Title** where _B2_ is followed by a space
+- `catalognum`: include **Catalog:** as a valid header when parsing the description
+- `track.title` digital-only cleanup, remove:
+  - **DIGITAL** and **Bonus** from the front of the title
+  - **digital-only** and **(digital)** from the end
+
+### Fixed
+
+- `lyrics`: instead of parsing the HTML, lyrics are now reliably retrieved from the JSON
+  data and added to each track where applicable.
+- Nowadays it is possible that the `datePublished` field is not given in the release JSON
+  data - this is now handled gracefully.
+
+[musicbrainz genres]: https://beta.musicbrainz.org/genres
+
 ## [0.10.1] 2021-09-13
 
 ### Fixed
