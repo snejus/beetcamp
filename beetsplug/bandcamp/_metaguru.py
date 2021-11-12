@@ -50,17 +50,15 @@ PATTERNS: Dict[str, Pattern] = {
     ),
     "digital": re.compile(
         r"""
-        # either
-        (^                  # start of the title
-          DIGI(TAL)?[.]?[ ] # note all capitals (otherwise we may match actual titles)
-          (\d+[.][ ]?)?     # which may be followed by an index
-        ) | (?i:            # or, with ignorecase in place, ...
-          [ *\[\(-]+                    # there is some special delimiter
-          (bandcamp|digi(tal)?)         # followed by either of these two
-          (
-            [)\]]$                      # either closed immediately
-            |.*(only|bonus|exclusive).* # or ending with some big VIP word
-          )
+        # either begins with DIGI(TAL) (note all caps, otherwise we may match titles)
+        # which may be followed by an index
+        (^DIGI(TAL)?[.]?[ ](\d+[.][ ]?)?)
+        # or, with ignorecase in place
+        | (?i:
+          # there is some special delimiter followed by either of these three
+          [ *\[\(-]+(bandcamp|digi(tal)?)
+          # either closed immediately or ending with some big VIP word
+          ([)\]]$|.*(only|bonus|exclusive).*)
         )
         """,
         re.VERBOSE,
