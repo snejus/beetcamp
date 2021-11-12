@@ -53,21 +53,19 @@ PATTERNS: Dict[str, Pattern] = {
 (
     # either begins with DIGI(TAL) (note all caps, otherwise we may match titles)
     # and may be followed by an index
-    ^DIGI(TAL)?\.?\ (\d+\.\ ?)?
-  | (?i:  # or, with ignorecase in place
-          # there is some special delimiter followed by either of these three
-      [ *\[(-]+(bandcamp|digi(tal)?)
-      (
-          [)\]]$                      # either closed immediately
-        | .*(only|bonus|exclusive).*  # or ending with some big VIP word
-      )
+    ^(DIGI|DIGITAL)\.?\ (\d+\.\ ?)?
+  | # there is some special delimiter followed by either of these three
+    [- *\[\(]+(?i:bandcamp.*|digi|digital)
+    (
+        [)\]]$                          # either closed immediately
+      | \W+(?i:only|bonus|exclusive).*  # or ending with some big VIP word
     )
 )
         """,
         re.VERBOSE,
     ),
     "clean_incl": re.compile(r"(?i:(\(?incl[^)]+\)?|\([^)]+remix[^)]+\)))"),
-    "remix_or_ft": re.compile(r"\s(?i:(\[|\().*(mix|edit)|f(ea)?t\.).*"),
+    "remix_or_ft": re.compile(r"\s(?i:[\[\(].*(mix|edit)|f(ea)?t\.).*"),
     "track_alt": re.compile(r"([ABCDEFGH]{1,3}[0-9])(\.|.?-\s|\s)"),
     "vinyl_name": re.compile(
         r'(?P<count>(?i:[1-5]|single|double|triple))(LP)? ?x? ?((7|10|12)" )?Vinyl'
