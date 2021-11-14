@@ -179,11 +179,11 @@ class Helpers:
         ]
         if label:
             # low prio: if label name is followed by digits, it may form a cat number
-            escaped = rf"{esc_label}[ ]?[A-Z]?\d+"
-            cases.append((re.compile(rf"^{escaped}|{escaped}$"), album))
+            esc = rf"{esc_label}\ ?[A-Z]?[0-9]+[A-Z]?"
+            cases.append((re.compile(rf"(^{esc})|({esc}$)", re.IGNORECASE), album))
 
         search = lambda x: x[0].search(x[1])
-        strip = lambda x: x.groups()[0].strip() if x and x.groups()[0] else ""
+        strip = lambda x: x.groups()[0].strip() if x and len(x.groups()) else ""
         matches: Iterable[str] = filter(op.truth, map(strip, map(search, cases)))
 
         artists = set(map(str.casefold, kwargs.get("artists") or []))
