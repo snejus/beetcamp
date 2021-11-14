@@ -39,30 +39,30 @@ MEDIA_MAP = {
 VA = "Various Artists"
 
 _catalognum = r"""(\b
-    (?!(?i:chapt|number|track|deluxe|vinyl|artists|part|(?:va|vol(?:ume)?)[\W\d]|mp3|rmxs|disc)|EP |C\d\d|.*20[12][0-9]|[A-z][0-9]?\b) # skip
+    (?<!of[ ])(?!(?i:(?:LC|of|by)[ ]|record|session|chapt|number|track|deluxe|vinyl|artists|part|(?:va|vol(?:ume)?)[\W\d]|mp3|rmxs|disc)|EP |C\d\d|.*20[012][0-9]|[A-z][0-9]?\b) # skip
     (
-        [A-Z]+[ ]\d+   # must include at least one number
+        [A-Z]+[ ]\d   # must include at least one number
       | [A-z$]+\d+([.]\d)?
-      |
-      (
+      | (
           [A-z]+([-.][A-Z]+)?    # may include a space before the number(s)
           [-.]?
           (
-            [ ]\d{2,}   # must include at least one number
-            | \d+[.]\d+ # may end with .<num>
-            | \d+
+            [ ]\d{2,3}   # must include at least one number
+            | \d{1,3}[.]\d+ # may end with .<num>
+            | \d{1,4}
           )
           (?:
             | (?=-?CD)  # may end with -CD which we ignore
             | [A-Z]     # may end with a single capital letter
           )?
       )
-    )\b
+    )\b(?![.0-9-])
 )
 """
 _exclusive = r"[*\[( -]*(bandcamp|digi(tal)?)[ -](digital )?(only|bonus|exclusive)[*\])]?"
 PATTERNS: Dict[str, Pattern] = {
     "meta": re.compile(r".*dateModified.*", re.MULTILINE),
+    "desc_catalognum": re.compile(rf"(?:^|[Cc]at[^:]+[.:]\ ?){_catalognum}", re.VERBOSE),
     "quick_catalognum": re.compile(rf"[\[\(|]{_catalognum}[|\]\)]", re.VERBOSE),
     "catalognum": re.compile(rf"(^{_catalognum}|{_catalognum}$)", re.VERBOSE),
     "digital": [  # type: ignore
@@ -152,38 +152,45 @@ class Helpers:
         return parsed_artist or official_artist or albumartist
 
     @staticmethod
-    def parse_catalognum(album: str, disctitle: str, description: str, label: str) -> str:
+    def parse_catalognum(
+        album: str, disctitle: str, description: str, label: str, **kwargs: Any
+    ) -> str:
         """Try finding the catalogue number in the following sequence:
         1. Check description for a formal catalogue number
         2. Check album name for [CATALOGNUM] or (CATALOGNUM)
         3. Check whether label name is followed by numbers
         4. Check album name and disctitle using more flexible rules.
         """
-        label_excl: Tuple[Optional[Pattern], Optional[str]] = (None, None)
-        if label:
-            escaped = re.escape(label)
-            label_excl = (re.compile(rf"({escaped}\s?[0-9]+)"), album)
-
-        for pattern, source in [
-            label_excl,
+        esc_label = re.escape(label)
+        cases = [
+            (re.compile(r"(?:Catal[^:]+: *)(\b[^\n]+\b)(?:[\]]*\n)"), description),
             (PATTERNS["quick_catalognum"], description),
-            (re.compile(rf"(^{_catalognum}|(?:[Cc]at[^:]+:\ ?){_catalognum})", re.VERBOSE), description),
             (PATTERNS["quick_catalognum"], album),
-            (re.compile(rf"(?:^{_catalognum}$|[Cc]at[^:]+:\ ?){_catalognum}", re.VERBOSE), description),
+            (PATTERNS["desc_catalognum"], description),
             (PATTERNS["catalognum"], album),
             (PATTERNS["catalognum"], disctitle),
-        ]:
-            if not pattern:
-                continue
+            (
+                re.compile(
+                    rf"(?![Vv]ocals.*)(?:[^-/@\w]){_catalognum}(?:\n|$)", re.VERBOSE
+                ),
+                description,
+            ),
+            (re.compile(rf"{_catalognum}$", re.VERBOSE), description),
+        ]
+        if label:
+            # low prio: if label name is followed by digits, it may form a cat number
+            escaped = rf"{esc_label}[ ]?[A-Z]?\d+"
+            cases.append((re.compile(rf"^{escaped}|{escaped}$"), album))
 
-            match = pattern.search(source)
-            if match:
-                cat = match.groups()[0]
-                if len(cat):
-                    cat = cat.strip()
-                    if cat:
-                        return cat
-        return ""
+        search = lambda x: x[0].search(x[1])
+        strip = lambda x: x.groups()[0].strip() if x and x.groups()[0] else ""
+        matches: Iterable[str] = filter(op.truth, map(strip, map(search, cases)))
+
+        artists = kwargs.get("artists") or set()
+        if artists:
+            matches = list(matches)
+            matches = it.filterfalse(partial(op.countOf, artists), matches)
+        return next(it.chain(matches, [""]))
 
     @staticmethod
     def get_duration(source: JSONDict) -> int:
@@ -457,7 +464,11 @@ class Metaguru(Helpers):
     @cached_property
     def catalognum(self) -> str:
         return self.parse_catalognum(
-            self.album_name, self.disctitle, self.all_media_comments, self.label
+            self.album_name,
+            self.disctitle,
+            self.all_media_comments,
+            self.label,
+            artists=self.all_artists,
         )
 
     @cached_property
@@ -514,6 +525,29 @@ class Metaguru(Helpers):
     def track_artists(self) -> Set[str]:
         artists = {(t.get("artist") or "") for t in self.tracks}
         artists.discard("")
+        return artists
+
+    @cached_property
+    def bandcamp_titles(self) -> List[str]:
+        tracks = self.meta["track"].get("itemListElement", [])
+        return list(
+            map(op.methodcaller("get", "name", ""), map(op.itemgetter("item"), tracks))
+        )
+
+    @cached_property
+    def all_artists(self) -> Set[str]:
+        def only_artist(name: str) -> str:
+            return re.sub(r" - .*", "", PATTERNS["track_alt"].sub("", name))
+
+        artists = set(
+            map(only_artist, filter(partial(op.contains, " - "), self.bandcamp_titles))
+        )
+        match = re.search(r"Artist:([^\n]+)", self.all_media_comments)
+        if match:
+            albumartist = match.groups()[0].strip()
+        else:
+            albumartist = self.meta["byArtist"]["name"]
+        artists.update(albumartist.split(", "))
         return artists
 
     @cached_property
