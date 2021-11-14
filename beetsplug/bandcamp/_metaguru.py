@@ -186,10 +186,10 @@ class Helpers:
         strip = lambda x: x.groups()[0].strip() if x and x.groups()[0] else ""
         matches: Iterable[str] = filter(op.truth, map(strip, map(search, cases)))
 
-        artists = kwargs.get("artists") or set()
+        artists = set(map(str.casefold, kwargs.get("artists") or []))
         if artists:
             matches = list(matches)
-            matches = it.filterfalse(partial(op.countOf, artists), matches)
+            matches = it.filterfalse(lambda x: x.casefold() in artists, matches)
         return next(it.chain(matches, [""]))
 
     @staticmethod
@@ -214,7 +214,11 @@ class Helpers:
         # catalognum, album, albumartist
         for arg in args:
             arg = re.escape(arg)
-            name = re.sub(rf"{arg}((?=[^'])|$)", "", name)
+            name = re.sub(rf"(?i:{arg})((?=[^'])|$)", "", name)
+
+        match = re.fullmatch(r" *'(.+)'", name)
+        if match:
+            name = match.expand(r"\1")
 
         # redundant spaces, duoble quotes, parentheses
         for pat, repl in [
