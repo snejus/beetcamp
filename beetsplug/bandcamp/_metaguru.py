@@ -252,12 +252,12 @@ class Helpers:
         # handle special chars
         excl = "|".join(map(re.escape, exclude))
 
-        rubbish = fr"(?i:\b({excl})(\b|$))"
-        empty_parens = r"\(\)|\[\]"
+        rubbish = re.compile(fr"(?i:\ ?\b({excl})(\b|$))")
+        empty_parens = re.compile(r"\(\)|\[\]")
         default = next(iter([*args, name]))
 
-        def clean(patstr: str, text: str) -> str:
-            return re.sub(patstr, "", text)
+        def clean(pattern: Pattern, text: str) -> str:
+            return pattern.sub("", text)
 
         return clean(empty_parens, clean(rubbish, name)).strip("/-|([ ") or default
 
@@ -705,11 +705,13 @@ class Metaguru(Helpers):
             kwargs.update(**self._common_album, albumartist=self.bandcamp_albumartist)
 
         track = self.tracks[0].copy()
-        track.update(self.parse_track_name(self.album_name))
+        track.update(self.parse_track_name(self.album_name, self.catalognum))
+        track["title"] = self.clean_name(track["title"])
         if not track.get("artist"):
-            track["artist"] = self.bandcamp_albumartist
+            track["artist"] = self.albumartist
         if NEW_BEETS and "-" not in kwargs.get("album", ""):
-            kwargs["album"] = "{} - {}".format(track["artist"], track["title"])
+            artist, title = track["artist"], track["title"]
+            kwargs["album"] = "{} - {}".format(artist, title)
 
         return self._trackinfo(track, medium_total=1, **kwargs)
 
