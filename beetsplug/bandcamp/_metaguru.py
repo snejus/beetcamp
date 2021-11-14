@@ -491,10 +491,10 @@ class Metaguru(Helpers):
     @cached_property
     def tracks(self) -> List[JSONDict]:
         """Parse relevant details from the tracks' JSON."""
-        if self._singleton:
-            raw_tracks = [{"item": self.meta}]
-        else:
+        try:
             raw_tracks = self.meta["track"].get("itemListElement", [])
+        except KeyError:
+            raw_tracks = [{"item": self.meta}]
 
         albumartist = self.bandcamp_albumartist
         catalognum = self.catalognum
@@ -645,7 +645,7 @@ class Metaguru(Helpers):
             args.append(self.albumartist)
         return self.clean_name(self.album_name, *args, remove_extra=True)
 
-    @property
+    @cached_property
     def _common(self) -> JSONDict:
         return dict(
             data_source=DATA_SOURCE,
@@ -662,7 +662,7 @@ class Metaguru(Helpers):
             return {field: getattr(self, field)}
         return dict(zip(fields, iter(op.attrgetter(*fields)(src or self))))
 
-    @property
+    @cached_property
     def _common_album(self) -> JSONDict:
         common_data: JSONDict = dict(album=self.clean_album_name)
         fields = [
@@ -697,25 +697,24 @@ class Metaguru(Helpers):
 
         return track_info
 
-    @property
+    @cached_property
     def singleton(self) -> TrackInfo:
         self._singleton = True
-        kwargs: JSONDict = {}
+        track: JSONDict = {}
         if NEW_BEETS:
-            kwargs.update(**self._common_album, albumartist=self.bandcamp_albumartist)
+            track.update(**self._common_album, albumartist=self.albumartist)
 
-        track = self.tracks[0].copy()
+        track.update(self.tracks[0].copy())
         track.update(self.parse_track_name(self.album_name, self.catalognum))
-        track["title"] = self.clean_name(track["title"])
         if not track.get("artist"):
             track["artist"] = self.albumartist
-        if NEW_BEETS and "-" not in kwargs.get("album", ""):
+        track["title"] = self.clean_name(track["title"])
+        if NEW_BEETS:
             artist, title = track["artist"], track["title"]
-            kwargs["album"] = "{} - {}".format(artist, title)
+            track["album"] = "{} - {}".format(artist, title)
+        return self._trackinfo(track, medium_total=1)
 
-        return self._trackinfo(track, medium_total=1, **kwargs)
-
-    @property
+    @cached_property
     def album(self) -> AlbumInfo:
         """Return album for the appropriate release format."""
         tracks: Iterable[JSONDict] = self.tracks
