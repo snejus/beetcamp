@@ -38,19 +38,38 @@ MEDIA_MAP = {
 }
 VA = "Various Artists"
 
-_catalognum = r"(\b[A-Za-z]([^-.\s\d]|[.-][^0-9])+(([-.]?|[A-Z]\s)\d+|\s\d{2,})[A-Z]?(?:[.-]?\d|CD)?\b)"  # noqa
-_catalognum_header = r"(?:Catalog(?:ue)?(?: (?:Number|N[or]))?|Cat N[or])\.?:"
+_catalognum = r"""(\b
+    (?!(?i:chapt|number|track|deluxe|vinyl|artists|part|(?:va|vol(?:ume)?)[\W\d]|mp3|rmxs|disc)|EP |C\d\d|.*20[12][0-9]|[A-z][0-9]?\b) # skip
+    (
+        [A-Z]+[ ]\d+   # must include at least one number
+      | [A-z$]+\d+([.]\d)?
+      |
+      (
+          [A-z]+([-.][A-Z]+)?    # may include a space before the number(s)
+          [-.]?
+          (
+            [ ]\d{2,}   # must include at least one number
+            | \d+[.]\d+ # may end with .<num>
+            | \d+
+          )
+          (?:
+            | (?=-?CD)  # may end with -CD which we ignore
+            | [A-Z]     # may end with a single capital letter
+          )?
+      )
+    )\b
+)
+"""
+_exclusive = r"[*\[( -]*(bandcamp|digi(tal)?)[ -](digital )?(only|bonus|exclusive)[*\])]?"
 PATTERNS: Dict[str, Pattern] = {
-    "meta": re.compile(r".*dateModified.*", flags=re.MULTILINE),
-    "desc_catalognum": re.compile(rf"(?:{_catalognum_header} ?)([A-Z]+[. -]?[0-9]+)"),
-    "quick_catalognum": re.compile(rf"[\[(]{_catalognum}[])]"),
-    "catalognum": re.compile(rf"(^{_catalognum}|{_catalognum}$)"),
-    "catalognum_excl": re.compile(
-        r"(?i:vol(ume)?|artists|\bva\d+|vinyl|triple|ep 12)|202[01]|(^|\s)C\d\d|\d+/\d+"
-    ),
+    "meta": re.compile(r".*dateModified.*", re.MULTILINE),
+    "quick_catalognum": re.compile(rf"[\[\(|]{_catalognum}[|\]\)]", re.VERBOSE),
+    "catalognum": re.compile(rf"(^{_catalognum}|{_catalognum}$)", re.VERBOSE),
     "digital": [  # type: ignore
         re.compile(r"^(DIGI(TAL)? ?[\d.]+|Bonus\W{2,})\W*"),
-        re.compile(r"(?i:[^\w\)]+(bandcamp[^-]+|digi(tal)?)(\W*(\W+|only|bonus|exclusive)\W*$))")  # noqa
+        re.compile(
+            r"(?i:[^\w\)]+(bandcamp[^-]+|digi(tal)?)(\W*(\W+|only|bonus|exclusive)\W*$))"
+        ),  # noqa
     ],
     "clean_incl": re.compile(r"(?i:(\(?incl[^)]+\)?|\([^)]+remix[^)]+\)))"),
     "remix_or_ft": re.compile(r"\s(?i:[\[\(].*(mix|edit)|f(ea)?t\.).*"),
@@ -146,18 +165,24 @@ class Helpers:
             label_excl = (re.compile(rf"({escaped}\s?[0-9]+)"), album)
 
         for pattern, source in [
-            (PATTERNS["desc_catalognum"], description),
-            (PATTERNS["quick_catalognum"], album),
             label_excl,
+            (PATTERNS["quick_catalognum"], description),
+            (re.compile(rf"(^{_catalognum}|(?:[Cc]at[^:]+:\ ?){_catalognum})", re.VERBOSE), description),
+            (PATTERNS["quick_catalognum"], album),
+            (re.compile(rf"(?:^{_catalognum}$|[Cc]at[^:]+:\ ?){_catalognum}", re.VERBOSE), description),
             (PATTERNS["catalognum"], album),
             (PATTERNS["catalognum"], disctitle),
         ]:
             if not pattern:
                 continue
 
-            match = pattern.search(PATTERNS["catalognum_excl"].sub("", source))
+            match = pattern.search(source)
             if match:
-                return match.groups()[0]
+                cat = match.groups()[0]
+                if len(cat):
+                    cat = cat.strip()
+                    if cat:
+                        return cat
         return ""
 
     @staticmethod
@@ -257,7 +282,7 @@ class Helpers:
             return valid_mb_genre(kw) or valid_mb_genre(list(words)[-1])
 
         # expand badly delimited keywords
-        split_kw = partial(re.split, r"[.] | #")
+        split_kw = partial(re.split, r"[.] | #| - ")
         for kw in it.chain(*map(split_kw, keywords)):
             # remove full stops and hashes and ensure the expected form of 'and'
             kw = re.sub("[.#]", "", str(kw)).replace("&", "and")
@@ -342,15 +367,22 @@ class Metaguru(Helpers):
         return sep.join(filter(op.truth, parts)).replace("\r", "")
 
     @cached_property
+    def all_media_comments(self) -> str:
+        get_desc = op.methodcaller("get", "description", "")
+        return "\n".join(
+            [self.comments, *map(get_desc, self.meta.get("albumRelease", {}))]
+        )
+
+    @cached_property
     def album_name(self) -> str:
-        match = re.search(r"Title:([^\n]+)", self.comments)
+        match = re.search(r"Title:([^\n]+)", self.all_media_comments)
         if match:
             return match.groups()[0].strip()
         return self.meta["name"]
 
     @cached_property
     def label(self) -> str:
-        match = re.search(r"Label:([^/,\n]+)", self.comments)
+        match = re.search(r"Label:([^/,\n]+)", self.all_media_comments)
         if match:
             return match.groups()[0].strip()
 
@@ -372,7 +404,7 @@ class Metaguru(Helpers):
 
     @cached_property
     def bandcamp_albumartist(self) -> str:
-        match = re.search(r"Artist:([^\n]+)", self.comments)
+        match = re.search(r"Artist:([^\n]+)", self.all_media_comments)
         if match:
             return str(match.groups()[0].strip())
 
@@ -425,7 +457,7 @@ class Metaguru(Helpers):
     @cached_property
     def catalognum(self) -> str:
         return self.parse_catalognum(
-            self.album_name, self.disctitle, self.comments, self.label
+            self.album_name, self.disctitle, self.all_media_comments, self.label
         )
 
     @cached_property
