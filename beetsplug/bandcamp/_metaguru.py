@@ -252,14 +252,19 @@ class Helpers:
         # handle special chars
         excl = "|".join(map(re.escape, exclude))
 
-        rubbish = re.compile(fr"(?i:\ ?\b({excl})(\b|$))")
+        rubbish = re.compile(fr"(?i:\b({excl})(\b|$))")
         empty_parens = re.compile(r"\(\)|\[\]")
         default = next(iter([*args, name]))
 
         def clean(pattern: Pattern, text: str) -> str:
             return pattern.sub("", text)
 
-        return clean(empty_parens, clean(rubbish, name)).strip("/-|([ ") or default
+        return (
+            re.sub(
+                r"( )[ ][- ]+", r"\1", clean(empty_parens, clean(rubbish, name))
+            ).strip("/-|([ ")
+            or default
+        )
 
     @staticmethod
     def get_genre(keywords: Iterable[str], config: JSONDict) -> Iterable[str]:
