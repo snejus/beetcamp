@@ -85,40 +85,31 @@
         {
           "@type": "PropertyValue",
           "name": "type_name",
-          "value": "Compact Disc (CD)"
+          "value": "USB Flash Drive"
         },
         {
           "@type": "PropertyValue",
           "name": "image_ids",
           "value": [
-            23625297
+            23625297,
+            26182438
           ]
         },
         {
           "@type": "PropertyValue",
-          "name": "is_music_merch",
-          "value": true
-        },
-        {
-          "@type": "PropertyValue",
           "name": "type_id",
-          "value": 1
+          "value": 5
         }
       ],
-      "description": "Artist: Francois Dillinger\nTitle: Icosahedrone\nFormat: Vinyl, 12\" & CD\nLabel: Diffuse Reality\nCatalogue: DREA 005\n\nVinyl → bit.ly/3cUflzb\nVinyl orders include two Diffuse Reality stickers and digital downloads of the full release.\nwww.diffusereality.net",
+      "description": "Artist: Francois Dillinger\nTitle: Icosahedrone\nFormat: Vinyl, 12\" & CD\nLabel: Diffuse Reality\nCatalogue: DREA 005\n\nVinyl → bit.ly/3cUflzb\nVinyl orders include two Diffuse Reality stickers and digital downloads of the full release.\n\n誠 Makoto - Honesty, absolute sincerity.\nFSC certified Bamboo wood USB flash drive.\nThis means that the wood from which this USB memory is made comes from sustainable forests and is respectful with the environment.\n4GB capacity.\nBlack screen printing. \nwww.diffusereality.net",
       "image": [
-        "https://f4.bcbits.com/img/0023625297_10.jpg"
+        "https://f4.bcbits.com/img/0023625297_10.jpg",
+        "https://f4.bcbits.com/img/0026182438_10.jpg"
       ],
-      "musicReleaseFormat": "CDFormat",
       "name": "Francois Dillinger - Icosahedrone [LP]",
       "offers": {
         "@type": "Offer",
         "additionalProperty": [
-          {
-            "@type": "PropertyValue",
-            "name": "download_type",
-            "value": "a"
-          },
           {
             "@type": "PropertyValue",
             "name": "fulfillment_days",
@@ -126,13 +117,8 @@
           },
           {
             "@type": "PropertyValue",
-            "name": "includes_digital_download",
-            "value": true
-          },
-          {
-            "@type": "PropertyValue",
             "name": "quantity_available",
-            "value": 7
+            "value": 6
           },
           {
             "@type": "PropertyValue",
@@ -150,7 +136,7 @@
       }
     },
     {
-      "@id": "https://diffusereality.bandcamp.com/album/francois-dillinger-icosahedrone-lp#b43435753",
+      "@id": "https://diffusereality.bandcamp.com/album/francois-dillinger-icosahedrone-lp#b44366677",
       "@type": [
         "MusicRelease",
         "Product"
@@ -159,7 +145,7 @@
         {
           "@type": "PropertyValue",
           "name": "item_id",
-          "value": 43435753
+          "value": 44366677
         },
         {
           "@type": "PropertyValue",
@@ -179,7 +165,7 @@
         {
           "@type": "PropertyValue",
           "name": "art_id",
-          "value": 3627156854
+          "value": 3297172111
         },
         {
           "@type": "PropertyValue",
@@ -193,17 +179,17 @@
         }
       ],
       "image": [
-        "https://f4.bcbits.com/img/a3627156854_10.jpg"
+        "https://f4.bcbits.com/img/a3297172111_10.jpg"
       ],
       "musicReleaseFormat": "DigitalFormat",
-      "name": "full digital discography (378 releases)",
+      "name": "full digital discography (420 releases)",
       "offers": {
         "@type": "Offer",
         "additionalProperty": [
           {
             "@type": "PropertyValue",
             "name": "bundle_size",
-            "value": 378
+            "value": 420
           },
           {
             "@type": "PropertyValue",
@@ -217,12 +203,12 @@
           }
         ],
         "availability": "OnlineOnly",
-        "price": 886.97,
+        "price": 1003,
         "priceCurrency": "EUR",
         "priceSpecification": {
-          "minPrice": 886.97
+          "minPrice": 1003
         },
-        "url": "https://diffusereality.bandcamp.com/album/francois-dillinger-icosahedrone-lp#b43435753-buy"
+        "url": "https://diffusereality.bandcamp.com/album/francois-dillinger-icosahedrone-lp#b44366677-buy"
       }
     },
     {
@@ -273,7 +259,7 @@
     "name": "Diffuse Reality Records"
   },
   "copyrightNotice": "All Rights Reserved",
-  "dateModified": "14 May 2021 10:34:44 GMT",
+  "dateModified": "22 Sep 2021 09:00:19 GMT",
   "datePublished": "05 May 2021 00:00:00 GMT",
   "image": "https://f4.bcbits.com/img/a0890773906_10.jpg",
   "keywords": [
@@ -332,7 +318,7 @@
         "value": 3000
       }
     ],
-    "description": "From Buenos Aires, based in Barcelona.",
+    "description": "Independent Record Label & Party Promoter founded in 2013. Barcelona based.\nArts Festival: Teorema\nSublabel: Periphylla\n۩  Send a private message to visit our Record shop in Barcelona. \n> https://bit.ly/3j2ZxNU",
     "foundingLocation": {
       "@type": "Place",
       "name": "Portugal"
@@ -388,16 +374,6 @@
               "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 1
             }
           ],
           "copyrightNotice": "All Rights Reserved",
@@ -426,16 +402,6 @@
               "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 2
             }
           ],
           "copyrightNotice": "All Rights Reserved",
@@ -464,16 +430,6 @@
               "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 3
             }
           ],
           "copyrightNotice": "All Rights Reserved",
@@ -502,16 +458,6 @@
               "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 4
             }
           ],
           "copyrightNotice": "All Rights Reserved",
@@ -540,16 +486,6 @@
               "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 5
             }
           ],
           "copyrightNotice": "All Rights Reserved",
@@ -578,16 +514,6 @@
               "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 6
             }
           ],
           "copyrightNotice": "All Rights Reserved",
@@ -616,16 +542,6 @@
               "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 7
             }
           ],
           "copyrightNotice": "All Rights Reserved",
@@ -654,16 +570,6 @@
               "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 8
             }
           ],
           "copyrightNotice": "All Rights Reserved",
@@ -692,16 +598,6 @@
               "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 9
             }
           ],
           "copyrightNotice": "All Rights Reserved",
@@ -730,16 +626,6 @@
               "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 10
             }
           ],
           "copyrightNotice": "All Rights Reserved",

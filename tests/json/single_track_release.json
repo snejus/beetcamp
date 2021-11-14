@@ -22,11 +22,6 @@
       "@type": "PropertyValue",
       "name": "license_name",
       "value": "all_rights_reserved"
-    },
-    {
-      "@type": "PropertyValue",
-      "name": "streaming",
-      "value": true
     }
   ],
   "byArtist": {

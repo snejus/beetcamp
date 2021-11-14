@@ -11,7 +11,7 @@
     {
       "@type": "PropertyValue",
       "name": "art_id",
-      "value": 732802335
+      "value": 1255022292
     },
     {
       "@type": "PropertyValue",
@@ -22,11 +22,6 @@
       "@type": "PropertyValue",
       "name": "license_name",
       "value": "all_rights_reserved"
-    },
-    {
-      "@type": "PropertyValue",
-      "name": "streaming",
-      "value": true
     }
   ],
   "byArtist": {
@@ -35,10 +30,10 @@
     "name": "GUTKEIN"
   },
   "copyrightNotice": "All Rights Reserved",
-  "dateModified": "10 Jan 2021 19:56:09 GMT",
-  "datePublished": "10 Jan 2021 19:56:09 GMT",
+  "dateModified": "09 Nov 2021 05:15:25 GMT",
+  "datePublished": "10 Jan 2021 00:00:00 GMT",
   "duration": "P00H05M55S",
-  "image": "https://f4.bcbits.com/img/a0732802335_10.jpg",
+  "image": "https://f4.bcbits.com/img/a1255022292_10.jpg",
   "inAlbum": {
     "@type": "MusicAlbum",
     "albumRelease": [
@@ -72,15 +67,15 @@
           {
             "@type": "PropertyValue",
             "name": "art_id",
-            "value": 732802335
+            "value": 1255022292
           }
         ],
         "description": "Includes high-quality download in MP3, FLAC and more. Paying supporters also get unlimited streaming via the free Bandcamp app.",
         "image": [
-          "https://f4.bcbits.com/img/a0732802335_10.jpg"
+          "https://f4.bcbits.com/img/a1255022292_10.jpg"
         ],
         "musicReleaseFormat": "DigitalFormat",
-        "name": "OENERA",
+        "name": "oenera",
         "offers": {
           "@type": "Offer",
           "additionalProperty": [
@@ -103,10 +98,86 @@
           },
           "url": "https://gutkeinforu.bandcamp.com/track/oenera#t793629957-buy"
         }
+      },
+      {
+        "@id": "https://gutkeinforu.bandcamp.com/track/oenera#b44303833",
+        "@type": [
+          "MusicRelease",
+          "Product"
+        ],
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "item_id",
+            "value": 44303833
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "item_type",
+            "value": "b"
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "selling_band_id",
+            "value": 1309392494
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "type_name",
+            "value": "Digital"
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "art_id",
+            "value": 1986734983
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "is_bfd",
+            "value": true
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "type_id",
+            "value": "d"
+          }
+        ],
+        "image": [
+          "https://f4.bcbits.com/img/a1986734983_10.jpg"
+        ],
+        "musicReleaseFormat": "DigitalFormat",
+        "name": "full digital discography (18 releases)",
+        "offers": {
+          "@type": "Offer",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "bundle_size",
+              "value": 18
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "discount",
+              "value": 0.3
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "max_price",
+              "value": 1000
+            }
+          ],
+          "availability": "OnlineOnly",
+          "price": 20.26,
+          "priceCurrency": "USD",
+          "priceSpecification": {
+            "minPrice": 20.26
+          },
+          "url": "https://gutkeinforu.bandcamp.com/track/oenera#b44303833-buy"
+        }
       }
     ],
     "albumReleaseType": "SingleRelease",
-    "name": "OENERA",
+    "name": "oenera",
     "numTracks": 1
   },
   "keywords": [
@@ -116,7 +187,7 @@
     "trance",
     "Russia"
   ],
-  "name": "OENERA",
+  "name": "oenera",
   "publisher": {
     "@id": "https://gutkeinforu.bandcamp.com",
     "@type": "MusicGroup",
