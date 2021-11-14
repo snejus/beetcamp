@@ -39,7 +39,7 @@ MEDIA_MAP = {
 VA = "Various Artists"
 
 _catalognum = r"""(\b
-    (?<!of[ ])(?!(?i:(?:LC|of|by)[ ]|record|session|chapt|number|track|deluxe|vinyl|artists|part|(?:va|vol(?:ume)?)[\W\d]|mp3|rmxs|disc)|EP |C\d\d|.*20[012][0-9]|[A-z][0-9]?\b) # skip
+    (?<!of[ ])(?!(?i:(?:LC|of|by)[ ]|record|colou?r|session|chapt|number|track|deluxe|vinyl|artists|part|(?:va|vol(?:ume)?)[\W\d]|mp3|rmxs|disc)|EP |C\d\d|.*20[012][0-9]|[A-z][0-9]?\b) # skip
     (
         [A-Z]+[ ]\d   # must include at least one number
       | [A-z$]+\d+([.]\d)?
