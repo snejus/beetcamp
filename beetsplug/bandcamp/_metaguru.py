@@ -219,8 +219,9 @@ class Helpers:
 
         # redundant spaces, duoble quotes, parentheses
         for pat, repl in [
-            (r"\s\s+", " "),
-            (r"\(\s+|(- )?\(+", "("),
+            (r"[ ]{2,}", " "),
+            (r"\(\ +|(- )?\(+", "("),
+            # (r"\ +[\]", "]"),
             # Remove duplicate closing parens if they follow a space
             # or enclose mix/edit info and are at the end
             (r" \)+|(?<=(?i:.mix|edit))\)+$", ")"),
@@ -237,6 +238,7 @@ class Helpers:
             "limited edition",
             "various artists",
             "various artist",
+            "va",
             "free download",
             "free dl",
             "free)",
@@ -244,7 +246,6 @@ class Helpers:
             "e.p.",
             "ep",
             "lp",
-            "va",
         ]
         # handle special chars
         excl = "|".join(map(re.escape, exclude))
@@ -581,6 +582,11 @@ class Metaguru(Helpers):
     @cached_property
     def is_ep(self) -> bool:
         return "EP" in self.album_name or "EP" in self.disctitle
+
+    # , self.comments])
+    # return any(
+    #     map(lambda x: " EP" in x, [self.album_name, self.disctitle, self.comments])
+    # )
 
     @cached_property
     def is_va(self) -> bool:
