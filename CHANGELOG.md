@@ -70,7 +70,7 @@
 - Fixed #18 by handling cases when a track duration is not given.
 - Fixed #19 where artist names like **SUNN O)))** would get incorrectly mistreated by
   the album name cleanup logic due to multiple consecutive parentheses. The fix involved
-  adding some rules around it: they are now deduped _only if_
+  adding some rules around it: they are now deduplicated _only if_
 
   - they are preceded with a space
   - or they enclose remix / edit info and are the last characters in the album name
@@ -154,7 +154,7 @@ Thanks @arogl for reporting each of the above!
   - `label`: some releases embed the `recordLabel` field into the json data - it now gets
     prioritized over the publisher name when it is available.
 - `track.title`: clean up `*digital only*` properly. Previously we did not account for
-  asterixes
+  asterisks
 
 ### Fixed
 
@@ -180,7 +180,7 @@ Thanks @arogl for reporting each of the above!
 
 ### Added
 
-- Added a github action to run ci for `master` and `dev` branches. For now it's just a minimal
+- Added a github action to run CI for `master` and `dev` branches. For now it's just a minimal
   configuration and will probably get updated soon.
 
 ## [0.9.1] 2021-06-04
@@ -194,19 +194,19 @@ Thanks @arogl for reporting each of the above!
     been fixed regarding the MusicBrainz description: release composed of the same title
     and multiple remixes is a single.
   - Use `ep` only if _EP_ is mentioned either in the album name or the disc title.
-- `album.catalognum`: Make the _DISCTITLE_ uppercase before looking for the catalogue
+- `album.catalognum`: Make the _DISCTITLE_ uppercase before looking for the catalog
   number.
 - `album.media`: Exclude anything that contains _bundle_ in their names. These usually
   contain additional releases that we do not need.
 - `track.title`: Clean `- DIGITAL ONLY` (and similar) when it's preceded by a dash and not
-  enclosed by parens or square brackets.
+  enclosed by parentheses or square brackets.
 - `track.track_alt`: Having witnessed a very creative track title **E7-E5**, limit the
   `track_alt` field number to the range **0-6**.
-- Committed a JSON testcase which was supposed to be part of `0.9.0`.
+- Committed a JSON test case which was supposed to be part of `0.9.0`.
 
 ### Added
 
-- Extend `url2json` with `--tracklist-for-tests` to ease adding new testcases.
+- Extend `url2json` with `--tracklist-for-tests` to ease adding new test cases.
 
 ## [0.9.0] 2021-06-01
 
@@ -219,12 +219,12 @@ Thanks @arogl for reporting each of the above!
 ### Added
 
 - The `comments` field now includes the media description and credits.
-- The description is searched for artist and album names in addition to the catalogue
+- The description is searched for artist and album names in addition to the catalog
   number.
 
 ### Updated
 
-- All testcases are now pretty JSON files - this should bring more transparency around
+- All test cases are now pretty JSON files - this should bring more transparency around
   the adjustments that Bandcamp make in the future (once they get updated). The `url2json`
   tool has `-u` flag that updates them automatically.
 
@@ -248,7 +248,7 @@ Thanks @arogl for reporting each of the above!
 
 - Parsing / logic:
 
-  - Token `feat.` is now recognised as a valid member of the `artist` field.
+  - Token `feat.` is now recognized as a valid member of the `artist` field.
   - `free download`, `[EP|LP]`, `(EP|LP)`, `E.P.`, `LP` are now cleaned from the album name.
   - Updated `albumtype` logic: in some `compilation` cases track artists would go missing
     and get set to _Various Artists_ - instead it now defaults to the original
@@ -271,7 +271,7 @@ Thanks @arogl for reporting each of the above!
 
 ### Added
 
-- Release description is now checked for the catalogue number.
+- Release description is now checked for the catalog number.
 - Added a test based on parsing _the JSON output_ directly without having to parse the
   entire HTML. Bandcamp have been moving away from HTML luckily, so let's hope the trend
   continues.
@@ -305,7 +305,7 @@ Thanks @arogl for reporting each of the above!
 
   - Artist name (unless it's a singleton track)
   - Label name
-  - Catalogue number
+  - Catalog number
   - Strings
     - **Various Artists**
     - **limited edition**
@@ -328,7 +328,7 @@ Thanks @arogl for reporting each of the above!
 - Added _recommended_ installation method in the readme.
 - Added tox tests for `beets < 1.5` and `beets > 1.5` for python versions from 3.6 up to
   3.9.
-- Sped up reimporting bandcamp items by checking whether the URL is already available
+- Sped up re-importing bandcamp items by checking whether the URL is already available
   before searching.
 - Parsing: If track's name includes _bandcamp digital (bonus|only) etc._, **bandcamp** part gets
   removed as well.
@@ -391,7 +391,7 @@ Thanks @arogl for reporting each of the above!
 
 ### Updated
 
-- Catalogue number parser now requires at least two digits to find a good match.
+- Catalog number parser now requires at least two digits to find a good match.
 
 ## [0.5.5] 2021-01-30
 
@@ -419,8 +419,8 @@ Thanks @arogl for reporting each of the above!
 - Handle a sold-out release where the track listing isn't available, which would otherwise
   cause a KeyError.
 
-- Catalogue number parser should now forget that cassette types like **C30** or **C90**
-  could be valid catalogue numbers.
+- Catalog number parser should now forget that cassette types like **C30** or **C90**
+  could be valid catalog numbers.
 
 ### Updated
 
@@ -430,8 +430,7 @@ Thanks @arogl for reporting each of the above!
 
 ### Fixed
 
-- For data that is parsed directly from the html, ampersands are now correctly
-  unescaped.
+- For data that is parsed directly from the html, ampersands are now correctly unescaped.
 
 ## [0.5.2] 2021-01-18
 
@@ -487,7 +486,7 @@ Thanks @arogl for reporting each of the above!
 
 ### Fixed
 
-- `catalognum` parser used to parse `Vol.30` or `Christmas 2020` as catalogue
+- `catalognum` parser used to parse `Vol.30` or `Christmas 2020` as catalog
   number - these are now excluded. It's likely that additional patterns will
   come up later.
 
@@ -507,5 +506,5 @@ Thanks @arogl for reporting each of the above!
 
 - The pipeline now uses generators, therefore the plug-in searches until it
   finds a good fit and won't continue further (same as the musicbrainz autotagger)
-- Extended the parsing functionality with data like catalogue number, label,
+- Extended the parsing functionality with data like catalog number, label,
   country etc. The full list is given in the readme.
