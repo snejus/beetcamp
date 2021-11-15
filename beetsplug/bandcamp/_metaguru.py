@@ -39,7 +39,7 @@ MEDIA_MAP = {
 VA = "Various Artists"
 
 _catalognum = r"""(\b
-    (?<!of[ ])(?!(?i:(?:LC|of|by)[ ]|record|colou?r|session|chapt|number|track|deluxe|vinyl|artists|part|(?:va|vol(?:ume)?)[\W\d]|mp3|rmxs|disc)|EP |C\d\d|.*20[012][0-9]|[A-z][0-9]?\b) # skip
+    (?![A-z][a-z]+\ [0-9]+|EP |C\d\d|(?i:vol(ume)?|record|session|disc)|VA|[A-Z][0-9]\b)
     (
         [A-Z]+[ ]\d   # must include at least one number
       | [A-z$]+\d+([.]\d)?
@@ -56,20 +56,23 @@ _catalognum = r"""(\b
             | [A-Z]     # may end with a single capital letter
           )?
       )
-    )\b(?![.0-9-])
+    )\b(?![0-9-/])
 )
 """
 _exclusive = r"[*\[( -]*(bandcamp|digi(tal)?)[ -](digital )?(only|bonus|exclusive)[*\])]?"
+CATNUM_PAT = {
+    "desc": re.compile(rf"(?:^|\n|[Cc]at[^:]+[.:]\ ?){_catalognum}", re.VERBOSE),
+    "in_parens": re.compile(rf"[\[\(|]{_catalognum}[|\]\)]", re.VERBOSE),
+    "with_header": re.compile(r"(?:Catal[^:]+: *)(\b[^\n]+\b)(?:[\]]*\n)"),
+    "start_or_end": re.compile(rf"((^|\n){_catalognum}|{_catalognum}(\n|$))", re.VERBOSE),
+}
 PATTERNS: Dict[str, Pattern] = {
     "meta": re.compile(r".*dateModified.*", re.MULTILINE),
-    "desc_catalognum": re.compile(rf"(?:^|[Cc]at[^:]+[.:]\ ?){_catalognum}", re.VERBOSE),
-    "quick_catalognum": re.compile(rf"[\[\(|]{_catalognum}[|\]\)]", re.VERBOSE),
-    "catalognum": re.compile(rf"(^{_catalognum}|{_catalognum}$)", re.VERBOSE),
     "digital": [  # type: ignore
         re.compile(r"^(DIGI(TAL)? ?[\d.]+|Bonus\W{2,})\W*"),
         re.compile(
             r"(?i:[^\w\)]+(bandcamp[^-]+|digi(tal)?)(\W*(\W+|only|bonus|exclusive)\W*$))"
-        ),  # noqa
+        ),
     ],
     "clean_incl": re.compile(r"(?i:(\(?incl[^)]+\)?|\([^)]+remix[^)]+\)))"),
     "remix_or_ft": re.compile(r"\s(?i:[\[\(].*(mix|edit)|f(ea)?t\.).*"),
@@ -109,7 +112,7 @@ class Helpers:
     @staticmethod
     def parse_track_name(name: str, catalognum: str = "") -> Dict[str, Optional[str]]:
         track: Dict[str, Optional[str]] = {
-            a: None for a in ["track_alt", "artist", "title", "main_title"]
+            a: "" for a in ["track_alt", "artist", "title", "main_title"]
         }
 
         # remove catalognum if given
@@ -163,19 +166,13 @@ class Helpers:
         """
         esc_label = re.escape(label)
         cases = [
-            (re.compile(r"(?:Catal[^:]+: *)(\b[^\n]+\b)(?:[\]]*\n)"), description),
-            (PATTERNS["quick_catalognum"], description),
-            (PATTERNS["quick_catalognum"], album),
-            (PATTERNS["desc_catalognum"], description),
-            (PATTERNS["catalognum"], album),
-            (PATTERNS["catalognum"], disctitle),
-            (
-                re.compile(
-                    rf"(?![Vv]ocals.*)(?:[^-/@\w]){_catalognum}(?:\n|$)", re.VERBOSE
-                ),
-                description,
-            ),
-            (re.compile(rf"{_catalognum}$", re.VERBOSE), description),
+            (CATNUM_PAT["with_header"], description),
+            (CATNUM_PAT["in_parens"], description),
+            (CATNUM_PAT["in_parens"], album),
+            (CATNUM_PAT["desc"], description),
+            (CATNUM_PAT["start_or_end"], album),
+            (CATNUM_PAT["start_or_end"], disctitle),
+            (re.compile(rf"\ {_catalognum}(?:\n|$)", re.VERBOSE), description),
         ]
         if label:
             # low prio: if label name is followed by digits, it may form a cat number
@@ -254,17 +251,14 @@ class Helpers:
 
         rubbish = re.compile(fr"(?i:\b({excl})(\b|$))")
         empty_parens = re.compile(r"\(\)|\[\]")
-        default = next(iter([*args, name]))
 
         def clean(pattern: Pattern, text: str) -> str:
             return pattern.sub("", text)
 
-        return (
-            re.sub(
-                r"( )[ ][- ]+", r"\1", clean(empty_parens, clean(rubbish, name))
-            ).strip("/-|([ ")
-            or default
-        )
+        leave_space_only = r"( )[ ][- ]+"
+        return re.sub(
+            leave_space_only, r"\1", clean(empty_parens, clean(rubbish, name))
+        ).strip("/-|([ ")
 
     @staticmethod
     def get_genre(keywords: Iterable[str], config: JSONDict) -> Iterable[str]:
@@ -375,8 +369,9 @@ class Metaguru(Helpers):
         the configured separator string.
         """
         parts = [self.meta.get("description")]
-        if self.media_name != DIGI_MEDIA:
-            parts.append(self._media.get("description"))
+        media_desc = self._media.get("description")
+        if media_desc and not media_desc.startswith("Includes high-quality"):
+            parts.append(media_desc)
 
         parts.append(self.meta.get("creditText"))
         sep = self.config["comments_separator"]
@@ -386,7 +381,11 @@ class Metaguru(Helpers):
     def all_media_comments(self) -> str:
         get_desc = op.methodcaller("get", "description", "")
         return "\n".join(
-            [self.comments, *map(get_desc, self.meta.get("albumRelease", {}))]
+            [
+                # self.comments,
+                *map(get_desc, self.meta.get("albumRelease", {})),
+                self.comments,
+            ]
         )
 
     @cached_property
@@ -538,9 +537,16 @@ class Metaguru(Helpers):
 
     @cached_property
     def bandcamp_titles(self) -> List[str]:
-        tracks = self.meta["track"].get("itemListElement", [])
+        try:
+            tracks = self.meta["track"].get("itemListElement", [])
+        except KeyError:
+            tracks = [{"item": self.meta}]
+
         return list(
-            map(op.methodcaller("get", "name", ""), map(op.itemgetter("item"), tracks))
+            map(
+                lambda x: (x.get("byArtist", x) or x).get("name") or "",
+                map(op.itemgetter("item"), tracks),
+            )
         )
 
     @cached_property
@@ -548,9 +554,14 @@ class Metaguru(Helpers):
         def only_artist(name: str) -> str:
             return re.sub(r" - .*", "", PATTERNS["track_alt"].sub("", name))
 
-        artists = set(
-            map(only_artist, filter(partial(op.contains, " - "), self.bandcamp_titles))
-        )
+        artists = set()
+        titles = self.bandcamp_titles
+        for t in titles:
+            if " - " in t:
+                artists.add(only_artist(t))
+            else:
+                artists.add(t)
+
         match = re.search(r"Artist:([^\n]+)", self.all_media_comments)
         if match:
             albumartist = match.groups()[0].strip()
