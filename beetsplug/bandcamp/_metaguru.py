@@ -577,16 +577,13 @@ class Metaguru(Helpers):
 
     @cached_property
     def is_lp(self) -> bool:
-        return "LP" in self.album_name or "LP" in self.disctitle
+        maybe_here = [self.album_name, self.disctitle, self.comments]
+        return any(map(lambda x: " LP" in x, maybe_here))
 
     @cached_property
     def is_ep(self) -> bool:
-        return "EP" in self.album_name or "EP" in self.disctitle
-
-    # , self.comments])
-    # return any(
-    #     map(lambda x: " EP" in x, [self.album_name, self.disctitle, self.comments])
-    # )
+        maybe_here = [self.album_name, self.disctitle, self.comments]
+        return any(map(lambda x: " EP" in x, maybe_here))
 
     @cached_property
     def is_va(self) -> bool:
@@ -661,11 +658,26 @@ class Metaguru(Helpers):
     @cached_property
     def clean_album_name(self) -> str:
         args = [self.catalognum] if self.catalognum else []
-        if not self.albumtype == "compilation":
-            args.append(self.label)
         if not self._singleton:
+            # args.append(self.bandcamp_albumartist)
             args.append(self.albumartist)
-        return self.clean_name(self.album_name, *args, remove_extra=True)
+        # leave label name in place for compilations
+        if self.albumtype == "compilation":
+            # it could have been added as an albumartist already
+            for arg in filter(lambda x: x == self.label, args):
+                args.remove(self.label)
+        else:
+            args.append(self.label)
+
+        album = self.clean_name(self.album_name, *args, remove_extra=True)
+        if not album:
+            # try checking the description
+            match = re.search(r": ?([\w ]+) EP", self.all_media_comments)
+            if match:
+                album = match.expand(r"\1")
+            else:
+                album = self.catalognum
+        return album
 
     @cached_property
     def _common(self) -> JSONDict:
