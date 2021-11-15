@@ -140,7 +140,7 @@ class Helpers:
 
         # whatever is left must be the artist
         if len(parts):
-            track["artist"] = ", ".join(parts).strip(",. ")
+            track["artist"] = ", ".join(parts).strip(", ")
         return track
 
     @staticmethod
