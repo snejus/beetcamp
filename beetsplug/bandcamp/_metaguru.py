@@ -64,7 +64,7 @@ rm_strings = [
     "limited edition",
     "various artists?|va",
     "free download|free dl|free\\)",
-    "vinyl|ep|lp",
+    "vinyl|(double )?ep|lp",
     "e[.]p[.]",
 ]
 CATNUM_PAT = {
@@ -74,7 +74,7 @@ CATNUM_PAT = {
     "start_or_end": re.compile(rf"((^|\n){_catalognum}|{_catalognum}(\n|$))", re.VERBOSE),
 }
 PATTERNS: Dict[str, Pattern] = {
-    "clean_title": re.compile(fr"(?i: ?\(?\b({'|'.join(rm_strings)})(\b\)?|$))"),
+    "clean_title": re.compile(fr"(?i: ?[\[\(]?\b({'|'.join(rm_strings)})(\b[\]\)]?|$))"),
     "clean_incl": re.compile(r"(?i:(\(?incl|\((inc|tracks|.*remix( |es)))).*$"),
     "meta": re.compile(r".*dateModified.*", re.MULTILINE),
     "digital": [  # type: ignore
@@ -213,15 +213,20 @@ class Helpers:
 
     @staticmethod
     def get_genre(keywords: Iterable[str], config: JSONDict) -> Iterable[str]:
-        """Verify each keyword against the list of MusicBrainz genres and return
-        a comma-delimited list of valid ones, where validity depends on the mode:
-          * classical: valid only if the entire keyword is found in the MB genres list
-          * progressive: above + if each of the words is a valid MB genre since it is
-            effectively a subgenre.
-          * psychedelic: above + if the last word is a valid MB genre
+        """Return a comma-delimited list of valid genres, using MB genres for reference.
 
-        If a keyword is part of another keyword (genre within a sub-genre), exclude it.
-        For example,
+        Verify each keyword's (potential genre) validity w.r.t. the configured `mode`:
+          * classical: valid only if the _entire keyword_ matches a MB genre in the list
+          * progressive: either above or if each of the words matches MB genre - since it
+            is effectively a subgenre.
+          * psychedelic: either one of the above or if the last word is a valid MB genre.
+            This allows to be flexible regarding the variety of potential genres while
+            keeping away from spammy ones.
+
+        Once we have the list of keywords that make it through the mode filters,
+        an additional filter is executed:
+          * if a keyword is _part of another keyword_ (genre within a sub-genre),
+            the more generic option gets excluded, for example,
             >>> get_genre(['house', 'garage house', 'glitch'], "classical")
             'garage house, glitch'
         """
@@ -465,7 +470,7 @@ class Metaguru(Helpers):
         try:
             raw_tracks = self.meta["track"].get("itemListElement", [])
         except KeyError:
-            raw_tracks = [{"item": self.meta}]
+            raw_tracks = [{"item": self.meta, "position": 0}]
 
         albumartist = self.bandcamp_albumartist
         catalognum = self.catalognum
