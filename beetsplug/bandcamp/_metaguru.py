@@ -587,16 +587,11 @@ class Metaguru(Helpers):
 
     @cached_property
     def is_va(self) -> bool:
+        unique = set(map(lambda x: re.sub(r", .*", "", x), self.track_artists))
         return (
             VA.casefold() in self.album_name.casefold()
-            or len(self.track_artists) == len(self.tracks)
-            or (
-                len(self.track_artists) > 1
-                and not {*self.bandcamp_albumartist.split(", ")}.issubset(
-                    self.track_artists
-                )
-                and len(self.tracks) >= 4
-            )
+            or len(unique) == len(self.tracks)
+            or (len(unique) > 1 and len(self.tracks) >= 4)
         )
 
     @cached_property
