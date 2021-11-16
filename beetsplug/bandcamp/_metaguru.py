@@ -39,7 +39,7 @@ MEDIA_MAP = {
 VA = "Various Artists"
 
 _catalognum = r"""(\b
-    (?![A-z][a-z]+\ [0-9]+|EP |C\d\d|(?i:vol(ume)?|record|session|disc)|VA|[A-Z][0-9]\b)
+    (?![A-z][a-z]+\ [0-9]+|EP |C\d\d|(?i:vol(ume)?|record|session|disc|artist)|VA|[A-Z][0-9]\b)
     (
         [A-Z]+[ ]\d   # must include at least one number
       | [A-z$]+\d+([.]\d)?
@@ -159,22 +159,16 @@ class Helpers:
         return parsed_artist or official_artist or albumartist
 
     @staticmethod
-    def parse_catalognum(
-        album: str, disctitle: str, description: str, label: str, **kwargs: Any
-    ) -> str:
-        """Try finding the catalogue number in the following sequence:
-        1. Check description for a formal catalogue number
-        2. Check album name for [CATALOGNUM] or (CATALOGNUM)
-        3. Check whether label name is followed by numbers
-        4. Check album name and disctitle using more flexible rules.
-        """
+    def parse_catalognum(album, disctitle, description, label, **kwargs):
+        # type: (str, str, str, str, Any) -> str
+        """Try getting the catalog number looking at various fields."""
         esc_label = re.escape(label)
         cases = [
+            (CATNUM_PAT["in_parens"], album),
+            (CATNUM_PAT["start_or_end"], album),
             (CATNUM_PAT["with_header"], description),
             (CATNUM_PAT["in_parens"], description),
-            (CATNUM_PAT["in_parens"], album),
             (CATNUM_PAT["desc"], description),
-            (CATNUM_PAT["start_or_end"], album),
             (CATNUM_PAT["start_or_end"], disctitle),
             (re.compile(rf"\ {_catalognum}(?:\n|$)", re.VERBOSE), description),
         ]
