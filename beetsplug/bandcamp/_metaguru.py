@@ -64,7 +64,7 @@ rm_strings = [
     "limited edition",
     "various artists?|va",
     "free download|free dl|free\\)",
-    "vinyl|(double )?ep|lp",
+    "vinyl|(double )?(ep|lp)",
     "e[.]p[.]",
 ]
 CATNUM_PAT = {
@@ -116,11 +116,10 @@ class Helpers:
         return clean_name
 
     @staticmethod
-    def parse_track_name(name: str, delim: str) -> Dict[str, str]:
+    def parse_track_name(name: str, delim: str, rm_index=False) -> Dict[str, str]:
         track = defaultdict(str)
-
-        # remove leading numerical index if found
-        name = re.sub(r"^[01]?[0-9][. ] ?(?=[A-Z])", "", name).strip(", ")
+        if rm_index:
+            name = re.sub(r"^[01]?[0-9][. ] ?(?=[A-Z])", "", name).strip(", ")
 
         # match track alt and remove it from the name
         match = PATTERNS["track_alt"].match(name)
@@ -449,14 +448,12 @@ class Metaguru(Helpers):
         except (ValueError, LookupError):
             return WORLDWIDE
 
-    def track_delimiter(self, raw_tracks: List[JSONDict]) -> str:
+    def track_delimiter(self, names: List[str]) -> str:
         """Return the track parts delimiter that is in effect in the current release.
         In some (weird) situations track parts are delimited by a pipe pipe character
         instead of the usual dash. This checks every track looking for our delimiters
         and returns the one that is found _in each of the track names_.
         """
-        get = op.itemgetter
-        names = list(map(get("name"), map(get("item"), raw_tracks)))
         for delim in "-|":
             delims = it.repeat(fr"[{delim}] | [{delim}]")
             match_count = sum(map(bool, map(re.search, delims, names)))
@@ -472,20 +469,33 @@ class Metaguru(Helpers):
         except KeyError:
             raw_tracks = [{"item": self.meta, "position": 0}]
 
+        get = op.itemgetter
+        names = list(map(get("name"), map(get("item"), raw_tracks)))
+
+        # find the track delimiter
+        delim = self.track_delimiter(names)
+
+        # remove leading numerical index if every track has it
+        rm_index = False
+        if all(map(lambda x: x[0].isdigit(), names)):
+            rm_index = True
+
         albumartist = self.bandcamp_albumartist
         catalognum = self.catalognum
         delim = self.track_delimiter(raw_tracks)
         tracks = []
         for item, position in map(op.itemgetter("item", "position"), raw_tracks):
             name = self.clear_digi_only(item["name"])
+            digi_only = name != item["name"]
+            name = self.clean_name(name, catalognum)
             track: JSONDict = defaultdict(str)
             track.update(
-                digi_only=name != item["name"],
+                digi_only=digi_only,
                 index=position or 1,
                 medium_index=position or 1,
                 track_id=item.get("@id"),
                 length=self.get_duration(item),
-                **self.parse_track_name(self.clean_name(name, catalognum), delim),
+                **self.parse_track_name(name, delim, rm_index=rm_index),
             )
             track["artist"] = self.get_track_artist(track["artist"], item, albumartist)
             lyrics = item.get("recordingOf", {}).get("lyrics", {}).get("text")
@@ -626,6 +636,13 @@ class Metaguru(Helpers):
         return ", ".join(genres) or None
 
     @cached_property
+    def parsed_album_name(self) -> str:
+        match = re.search(r"[:-] ?([\w ]+) [EL]P", self.all_media_comments)
+        if match:
+            return match.expand(r"\1")
+        return self.catalognum
+
+    @cached_property
     def clean_album_name(self) -> str:
         args = [self.catalognum]
         if not self._singleton:
@@ -641,14 +658,9 @@ class Metaguru(Helpers):
             args.append(self.label)
 
         album = self.clean_name(self.album_name, *args, remove_extra=True)
-        if not album:
-            # try checking the description
-            match = re.search(r"[:-] ?([\w ]+) [EL]P", self.all_media_comments)
-            if match:
-                album = match.expand(r"\1")
-            else:
-                album = self.catalognum
-        return album
+        if album:
+            return album
+        return self.parsed_album_name
 
     @cached_property
     def _common(self) -> JSONDict:

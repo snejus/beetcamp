@@ -172,8 +172,11 @@ def test_convert_title(title, expected):
 )
 def test_parse_track_name(inputs, expected):
     expected_track = dict(zip(("track_alt", "artist", "title", "main_title"), expected))
-    result = Metaguru.parse_track_name(Metaguru.clean_name(*inputs))
-    assert expected_track == result, print_result(inputs[0], expected_track, result)
+    rm = list(filter(lambda x: expected_track.get(x) is None, expected_track.keys()))
+    for key in rm:
+        expected_track.pop(key)
+    result = Metaguru.parse_track_name(Metaguru.clean_name(*inputs), "-")
+    assert expected_track == dict(result), print_result(inputs[0], expected_track, result)
 
 
 @pytest.mark.parametrize(
