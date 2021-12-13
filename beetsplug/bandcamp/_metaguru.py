@@ -6,7 +6,6 @@ import re
 from collections import defaultdict
 from datetime import date, datetime
 from functools import partial
-from math import floor
 from typing import Any, Dict, Iterable, List, Optional, Pattern, Set
 from unicodedata import normalize
 
@@ -14,6 +13,7 @@ from beets.autotag.hooks import AlbumInfo, TrackInfo
 from cached_property import cached_property
 from pkg_resources import get_distribution, parse_version
 from pycountry import countries, subdivisions
+from rich import print
 
 from .genres_lookup import GENRES
 
@@ -40,7 +40,7 @@ MEDIA_MAP = {
 VA = "Various Artists"
 
 _catalognum = r"""(\b
-    (?![A-z][a-z]+\ [0-9]+|EP |C\d\d|(?i:vol(ume)?|record|session|disc|artist)|VA|[A-Z][0-9]\b)
+    (?![A-z][a-z]+\ [0-9]+|EP |C\d\d|(?i:vol(ume)?|record|session|disc|artist)|VA|CD[0-9]*|[A-Z][0-9]\b)
     (
         [A-Z]+[ ]\d   # must include at least one number
       | [A-z$]+\d+([.]\d)?
@@ -99,6 +99,18 @@ def urlify(pretty_string: str) -> str:
 
 class Helpers:
     @staticmethod
+    def get_country(loc: str) -> str:
+        try:
+            name = normalize("NFKD", loc).encode("ascii", "ignore").decode()
+            return (
+                COUNTRY_OVERRIDES.get(name)
+                or getattr(countries.get(name=name, default=object), "alpha_2", None)
+                or subdivisions.lookup(name).country_code
+            )
+        except (ValueError, LookupError):
+            return WORLDWIDE
+
+    @staticmethod
     def get_vinyl_count(name: str) -> int:
         conv = {"single": 1, "double": 2, "triple": 3}
         match = re.search(PATTERNS["vinyl_name"], name)
@@ -116,7 +128,7 @@ class Helpers:
         return clean_name
 
     @staticmethod
-    def parse_track_name(name: str, delim: str, rm_index=False) -> Dict[str, str]:
+    def parse_track_name(name: str, delim: str = "-", rm_index=False) -> Dict[str, str]:
         track = defaultdict(str)
         if rm_index:
             name = re.sub(r"^[01]?[0-9][. ] ?(?=[A-Z])", "", name).strip(", ")
@@ -171,7 +183,11 @@ class Helpers:
             cases.append((re.compile(rf"(^{esc})|({esc}$)", re.IGNORECASE), album))
 
         search = lambda x: x[0].search(x[1])
-        strip = lambda x: x.groups()[0].strip() if x and len(x.groups()) else ""
+        strip = (
+            lambda x: x.groups()[0].strip()
+            if x and len(x.groups()) and x.groups()[0]
+            else ""
+        )
         matches: Iterable[str] = filter(op.truth, map(strip, map(search, cases)))
 
         artists = set(map(str.casefold, kwargs.get("artists") or []))
@@ -211,7 +227,12 @@ class Helpers:
         return PATTERNS["clean_title"].sub("", name).strip(" -|/'")
 
     @staticmethod
-    def get_genre(keywords: Iterable[str], config: JSONDict) -> Iterable[str]:
+    def get_genre(
+        keywords: Iterable[str],
+        genre_config: JSONDict = None,
+        always_include: List[str] = [],
+        mode: str = "progressive",
+    ) -> Iterable[str]:
         """Return a comma-delimited list of valid genres, using MB genres for reference.
 
         Verify each keyword's (potential genre) validity w.r.t. the configured `mode`:
@@ -231,26 +252,34 @@ class Helpers:
         """
         # use a list to keep the initial order
         genres: List[str] = []
+        if genre_config:
+            always_include = genre_config["always_include"]
+            mode = genre_config["mode"]
         valid_mb_genre = partial(op.contains, GENRES)
 
         def is_included(kw: str) -> bool:
-            return any(map(lambda x: re.search(x, kw), config["always_include"]))
+            return any(map(lambda x: re.search(x, kw), always_include))
 
         def valid_for_mode(kw: str) -> bool:
-            if config["mode"] == "classical":
+            if mode == "classical":
                 return kw in GENRES
 
             words = map(str.strip, kw.split(" "))
-            if config["mode"] == "progressive":
+            if mode == "progressive":
                 return kw in GENRES or all(map(valid_mb_genre, words))
 
             return valid_mb_genre(kw) or valid_mb_genre(list(words)[-1])
 
         # expand badly delimited keywords
         split_kw = partial(re.split, r"[.] | #| - ")
-        for kw in it.chain(*map(split_kw, keywords)):
+        for kw in it.chain(*map(split_kw, map(str.lower, keywords))):
             # remove full stops and hashes and ensure the expected form of 'and'
-            kw = re.sub("[.#]", "", str(kw)).replace("&", "and")
+            kw = (
+                re.sub("[.#]", "", str(kw))
+                .replace("&", "and")
+                .replace("dnb", "drum and bass")
+                .replace("drum n bass", "drum and bass")
+            )
             if kw not in genres and (is_included(kw) or valid_for_mode(kw)):
                 genres.append(kw)
 
@@ -269,7 +298,7 @@ class Helpers:
         return it.filterfalse(duplicate, genres)
 
     @staticmethod
-    def _get_media_reference(meta: JSONDict) -> JSONDict:
+    def _get_media_reference(media_list: List[JSONDict]) -> JSONDict:
         """Get release media from the metadata, excluding bundles.
         Return a dictionary with a human mapping (Digital|CD|Vinyl|Cassette) -> media.
         """
@@ -278,120 +307,114 @@ class Helpers:
             return "bundle" in (fmt.get("name") or "").casefold()
 
         media: Dict[str, JSONDict] = {}
-        for _format in it.filterfalse(is_bundle, meta["albumRelease"]):
-            try:
-                medium = _format["musicReleaseFormat"]
-            except KeyError:
+        for _format in it.filterfalse(is_bundle, media_list):
+            medium = _format.get("musicReleaseFormat")
+            if not medium:
                 continue
-            human_name = MEDIA_MAP[medium]
-            media[human_name] = _format
+            media[MEDIA_MAP[medium]] = _format
         return media
 
 
-class Metaguru(Helpers):
-    html: str
-    meta: JSONDict
-    config: JSONDict
+class BandcampMeta:
+    media: JSONDict
+    media_name: str
 
-    _media: Dict[str, str]
-    _singleton = False
-    excluded_fields: Set[str] = set()
+    _config: JSONDict
+    _meta: JSONDict
 
-    def __init__(self, html, config=None) -> None:
-        self.html = html
-        self.config = config or {}
-        self.meta = {}
-        self.excluded_fields.update(set(self.config.get("exclude_extra_fields") or []))
+    def __init__(self, html: str, config: JSONDict) -> None:
+        self.media = self._meta = {}
+        self._config = config
         match = re.search(PATTERNS["meta"], html)
         if match:
-            self.meta = json.loads(match.group())
+            self._meta = json.loads(match.group())
 
-        self._media = self.meta.get("albumRelease", [{}])[0]
-        try:
-            media_index = self._get_media_reference(self.meta)
-        except (KeyError, AttributeError):
-            pass
+        media = (
+            self._meta.get("albumRelease")
+            or self._meta.get("inAlbum", {}).get("albumRelease")
+        )
+        media_index = Helpers._get_media_reference(media)
+        for preference in (self._config.get("preferred_media") or "").split(","):
+            if preference in media_index:
+                self.media = media_index[preference]
+                self.media_name = preference
+                break
         else:
-            # if preference is given and the format is available, use it
-            for preference in (self.config.get("preferred_media") or "").split(","):
-                if preference in media_index:
-                    self._media = media_index[preference]
-                    break
+            self.media = media_index[DIGI_MEDIA]
+            self.media_name = DIGI_MEDIA
 
     @cached_property
-    def comments(self) -> str:
-        """Return release, media descriptions and credits separated by
-        the configured separator string.
-        """
-        parts = [self.meta.get("description")]
-        media_desc = self._media.get("description")
-        if media_desc and not media_desc.startswith("Includes high-quality"):
-            parts.append(media_desc)
-
-        parts.append(self.meta.get("creditText"))
-        sep = self.config["comments_separator"]
-        return sep.join(filter(op.truth, parts)).replace("\r", "")
+    def description(self):
+        return self._meta.get("description") or ""
 
     @cached_property
-    def all_media_comments(self) -> str:
-        get_desc = op.methodcaller("get", "description", "")
-        return "\n".join(
-            [
-                # self.comments,
-                *map(get_desc, self.meta.get("albumRelease", {})),
-                self.comments,
-            ]
+    def media_description(self) -> str:
+        return self.media.get("description") or ""
+
+    @cached_property
+    def disctitle(self) -> str:
+        """Return medium's disc title if found."""
+        return "" if self.media_name == DIGI_MEDIA else self.media.get("name", "")
+
+    @cached_property
+    def mediums(self) -> int:
+        return (
+            Helpers.get_vinyl_count(self.disctitle) if self.media_name == "Vinyl" else 1
         )
 
     @cached_property
+    def credits(self) -> str:
+        return self._meta.get("creditText") or ""
+
+    @cached_property
+    def all_media_descriptions(self) -> str:
+        get_desc = op.methodcaller("get", "description", "")
+        bad = "Includes high-quality"
+        return self._config["comments_separator"].join(filter(lambda x: x and not x.startswith(bad), map(get_desc, self._meta.get("albumRelease", {}))))
+
+    @cached_property
     def album_name(self) -> str:
-        match = re.search(r"Title:([^\n]+)", self.all_media_comments)
+        match = re.search(r"Title: ?([^\n]+)", self.all_media_descriptions)
         if match:
-            return match.groups()[0].strip()
-        return self.meta["name"]
+            return match.expand(r"\1").strip()
+        return self._meta["name"]
 
     @cached_property
     def label(self) -> str:
-        match = re.search(r"Label:([^/,\n]+)", self.all_media_comments)
+        match = re.search(r"Label:([^/,\n]+)", self.all_media_descriptions)
         if match:
             return match.groups()[0].strip()
-
         try:
-            return self.meta["albumRelease"][0]["recordLabel"]["name"]
+            return self._meta["albumRelease"][0]["recordLabel"]["name"]
         except (KeyError, IndexError):
-            return self.meta["publisher"]["name"]
+            return self._meta["publisher"]["name"]
 
     @cached_property
     def album_id(self) -> str:
-        return self.meta["@id"]
+        return self._meta["@id"]
 
     @cached_property
     def artist_id(self) -> str:
         try:
-            return self.meta["byArtist"]["@id"]
+            return self._meta["byArtist"]["@id"]
         except KeyError:
-            return self.meta["publisher"]["@id"]
+            return self._meta["publisher"]["@id"]
 
     @cached_property
-    def bandcamp_albumartist(self) -> str:
+    def albumartist(self) -> str:
         """Return the official release albumartist.
         It is correct in half of the cases. In others, we usually find the label name.
         """
-        match = re.search(r"Artist:([^\n]+)", self.all_media_comments)
+        match = re.search(r"Artist: ?([^\n]+)", self.all_media_descriptions)
         if match:
             return str(match.groups()[0].strip())
 
-        albumartist = self.meta["byArtist"]["name"].replace("various", VA)
-        album = self.album_name
-        if self.label == albumartist:
-            albumartist = self.parse_track_name(album, "-").get("artist") or albumartist
-
-        return re.sub(r"(?i:, ft.*remix.*)", "", albumartist)
+        return self._meta["byArtist"]["name"]
 
     @cached_property
     def image(self) -> str:
         # TODO: Need to test
-        image = self.meta.get("image", "")
+        image = self._meta.get("image", "")
         return image[0] if isinstance(image, list) else image
 
     @cached_property
@@ -401,52 +424,114 @@ class Metaguru(Helpers):
 
         If the field is not found, return None.
         """
-        rel = self.meta.get("datePublished")
+        rel = self._meta.get("datePublished")
         if rel:
             return datetime.strptime(re.sub(r" [0-9]{2}:.+", "", rel), "%d %b %Y").date()
         return rel
 
     @cached_property
+    def country(self) -> str:
+        try:
+            loc = self._meta["publisher"]["foundingLocation"]["name"]
+            return Helpers.get_country(loc.rpartition(", ")[-1])
+        except KeyError:
+            return WORLDWIDE
+
+    @cached_property
+    def raw_tracks(self) -> List[JSONDict]:
+        try:
+            return self._meta["track"].get("itemListElement", [])
+        except KeyError:
+            return [{"item": self._meta}]
+
+    @cached_property
+    def style(self) -> Optional[str]:
+        """Extract bandcamp genre tag from the metadata."""
+        # expecting the following form: https://bandcamp.com/tag/folk
+        style = None
+        tag_url = self._meta.get("publisher", {}).get("genre") or ""
+        if tag_url:
+            style = tag_url.split("/")[-1]
+            if self._config["genre"]["capitalize"]:
+                style = style.capitalize()
+        return style
+
+    @cached_property
+    def genre(self) -> Optional[str]:
+        kws: Iterable[str] = map(str.lower, self._meta["keywords"])
+        if self.style:
+            exclude_style = partial(op.ne, self.style.lower())
+            kws = filter(exclude_style, kws)
+
+        genre_cfg = self._config.get("genre", {})
+        genres = Helpers.get_genre(kws, genre_cfg)
+        if genre_cfg["capitalize"]:
+            genres = map(str.capitalize, genres)
+        if genre_cfg["maximum"]:
+            genres = it.islice(genres, genre_cfg["maximum"])
+
+        return ", ".join(genres) or None
+
+
+class Metaguru(Helpers):
+    meta: BandcampMeta
+    config: JSONDict
+
+    _singleton = False
+    excluded_fields: Set[str] = set()
+
+    def __init__(self, html, config) -> None:
+        self.config = config or {}
+        self.meta = BandcampMeta(html, config)
+        self.excluded_fields = set(self.config.get("exclude_extra_fields") or [])
+
+    @cached_property
+    def comments(self) -> str:
+        """Return release, media descriptions and credits separated by
+        the configured separator string.
+        """
+        parts = [self.meta.description]
+        media_desc = self.meta.media_description
+        if media_desc and not media_desc.startswith("Includes high-quality"):
+            parts.append(media_desc)
+
+        parts.append(self.meta.credits)
+        sep = self.config["comments_separator"]
+        return sep.join(filter(op.truth, parts)).replace("\r", "")
+
+        # parts = [self.meta.description]
+
+        # def fold_text(text: str) -> str:
+        #     return re.sub(r"\s+", " ", text).casefold()
+
+        # def already_here(string: str) -> bool:
+        #     folded = fold_text(string)
+        #     return folded in set(map(fold_text, parts))
+
+        # media_desc = self.meta.all_media_descriptions or ""
+        # bad = "Includes high-quality"
+        # if not already_here(media_desc) and not media_desc.startswith(bad):
+        #     parts.append(media_desc)
+
+        # if not already_here(fold_text(self.meta.credits)):
+        #     parts.append(self.meta.credits)
+
+        # return self.config["comments_separator"].join(filter(op.truth, parts))
+
+    @cached_property
     def albumstatus(self) -> str:
-        reldate = self.release_date
+        reldate = self.meta.release_date
         return "Official" if reldate and reldate <= date.today() else "Promotional"
-
-    @cached_property
-    def media_name(self) -> str:
-        """Return the human-readable version of the media format."""
-        return MEDIA_MAP.get(self._media.get("musicReleaseFormat", ""), DIGI_MEDIA)
-
-    @cached_property
-    def disctitle(self) -> str:
-        """Return medium's disc title if found."""
-        return "" if self.media_name == DIGI_MEDIA else self._media.get("name", "")
-
-    @cached_property
-    def mediums(self) -> int:
-        return self.get_vinyl_count(self.disctitle) if self.media_name == "Vinyl" else 1
 
     @cached_property
     def catalognum(self) -> str:
         return self.parse_catalognum(
-            self.album_name,
-            self.disctitle,
-            self.all_media_comments,
-            self.label,
+            self.meta.album_name,
+            self.meta.disctitle,
+            self.meta.all_media_descriptions,
+            self.meta.label,
             artists=self.all_artists,
         )
-
-    @cached_property
-    def country(self) -> str:
-        try:
-            loc = self.meta["publisher"]["foundingLocation"]["name"].rpartition(", ")[-1]
-            name = normalize("NFKD", loc).encode("ascii", "ignore").decode()
-            return (
-                COUNTRY_OVERRIDES.get(name)
-                or getattr(countries.get(name=name, default=object), "alpha_2", None)
-                or subdivisions.lookup(name).country_code
-            )
-        except (ValueError, LookupError):
-            return WORLDWIDE
 
     def track_delimiter(self, names: List[str]) -> str:
         """Return the track parts delimiter that is in effect in the current release.
@@ -464,27 +549,24 @@ class Metaguru(Helpers):
     @cached_property
     def tracks(self) -> List[JSONDict]:
         """Parse relevant details from the tracks' JSON."""
-        try:
-            raw_tracks = self.meta["track"].get("itemListElement", [])
-        except KeyError:
-            raw_tracks = [{"item": self.meta, "position": 0}]
-
+        raw_tracks = self.meta.raw_tracks
         get = op.itemgetter
         names = list(map(get("name"), map(get("item"), raw_tracks)))
 
         # find the track delimiter
         delim = self.track_delimiter(names)
-
         # remove leading numerical index if every track has it
         rm_index = False
         if all(map(lambda x: x[0].isdigit(), names)):
             rm_index = True
 
-        albumartist = self.bandcamp_albumartist
+        albumartist = self.meta.albumartist
         catalognum = self.catalognum
-        delim = self.track_delimiter(raw_tracks)
+        # pat = re.compile(r"[^\w\]\)]*\[(?!.*(?i:mix|edit))[^\]]+\]")
+        # name = self.clear_digi_only(pat.sub("", item["name"]))
+        # args = [name, catalognum]
         tracks = []
-        for item, position in map(op.itemgetter("item", "position"), raw_tracks):
+        for item, position in map(lambda x: (x["item"], x.get("position")), raw_tracks):
             name = self.clear_digi_only(item["name"])
             digi_only = name != item["name"]
             name = self.clean_name(name, catalognum)
@@ -513,15 +595,10 @@ class Metaguru(Helpers):
 
     @cached_property
     def bandcamp_titles(self) -> List[str]:
-        try:
-            tracks = self.meta["track"].get("itemListElement", [])
-        except KeyError:
-            tracks = [{"item": self.meta}]
-
         return list(
             map(
                 lambda x: (x.get("byArtist", x) or x).get("name") or "",
-                map(op.itemgetter("item"), tracks),
+                self.meta.raw_tracks,
             )
         )
 
@@ -538,26 +615,21 @@ class Metaguru(Helpers):
             else:
                 artists.add(t)
 
-        match = re.search(r"Artist:([^\n]+)", self.all_media_comments)
-        if match:
-            albumartist = match.groups()[0].strip()
-        else:
-            albumartist = self.meta["byArtist"]["name"]
-        artists.update(albumartist.split(", "))
+        artists.update(self.meta.albumartist.split(", "))
         return artists
 
     @cached_property
-    def is_single(self) -> bool:
-        return self._singleton or len(set(t.get("main_title") for t in self.tracks)) == 1
+    def is_single_album(self) -> bool:
+        return len(set(t.get("main_title") for t in self.tracks)) == 1
 
     @cached_property
     def is_lp(self) -> bool:
-        maybe_here = [self.album_name, self.disctitle, self.comments]
+        maybe_here = [self.meta.album_name, self.meta.disctitle, self.comments]
         return any(map(lambda x: " LP" in x, maybe_here))
 
     @cached_property
     def is_ep(self) -> bool:
-        maybe_here = [self.album_name, self.disctitle, self.comments]
+        maybe_here = [self.meta.album_name, self.meta.disctitle, self.comments]
         return any(map(lambda x: " EP" in x, maybe_here))
 
     @cached_property
@@ -565,15 +637,26 @@ class Metaguru(Helpers):
         track_artists = self.track_artists
         track_count = len(self.tracks)
         unique = set(map(lambda x: re.sub(r" ?[,x].*", "", x).lower(), track_artists))
+        # return VA.casefold() in self.meta.album_name.casefold() or (
+        #     track_count >= 4
+        #     and (
+        #         len(unique) == track_count
+        #         or (
+        #             len(unique) > 1
+        #             and not {*self.meta.albumartist.split(", ")}.issubset(unique)
+        #         )
+        #     )
+        # )
         return (
-            VA.casefold() in self.album_name.casefold()
+            VA.casefold() in self.meta.album_name.casefold()
             or len(unique) == track_count
             or (
                 len(unique) > 1
-                and not {*self.bandcamp_albumartist.split(", ")}.issubset(unique)
+                # this circumvents the case when a release lists all track artists
+                # as the albumartist
+                and not set(self.meta.albumartist.split(", ")) == unique
                 and track_count >= 4
             )
-            or (len(unique) > 1 and len(self.tracks) >= 4)
         )
 
     @cached_property
@@ -582,62 +665,42 @@ class Metaguru(Helpers):
         * 'Various Artists' for a compilation release
         * If every track has the same author, treat it as the albumartist
         """
-        if self.albumtype == "compilation":
+        albumartist = self.meta.albumartist
+        if self.meta.label == albumartist:
+            album = self.meta.album_name
+            albumartist = self.parse_track_name(album, "-").get("artist") or albumartist
+
+        if self.is_va:
             return VA
         tartists = self.track_artists
         if len(tartists) == 1:
             first_tartist = tartists.copy().pop()
-            if first_tartist != self.label:
+            if first_tartist != self.meta.label:
                 return first_tartist
-        return self.bandcamp_albumartist
+        return albumartist
 
     @cached_property
     def albumtype(self) -> str:
-        if self.is_lp:
-            return "album"
+        if self._singleton:
+            return "single"
         if self.is_ep:
             return "ep"
-        if self.is_single:
-            return "single"
-        if self.is_va:
-            return "compilation"
         return "album"
 
     @cached_property
-    def va(self) -> bool:
-        return self.albumtype == "compilation"
-
-    @cached_property
-    def style(self) -> Optional[str]:
-        """Extract bandcamp genre tag from the metadata."""
-        # expecting the following form: https://bandcamp.com/tag/folk
-        tag_url = self.meta.get("publisher", {}).get("genre") or ""
-        style = None
-        if tag_url:
-            style = tag_url.split("/")[-1]
-            if self.config["genre"]["capitalize"]:
-                style = style.capitalize()
-        return style
-
-    @cached_property
-    def genre(self) -> Optional[str]:
-        kws: Iterable[str] = map(str.lower, self.meta["keywords"])
-        if self.style:
-            exclude_style = partial(op.ne, self.style.lower())
-            kws = filter(exclude_style, kws)
-
-        genre_cfg = self.config["genre"]
-        genres = self.get_genre(kws, genre_cfg)
-        if genre_cfg["capitalize"]:
-            genres = map(str.capitalize, genres)
-        if genre_cfg["maximum"]:
-            genres = it.islice(genres, genre_cfg["maximum"])
-
-        return ", ".join(genres) or None
+    def albumtypes(self) -> str:
+        albumtypes = [self.albumtype]
+        if self.is_single_album:
+            albumtypes.append("single")
+        elif self.is_va:
+            albumtypes.append("compilation")
+        if self.is_lp:
+            albumtypes.append("lp")
+        return "; ".join(albumtypes)
 
     @cached_property
     def parsed_album_name(self) -> str:
-        match = re.search(r"[:-] ?([\w ]+) [EL]P", self.all_media_comments)
+        match = re.search(r"[:-] ?([\w ]+) [EL]P", self.meta.all_media_descriptions)
         if match:
             return match.expand(r"\1")
         return self.catalognum
@@ -646,18 +709,18 @@ class Metaguru(Helpers):
     def clean_album_name(self) -> str:
         args = [self.catalognum]
         if not self._singleton:
-            args.append(self.bandcamp_albumartist)
+            args.append(self.meta.albumartist)
             args.append(self.albumartist)
             args.extend(self.albumartist.split(", "))
         # leave label name in place for compilations
         if self.albumtype == "compilation":
             # it could have been added as an albumartist already
-            for _ in range(args.count(self.label)):
-                args.remove(self.label)
+            for _ in range(args.count(self.meta.label)):
+                args.remove(self.meta.label)
         else:
-            args.append(self.label)
+            args.append(self.meta.label)
 
-        album = self.clean_name(self.album_name, *args, remove_extra=True)
+        album = self.clean_name(self.meta.album_name, *args, remove_extra=True)
         if album:
             return album
         return self.parsed_album_name
@@ -666,9 +729,9 @@ class Metaguru(Helpers):
     def _common(self) -> JSONDict:
         return dict(
             data_source=DATA_SOURCE,
-            media=self.media_name,
-            data_url=self.album_id,
-            artist_id=self.artist_id,
+            media=self.meta.media_name,
+            data_url=self.meta.album_id,
+            artist_id=self.meta.artist_id,
         )
 
     def get_fields(self, fields: Iterable[str], src: object = None) -> JSONDict:
@@ -677,35 +740,34 @@ class Metaguru(Helpers):
         if len(fields) == 1:
             field = fields.pop()
             return {field: getattr(self, field)}
-        return dict(zip(fields, iter(op.attrgetter(*fields)(src or self))))
+        return dict(
+            zip(
+                fields,
+                map(lambda x: x if x else "", iter(op.attrgetter(*fields)(src or self))),
+            )
+        )
 
     @cached_property
     def _common_album(self) -> JSONDict:
         common_data: JSONDict = dict(album=self.clean_album_name)
-        fields = [
-            "label",
-            "catalognum",
-            "albumtype",
-            "albumstatus",
-            "country",
-            "style",
-            "genre",
-            "comments",
-        ]
+        fields = ["catalognum", "albumtype", "albumtypes", "comments", "albumstatus"]
         common_data.update(self.get_fields(fields))
-        reldate = self.release_date
+        common_data.update(
+            self.get_fields(["label", "style", "genre", "country"], self.meta)
+        )
+        reldate = self.meta.release_date
         if reldate:
             common_data.update(self.get_fields(["year", "month", "day"], reldate))
 
         return common_data
 
     def _trackinfo(self, track: JSONDict, **kwargs: Any) -> TrackInfo:
-        track.pop("digi_only")
-        track.pop("main_title")
+        track.pop("digi_only", None)
+        track.pop("main_title", None)
         track_info = TrackInfo(
             **self._common,
             **track,
-            disctitle=self.disctitle or None,
+            disctitle=self.meta.disctitle or None,
             medium=1,
             **kwargs,
         )
@@ -719,24 +781,36 @@ class Metaguru(Helpers):
         self._singleton = True
         track: JSONDict = {}
         if NEW_BEETS:
-            track.update(**self._common_album, albumartist=self.albumartist)
+            # track.update(**self._common_album, albumartist=self.albumartist)
+            track.update(**self._common_album)  # , albumartist=self.albumartist)
+        track.pop("albumstatus")
+        track.pop("albumtype")
 
         track.update(self.tracks[0].copy())
-        track.update(self.parse_track_name(self.album_name, "-"))
+        track.update(self.parse_track_name(self.meta.album_name, "-"))
         if not track.get("artist"):
             track["artist"] = self.albumartist
         track["title"] = self.clean_name(track["title"])
-        if NEW_BEETS:
-            artist, title = track["artist"], track["title"]
-            track["album"] = "{} - {}".format(artist, title)
-        return self._trackinfo(track, medium_total=1)
+        track["index"] = 0
+        track.update(self._trackinfo(track))
+        track.pop("disctitle", None)
+        track.pop("medium", None)
+        track.pop("medium_index", None)
+        # track.pop("media", None)
+        return TrackInfo(**track)
+
+        # if NEW_BEETS:
+        # artist, title = track["artist"], track["title"]
+        # track["album"] = "{} - {}".format(artist, title)
+        # return self._trackinfo(track, medium_total=1)
+        # return self._trackinfo(track)
 
     @cached_property
     def album(self) -> AlbumInfo:
         """Return album for the appropriate release format."""
         tracks: Iterable[JSONDict] = self.tracks
         include_digi = self.config.get("include_digital_only_tracks")
-        if not include_digi and self.media_name != DIGI_MEDIA:
+        if not include_digi and self.meta.media_name != DIGI_MEDIA:
             tracks = it.filterfalse(op.itemgetter("digi_only"), tracks)
 
         tracks = list(map(op.methodcaller("copy"), tracks))
@@ -746,9 +820,9 @@ class Metaguru(Helpers):
             **self._common,
             **self._common_album,
             artist=self.albumartist,
-            album_id=self.album_id,
-            mediums=self.mediums,
+            album_id=self.meta.album_id,
+            mediums=self.meta.mediums,
             tracks=list(map(get_trackinfo, tracks)),
         )
-        album_info.update(self.get_fields(["va"]))
+        album_info.update({"va": self.is_va})
         return album_info

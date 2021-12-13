@@ -3,7 +3,7 @@ import json
 from datetime import date
 
 import pytest
-from beetsplug.bandcamp._metaguru import Helpers, Metaguru, urlify
+from beetsplug.bandcamp._metaguru import Helpers, Metaguru, urlify, BandcampMeta
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
@@ -44,6 +44,8 @@ def print_result(case, expected, result):
         _p("", "sick vinyl", "", "sick vinyl", id="only media desc"),
         _p("", "", "credit", "credit", id="only credits"),
         _p("stuff", "sick vinyl", "creds", "stuff\nsick vinyl\ncreds", id="all"),
+        _p("stuff", "vinyl", r"stuff", "stuff\nvinyl", id="duplicate is ignored"),
+        _p("stuff", "vinyl", "Stuff", "stuff\nvinyl", id="upcase duplicate is ignored"),
     ],
 )
 def test_comments(descr, disctitle, creds, expected):
@@ -337,6 +339,7 @@ def test_parse_catalognum(album, disctitle, description, label, expected):
         ("The Castle [BLCKLPS009] Incl. Remix", [], "The Castle [BLCKLPS009]"),
         ('Anetha - "Ophiuchus EP"', ["Anetha"], "Ophiuchus"),
         ("Album (FREE DL)", [], "Album"),
+        ("Album (Edit-FREE DL)", [], "Album"),
         ("Devils Kiss VA", [], "Devils Kiss"),
         ("Devils Kiss VA001", [], "Devils Kiss VA001"),
         (

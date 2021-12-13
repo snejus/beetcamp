@@ -1,6 +1,8 @@
 import pytest
 from beetsplug.bandcamp._metaguru import Metaguru
 
+pytestmark = pytest.mark.parsing
+
 
 def test_style(beets_config):
     guru = Metaguru("", beets_config)

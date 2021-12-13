@@ -109,13 +109,11 @@ def single_track_release() -> ReleaseInfo:
         albumstatus="Official",
         label="Megatech Industries",
         albumtype="single",
-        catalognum="",
         year=2020,
         month=11,
         day=9,
         country="SE",
         genre=None,
-        style=None,
     )
     return info
 
@@ -131,14 +129,13 @@ def single_only_track_name() -> ReleaseInfo:
     )
     info.set_singleton(
         artist="GUTKEIN",
-        title="OENERA",
+        title="oenera",
         length=355,
-        album="GUTKEIN - OENERA",
+        album="GUTKEIN - oenera",
         albumartist="GUTKEIN",
         albumstatus="Official",
         label="GUTKEIN",
         albumtype="single",
-        catalognum="",
         year=2021,
         month=1,
         day=10,
