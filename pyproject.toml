@@ -9,7 +9,6 @@ homepage = "https://github.com/snejus/beetcamp"
 repository = "https://github.com/snejus/beetcamp"
 
 packages = [{ include = "beetsplug" }]
-include = ["LICENSE", "README.md"]
 
 [tool.poetry.dependencies]
 python = ">=3.6,<3.10"
