@@ -34,7 +34,7 @@ from ._metaguru import DATA_SOURCE, DIGI_MEDIA, Metaguru, urlify
 
 try:
     from rich.console import Console
-    from rich import print
+    # from rich import print
 
     console = Console(
         force_terminal=True, force_interactive=True, highlight=True, stderr=True
