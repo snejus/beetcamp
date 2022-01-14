@@ -32,7 +32,7 @@ jobs:
       - name: Pytest
         continue-on-error: true
         run: |
-          poetry run pytest
+          poetry run pytest -m parsing
       - name: Coveralls
         run: |
           pip install coveralls
