@@ -28,7 +28,7 @@ jobs:
           python -m pip install --upgrade pip setuptools wheel
           pip install poetry==1.2.0a2
           poetry install --sync
-          pip install beets==${{ beets }}
+          pip install beets==${{ matrix.beets }}
       - name: Pytest
         run: |
           poetry run pytest
