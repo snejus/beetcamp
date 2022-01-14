@@ -10,13 +10,17 @@ on:
 jobs:
   sonarcloud:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: [3.6, 3.7, 3.8, 3.9, 3.10]
+        beets: [1.4, 1.5, 1.6]
     steps:
       - uses: actions/checkout@v2
         with:
           # Disabling shallow clone is recommended for improving relevancy of reporting
           fetch-depth: 0
 
-      - name: Set up Python ${{ matrix.python-version }}
+      - name: Set up Python ${{ matrix.python }}
         uses: actions/setup-python@v2
 
       - name: Install dependencies
@@ -24,6 +28,7 @@ jobs:
           python -m pip install --upgrade pip setuptools wheel
           pip install poetry==1.2.0a2
           poetry install --sync
+          pip install beets==${{ beets }}
       - name: Pytest
         run: |
           poetry run pytest
