@@ -171,7 +171,7 @@ class Helpers:
             cases.append((re.compile(rf"(^{esc})|({esc}$)", re.IGNORECASE), album))
 
         search = lambda x: x[0].search(x[1])
-        strip = lambda x: x.groups()[0].strip() if x and len(x.groups()) else ""
+        strip = lambda x: x.groups()[0].strip() if x and len(x.groups()) and x.groups()[0] else ""
         matches: Iterable[str] = filter(op.truth, map(strip, map(search, cases)))
 
         artists = set(map(str.casefold, kwargs.get("artists") or []))
@@ -482,7 +482,6 @@ class Metaguru(Helpers):
 
         albumartist = self.bandcamp_albumartist
         catalognum = self.catalognum
-        delim = self.track_delimiter(raw_tracks)
         tracks = []
         for item, position in map(op.itemgetter("item", "position"), raw_tracks):
             name = self.clear_digi_only(item["name"])
