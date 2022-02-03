@@ -66,7 +66,7 @@
       "name": "ISMVA003.3"
     },
     {
-      "@id": "https://ismusberlin.bandcamp.com/album/ismva0033#b42222766",
+      "@id": "https://ismusberlin.bandcamp.com/album/ismva0033#b45620211",
       "@type": [
         "MusicRelease",
         "Product"
@@ -75,7 +75,7 @@
         {
           "@type": "PropertyValue",
           "name": "item_id",
-          "value": 42222766
+          "value": 45620211
         },
         {
           "@type": "PropertyValue",
@@ -95,31 +95,26 @@
         {
           "@type": "PropertyValue",
           "name": "art_id",
-          "value": 378822374
+          "value": 1893912488
         },
         {
           "@type": "PropertyValue",
           "name": "is_bfd",
           "value": true
-        },
-        {
-          "@type": "PropertyValue",
-          "name": "type_id",
-          "value": "d"
         }
       ],
       "image": [
-        "https://f4.bcbits.com/img/a0378822374_10.jpg"
+        "https://f4.bcbits.com/img/a1893912488_10.jpg"
       ],
       "musicReleaseFormat": "DigitalFormat",
-      "name": "full digital discography (16 releases)",
+      "name": "full digital discography (17 releases)",
       "offers": {
         "@type": "Offer",
         "additionalProperty": [
           {
             "@type": "PropertyValue",
             "name": "bundle_size",
-            "value": 16
+            "value": 17
           },
           {
             "@type": "PropertyValue",
@@ -138,7 +133,7 @@
         "priceSpecification": {
           "minPrice": 29.25
         },
-        "url": "https://ismusberlin.bandcamp.com/album/ismva0033#b42222766-buy"
+        "url": "https://ismusberlin.bandcamp.com/album/ismva0033#b45620211-buy"
       }
     },
     {
@@ -277,16 +272,37 @@
     "subjectOf": [
       {
         "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "m"
+          }
+        ],
         "name": "music",
         "url": "https://ismusberlin.bandcamp.com/music"
       },
       {
         "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "p"
+          }
+        ],
         "name": "merch",
         "url": "https://ismusberlin.bandcamp.com/merch"
       },
       {
         "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "c"
+          }
+        ],
         "name": "community",
         "url": "https://ismusberlin.bandcamp.com/community"
       }

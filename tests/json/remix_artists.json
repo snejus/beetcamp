@@ -96,11 +96,6 @@
           "@type": "PropertyValue",
           "name": "is_bfd",
           "value": true
-        },
-        {
-          "@type": "PropertyValue",
-          "name": "type_id",
-          "value": "d"
         }
       ],
       "image": [
@@ -231,16 +226,37 @@
     "subjectOf": [
       {
         "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "m"
+          }
+        ],
         "name": "music",
         "url": "https://maisoncloserecords.bandcamp.com/music"
       },
       {
         "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "p"
+          }
+        ],
         "name": "merch",
         "url": "https://maisoncloserecords.bandcamp.com/merch"
       },
       {
         "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "c"
+          }
+        ],
         "name": "community",
         "url": "https://maisoncloserecords.bandcamp.com/community"
       }

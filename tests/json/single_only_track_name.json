@@ -100,7 +100,7 @@
         }
       },
       {
-        "@id": "https://gutkeinforu.bandcamp.com/track/oenera#b44303833",
+        "@id": "https://gutkeinforu.bandcamp.com/track/oenera#b45137431",
         "@type": [
           "MusicRelease",
           "Product"
@@ -109,7 +109,7 @@
           {
             "@type": "PropertyValue",
             "name": "item_id",
-            "value": 44303833
+            "value": 45137431
           },
           {
             "@type": "PropertyValue",
@@ -129,36 +129,31 @@
           {
             "@type": "PropertyValue",
             "name": "art_id",
-            "value": 1986734983
+            "value": 3494809494
           },
           {
             "@type": "PropertyValue",
             "name": "is_bfd",
             "value": true
-          },
-          {
-            "@type": "PropertyValue",
-            "name": "type_id",
-            "value": "d"
           }
         ],
         "image": [
-          "https://f4.bcbits.com/img/a1986734983_10.jpg"
+          "https://f4.bcbits.com/img/a3494809494_10.jpg"
         ],
         "musicReleaseFormat": "DigitalFormat",
-        "name": "full digital discography (18 releases)",
+        "name": "full digital discography (21 releases)",
         "offers": {
           "@type": "Offer",
           "additionalProperty": [
             {
               "@type": "PropertyValue",
               "name": "bundle_size",
-              "value": 18
+              "value": 21
             },
             {
               "@type": "PropertyValue",
               "name": "discount",
-              "value": 0.3
+              "value": 0.65
             },
             {
               "@type": "PropertyValue",
@@ -167,12 +162,12 @@
             }
           ],
           "availability": "OnlineOnly",
-          "price": 20.26,
+          "price": 11.36,
           "priceCurrency": "USD",
           "priceSpecification": {
-            "minPrice": 20.26
+            "minPrice": 11.36
           },
-          "url": "https://gutkeinforu.bandcamp.com/track/oenera#b44303833-buy"
+          "url": "https://gutkeinforu.bandcamp.com/track/oenera#b45137431-buy"
         }
       }
     ],
@@ -182,8 +177,8 @@
   },
   "keywords": [
     "Electronic",
-    "KETA",
-    "techno",
+    "keta techno",
+    "meta",
     "trance",
     "Russia"
   ],
@@ -223,7 +218,7 @@
         "value": 749
       }
     ],
-    "description": "have u ever seen a label located at the very tip of a k-hall?",
+    "description": "support a tiny acquarium on the tip of a K-hall ~)",
     "foundingLocation": {
       "@type": "Place",
       "name": "Russia"
@@ -246,8 +241,39 @@
     "subjectOf": [
       {
         "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "m"
+          }
+        ],
         "name": "music",
         "url": "https://gutkeinforu.bandcamp.com/music"
+      },
+      {
+        "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "p"
+          }
+        ],
+        "name": "merch",
+        "url": "https://gutkeinforu.bandcamp.com/merch"
+      },
+      {
+        "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "v"
+          }
+        ],
+        "name": "video",
+        "url": "https://gutkeinforu.bandcamp.com/video"
       }
     ]
   }

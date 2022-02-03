@@ -134,7 +134,7 @@
           {
             "@type": "PropertyValue",
             "name": "quantity_available",
-            "value": 95
+            "value": 93
           }
         ],
         "availability": "InStock",
@@ -238,7 +238,7 @@
       {
         "@type": "WebPage",
         "name": "Instagram",
-        "url": "https://www.instagram.com/fallingapart030/"
+        "url": "https://www.instagram.com/fallingapartrecords/"
       },
       {
         "@type": "WebPage",
@@ -248,23 +248,44 @@
       {
         "@type": "WebPage",
         "name": "SoundCloud",
-        "url": "https://soundcloud.com/fallingapart030"
+        "url": "https://soundcloud.com/fallingapartrecords"
       }
     ],
     "name": "falling apart",
     "subjectOf": [
       {
         "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "m"
+          }
+        ],
         "name": "music",
         "url": "https://fallingapart.bandcamp.com/music"
       },
       {
         "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "p"
+          }
+        ],
         "name": "merch",
         "url": "https://fallingapart.bandcamp.com/merch"
       },
       {
         "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "c"
+          }
+        ],
         "name": "community",
         "url": "https://fallingapart.bandcamp.com/community"
       }

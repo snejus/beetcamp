@@ -66,7 +66,7 @@
       "name": "NYH244 Less Weird Parallel Universe  - Nearly 20 Years of Erikoisdance"
     },
     {
-      "@id": "https://newyorkhaunted.bandcamp.com/album/nyh244-less-weird-parallel-universe-nearly-20-years-of-erikoisdance#b44313512",
+      "@id": "https://newyorkhaunted.bandcamp.com/album/nyh244-less-weird-parallel-universe-nearly-20-years-of-erikoisdance#b45622685",
       "@type": [
         "MusicRelease",
         "Product"
@@ -75,7 +75,7 @@
         {
           "@type": "PropertyValue",
           "name": "item_id",
-          "value": 44313512
+          "value": 45622685
         },
         {
           "@type": "PropertyValue",
@@ -95,31 +95,26 @@
         {
           "@type": "PropertyValue",
           "name": "art_id",
-          "value": 2939613046
+          "value": 2299706879
         },
         {
           "@type": "PropertyValue",
           "name": "is_bfd",
           "value": true
-        },
-        {
-          "@type": "PropertyValue",
-          "name": "type_id",
-          "value": "d"
         }
       ],
       "image": [
-        "https://f4.bcbits.com/img/a2939613046_10.jpg"
+        "https://f4.bcbits.com/img/a2299706879_10.jpg"
       ],
       "musicReleaseFormat": "DigitalFormat",
-      "name": "full digital discography (296 releases)",
+      "name": "full digital discography (305 releases)",
       "offers": {
         "@type": "Offer",
         "additionalProperty": [
           {
             "@type": "PropertyValue",
             "name": "bundle_size",
-            "value": 296
+            "value": 305
           },
           {
             "@type": "PropertyValue",
@@ -133,12 +128,12 @@
           }
         ],
         "availability": "OnlineOnly",
-        "price": 88.8,
+        "price": 122.1,
         "priceCurrency": "EUR",
         "priceSpecification": {
-          "minPrice": 88.8
+          "minPrice": 122.1
         },
-        "url": "https://newyorkhaunted.bandcamp.com/album/nyh244-less-weird-parallel-universe-nearly-20-years-of-erikoisdance#b44313512-buy"
+        "url": "https://newyorkhaunted.bandcamp.com/album/nyh244-less-weird-parallel-universe-nearly-20-years-of-erikoisdance#b45622685-buy"
       }
     },
     {
@@ -280,7 +275,7 @@
         "value": 590
       }
     ],
-    "description": "NYH is the label of Dutch producer Drvg Cvltvre. Experimental house and techno. \n\nimagery created by @youtubeartifact\na bot by @dontsave\nand kandinsky.io",
+    "description": "NYH is the label of Dutch producer Drvg Cvltvre. Experimental house and techno. \n\nimagery created by @youtubeartifact\na bot by @dontsave, kandinsky.io and Dream by Wombo.",
     "foundingLocation": {
       "@type": "Place",
       "name": "Tilburg, Netherlands"
@@ -291,16 +286,37 @@
     "subjectOf": [
       {
         "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "m"
+          }
+        ],
         "name": "music",
         "url": "https://newyorkhaunted.bandcamp.com/music"
       },
       {
         "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "p"
+          }
+        ],
         "name": "merch",
         "url": "https://newyorkhaunted.bandcamp.com/merch"
       },
       {
         "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "c"
+          }
+        ],
         "name": "community",
         "url": "https://newyorkhaunted.bandcamp.com/community"
       }
