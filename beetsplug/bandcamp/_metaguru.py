@@ -41,7 +41,7 @@ VA = "Various Artists"
 
 _catalognum = r"""(?<![/@])(\b
 (?!\W|VA|EP[ ]|L[PC][ ]|.*20[0-9]{2}|.*[ ][0-9]KG|AT[ ]0|GC1)
-(?!(?i:vol |mp3|christ|vinyl|disc|session|record|artist|the ))
+(?!(?i:vol |mp3|christ|vinyl|disc|session|record|artist|the |maxi ))
 (
       [A-Z .]+\d{3,}        # HANDS D300
     | [A-Z-]{2,}\d+         # RIV4
@@ -58,10 +58,9 @@ _catalognum = r"""(?<![/@])(\b
 \b)"""
 
 CATNUM_PAT = {
-    "desc": re.compile(fr"(?:^|\n|[Cc]at[^:]+[.:]\ ?){_catalognum}", re.VERBOSE),
-    "in_parens": re.compile(_catalognum, re.VERBOSE),
-    "with_header": re.compile(fr"(?:Cat[^:]+:[ \W]*|number ){_catalognum}", re.VERBOSE),
+    "with_header": re.compile(fr"(?:Cat[^:]+:[ \W]*){_catalognum}", re.VERBOSE),
     "start_or_end": re.compile(fr"((^|\n){_catalognum}|{_catalognum}(\n|$))", re.VERBOSE),
+    "anywhere": re.compile(_catalognum, re.VERBOSE),
 }
 
 rm_strings = [
@@ -155,16 +154,15 @@ class Helpers:
         """Try getting the catalog number looking at various fields."""
         cases = [
             (CATNUM_PAT["with_header"], description),
-            (CATNUM_PAT["in_parens"], album),
-            (CATNUM_PAT["start_or_end"], album),
-            (CATNUM_PAT["desc"], description),
-            (CATNUM_PAT["start_or_end"], disctitle),
-            (re.compile(fr"\ {_catalognum}(?:\n|$)", re.VERBOSE), description),
-            (CATNUM_PAT["in_parens"], description),
+            (CATNUM_PAT["anywhere"], disctitle),
+            (CATNUM_PAT["anywhere"], album),
+            (CATNUM_PAT["start_or_end"], description),
+            (CATNUM_PAT["anywhere"], description),
         ]
         if label:
             # if label name is followed by digits, it may form a cat number
-            cases.append((re.compile(fr"(?i:({re.escape(label)}[ ][A-Z]?\d+[A-Z]?))"), album))
+            esc = re.escape(label)
+            cases.append((re.compile(fr"(?i:({esc}[ ][A-Z]?\d+[A-Z]?))"), album))
 
         def find(pat: Pattern, string: str) -> str:
             try:

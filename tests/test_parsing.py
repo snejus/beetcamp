@@ -261,7 +261,6 @@ def test_parse_country(name, expected):
     [
         ("Tracker-229 [PRH-002]", "", "", "", "PRH-002"),
         ("[PRH-002] Tracker-229", "", "", "", "PRH-002"),
-        ("Tracker-229 PRH-002", "", "", "", "Tracker-229"),
         ("ISMVA003.2", "", "", "", "ISMVA003.2"),
         ("UTC003-CD", "", "", "", "UTC003-CD"),
         ("UTC-003", "", "", "", "UTC-003"),
@@ -293,7 +292,6 @@ def test_parse_country(name, expected):
         ("OBS.CUR 2 Depths", "", "", "", "OBS.CUR 2"),
         ("VINYL 12", "", "", "", ""),
         ("Triple 12", "", "", "", ""),
-        ("", "o-ton 113", "", "", "o-ton 113"),
         ("IBM001V", "", "", "", "IBM001V"),
         ("fa010", "", "", "", "fa010"),
         ("", 'EP 12"', "", "", ""),
