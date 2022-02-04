@@ -40,9 +40,10 @@ MEDIA_MAP = {
 VA = "Various Artists"
 
 _catalognum = r"""(\b
-(?!\W|VA|EP |L[PC] |.*20[0-9]{2}|(?i:vol |mp3|christ|vinyl|disc|session|record|artist))
+(?!\W|VA|EP[ ]|L[PC][ ]|.*20[0-9]{2}|.*[ ][0-9]KG|AT[ ]0|GC1)
+(?!(?i:vol |mp3|christ|vinyl|disc|session|record|artist|the ))
 (
-      [A-Z]\d{3,}           # D300
+      [A-Z .]+\d{3,}        # HANDS D300
     | [A-Z-]{2,}\d+         # RIV4
     | [A-Z]+[A-Z.$-]+\d{2,} # USE202, HEY-101, LI$025
     | [A-Z.]{2,}[ ]\d+      # OBS.CUR 9
@@ -50,7 +51,7 @@ _catalognum = r"""(\b
     | [a-z]+(cd|lp)\d+      # ostgutlp45
 )
 ( # optionally followed by
-      [A-Z]         # IBM001V
+      [ ]?[A-Z]     # IBM001V
     | [.][0-9]+     # ISMVA002.1
     | -?[A-Z]+      # PLUS8024CD
 )?
@@ -58,10 +59,9 @@ _catalognum = r"""(\b
 
 CATNUM_PAT = {
     "desc": re.compile(fr"(?:^|\n|[Cc]at[^:]+[.:]\ ?){_catalognum}", re.VERBOSE),
-    "in_parens": re.compile(fr"[\[\(|]{_catalognum}[|\]\)]", re.VERBOSE),
-    "with_header": re.compile(fr"(?:Cat[^:]+:[ \W]*){_catalognum}", re.VERBOSE),
+    "in_parens": re.compile(_catalognum, re.VERBOSE),
+    "with_header": re.compile(fr"(?:Cat[^:]+:[ \W]*|number ){_catalognum}", re.VERBOSE),
     "start_or_end": re.compile(fr"((^|\n){_catalognum}|{_catalognum}(\n|$))", re.VERBOSE),
-    "label": r"(?i:({}[ ]\d+[A-Z]?))",
 }
 
 rm_strings = [
@@ -157,32 +157,30 @@ class Helpers:
             (CATNUM_PAT["with_header"], description),
             (CATNUM_PAT["in_parens"], album),
             (CATNUM_PAT["start_or_end"], album),
-            (CATNUM_PAT["in_parens"], description),
             (CATNUM_PAT["desc"], description),
             (CATNUM_PAT["start_or_end"], disctitle),
-            (re.compile(rf"\ {_catalognum}(?:\n|$)", re.VERBOSE), description),
+            (re.compile(fr"\ {_catalognum}(?:\n|$)", re.VERBOSE), description),
+            (CATNUM_PAT["in_parens"], description),
         ]
         if label:
             # if label name is followed by digits, it may form a cat number
-            pat = re.compile(CATNUM_PAT["label"].format(re.escape(label)))
-            cases.append((pat, album))
+            cases.append((re.compile(fr"(?i:({re.escape(label)}[ ][A-Z]?\d+[A-Z]?))"), album))
 
-        def search(pat: Pattern, string: str) -> Optional[str]:
-            match = pat.search(string)
-            if match:
-                groups = match.groups()
-                if groups and groups[0]:
-                    return groups[0].strip()
+        def find(pat: Pattern, string: str) -> str:
+            try:
+                return pat.search(string).groups()[0].strip()  # type: ignore
+            except AttributeError:
+                return ""
 
-            return None
+        ignored = set(map(str.casefold, kwargs.get("artists") or []) or [None, ""])
 
-        matches: Iterable[str] = filter(op.truth, it.starmap(search, cases))
+        def not_ignored(option: str) -> bool:
+            return bool(option) and option.casefold() not in ignored
 
-        artists = set(map(str.casefold, kwargs.get("artists") or []))
-        if artists:
-            matches = list(matches)
-            matches = it.filterfalse(lambda x: x.casefold() in artists, matches)
-        return next(it.chain(matches, [""]))
+        try:
+            return next(filter(not_ignored, it.starmap(find, cases)))
+        except StopIteration:
+            return ""
 
     @staticmethod
     def get_duration(source: JSONDict) -> int:
@@ -338,14 +336,7 @@ class Metaguru(Helpers):
 
     @cached_property
     def all_media_comments(self) -> str:
-        get_desc = op.methodcaller("get", "description", "")
-        return "\n".join(
-            [
-                # self.comments,
-                *map(get_desc, self.meta.get("albumRelease", {})),
-                self.comments,
-            ]
-        )
+        return (self._media.get("description") or "") + "\n" + self.comments
 
     @cached_property
     def album_name(self) -> str:

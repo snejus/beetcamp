@@ -15,7 +15,7 @@ from beetsplug.bandcamp._metaguru import Metaguru
 pytestmark = pytest.mark.lib
 
 target_dir = "dev"
-compare_against = "a9eeafc"
+compare_against = "5462977"
 if not os.path.exists(target_dir):
     os.makedirs(target_dir)
 install(show_locals=True, extra_lines=8, width=int(os.environ.get("COLUMNS", 150)))
