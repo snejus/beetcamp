@@ -40,39 +40,37 @@ MEDIA_MAP = {
 VA = "Various Artists"
 
 _catalognum = r"""(\b
-    (?![A-z][a-z]+\ [0-9]+|EP |C\d\d|(?i:vol(ume)?|record|session|disc|artist)|VA|[A-Z][0-9]\b)
-    (
-        [A-Z]+[ ]\d   # must include at least one number
-      | [A-z$]+\d+([.]\d)?
-      | (
-          [A-z]+([-.][A-Z]+)?    # may include a space before the number(s)
-          [-.]?
-          (
-            [ ]\d{2,3}   # must include at least one number
-            | \d{1,3}[.]\d+ # may end with .<num>
-            | \d{1,4}
-          )
-          (?:
-            | (?=-?CD)  # may end with -CD which we ignore
-            | [A-Z]     # may end with a single capital letter
-          )?
-      )
-    )\b(?![0-9-/])
+(?!\W|VA|EP |L[PC] |.*20[0-9]{2}|(?i:vol |mp3|christ|vinyl|disc|session|record|artist))
+(
+      [A-Z]\d{3,}           # D300
+    | [A-Z-]{2,}\d+         # RIV4
+    | [A-Z]+[A-Z.$-]+\d{2,} # USE202, HEY-101, LI$025
+    | [A-Z.]{2,}[ ]\d+      # OBS.CUR 9
+    | \w+[A-z]0\d+          # 1ØPILLS018, fa036
+    | [a-z]+(cd|lp)\d+      # ostgutlp45
 )
-"""
+( # optionally followed by
+      [A-Z]         # IBM001V
+    | [.][0-9]+     # ISMVA002.1
+    | -?[A-Z]+      # PLUS8024CD
+)?
+\b)"""
+
+CATNUM_PAT = {
+    "desc": re.compile(fr"(?:^|\n|[Cc]at[^:]+[.:]\ ?){_catalognum}", re.VERBOSE),
+    "in_parens": re.compile(fr"[\[\(|]{_catalognum}[|\]\)]", re.VERBOSE),
+    "with_header": re.compile(fr"(?:Cat[^:]+:[ \W]*){_catalognum}", re.VERBOSE),
+    "start_or_end": re.compile(fr"((^|\n){_catalognum}|{_catalognum}(\n|$))", re.VERBOSE),
+    "label": r"(?i:({}[ ]\d+[A-Z]?))",
+}
+
 rm_strings = [
     "limited edition",
     "various artists?|va",
-    "free download|free dl|free\\)",
+    r"free download|free dl|free[)]",
     "vinyl|(double )?(ep|lp)",
     "e[.]p[.]",
 ]
-CATNUM_PAT = {
-    "desc": re.compile(rf"(?:^|\n|[Cc]at[^:]+[.:]\ ?){_catalognum}", re.VERBOSE),
-    "in_parens": re.compile(rf"[\[\(|]{_catalognum}[|\]\)]", re.VERBOSE),
-    "with_header": re.compile(r"(?:Catal[^:]+: *)(\b[^\n]+\b)(?:[\]]*\n)"),
-    "start_or_end": re.compile(rf"((^|\n){_catalognum}|{_catalognum}(\n|$))", re.VERBOSE),
-}
 PATTERNS: Dict[str, Pattern] = {
     "clean_title": re.compile(fr"(?i: ?[\[\(]?\b({'|'.join(rm_strings)})(\b[\]\)]?|$))"),
     "clean_incl": re.compile(r"(?i:(\(?incl|\((inc|tracks|.*remix( |es)))).*$"),
@@ -155,24 +153,30 @@ class Helpers:
     def parse_catalognum(album, disctitle, description, label, **kwargs):
         # type: (str, str, str, str, Any) -> str
         """Try getting the catalog number looking at various fields."""
-        esc_label = re.escape(label)
         cases = [
+            (CATNUM_PAT["with_header"], description),
             (CATNUM_PAT["in_parens"], album),
             (CATNUM_PAT["start_or_end"], album),
-            (CATNUM_PAT["with_header"], description),
             (CATNUM_PAT["in_parens"], description),
             (CATNUM_PAT["desc"], description),
             (CATNUM_PAT["start_or_end"], disctitle),
             (re.compile(rf"\ {_catalognum}(?:\n|$)", re.VERBOSE), description),
         ]
         if label:
-            # low prio: if label name is followed by digits, it may form a cat number
-            esc = rf"{esc_label}\ ?[A-Z]?[0-9]+[A-Z]?"
-            cases.append((re.compile(rf"(^{esc})|({esc}$)", re.IGNORECASE), album))
+            # if label name is followed by digits, it may form a cat number
+            pat = re.compile(CATNUM_PAT["label"].format(re.escape(label)))
+            cases.append((pat, album))
 
-        search = lambda x: x[0].search(x[1])
-        strip = lambda x: x.groups()[0].strip() if x and len(x.groups()) and x.groups()[0] else ""
-        matches: Iterable[str] = filter(op.truth, map(strip, map(search, cases)))
+        def search(pat: Pattern, string: str) -> Optional[str]:
+            match = pat.search(string)
+            if match:
+                groups = match.groups()
+                if groups and groups[0]:
+                    return groups[0].strip()
+
+            return None
+
+        matches: Iterable[str] = filter(op.truth, it.starmap(search, cases))
 
         artists = set(map(str.casefold, kwargs.get("artists") or []))
         if artists:
@@ -493,7 +497,7 @@ class Metaguru(Helpers):
                 index=position or 1,
                 medium_index=position or 1,
                 track_id=item.get("@id"),
-                length=self.get_duration(item),
+                length=floor(self.get_duration(item)),
                 **self.parse_track_name(name, delim, rm_index=rm_index),
             )
             track["artist"] = self.get_track_artist(track["artist"], item, albumartist)

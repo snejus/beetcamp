@@ -15,7 +15,7 @@ from beetsplug.bandcamp._metaguru import Metaguru
 pytestmark = pytest.mark.lib
 
 target_dir = "dev"
-compare_against = "0.11.0"
+compare_against = "a9eeafc"
 if not os.path.exists(target_dir):
     os.makedirs(target_dir)
 install(show_locals=True, extra_lines=8, width=int(os.environ.get("COLUMNS", 150)))
@@ -105,7 +105,7 @@ def test_file(file, config):
 
 def test_all():
     config = BandcampPlugin().config.flatten()
-    for testfile in testfiles:
+    for testfile in sorted(testfiles):
         guru = Metaguru(open(os.path.join("tests/jsons", testfile)).read(), config)
         if "_track_" in testfile:
             new = guru.singleton

@@ -263,7 +263,7 @@ def test_parse_country(name, expected):
         ("[PRH-002] Tracker-229", "", "", "", "PRH-002"),
         ("Tracker-229 PRH-002", "", "", "", "Tracker-229"),
         ("ISMVA003.2", "", "", "", "ISMVA003.2"),
-        ("UTC003-CD", "", "", "", "UTC003"),
+        ("UTC003-CD", "", "", "", "UTC003-CD"),
         ("UTC-003", "", "", "", "UTC-003"),
         ("EP [SINDEX008]", "", "", "", "SINDEX008"),
         ("2 x Vinyl LP - MTY003", "", "", "", "MTY003"),
@@ -301,6 +301,7 @@ def test_parse_country(name, expected):
         ("Counterspell [HMX005]", "", "", "", "HMX005"),
         ("3: Flight Of The Behemoth", "", "", "SUNN O)))", ""),
         ("[CAT001]", "", "", "\\m/ records", "CAT001"),
+        ("", "", "On INS004, ", "", "INS004"),
     ],
 )
 def test_parse_catalognum(album, disctitle, description, label, expected):
