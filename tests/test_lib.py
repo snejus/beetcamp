@@ -15,7 +15,7 @@ from beetsplug.bandcamp._metaguru import Metaguru
 pytestmark = pytest.mark.lib
 
 target_dir = "dev"
-compare_against = "5462977"
+compare_against = "59da33d"
 if not os.path.exists(target_dir):
     os.makedirs(target_dir)
 install(show_locals=True, extra_lines=8, width=int(os.environ.get("COLUMNS", 150)))
@@ -43,6 +43,7 @@ def do_key(table, key: str, before, after) -> None:
     after = re.sub(r"^\s|\s$", "", str(after or ""))
 
     if (before or after) and (before != after):
+        difftext = ""
         stats_map[key] += 1
         if key == "genre":
             before, after = set(before.split(", ")), set(after.split(", "))
@@ -62,8 +63,9 @@ def do_key(table, key: str, before, after) -> None:
                 difftext = " | ".join(diffparts)
         else:
             difftext = make_difftext(before, after)
+        if difftext:
             diffs[key].add(difftext)
-        table.add_row(wrap(key, "b"), difftext)
+            table.add_row(wrap(key, "b"), difftext)
 
 
 def compare(old, new) -> bool:
