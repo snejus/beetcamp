@@ -280,13 +280,6 @@ def test_parse_country(name, expected):
         ("Emotion 1 - Kulør 008", "Emotion 1 Vinyl", "", "Kulør", "Kulør 008"),
         ("zz333HZ with remixes from Le Chocolat Noir", "", "", "", ""),
         ("UTC-003", "", "Catalogue Number: TE0029", "", "TE0029"),
-        ("UTC-003", "", "Catalogue Nr: TE0029", "", "TE0029"),
-        ("UTC-003", "", "Catalogue No.: TE0029", "", "TE0029"),
-        ("UTC-003", "", "Catalogue: CTU-300", "", "CTU-300"),
-        ("UTC-003", "", "Cat No: TE0029", "", "TE0029"),
-        ("UTC-003", "", "Cat Nr.: TE0029", "", "TE0029"),
-        ("UTC-003", "", "Catalogue:CTU-300", "", "CTU-300"),
-        ("Emotional Shutdown", "", "Catalog: SCTR007", "", "SCTR007"),
         ("", "LP | ostgutlp31", "", "", "ostgutlp31"),
         ("Album VA001", "", "", "", ""),
         ("Album MVA001", "", "", "", "MVA001"),
@@ -303,10 +296,26 @@ def test_parse_country(name, expected):
         ("[CAT001]", "", "", "\\m/ records", "CAT001"),
         ("", "", "On INS004, ", "", "INS004"),
         ("Addax EP - WU55", "", "", "", "WU55"),
+        ("BAD001", "Life Without Friction (SSPB008)", "", "", "SSPB008"),
+        ("", "TS G5000 hello hello t-shirt.", "", "", ""),
     ],
 )
-def test_parse_catalognum(album, disctitle, description, label, expected):
-    assert Metaguru.parse_catalognum(album, disctitle, description, label) == expected
+def test_parse_catalognum(album, disctitle, description, label, expected, beets_config):
+    meta = {
+        "name": album,
+        "description": description,
+        "publisher": {"name": label},
+        "byArtist": {"name": ""},
+        "albumRelease": [
+            {
+                "name": disctitle,
+                "musicReleaseFormat": "VinylFormat",
+                "description": "",
+            },
+        ],
+    }
+
+    assert Metaguru(meta, beets_config).catalognum == expected
 
 
 @pytest.mark.parametrize(
