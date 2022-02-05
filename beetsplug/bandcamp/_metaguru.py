@@ -160,7 +160,7 @@ class Helpers:
         if label:
             # if label name is followed by digits, it may form a cat number
             esc = re.escape(label)
-            cases.append((re.compile(fr"(?i:({esc}[ ][A-Z]?\d+[A-Z]?))"), album))
+            cases.insert(0, (re.compile(fr"(?i:{esc} ?[A-Z]?\d+[A-Z]?)"), album))
 
         def find(pat: Pattern, string: str) -> str:
             try:

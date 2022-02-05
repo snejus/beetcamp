@@ -298,6 +298,9 @@ def test_parse_country(name, expected):
         ("Addax EP - WU55", "", "", "", "WU55"),
         ("BAD001", "Life Without Friction (SSPB008)", "", "", "SSPB008"),
         ("", "TS G5000 hello hello t-shirt.", "", "", ""),
+        ("GOOD GOOD001", "", "", "", "GOOD GOOD001"),
+        ("BAd GOOD001", "", "", "", "GOOD001"),
+        ("bad GOOD001", "", "", "bad GOOD", "bad GOOD001"),
     ],
 )
 def test_parse_catalognum(album, disctitle, description, label, expected, beets_config):
