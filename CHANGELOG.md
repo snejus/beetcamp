@@ -1,21 +1,42 @@
 ## [0.12.0-alpha.0] Unreleased
 
+### Added
+
+- `catalognum`: To find the catalog number, we have previously been looking at the release
+  title or it being mentioned explicitly within the release description. Now, media title,
+  media description and the rest of the release description are also taken into account.
+
+- `track`: Support for tracks that do not use dash (`-`) but some other character to separate
+  pieces of information in track names. For example, consider the following
+  [tracklist]:
+
+  ```
+  A1 | WHITESHADOWHURTS x TOXICSPIKEBACK | Arcadia
+  A2 | WHITESHADOWHURTS | Corrupted Entity
+  A3 | WHITESHADOWHURTS | Colosseo
+  B1 | TOXICSPIKEBACK | Eclipse
+  B2 | TOXICSPIKEBACK | Eclipse [DJ LINT's Tribe Mix]
+  B3 | WHITESHADOWHURTS | Corrupted Entity [OAT.M's Oldschool Mix]
+  ```
+
+  `beetcamp` now finds that `|` is being used as the delimiter and parses values for
+  `track_alt`, `artist` and `title` accordingly for each track.
+
+### Updated
+
+- `catalognum`
+  - Artists like **PROCESS 404** are not assumed to be catalogue numbers anymore.
+  - Short catalognums, such as **WU55**, are accepted.
+  - Multiple words, such as **SMILE SESSIONS 003** are accepted as long as they are in
+    caps and are followed by multiple numbers.
+
 ### Fixed
 
 - `singleton`
   - catalogue number, if found, is now reliably removed form the title.
 
-### Updated
-
-- `catalognum`
-  - Previously we've been searching the release title only; now we additionally read the media title, and media and release descriptions too
-  - Candidates are checked against the list of artists found in the release to
-    ensure that artists like **PROCESS 404** are not assumed to be catalogue numbers.
-  - Technical details:
-    - Short catalognums, such as **WU55**, are now accepted.
-    - Multiple words, such as **SMILE SESSIONS 003** are accepted as long as they are in
-      caps and there are multiple numbers at the end.
-
+[tracklist]: https://scumcllctv.bandcamp.com/album/scum002-arcadia
+[0.12.0]: https://github.com/snejus/beetcamp/releases/tag/0.12.0
 
 ## [0.11.0] 2021-11-12
 
@@ -81,6 +102,7 @@
   data - this is now handled gracefully.
 
 [musicbrainz genres]: https://beta.musicbrainz.org/genres
+[0.11.0]: https://github.com/snejus/beetcamp/releases/tag/0.11.0
 
 ## [0.10.1] 2021-09-13
 

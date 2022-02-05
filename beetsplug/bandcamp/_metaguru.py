@@ -42,6 +42,7 @@ VA = "Various Artists"
 _catalognum = r"""(?<![/@])(\b
 (?!\W|VA|EP[ ]|L[PC][ ]|.*20[0-9]{2}|.*[ ][0-9]KG|AT[ ]0|GC1)
 (?!(?i:vol |mp3|christ|vinyl|disc|session|record|artist|the |maxi ))
+(?![^.]+shirt)
 (
       [A-Z .]+\d{3,}        # HANDS D300
     | [A-Z-]{2,}\d+         # RIV4
@@ -90,7 +91,7 @@ PATTERNS: Dict[str, Pattern] = {
 
 def urlify(pretty_string: str) -> str:
     """Transform a string into bandcamp url."""
-    name = pretty_string.lower().replace("'", "")
+    name = pretty_string.lower().replace("'", "").replace(".", "")
     return re.sub("--+", "-", re.sub(r"\W", "-", name, flags=re.ASCII)).strip("-")
 
 
@@ -113,19 +114,16 @@ class Helpers:
         return clean_name
 
     @staticmethod
-    def parse_track_name(name: str, delim: str, rm_index=False) -> Dict[str, str]:
+    def parse_track_name(name: str, delim: str = "-") -> Dict[str, str]:
         track = defaultdict(str)
-        if rm_index:
-            name = re.sub(r"^[01]?[0-9][. ] ?(?=[A-Z])", "", name).strip(", ")
 
         # match track alt and remove it from the name
         match = PATTERNS["track_alt"].match(name)
         if match:
             track["track_alt"] = match.expand(r"\1")
-            name = name.replace(track["track_alt"], "")
+            # do not strip a period from the end since it may end with an abbrev
+            name = name.replace(track["track_alt"], "").lstrip(". ")
 
-        # do not strip a period from the end since it could end with an abbrev
-        name = name.lstrip(".")
         if delim:
             parts = re.split(fr" ?[{delim}] | [{delim}] ?", name.strip(",-| "))
             track["title"] = parts.pop(-1)  # title is always given
@@ -196,8 +194,6 @@ class Helpers:
         If `remove_extra`, remove info from within the parentheses (usually remix info).
         """
         # catalognum, album, albumartist
-        for arg in filter(op.truth, args):
-            name = re.sub(rf"(?i:[^\w\]\)]*{re.escape(arg)}\W*)", " ", name)
         for pat, repl in [
             (r"  +", " "),  # multiple spaces
             (r"\( +|(- )?\(+", "("),  # rubbish that precedes opening parenthesis
@@ -205,10 +201,23 @@ class Helpers:
             ('"', ""),  # double quote anywhere in the string
         ]:
             name = re.sub(pat, repl, name)
+        for arg in filter(op.truth, args):
+            name = re.sub(fr"(?i:[^\w\]\)]*{re.escape(arg)}\W*)", " ", name)
         # redundant information about 'remixes from xyz'
         if remove_extra:
             name = PATTERNS["clean_incl"].sub("", name)
-        return PATTERNS["clean_title"].sub("", name).strip(" -|/'")
+        return PATTERNS["clean_title"].sub("", name).strip(" -|/")
+
+    @staticmethod
+    def clean_track_names(names: List[str], catalognum: str = "") -> List[str]:
+        """Remove catalogue number and leading numerical index if they are found."""
+        if catalognum:
+            names = list(map(lambda x: Helpers.clean_name(x, catalognum), names))
+
+        if all(map(lambda x: x[0].isdigit(), names)):
+            pat = re.compile(r"^\d+\W+")
+            names = list(map(lambda x: pat.sub("", x), names))
+        return names
 
     @staticmethod
     def get_genre(keywords: Iterable[str], config: JSONDict) -> Iterable[str]:
@@ -376,7 +385,7 @@ class Metaguru(Helpers):
         albumartist = self.meta["byArtist"]["name"].replace("various", VA)
         album = self.album_name
         if self.label == albumartist:
-            albumartist = self.parse_track_name(album, "-").get("artist") or albumartist
+            albumartist = self.parse_track_name(album).get("artist") or albumartist
 
         return re.sub(r"(?i:, ft.*remix.*)", "", albumartist)
 
@@ -478,33 +487,26 @@ class Metaguru(Helpers):
         try:
             raw_tracks = self.meta["track"].get("itemListElement", [])
         except KeyError:
-            raw_tracks = [{"item": self.meta, "position": 0}]
+            raw_tracks = [{"item": self.meta, "position": 1}]
 
         names = list(map(lambda x: (x.get("item") or {}).get("name") or "", raw_tracks))
 
         # find the track delimiter
         delim = self.track_delimiter(names)
-
-        # remove leading numerical index if every track has it
-        rm_index = False
-        if all(map(lambda x: x[0].isdigit(), names)):
-            rm_index = True
-
+        names = self.clean_track_names(names, self.catalognum)
         albumartist = self.bandcamp_albumartist
-        catalognum = self.catalognum
         tracks = []
         for item, position in map(op.itemgetter("item", "position"), raw_tracks):
-            name = self.clear_digi_only(item["name"])
-            digi_only = name != item["name"]
-            name = self.clean_name(name, catalognum)
-            track: JSONDict = defaultdict(str)
-            track.update(
-                digi_only=digi_only,
+            initial_name = names[position - 1]
+            name = self.clear_digi_only(initial_name)
+            track: JSONDict = defaultdict(
+                str,
+                digi_only=name != initial_name,
                 index=position or 1,
                 medium_index=position or 1,
                 track_id=item.get("@id"),
                 length=floor(self.get_duration(item)),
-                **self.parse_track_name(name, delim, rm_index=rm_index),
+                **self.parse_track_name(name, delim),
             )
             track["artist"] = self.get_track_artist(track["artist"], item, albumartist)
             lyrics = item.get("recordingOf", {}).get("lyrics", {}).get("text")
@@ -731,7 +733,7 @@ class Metaguru(Helpers):
             track.update(**self._common_album, albumartist=self.albumartist)
 
         track.update(self.tracks[0].copy())
-        track.update(self.parse_track_name(self.clean_album_name, "-"))
+        track.update(self.parse_track_name(self.clean_album_name))
         if not track.get("artist"):
             track["artist"] = self.albumartist
         track["title"] = self.clean_name(track["title"])
