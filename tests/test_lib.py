@@ -15,7 +15,7 @@ from beetsplug.bandcamp._metaguru import Metaguru
 pytestmark = pytest.mark.lib
 
 target_dir = "dev"
-compare_against = "ac6dd0f"
+compare_against = "0.11.0"
 if not os.path.exists(target_dir):
     os.makedirs(target_dir)
 install(show_locals=True, extra_lines=8, width=int(os.environ.get("COLUMNS", 150)))
@@ -34,7 +34,7 @@ def file(request):
     return request.param
 
 
-diffs = defaultdict(set)
+diffs = defaultdict(list)
 stats_map = defaultdict(lambda: 0)
 
 
@@ -64,7 +64,7 @@ def do_key(table, key: str, before, after) -> None:
         else:
             difftext = make_difftext(before, after)
         if difftext:
-            diffs[key].add(difftext)
+            diffs[key].append(difftext)
             table.add_row(wrap(key, "b"), difftext)
 
 

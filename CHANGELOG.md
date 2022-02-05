@@ -1,3 +1,22 @@
+## [0.12.0-alpha.0] Unreleased
+
+### Fixed
+
+- `singleton`
+  - catalogue number, if found, is now reliably removed form the title.
+
+### Updated
+
+- `catalognum`
+  - Previously we've been searching the release title only; now we additionally read the media title, and media and release descriptions too
+  - Candidates are checked against the list of artists found in the release to
+    ensure that artists like **PROCESS 404** are not assumed to be catalogue numbers.
+  - Technical details:
+    - Short catalognums, such as **WU55**, are now accepted.
+    - Multiple words, such as **SMILE SESSIONS 003** are accepted as long as they are in
+      caps and there are multiple numbers at the end.
+
+
 ## [0.11.0] 2021-11-12
 
 ### Added

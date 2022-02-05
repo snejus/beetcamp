@@ -3,11 +3,12 @@ import json
 from datetime import date
 
 import pytest
-from beetsplug.bandcamp._metaguru import Helpers, Metaguru, urlify
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
+
+from beetsplug.bandcamp._metaguru import Helpers, Metaguru, urlify
 
 pytestmark = pytest.mark.parsing
 
@@ -168,6 +169,10 @@ def test_convert_title(title, expected):
         ),
         (("O)))Bow 1",), (None, None, "O)))Bow 1", "O)))Bow 1")),
         (("H.E.L.L.O.",), (None, None, "H.E.L.L.O.", "H.E.L.L.O.")),
+        (
+            ("Erik Burka - A Baby Pigeon [MNRM003]", "MNRM003"),
+            (None, "Erik Burka", "A Baby Pigeon", "A Baby Pigeon"),
+        ),
     ],
 )
 def test_parse_track_name(inputs, expected):
@@ -204,7 +209,7 @@ def test_track_artists(artists, expected):
 
 
 @pytest.mark.parametrize(
-    ("name", "expected_digital_only", "expected_name"),
+    ("name", "expected_digi_only", "expected_name"),
     [
         ("Artist - Track [Digital Bonus]", True, "Artist - Track"),
         ("DIGI 11. Track", True, "Track"),
@@ -223,10 +228,10 @@ def test_track_artists(artists, expected):
         ("TROPICOFRIO - DIGITAL DRIVER", False, "TROPICOFRIO - DIGITAL DRIVER"),
     ],
 )
-def test_check_digital_only(name, expected_digital_only, expected_name):
-    actual_name, actual_digi_only = Metaguru.clean_digital_only_track(name)
+def test_check_digi_only(name, expected_digi_only, expected_name):
+    actual_name = Metaguru.clear_digi_only(name)
     assert actual_name == expected_name
-    assert actual_digi_only == expected_digital_only
+    assert (actual_name != name) == expected_digi_only
 
 
 @pytest.mark.parametrize(
@@ -300,6 +305,7 @@ def test_parse_country(name, expected):
         ("3: Flight Of The Behemoth", "", "", "SUNN O)))", ""),
         ("[CAT001]", "", "", "\\m/ records", "CAT001"),
         ("", "", "On INS004, ", "", "INS004"),
+        ("Addax EP - WU55", "", "", "", "WU55"),
     ],
 )
 def test_parse_catalognum(album, disctitle, description, label, expected):

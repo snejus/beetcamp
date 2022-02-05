@@ -3,7 +3,7 @@ import itertools as it
 import json
 import operator as op
 import re
-from collections import defaultdict
+from collections import Counter, defaultdict
 from datetime import date, datetime
 from functools import partial
 from math import floor
@@ -334,7 +334,14 @@ class Metaguru(Helpers):
 
     @cached_property
     def all_media_comments(self) -> str:
-        return (self._media.get("description") or "") + "\n" + self.comments
+        get_desc = op.methodcaller("get", "description", "")
+        return "\n".join(
+            [
+                # self.comments,
+                *map(get_desc, self.meta.get("albumRelease", {})),
+                self.comments,
+            ]
+        )
 
     @cached_property
     def album_name(self) -> str:
@@ -443,16 +450,20 @@ class Metaguru(Helpers):
 
     def track_delimiter(self, names: List[str]) -> str:
         """Return the track parts delimiter that is in effect in the current release.
-        In some (weird) situations track parts are delimited by a pipe pipe character
-        instead of the usual dash. This checks every track looking for our delimiters
-        and returns the one that is found _in each of the track names_.
+        In some (unusual) situations track parts are delimited by a pipe character
+        instead of dash.
+
+        This checks every track looking for the first character (alphanums, ampersand,
+        space excluded) that splits it. The character that split the most and
+        at least half of the tracklist is the character we need.
         """
-        for delim in "-|":
-            delims = it.repeat(fr"[{delim}] | [{delim}]")
-            match_count = sum(map(bool, map(re.search, delims, names)))
-            if len(names) - match_count <= 1:
-                return delim
-        return ""
+
+        def get_delim(string: str) -> str:
+            match = re.search(r" ([^\w& ]) ", string)
+            return match.expand(r"\1") if match else ""
+
+        delim, count = Counter(map(get_delim, names)).most_common(1).pop()
+        return re.escape(delim) if (len(names) == 1 or count > len(names) / 2) else ""
 
     @cached_property
     def tracks(self) -> List[JSONDict]:
@@ -462,8 +473,7 @@ class Metaguru(Helpers):
         except KeyError:
             raw_tracks = [{"item": self.meta, "position": 0}]
 
-        get = op.itemgetter
-        names = list(map(get("name"), map(get("item"), raw_tracks)))
+        names = list(map(lambda x: (x.get("item") or {}).get("name") or "", raw_tracks))
 
         # find the track delimiter
         delim = self.track_delimiter(names)
@@ -714,7 +724,7 @@ class Metaguru(Helpers):
             track.update(**self._common_album, albumartist=self.albumartist)
 
         track.update(self.tracks[0].copy())
-        track.update(self.parse_track_name(self.album_name, "-"))
+        track.update(self.parse_track_name(self.clean_album_name, "-"))
         if not track.get("artist"):
             track["artist"] = self.albumartist
         track["title"] = self.clean_name(track["title"])
