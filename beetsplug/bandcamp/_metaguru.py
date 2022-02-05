@@ -289,34 +289,26 @@ class Helpers:
 
 
 class Metaguru(Helpers):
-    html: str
     meta: JSONDict
     config: JSONDict
-
-    _media: Dict[str, str]
     _singleton = False
-    excluded_fields: Set[str] = set()
 
-    def __init__(self, html, config=None) -> None:
-        self.html = html
+    def __init__(self, meta: JSONDict, config: Optional[JSONDict] = None) -> None:
+        self.meta = meta
         self.config = config or {}
-        self.meta = {}
-        self.excluded_fields.update(set(self.config.get("exclude_extra_fields") or []))
-        match = re.search(PATTERNS["meta"], html)
-        if match:
-            self.meta = json.loads(match.group())
 
-        self._media = self.meta.get("albumRelease", [{}])[0]
+    @classmethod
+    def from_html(cls, html: str, config: JSONDict = None) -> "Metaguru":
         try:
-            media_index = self._get_media_reference(self.meta)
-        except (KeyError, AttributeError):
-            pass
-        else:
-            # if preference is given and the format is available, use it
-            for preference in (self.config.get("preferred_media") or "").split(","):
-                if preference in media_index:
-                    self._media = media_index[preference]
-                    break
+            meta = json.loads(re.search(PATTERNS["meta"], html).group())  # type: ignore
+        except AttributeError as exc:
+            raise AttributeError("Could not find release metadata JSON") from exc
+
+        return cls(meta, config)
+
+    @cached_property
+    def excluded_fields(self) -> Set[str]:
+        return set(self.config.get("excluded_fields") or [])
 
     @cached_property
     def comments(self) -> str:
@@ -324,7 +316,7 @@ class Metaguru(Helpers):
         the configured separator string.
         """
         parts = [self.meta.get("description")]
-        media_desc = self._media.get("description")
+        media_desc = self.media.get("description")
         if media_desc and not media_desc.startswith("Includes high-quality"):
             parts.append(media_desc)
 
@@ -412,14 +404,29 @@ class Metaguru(Helpers):
         return "Official" if reldate and reldate <= date.today() else "Promotional"
 
     @cached_property
+    def media(self) -> JSONDict:
+        media = self.meta.get("albumRelease", [{}])[0]
+        try:
+            media_index = self._get_media_reference(self.meta)
+        except (KeyError, AttributeError):
+            pass
+        else:
+            # if preference is given and the format is available, use it
+            for preference in (self.config.get("preferred_media") or "").split(","):
+                if preference in media_index:
+                    media = media_index[preference]
+                    break
+        return media
+
+    @cached_property
     def media_name(self) -> str:
         """Return the human-readable version of the media format."""
-        return MEDIA_MAP.get(self._media.get("musicReleaseFormat", ""), DIGI_MEDIA)
+        return MEDIA_MAP.get(self.media.get("musicReleaseFormat", ""), DIGI_MEDIA)
 
     @cached_property
     def disctitle(self) -> str:
         """Return medium's disc title if found."""
-        return "" if self.media_name == DIGI_MEDIA else self._media.get("name", "")
+        return "" if self.media_name == DIGI_MEDIA else self.media.get("name", "")
 
     @cached_property
     def mediums(self) -> int:
@@ -675,7 +682,7 @@ class Metaguru(Helpers):
 
     def get_fields(self, fields: Iterable[str], src: object = None) -> JSONDict:
         """Return a mapping between unexcluded fields and their values."""
-        fields = set(fields) - self.excluded_fields
+        fields = list(set(fields) - self.excluded_fields)
         if len(fields) == 1:
             field = fields.pop()
             return {field: getattr(self, field)}

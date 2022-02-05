@@ -135,7 +135,7 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         if not html:
             html = self._get(url)
         if html:
-            self._gurucache[url] = Metaguru(html, self.config.flatten())
+            self._gurucache[url] = Metaguru.from_html(html, self.config.flatten())
         return self._gurucache.get(url)
 
     def loaded(self) -> None:

@@ -90,8 +90,8 @@ def compare(old, new) -> bool:
 
 
 def test_file(file, config):
-    with open(os.path.join("tests/jsons", file)) as f:
-        guru = Metaguru(f.read(), config)
+    meta = json.load(open(os.path.join("tests/jsons", file)))
+    guru = Metaguru(meta, config)
 
     if "_track_" in file:
         new = guru.singleton
@@ -105,10 +105,10 @@ def test_file(file, config):
     compare(old, new)
 
 
-def test_all():
-    config = BandcampPlugin().config.flatten()
+def test_all(config):
     for testfile in sorted(testfiles):
-        guru = Metaguru(open(os.path.join("tests/jsons", testfile)).read(), config)
+        meta = json.load(open(os.path.join("tests/jsons", testfile)))
+        guru = Metaguru(meta, config)
         if "_track_" in testfile:
             new = guru.singleton
         else:

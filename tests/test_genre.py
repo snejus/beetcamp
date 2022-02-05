@@ -1,10 +1,12 @@
 import pytest
+
 from beetsplug.bandcamp._metaguru import Metaguru
+
+pytestmark = pytest.mark.parsing
 
 
 def test_style(beets_config):
-    guru = Metaguru("", beets_config)
-    guru.meta = {"publisher": {"genre": "bandcamp.com/tag/folk"}}
+    guru = Metaguru({"publisher": {"genre": "bandcamp.com/tag/folk"}}, beets_config)
     assert guru.style == "folk"
 
 
@@ -28,8 +30,7 @@ def test_style(beets_config):
 def test_genre_variations(keywords, expected, beets_config):
     beets_config["genre"]["mode"] = "psychedelic"
     beets_config["genre"]["always_include"] = ["^hard", "core$"]
-    guru = Metaguru("", beets_config)
-    guru.meta = {"keywords": keywords}
+    guru = Metaguru({"keywords": keywords}, beets_config)
     assert guru.genre == expected
 
 
@@ -97,8 +98,7 @@ def test_beets_config(capitalize, maximum, expected, beets_config):
     }
     beets_config["genre"]["capitalize"] = capitalize
     beets_config["genre"]["maximum"] = maximum
-    guru = Metaguru("", beets_config)
-    guru.meta = meta
+    guru = Metaguru(meta, beets_config)
 
     assert guru.style == ("Dubstep" if capitalize else "dubstep")
     assert guru.genre == expected

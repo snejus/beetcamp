@@ -1,5 +1,4 @@
 """Module for tests related to parsing."""
-import json
 from datetime import date
 
 import pytest
@@ -8,7 +7,7 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
 
-from beetsplug.bandcamp._metaguru import Helpers, Metaguru, urlify
+from beetsplug.bandcamp._metaguru import Metaguru, urlify
 
 pytestmark = pytest.mark.parsing
 
@@ -55,7 +54,7 @@ def test_comments(descr, disctitle, creds, expected):
         dateModified="doesntmatter",
     )
     config = {"preferred_media": "Vinyl", "comments_separator": "\n"}
-    guru = Metaguru(json.dumps(meta), config)
+    guru = Metaguru(meta, config)
     assert guru.comments == expected, vars(guru)
 
 
@@ -203,7 +202,7 @@ def test_get_track_artist(parsed, official, albumartist, expected):
     ("artists", "expected"), [(["4.44.444.8", "4.44.444.8"], {"4.44.444.8"})]
 )
 def test_track_artists(artists, expected):
-    guru = Metaguru("")
+    guru = Metaguru({})
     guru.tracks = [{"artist": a} for a in artists]
     assert guru.track_artists == expected
 
@@ -256,8 +255,7 @@ def test_check_digi_only(name, expected_digi_only, expected_name):
     ],
 )
 def test_parse_country(name, expected):
-    guru = Metaguru("")
-    guru.meta = {"publisher": {"foundingLocation": {"name": name}}}
+    guru = Metaguru({"publisher": {"foundingLocation": {"name": name}}})
     assert guru.country == expected
 
 
@@ -292,7 +290,6 @@ def test_parse_country(name, expected):
         ("", "LP | ostgutlp31", "", "", "ostgutlp31"),
         ("Album VA001", "", "", "", ""),
         ("Album MVA001", "", "", "", "MVA001"),
-        ("Album [ROAD4]", "", "", "", "ROAD4"),
         ("Need For Lead (ISM001)", "", "", "", "ISM001"),
         ("OBS.CUR 2 Depths", "", "", "", "OBS.CUR 2"),
         ("VINYL 12", "", "", "", ""),
@@ -370,13 +367,12 @@ def test_bundles_get_excluded():
             {"name": "Vinyl", "musicReleaseFormat": "VinylFormat"},
         ]
     }
-    assert set(Helpers._get_media_reference(meta)) == {"Vinyl"}
+    assert set(Metaguru._get_media_reference(meta)) == {"Vinyl"}
 
 
 @pytest.mark.parametrize(
     ("date", "expected"), [("08 Dec 2020 00:00:00 GMT", date(2020, 12, 8)), (None, None)]
 )
 def test_handles_missing_publish_date(date, expected):
-    guru = Metaguru("")
-    guru.meta = {"datePublished": date}
+    guru = Metaguru({"datePublished": date})
     assert guru.release_date == expected

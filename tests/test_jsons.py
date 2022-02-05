@@ -4,7 +4,7 @@ import pytest
 from beetsplug.bandcamp._metaguru import NEW_BEETS, Metaguru
 from pytest_lazyfixture import lazy_fixture
 
-pytestmark = pytest.mark.parsing
+pytestmark = pytest.mark.jsons
 
 
 @pytest.fixture(name="release")
@@ -38,7 +38,7 @@ def check(actual, expected) -> None:
 )
 def test_parse_single_track_release(release, beets_config):
     html, expected = release
-    guru = Metaguru(html, beets_config)
+    guru = Metaguru.from_html(html, beets_config)
 
     check(guru.singleton, expected.singleton)
 
@@ -65,7 +65,7 @@ def test_parse_single_track_release(release, beets_config):
 def test_parse_various_types(release, beets_config):
     html, expected_release = release
     beets_config["preferred_media"] = expected_release.media
-    guru = Metaguru(html, beets_config)
+    guru = Metaguru.from_html(html, beets_config)
 
     actual_album = guru.album
     expected_album = expected_release.albuminfo
