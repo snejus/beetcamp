@@ -160,12 +160,12 @@ class Helpers:
         if label:
             # if label name is followed by digits, it may form a cat number
             esc = re.escape(label)
-            cases.insert(0, (re.compile(fr"(?i:{esc} ?[A-Z]?\d+[A-Z]?)"), album))
+            cases.insert(0, (re.compile(fr"(?i:({esc} ?[A-Z]?\d+[A-Z]?))"), album))
 
         def find(pat: Pattern, string: str) -> str:
             try:
                 return pat.search(string).groups()[0].strip()  # type: ignore
-            except AttributeError:
+            except (IndexError, AttributeError):
                 return ""
 
         ignored = set(map(str.casefold, kwargs.get("artists") or []) or [None, ""])
@@ -193,12 +193,12 @@ class Helpers:
         """Return clean album name / track title.
         If `remove_extra`, remove info from within the parentheses (usually remix info).
         """
-        # catalognum, album, albumartist
         for pat, repl in [
             (r"  +", " "),  # multiple spaces
             (r"\( +|(- )?\(+", "("),  # rubbish that precedes opening parenthesis
             (r" +\)|\)+", ")"),  # rubbish spaces that precede closing parenthesis
             ('"', ""),  # double quote anywhere in the string
+            (r"(\([^)]+) - ([^(]+\))", r"\1-\2"),  # spaces in remixer names within parens
         ]:
             name = re.sub(pat, repl, name)
         for arg in filter(op.truth, args):

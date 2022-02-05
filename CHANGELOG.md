@@ -32,8 +32,9 @@
 
 ### Fixed
 
-- `singleton`
-  - catalogue number, if found, is now reliably removed form the title.
+- `singleton`: `catalogue number`, if found, is now reliably removed from the title.
+- `track.title`: ` - ` delimiter is handled graciously when it is found within the
+  remix parentheses.
 
 [tracklist]: https://scumcllctv.bandcamp.com/album/scum002-arcadia
 [0.12.0]: https://github.com/snejus/beetcamp/releases/tag/0.12.0
