@@ -14,6 +14,7 @@ from beets.autotag.hooks import AlbumInfo, TrackInfo
 from cached_property import cached_property
 from pkg_resources import get_distribution, parse_version
 from pycountry import countries, subdivisions
+from rich import print
 
 from .genres_lookup import GENRES
 
@@ -124,15 +125,10 @@ class Helpers:
             # do not strip a period from the end since it may end with an abbrev
             name = name.replace(track["track_alt"], "").lstrip(". ")
 
-        if delim:
-            parts = re.split(fr" ?[{delim}] | [{delim}] ?", name.strip(",-| "))
-            track["title"] = parts.pop(-1)  # title is always given
-            if parts:  # whatever is left must be the artist
-                track["artist"] = ", ".join(parts).strip(", ")
-        else:
-            track["title"] = name
-
-        track["main_title"] = PATTERNS["remix_or_ft"].sub("", track["title"])
+        parts = re.split(fr" ?[{delim}] | [{delim}] ?", name.strip(",-| "), maxsplit=1)
+        parts = list(map(str.strip, parts))
+        track.update(title=parts.pop(-1).strip(), artist=parts[0].strip() if parts else "")
+        track.update(main_title=PATTERNS["remix_or_ft"].sub("", track["title"]))
         return track
 
     @staticmethod
@@ -199,12 +195,13 @@ class Helpers:
             (r" +\)|\)+", ")"),  # rubbish spaces that precede closing parenthesis
             ('"', ""),  # double quote anywhere in the string
             (r"(\([^)]+) - ([^(]+\))", r"\1-\2"),  # spaces in remixer names within parens
+            (r"\[[A-Z]+[0-9]+\]", ""),
         ]:
             name = re.sub(pat, repl, name)
         for arg in filter(op.truth, args):
             name = re.sub(fr"(?i:[^\w\]\)]*{re.escape(arg)}\W*)", " ", name)
-        # redundant information about 'remixes from xyz'
         if remove_extra:
+            # redundant information about 'remixes from xyz'
             name = PATTERNS["clean_incl"].sub("", name)
         return PATTERNS["clean_title"].sub("", name).strip(" -|/")
 
@@ -383,8 +380,8 @@ class Metaguru(Helpers):
             return str(match.groups()[0].strip())
 
         albumartist = self.meta["byArtist"]["name"].replace("various", VA)
-        album = self.album_name
         if self.label == albumartist:
+            album = self.album_name
             albumartist = self.parse_track_name(album).get("artist") or albumartist
 
         return re.sub(r"(?i:, ft.*remix.*)", "", albumartist)
@@ -479,20 +476,19 @@ class Metaguru(Helpers):
             return match.expand(r"\1") if match else ""
 
         delim, count = Counter(map(get_delim, names)).most_common(1).pop()
-        return re.escape(delim) if (len(names) == 1 or count > len(names) / 2) else ""
+        return delim if (len(names) == 1 or count > len(names) / 2) else ""
 
     @cached_property
     def tracks(self) -> List[JSONDict]:
         """Parse relevant details from the tracks' JSON."""
         try:
-            raw_tracks = self.meta["track"].get("itemListElement", [])
+            raw_tracks = self.meta["track"]["itemListElement"]
         except KeyError:
             raw_tracks = [{"item": self.meta, "position": 1}]
 
         names = list(map(lambda x: (x.get("item") or {}).get("name") or "", raw_tracks))
 
-        # find the track delimiter
-        delim = self.track_delimiter(names)
+        delim = self.track_delimiter(names) if not self._singleton else "-"
         names = self.clean_track_names(names, self.catalognum)
         albumartist = self.bandcamp_albumartist
         tracks = []
@@ -525,7 +521,7 @@ class Metaguru(Helpers):
     @cached_property
     def bandcamp_titles(self) -> List[str]:
         try:
-            tracks = self.meta["track"].get("itemListElement", [])
+            tracks = self.meta["track"]["itemListElement"]
         except KeyError:
             tracks = [{"item": self.meta}]
 
@@ -711,8 +707,6 @@ class Metaguru(Helpers):
         return common_data
 
     def _trackinfo(self, track: JSONDict, **kwargs: Any) -> TrackInfo:
-        track.pop("digi_only")
-        track.pop("main_title")
         track_info = TrackInfo(
             **self._common,
             **track,
@@ -723,24 +717,22 @@ class Metaguru(Helpers):
         for field in set(track_info.keys()) & self.excluded_fields:
             track_info[field] = None
 
+        track_info.pop("digi_only", None)
+        track_info.pop("main_title", None)
+
         return track_info
 
     @cached_property
     def singleton(self) -> TrackInfo:
         self._singleton = True
-        track: JSONDict = {}
-        if NEW_BEETS:
-            track.update(**self._common_album, albumartist=self.albumartist)
-
-        track.update(self.tracks[0].copy())
-        track.update(self.parse_track_name(self.clean_album_name))
+        track: TrackInfo = self._trackinfo(self.tracks[0])
+        track.update(self._common_album)
         if not track.get("artist"):
-            track["artist"] = self.albumartist
-        track["title"] = self.clean_name(track["title"])
-        if NEW_BEETS:
-            artist, title = track["artist"], track["title"]
-            track["album"] = "{} - {}".format(artist, title)
-        return self._trackinfo(track, medium_total=1)
+            track["artist"] = self.bandcamp_albumartist
+        track.update(album=f"{track.artist} - {track.title}")
+        track.index = track.medium_index = track.medium_total = 1
+        track.track_id = track.data_url
+        return track
 
     @cached_property
     def album(self) -> AlbumInfo:
