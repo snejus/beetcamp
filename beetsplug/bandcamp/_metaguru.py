@@ -14,7 +14,6 @@ from beets.autotag.hooks import AlbumInfo, TrackInfo
 from cached_property import cached_property
 from pkg_resources import get_distribution, parse_version
 from pycountry import countries, subdivisions
-from rich import print
 
 from .genres_lookup import GENRES
 
@@ -68,9 +67,8 @@ CATNUM_PAT = {
 rm_strings = [
     "limited edition",
     "various artists?|va",
-    r"free download|free dl|free[)]",
-    "vinyl|(double )?(ep|lp)",
-    "e[.]p[.]",
+    r"free download|free dl|free\)",
+    r"vinyl|(double )?(ep|lp)|e\.p\.",
 ]
 PATTERNS: Dict[str, Pattern] = {
     "clean_title": re.compile(fr"(?i: ?[\[\(]?\b({'|'.join(rm_strings)})(\b[\]\)]?|$))"),
@@ -82,11 +80,9 @@ PATTERNS: Dict[str, Pattern] = {
             r"(?i:[^\w\)]+(bandcamp[^-]+|digi(tal)?)(\W*(\W+|only|bonus|exclusive)\W*$))"
         ),
     ],
-    "remix_or_ft": re.compile(r"\s(?i:[\[\(].*(mix|edit)|f(ea)?t\.).*"),
-    "track_alt": re.compile(r"([ABCDEFGH]{1,3}[0-9])(\.|.?-\s|\s)"),
-    "vinyl_name": re.compile(
-        r'(?P<count>(?i:[1-5]|single|double|triple))(LP)? ?x? ?((7|10|12)" )?Vinyl'
-    ),
+    "remix_or_ft": re.compile(r" [\[\(].*(?i:mix|edit|f(ea)?t\.).*"),
+    "track_alt": re.compile(r"([ABCDEFGH]{1,3}[0-6])\W+"),
+    "vinyl_name": re.compile(r"[1-5](?= ?(xLP|LP|x))|single|double|triple", re.I),
 }
 
 
@@ -100,11 +96,11 @@ class Helpers:
     @staticmethod
     def get_vinyl_count(name: str) -> int:
         conv = {"single": 1, "double": 2, "triple": 3}
-        match = re.search(PATTERNS["vinyl_name"], name)
-        if not match:
+        for match in PATTERNS["vinyl_name"].finditer(name):
+            count = match.group()
+            return int(count) if count.isdigit() else conv[count.lower()]
+        else:
             return 1
-        count: str = match.groupdict()["count"]
-        return int(count) if count.isdigit() else conv[count.lower()]
 
     @staticmethod
     def clear_digi_only(name: str) -> str:
@@ -123,12 +119,15 @@ class Helpers:
         if match:
             track["track_alt"] = match.expand(r"\1")
             # do not strip a period from the end since it may end with an abbrev
-            name = name.replace(track["track_alt"], "").lstrip(". ")
+            name = name.replace(match.group(), "")
 
-        parts = re.split(fr" ?[{delim}] | [{delim}] ?", name.strip(",-| "), maxsplit=1)
-        parts = list(map(str.strip, parts))
-        track.update(title=parts.pop(-1).strip(), artist=parts[0].strip() if parts else "")
-        track.update(main_title=PATTERNS["remix_or_ft"].sub("", track["title"]))
+        track["title"] = name
+        parts = map(str.strip, re.split(fr" [{delim}]|[{delim}] ", name))
+        partslist = list(parts)
+        print(delim)
+        print(partslist)
+        track.update(title=partslist.pop(-1), artist=", ".join(partslist))
+        track["main_title"] = PATTERNS["remix_or_ft"].sub("", track["title"])
         return track
 
     @staticmethod
@@ -145,7 +144,7 @@ class Helpers:
     @staticmethod
     def parse_catalognum(album, disctitle, description, label, **kwargs):
         # type: (str, str, str, str, Any) -> str
-        """Try getting the catalog number looking at various fields."""
+        """Try getting the catalog number looking at text from various fields."""
         cases = [
             (CATNUM_PAT["with_header"], description),
             (CATNUM_PAT["anywhere"], disctitle),
@@ -192,9 +191,10 @@ class Helpers:
         for pat, repl in [
             (r"  +", " "),  # multiple spaces
             (r"\( +|(- )?\(+", "("),  # rubbish that precedes opening parenthesis
-            (r" +\)|\)+", ")"),  # rubbish spaces that precede closing parenthesis
+            (r" \)+|(?<=(?i:.mix|edit))\)+$", ")"),
             ('"', ""),  # double quote anywhere in the string
-            (r"(\([^)]+) - ([^(]+\))", r"\1-\2"),  # spaces in remixer names within parens
+            # spaces around dash in remixer names within parens
+            (r"(\([^)]+) - ([^(]+\))", r"\1-\2"),
             (r"\[[A-Z]+[0-9]+\]", ""),
         ]:
             name = re.sub(pat, repl, name)
@@ -211,7 +211,7 @@ class Helpers:
         if catalognum:
             names = list(map(lambda x: Helpers.clean_name(x, catalognum), names))
 
-        if all(map(lambda x: x[0].isdigit(), names)):
+        if len(names) > 1 and all(map(lambda x: x[0].isdigit(), names)):
             pat = re.compile(r"^\d+\W+")
             names = list(map(lambda x: pat.sub("", x), names))
         return names
@@ -467,16 +467,16 @@ class Metaguru(Helpers):
         instead of dash.
 
         This checks every track looking for the first character (alphanums, ampersand,
-        space excluded) that splits it. The character that split the most and
+        parens, space excluded) that splits it. The character that split the most and
         at least half of the tracklist is the character we need.
         """
 
         def get_delim(string: str) -> str:
-            match = re.search(r" ([^\w& ]) ", string)
-            return match.expand(r"\1") if match else ""
+            match = re.search(r" ([^\w&() ]) ", string)
+            return match.expand(r"\1") if match else "-"
 
         delim, count = Counter(map(get_delim, names)).most_common(1).pop()
-        return delim if (len(names) == 1 or count > len(names) / 2) else ""
+        return delim if (len(names) == 1 or count > len(names) / 2) else "-"
 
     @cached_property
     def tracks(self) -> List[JSONDict]:
@@ -488,7 +488,7 @@ class Metaguru(Helpers):
 
         names = list(map(lambda x: (x.get("item") or {}).get("name") or "", raw_tracks))
 
-        delim = self.track_delimiter(names) if not self._singleton else "-"
+        delim = self.track_delimiter(names)
         names = self.clean_track_names(names, self.catalognum)
         albumartist = self.bandcamp_albumartist
         tracks = []
@@ -502,7 +502,7 @@ class Metaguru(Helpers):
                 medium_index=position or 1,
                 track_id=item.get("@id"),
                 length=floor(self.get_duration(item)),
-                **self.parse_track_name(name, delim),
+                **self.parse_track_name(self.clean_name(name), delim),
             )
             track["artist"] = self.get_track_artist(track["artist"], item, albumartist)
             lyrics = item.get("recordingOf", {}).get("lyrics", {}).get("text")
