@@ -122,11 +122,8 @@ class Helpers:
             name = name.replace(match.group(), "")
 
         track["title"] = name
-        parts = map(str.strip, re.split(fr" [{delim}]|[{delim}] ", name))
-        partslist = list(parts)
-        print(delim)
-        print(partslist)
-        track.update(title=partslist.pop(-1), artist=", ".join(partslist))
+        parts = list(map(str.strip, re.split(fr" [{delim}]|[{delim}] ", name)))
+        track.update(title=parts.pop(-1), artist=", ".join(parts))
         track["main_title"] = PATTERNS["remix_or_ft"].sub("", track["title"])
         return track
 
@@ -730,7 +727,7 @@ class Metaguru(Helpers):
         track.update(self._common_album)
         if not track.get("artist"):
             track["artist"] = self.bandcamp_albumartist
-        track.update(album=f"{track.artist} - {track.title}")
+        track.update(album='')
         track.index = track.medium_index = track.medium_total = 1
         track.track_id = track.data_url
         return track

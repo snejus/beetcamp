@@ -24,6 +24,7 @@
 
 ### Updated
 
+- singleton: `album` and `albumartist` fields are not populated anymore.
 - `catalognum`
   - Artists like **PROCESS 404** are not assumed to be catalogue numbers anymore.
   - Short catalognums, such as **WU55**, are accepted.
@@ -32,9 +33,8 @@
 
 ### Fixed
 
-- `singleton`: `catalogue number`, if found, is now reliably removed from the title.
-- `track.title`: ` - ` delimiter is handled graciously when it is found within the
-  remix parentheses.
+- `singleton`: `catalognum`, if found, is now reliably removed from the title.
+- `track.title`: ` - ` delimiter is handled more appropriately when it is found in the song title.
 
 [tracklist]: https://scumcllctv.bandcamp.com/album/scum002-arcadia
 [0.12.0]: https://github.com/snejus/beetcamp/releases/tag/0.12.0
