@@ -209,7 +209,8 @@ class Helpers:
         if catalognum:
             names = list(map(lambda x: Helpers.clean_name(x, catalognum), names))
 
-        if len(names) > 1 and all(map(lambda x: x[0].isdigit(), names)):
+        len_tot = len(names)
+        if len_tot > 1 and sum(map(lambda x: int(x[0].isdigit()), names)) > len_tot / 2:
             pat = re.compile(r"^\d+\W+")
             names = list(map(lambda x: pat.sub("", x), names))
         return names
@@ -499,7 +500,7 @@ class Metaguru(Helpers):
                 index=position or 1,
                 medium_index=position or 1,
                 track_id=item.get("@id"),
-                length=floor(self.get_duration(item)),
+                length=floor(self.get_duration(item)) or None,
                 **self.parse_track_name(self.clean_name(name), delim),
             )
             track["artist"] = self.get_track_artist(track["artist"], item, albumartist)
@@ -727,7 +728,7 @@ class Metaguru(Helpers):
         track.update(self._common_album)
         if not track.get("artist"):
             track["artist"] = self.bandcamp_albumartist
-        track.update(album='')
+        track.pop("album", None)
         track.index = track.medium_index = track.medium_total = 1
         track.track_id = track.data_url
         return track

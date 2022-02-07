@@ -38,9 +38,10 @@ def check(actual, expected) -> None:
 )
 def test_parse_single_track_release(release, beets_config):
     html, expected = release
-    guru = Metaguru.from_html(html, beets_config)
+    actual = Metaguru.from_html(html, beets_config).singleton
+    actual.pop("comments", None)
 
-    check(guru.singleton, expected.singleton)
+    check(actual, expected.singleton)
 
 
 @pytest.mark.parametrize(
@@ -69,6 +70,7 @@ def test_parse_various_types(release, beets_config):
 
     actual_album = guru.album
     expected_album = expected_release.albuminfo
+    actual_album.pop("comments", None)
 
     assert hasattr(actual_album, "tracks")
     assert len(actual_album.tracks) == len(expected_album.tracks)

@@ -6,6 +6,7 @@ from typing import Optional, Tuple
 
 import pytest
 from beets.autotag.hooks import AlbumInfo, TrackInfo
+
 from beetsplug.bandcamp import DEFAULT_CONFIG
 from beetsplug.bandcamp._metaguru import DATA_SOURCE, DIGI_MEDIA, NEW_BEETS
 
@@ -22,7 +23,7 @@ class ReleaseInfo:
     def track_data(self, **kwargs) -> TrackInfo:
         kget = kwargs.get
         track_url = kget("track_id", f"{self.artist_id}/track/{kget('title_id')}")
-        return dict(
+        data = dict(
             title=kget("title"),
             track_id=track_url,
             artist=kget("artist"),
@@ -39,6 +40,9 @@ class ReleaseInfo:
             disctitle=self.disctitle,
             lyrics=kget("lyrics"),
         )
+        if not data["lyrics"]:
+            data.pop("lyrics")
+        return data
 
     def set_singleton(self, artist: str, title: str, length: int, **kwargs) -> None:
         data = self.track_data(
@@ -104,12 +108,10 @@ def single_track_release() -> ReleaseInfo:
         artist="Matriark",
         title="Arangel",
         length=421,
-        album="Matriark - Arangel",
-        albumartist="Matriark",
         albumstatus="Official",
         label="Megatech Industries",
         albumtype="single",
-        catalognum="",
+        catalognum="mt004",
         year=2020,
         month=11,
         day=9,
@@ -131,10 +133,8 @@ def single_only_track_name() -> ReleaseInfo:
     )
     info.set_singleton(
         artist="GUTKEIN",
-        title="OENERA",
+        title="oenera",
         length=355,
-        album="GUTKEIN - OENERA",
-        albumartist="GUTKEIN",
         albumstatus="Official",
         label="GUTKEIN",
         albumtype="single",
@@ -143,7 +143,7 @@ def single_only_track_name() -> ReleaseInfo:
         month=1,
         day=10,
         country="RU",
-        genre="techno, trance",
+        genre="trance",
         style="electronic",
     )
     return info
@@ -566,8 +566,8 @@ def description_meta() -> ReleaseInfo:
     info = ReleaseInfo(
         artist_id="https://diffusereality.bandcamp.com",
         album_id="https://diffusereality.bandcamp.com/album/francois-dillinger-icosahedrone-lp",  # noqa
-        media="CD",
-        disctitle="Francois Dillinger - Icosahedrone [LP]",
+        media=DIGI_MEDIA,
+        disctitle=None,
     )
     tracks = [
         ("count-to-infinity", albumartist, "Count To Infinity", 376, None),
