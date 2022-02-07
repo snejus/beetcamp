@@ -197,9 +197,10 @@ class Helpers:
             (r"(\([^)]+) - ([^(]+\))", r"\1-\2"),
             (r"\[[A-Z]+[0-9]+\]", ""),
         ]:
-            name = re.sub(pat, repl, name)
+            name = re.sub(pat, repl, name).strip()
         for arg in filter(op.truth, args):
-            name = re.sub(fr"(?i:[^\w\]\)]*{re.escape(arg)}\W*)", " ", name)
+            esc = re.escape(arg)
+            name = re.sub(fr"[\[()\] ]*(?i:{esc})[\[()\] ]*", " ", name).strip()
         if remove_extra:
             # redundant information about 'remixes from xyz'
             name = PATTERNS["clean_incl"].sub("", name)
