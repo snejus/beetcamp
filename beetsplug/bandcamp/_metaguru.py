@@ -245,6 +245,24 @@ class Helpers:
         return names
 
     @staticmethod
+    def track_delimiter(names: List[str]) -> str:
+        """Return the track parts delimiter that is in effect in the current release.
+        In some (unusual) situations track parts are delimited by a pipe character
+        instead of dash.
+
+        This checks every track looking for the first character (see the regex for
+        exclusions) that splits it. The character that split the most and
+        at least half of the tracklist is the character we need.
+        """
+
+        def get_delim(string: str) -> str:
+            match = re.search(r" ([^\w&()+ ]) ", string)
+            return match.expand(r"\1") if match else "-"
+
+        delim, count = Counter(map(get_delim, names)).most_common(1).pop()
+        return delim if (len(names) == 1 or count > len(names) / 2) else "-"
+
+    @staticmethod
     def get_genre(keywords: Iterable[str], config: JSONDict) -> Iterable[str]:
         """Return a comma-delimited list of valid genres, using MB genres for reference.
 
@@ -320,6 +338,7 @@ class Helpers:
             human_name = MEDIA_MAP[medium]
             media[human_name] = _format
         return media
+
 
 
 class Metaguru(Helpers):
@@ -488,23 +507,6 @@ class Metaguru(Helpers):
             )
         except (ValueError, LookupError):
             return WORLDWIDE
-
-    def track_delimiter(self, names: List[str]) -> str:
-        """Return the track parts delimiter that is in effect in the current release.
-        In some (unusual) situations track parts are delimited by a pipe character
-        instead of dash.
-
-        This checks every track looking for the first character (see the regex for
-        exclusions) that splits it. The character that split the most and
-        at least half of the tracklist is the character we need.
-        """
-
-        def get_delim(string: str) -> str:
-            match = re.search(r" ([^\w&()+ ]) ", string)
-            return match.expand(r"\1") if match else "-"
-
-        delim, count = Counter(map(get_delim, names)).most_common(1).pop()
-        return delim if (len(names) == 1 or count > len(names) / 2) else "-"
 
     @cached_property
     def tracks(self) -> List[JSONDict]:
