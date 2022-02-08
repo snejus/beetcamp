@@ -197,7 +197,7 @@ class Helpers:
             name = re.sub(pat, repl, name).strip()
         for arg in filter(op.truth, args):
             esc = re.escape(arg)
-            name = re.sub(fr"[&\[()\] ]*(?i:{esc})[&\[()\] ]*", " ", name).strip()
+            name = re.sub(fr"[:&\[( ]*(?i:{esc})[:&)\] ]*", " ", name).strip()
         if remove_extra:
             # redundant information about 'remixes from xyz'
             name = PATTERNS["clean_incl"].sub("", name)
@@ -513,7 +513,9 @@ class Metaguru(Helpers):
 
     @cached_property
     def track_artists(self) -> Set[str]:
-        artists = {(t.get("artist") or "") for t in self.tracks}
+        artists = {
+            re.sub(r" f(ea)?t.*", "", (t.get("artist") or "")) for t in self.tracks
+        }
         artists.discard("")
         return artists
 
