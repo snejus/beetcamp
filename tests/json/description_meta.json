@@ -136,7 +136,7 @@
       }
     },
     {
-      "@id": "https://diffusereality.bandcamp.com/album/francois-dillinger-icosahedrone-lp#b45654903",
+      "@id": "https://diffusereality.bandcamp.com/album/francois-dillinger-icosahedrone-lp#b45738897",
       "@type": [
         "MusicRelease",
         "Product"
@@ -145,7 +145,7 @@
         {
           "@type": "PropertyValue",
           "name": "item_id",
-          "value": 45654903
+          "value": 45738897
         },
         {
           "@type": "PropertyValue",
@@ -165,7 +165,7 @@
         {
           "@type": "PropertyValue",
           "name": "art_id",
-          "value": 2125095233
+          "value": 3284906663
         },
         {
           "@type": "PropertyValue",
@@ -174,22 +174,22 @@
         }
       ],
       "image": [
-        "https://f4.bcbits.com/img/a2125095233_10.jpg"
+        "https://f4.bcbits.com/img/a3284906663_10.jpg"
       ],
       "musicReleaseFormat": "DigitalFormat",
-      "name": "full digital discography (479 releases)",
+      "name": "full digital discography (481 releases)",
       "offers": {
         "@type": "Offer",
         "additionalProperty": [
           {
             "@type": "PropertyValue",
             "name": "bundle_size",
-            "value": 479
+            "value": 481
           },
           {
             "@type": "PropertyValue",
             "name": "discount",
-            "value": 0.7
+            "value": 0.8
           },
           {
             "@type": "PropertyValue",
@@ -198,12 +198,12 @@
           }
         ],
         "availability": "OnlineOnly",
-        "price": 1144.13,
+        "price": 765.76,
         "priceCurrency": "EUR",
         "priceSpecification": {
-          "minPrice": 1144.13
+          "minPrice": 765.76
         },
-        "url": "https://diffusereality.bandcamp.com/album/francois-dillinger-icosahedrone-lp#b45654903-buy"
+        "url": "https://diffusereality.bandcamp.com/album/francois-dillinger-icosahedrone-lp#b45738897-buy"
       }
     },
     {
@@ -261,9 +261,9 @@
     "Electronic",
     "ambient",
     "electro",
+    "minimal",
     "rave",
     "techno",
-    "trance",
     "Portugal"
   ],
   "name": "Francois Dillinger - Icosahedrone [LP]",
@@ -300,17 +300,17 @@
       {
         "@type": "PropertyValue",
         "name": "image_height",
-        "value": 3000
+        "value": 1400
       },
       {
         "@type": "PropertyValue",
         "name": "image_id",
-        "value": 23801099
+        "value": 27598543
       },
       {
         "@type": "PropertyValue",
         "name": "image_width",
-        "value": 3000
+        "value": 1400
       }
     ],
     "description": "Independent Record Label & Party Promoter founded in 2013. Barcelona based.\nArts Festival: Teorema\nSublabel: Periphylla\n۩  Send a private message to visit our Record shop in Barcelona. \n> https://bit.ly/3j2ZxNU",
@@ -319,12 +319,17 @@
       "name": "Portugal"
     },
     "genre": "https://bandcamp.com/tag/electronic",
-    "image": "https://f4.bcbits.com/img/0023801099_10.jpg",
+    "image": "https://f4.bcbits.com/img/0027598543_10.jpg",
     "mainEntityOfPage": [
       {
         "@type": "WebPage",
         "name": "diffusereality.net",
         "url": "http://www.diffusereality.net/"
+      },
+      {
+        "@type": "WebPage",
+        "name": "linktr.ee",
+        "url": "https://linktr.ee/diffusereality"
       }
     ],
     "name": "Diffuse Reality Records",

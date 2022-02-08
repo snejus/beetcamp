@@ -66,7 +66,7 @@
       "name": "NYH244 Less Weird Parallel Universe  - Nearly 20 Years of Erikoisdance"
     },
     {
-      "@id": "https://newyorkhaunted.bandcamp.com/album/nyh244-less-weird-parallel-universe-nearly-20-years-of-erikoisdance#b45622685",
+      "@id": "https://newyorkhaunted.bandcamp.com/album/nyh244-less-weird-parallel-universe-nearly-20-years-of-erikoisdance#b45659762",
       "@type": [
         "MusicRelease",
         "Product"
@@ -75,7 +75,7 @@
         {
           "@type": "PropertyValue",
           "name": "item_id",
-          "value": 45622685
+          "value": 45659762
         },
         {
           "@type": "PropertyValue",
@@ -95,7 +95,7 @@
         {
           "@type": "PropertyValue",
           "name": "art_id",
-          "value": 2299706879
+          "value": 3309405927
         },
         {
           "@type": "PropertyValue",
@@ -104,17 +104,17 @@
         }
       ],
       "image": [
-        "https://f4.bcbits.com/img/a2299706879_10.jpg"
+        "https://f4.bcbits.com/img/a3309405927_10.jpg"
       ],
       "musicReleaseFormat": "DigitalFormat",
-      "name": "full digital discography (305 releases)",
+      "name": "full digital discography (306 releases)",
       "offers": {
         "@type": "Offer",
         "additionalProperty": [
           {
             "@type": "PropertyValue",
             "name": "bundle_size",
-            "value": 305
+            "value": 306
           },
           {
             "@type": "PropertyValue",
@@ -128,12 +128,12 @@
           }
         ],
         "availability": "OnlineOnly",
-        "price": 122.1,
+        "price": 122.5,
         "priceCurrency": "EUR",
         "priceSpecification": {
-          "minPrice": 122.1
+          "minPrice": 122.5
         },
-        "url": "https://newyorkhaunted.bandcamp.com/album/nyh244-less-weird-parallel-universe-nearly-20-years-of-erikoisdance#b45622685-buy"
+        "url": "https://newyorkhaunted.bandcamp.com/album/nyh244-less-weird-parallel-universe-nearly-20-years-of-erikoisdance#b45659762-buy"
       }
     },
     {
