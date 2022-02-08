@@ -168,6 +168,10 @@ def test_convert_title(title, expected):
             (("Artist - Title [ONE001]"), "TWO001"),
             ("", "Artist", "Title", "Title"),
         ),
+        (
+            (("Artist + Other - Title"),),
+            ("", "Artist + Other", "Title", "Title"),
+        ),
     ],
 )
 def test_parse_track_name(inputs, expected, beets_config):

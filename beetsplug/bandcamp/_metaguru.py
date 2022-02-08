@@ -495,13 +495,13 @@ class Metaguru(Helpers):
         In some (unusual) situations track parts are delimited by a pipe character
         instead of dash.
 
-        This checks every track looking for the first character (alphanums, ampersand,
-        parens, space excluded) that splits it. The character that split the most and
+        This checks every track looking for the first character (see the regex for
+        exclusions) that splits it. The character that split the most and
         at least half of the tracklist is the character we need.
         """
 
         def get_delim(string: str) -> str:
-            match = re.search(r" ([^\w&() ]) ", string)
+            match = re.search(r" ([^\w&()+ ]) ", string)
             return match.expand(r"\1") if match else "-"
 
         delim, count = Counter(map(get_delim, names)).most_common(1).pop()
