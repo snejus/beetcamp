@@ -40,14 +40,14 @@ MEDIA_MAP = {
 VA = "Various Artists"
 
 _catalognum = r"""(?<![/@])(\b
-(?!\W|VA|EP[ ]|L[PC][ ]|.*20[0-9]{2}|.*[ ][0-9]KG|AT[ ]0|GC1)
+(?!\W|VA|EP[ ]|L[PC][ ]|.*[ ][0-9]KG|AT[ ]0|GC1)
 (?!(?i:vol |mp3|christ|vinyl|disc|session|record|artist|the |maxi ))
 (?![^.]+shirt)
 (
-      [A-Z .]+\d{3,}        # HANDS D300
+      [A-Z .]+\d{3}         # HANDS D300
     | [A-Z-]{2,}\d+         # RIV4
     | [A-Z]+[A-Z.$-]+\d{2,} # USE202, HEY-101, LI$025
-    | [A-Z.]{2,}[ ]\d+      # OBS.CUR 9
+    | [A-Z.]{2,}[ ]\d{1,3}  # OBS.CUR 9
     | \w+[A-z]0\d+          # 1ØPILLS018, fa036
     | [a-z]+(cd|lp)\d+      # ostgutlp45
 )
@@ -570,16 +570,9 @@ class Metaguru(Helpers):
     def is_va(self) -> bool:
         track_artists = self.track_artists
         track_count = len(self.tracks)
-        unique = set(map(lambda x: re.sub(r" ?[,x].*", "", x).lower(), track_artists))
-        return (
-            VA.casefold() in self.album_name.casefold()
-            or len(unique) == track_count
-            or (
-                len(unique) > 1
-                and not {*self.bandcamp_albumartist.split(", ")}.issubset(unique)
-                and track_count >= 4
-            )
-            or (len(unique) > 1 and len(self.tracks) >= 4)
+        unique = set(map(lambda x: re.sub(r" ?[&,x].*", "", x).lower(), track_artists))
+        return VA.casefold() in self.album_name.casefold() or (
+            len(unique) > min(4, track_count - 2) and track_count >= 4
         )
 
     @cached_property
