@@ -197,7 +197,7 @@ class Helpers:
             name = re.sub(pat, repl, name).strip()
         for arg in filter(op.truth, args):
             esc = re.escape(arg)
-            name = re.sub(fr"[\[()\] ]*(?i:{esc})[\[()\] ]*", " ", name).strip()
+            name = re.sub(fr"[&\[()\] ]*(?i:{esc})[&\[()\] ]*", " ", name).strip()
         if remove_extra:
             # redundant information about 'remixes from xyz'
             name = PATTERNS["clean_incl"].sub("", name)
@@ -378,7 +378,7 @@ class Metaguru(Helpers):
         if match:
             return str(match.groups()[0].strip())
 
-        albumartist = self.meta["byArtist"]["name"].replace("various", VA)
+        albumartist = self.meta["byArtist"]["name"]
         if self.label == albumartist:
             album = self.album_name
             albumartist = self.parse_track_name(album).get("artist") or albumartist
