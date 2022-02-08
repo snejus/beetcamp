@@ -50,6 +50,7 @@ _catalognum = r"""(?<![/@])(\b
     | [A-Z.]{2,}[ ]\d{1,3}  # OBS.CUR 9
     | \w+[A-z]0\d+          # 1ØPILLS018, fa036
     | [a-z]+(cd|lp)\d+      # ostgutlp45
+    | [A-z]+\d+-\d+         # P90-003
 )
 ( # optionally followed by
       [ ]?[A-Z]     # IBM001V
@@ -197,7 +198,7 @@ class Helpers:
             name = re.sub(pat, repl, name).strip()
         for arg in filter(op.truth, args):
             esc = re.escape(arg)
-            name = re.sub(fr"[:&\[( ]*(?i:{esc})[:&)\] ]*", " ", name).strip()
+            name = re.sub(fr"[^'\])\w]*(?i:{esc})[^'(\[\w]*", " ", name).strip()
         if remove_extra:
             # redundant information about 'remixes from xyz'
             name = PATTERNS["clean_incl"].sub("", name)

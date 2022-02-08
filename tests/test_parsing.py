@@ -339,6 +339,7 @@ def test_parse_country(name, expected):
         ("BAd GOOD001", "", "", "", "GOOD001"),
         ("bad GOOD001", "", "", "bad GOOD", "bad GOOD001"),
         ("MNQ 049 Void Vision - Sour (2019 repress)", "", "", "", "MNQ 049"),
+        ("P90-003", "", "", "", "P90-003"),
     ],
 )
 def test_parse_catalognum(album, disctitle, description, label, expected, beets_config):
@@ -403,6 +404,7 @@ def test_parse_catalognum(album, disctitle, description, label, expected, beets_
         ("HWEP010 - MEZZ - COLOR OF WAR", ["HWEP010", "MEZZ"], "COLOR OF WAR"),
         ("O)))Bow 1", [], "O)))Bow 1"),
         ("hi'Hello", ["hi"], "'Hello"),
+        ("Blood Moon †INVI VA006†", ["INVI VA006"], "Blood Moon"),
     ],
 )
 def test_clean_name(name, extras, expected):
