@@ -83,7 +83,7 @@ rm_strings = [
 ]
 PATTERNS: Dict[str, Pattern] = {
     "clean_title": re.compile(fr"(?i: ?[\[\(]?\b({'|'.join(rm_strings)})(\b[\]\)]?|$))"),
-    "clean_incl": re.compile(r"(?i:(\(?incl|\((inc|tracks|.*remix( |es)))).*$"),
+    "clean_incl": re.compile(r"(\(?incl|\((inc|tracks|.*remix( |es))).*$", re.I),
     "meta": re.compile(r".*dateModified.*", re.MULTILINE),
     "digital": [  # type: ignore
         re.compile(r"^(DIGI(TAL)? ?[\d.]+|Bonus\W{2,})\W*"),
@@ -338,7 +338,6 @@ class Helpers:
             human_name = MEDIA_MAP[medium]
             media[human_name] = _format
         return media
-
 
 
 class Metaguru(Helpers):
