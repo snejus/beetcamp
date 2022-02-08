@@ -589,16 +589,6 @@ class Metaguru(Helpers):
         return self._singleton or len(set(t.get("main_title") for t in self.tracks)) == 1
 
     @cached_property
-    def is_lp(self) -> bool:
-        maybe_here = [self.album_name, self.disctitle, self.comments]
-        return any(map(lambda x: " LP" in x, maybe_here))
-
-    @cached_property
-    def is_ep(self) -> bool:
-        maybe_here = [self.album_name, self.disctitle, self.comments]
-        return any(map(lambda x: " EP" in x, maybe_here))
-
-    @cached_property
     def is_va(self) -> bool:
         track_artists = self.track_artists
         track_count = len(self.tracks)
@@ -624,10 +614,14 @@ class Metaguru(Helpers):
 
     @cached_property
     def albumtype(self) -> str:
-        if self.is_lp:
+        text = "\n".join([self.album_name, self.disctitle, self.comments])
+        lp_count = text.count(" LP")
+        ep_count = text.count(" EP")
+        if lp_count >= ep_count and lp_count:
             return "album"
-        if self.is_ep:
+        elif ep_count > lp_count:
             return "ep"
+
         if self.is_single:
             return "single"
         if self.is_va:

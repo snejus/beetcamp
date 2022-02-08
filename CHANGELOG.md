@@ -10,6 +10,28 @@
   In addition to the above, we now apply a generic search pattern across the rest of the
   text, including media title, media description and the rest of the release description.
 
+  For those interested, at a high level the pattern used in the search looks like below
+
+  ```perl
+  (
+        [A-Z .]+\d{3}         # HANDS D300
+      | [A-Z-]{2,}\d+         # RIV4
+      | [A-Z]+[A-Z.$-]+\d{2,} # USE202, HEY-101, LI$025
+      | [A-Z.]{2,}[ ]\d{1,3}  # OBS.CUR 9
+      | \w+[A-z]0\d+          # 1ØPILLS018, fa036
+      | [a-z]+(cd|lp)\d+      # ostgutlp45
+      | [A-z]+\d+-\d+         # P90-003
+  )
+  ( # optionally followed by
+        [ ]?[A-Z]     # IBM001V
+      | [.][0-9]+     # ISMVA002.1
+      | -?[A-Z]+      # PLUS8024CD
+  )?
+  ```
+
+- `albumtype`: similar to the `catalognum`, the descriptions are searched for **EP** and
+  **LP** strings presence to find out the `albumtype`.
+
 - `track`: Support for tracks that do not use dash (`-`) but some other character to separate
   pieces of information in track names. For example, consider the following
   [tracklist]:
@@ -29,27 +51,7 @@
 ### Updated
 
 - singleton: `album` and `albumartist` fields are not anymore populated.
-- `catalognum`
-
-  - Artists like **PROCESS 404** are not assumed to be catalogue numbers anymore.
-  - For those interested, at a high level the pattern used in the search looks like below
-
-    ```perl
-    (
-          [A-Z .]+\d{3}         # HANDS D300
-        | [A-Z-]{2,}\d+         # RIV4
-        | [A-Z]+[A-Z.$-]+\d{2,} # USE202, HEY-101, LI$025
-        | [A-Z.]{2,}[ ]\d{1,3}  # OBS.CUR 9
-        | \w+[A-z]0\d+          # 1ØPILLS018, fa036
-        | [a-z]+(cd|lp)\d+      # ostgutlp45
-        | [A-z]+\d+-\d+         # P90-003
-    )
-    ( # optionally followed by
-          [ ]?[A-Z]     # IBM001V
-        | [.][0-9]+     # ISMVA002.1
-        | -?[A-Z]+      # PLUS8024CD
-    )?
-    ```
+- `catalognum`: artists like **PROCESS 404** are not assumed to be catalogue numbers anymore.
 
 - `track_alt`: allow non-capital letters, like **a1** to be parsed and convert them to
   capitals.
