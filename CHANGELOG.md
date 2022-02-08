@@ -2,6 +2,8 @@
 
 ### Added
 
+- `album`: following MusicBrainz [title format specification], strings **EP** and **LP**
+  are from now on kept in place in album names
 - `catalognum`: To find the catalog number, we have previously been looking at the release
   title or it being mentioned explicitly within the release description. Now, media title,
   media description and the rest of the release description are also taken into account.
@@ -37,7 +39,9 @@
 - `track.title`: ` - ` delimiter is handled more appropriately when it is found in the song title.
 
 [tracklist]: https://scumcllctv.bandcamp.com/album/scum002-arcadia
+[title format specification]: https://beta.musicbrainz.org/doc/Style/Titles
 [0.12.0]: https://github.com/snejus/beetcamp/releases/tag/0.12.0
+
 
 ## [0.11.0] 2021-11-12
 

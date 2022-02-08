@@ -7,7 +7,18 @@ from collections import Counter, defaultdict
 from datetime import date, datetime
 from functools import partial
 from math import floor
-from typing import Any, Dict, Iterable, List, Optional, Pattern, Set
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    Iterable,
+    List,
+    Optional,
+    Pattern,
+    Set,
+    Tuple,
+    Union,
+)
 from unicodedata import normalize
 
 from beets.autotag.hooks import AlbumInfo, TrackInfo
@@ -67,9 +78,8 @@ CATNUM_PAT = {
 
 rm_strings = [
     "limited edition",
-    "various artists?|va",
+    "various artists?|va|vinyl",
     r"free download|free dl|free\)",
-    r"vinyl|(double )?(ep|lp)|e\.p\.",
 ]
 PATTERNS: Dict[str, Pattern] = {
     "clean_title": re.compile(fr"(?i: ?[\[\(]?\b({'|'.join(rm_strings)})(\b[\]\)]?|$))"),
@@ -186,7 +196,7 @@ class Helpers:
         """Return clean album name / track title.
         If `remove_extra`, remove info from within the parentheses (usually remix info).
         """
-        for pat, repl in [
+        replacements: List[Tuple[str, Union[str, Callable]]] = [
             (r"  +", " "),  # multiple spaces
             (r"\( +|(- )?\(+", "("),  # rubbish that precedes opening parenthesis
             (r" \)+|(?<=(?i:.mix|edit))\)+$", ")"),
@@ -194,7 +204,10 @@ class Helpers:
             # spaces around dash in remixer names within parens
             (r"(\([^)]+) - ([^(]+\))", r"\1-\2"),
             (r"[\[(][A-Z]+[0-9]+[\])]", ""),
-        ]:
+            # uppercase EP and LP, and remove surrounding parens / brackets
+            (r"(\S*(\b(?i:[EL]P)\b)\S*)", lambda x: x.expand(r"\2").upper()),
+        ]
+        for pat, repl in replacements:
             name = re.sub(pat, repl, name).strip()
         for arg in filter(op.truth, args):
             esc = re.escape(arg)
@@ -203,6 +216,22 @@ class Helpers:
             # redundant information about 'remixes from xyz'
             name = PATTERNS["clean_incl"].sub("", name)
         return PATTERNS["clean_title"].sub("", name).strip(" -|/")
+
+    @staticmethod
+    def clean_ep_lp_name(album: str, artists: List[str]) -> str:
+        """Parse album name - which precedes 'LP' or 'EP' in the release title.
+        Attempt to remove artist names from the parsed string:
+        * If we're only left with 'EP', it means that the album name is made up of those
+          artists - in that case we keep them.
+        * Otherwise, we will end up cleaning a release title such as 'Artist Album EP',
+          where the artist is not clearly separated from the album name.
+        """
+        match = re.search(r"[^-|]+[EL]P", album)
+        if not match:
+            return ""
+        album_with_artists = match.group().strip()
+        clean_album = Helpers.clean_name(album_with_artists, *artists)
+        return album_with_artists if len(clean_album) == 2 else clean_album
 
     @staticmethod
     def clean_track_names(names: List[str], catalognum: str = "") -> List[str]:
@@ -646,6 +675,13 @@ class Metaguru(Helpers):
 
     @cached_property
     def clean_album_name(self) -> str:
+        upper_album = self.album_name.upper()
+        if " EP" in upper_album or " LP" in upper_album:
+            # EP and LP strings also get normalised during the cleanup,
+            # which is important for the next step
+            no_catlabel = self.clean_name(self.album_name, self.catalognum, self.label)
+            return self.clean_ep_lp_name(no_catlabel, self.albumartist.split(", "))
+
         args = [self.catalognum]
         if not self._singleton:
             args.append(self.bandcamp_albumartist)

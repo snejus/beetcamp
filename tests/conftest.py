@@ -277,7 +277,7 @@ def album_with_track_alt() -> ReleaseInfo:
     ]
     info.set_albuminfo(
         tracks,
-        album="Common Assault",
+        album="Common Assault EP",
         albumartist=artist,
         albumtype="ep",
         catalognum="FLD001",
@@ -592,7 +592,7 @@ def description_meta() -> ReleaseInfo:
         va=False,
         country="PT",
         mediums=1,
-        genre="ambient, electro, rave, techno, trance",
+        genre="ambient, electro, minimal, rave, techno",
         style="electronic",
     )
     return info
@@ -674,7 +674,7 @@ def remix_artists() -> ReleaseInfo:
     ]
     info.set_albuminfo(
         tracks,
-        album="Unseen",
+        album="Unseen EP",
         albumartist=albumartist,
         albumtype="ep",
         catalognum="",

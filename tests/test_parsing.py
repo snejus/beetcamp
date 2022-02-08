@@ -225,6 +225,20 @@ def test_clean_track_names(names, catalognum, expected):
 
 
 @pytest.mark.parametrize(
+    ("album", "artists", "expected"),
+    [
+        ("Album EP", [], "Album EP"),
+        ("Artist Album EP", ["Artist"], "Album EP"),
+        ("Artist EP", ["Artist"], "Artist EP"),
+        ("Album Artist EP", ["Artist"], "Album EP"),
+        ("CAT001 - Artist Album EP", ["Artist"], "Album EP"),
+    ],
+)
+def test_clean_ep_lp_name(album, artists, expected):
+    assert Metaguru.clean_ep_lp_name(album, artists) == expected
+
+
+@pytest.mark.parametrize(
     ("parsed", "official", "albumartist", "expected"),
     [
         (None, "", "AlbumA", "AlbumA"),
@@ -370,15 +384,15 @@ def test_parse_catalognum(album, disctitle, description, label, expected, beets_
         ("Album - Various Artists", [], "Album"),
         ("Various Artists - Album", [], "Album"),
         ("Various Artists Album", [], "Album"),
-        ("Album EP", [], "Album"),
-        ("Album [EP]", [], "Album"),
-        ("Album (EP)", [], "Album"),
-        ("Album E.P.", [], "Album"),
-        ("Album LP", [], "Album"),
-        ("Album [LP]", [], "Album"),
-        ("Album (LP)", [], "Album"),
-        ("[Label] Album EP", ["Label"], "Album"),
-        ("Artist - Album EP", ["Artist"], "Album"),
+        ("Album EP", [], "Album EP"),
+        ("Album [EP]", [], "Album EP"),
+        ("Album (EP)", [], "Album EP"),
+        ("Album E.P.", [], "Album E.P."),
+        ("Album LP", [], "Album LP"),
+        ("Album [LP]", [], "Album LP"),
+        ("Album (LP)", [], "Album LP"),
+        ("[Label] Album EP", ["Label"], "Album EP"),
+        ("Artist - Album EP", ["Artist"], "Album EP"),
         ("Label | Album", ["Label"], "Album"),
         ("Tweaker-229 [PRH-002]", ["PRH-002", "Tweaker-229"], ""),
         ("Album (limited edition)", [], "Album"),
@@ -386,13 +400,13 @@ def test_parse_catalognum(album, disctitle, description, label, expected, beets_
         ("Drepa Mann", [], "Drepa Mann"),
         ("Some ft. Some ONE - Album", ["Some ft. Some ONE"], "Album"),
         ("Some feat. Some ONE - Album", ["Some feat. Some ONE"], "Album"),
-        ("Healing Noise (EP) (Free Download)", [], "Healing Noise"),
+        ("Healing Noise (EP) (Free Download)", [], "Healing Noise EP"),
         ("[MCVA003] - VARIOUS ARTISTS", ["MCVA003"], ""),
         ("Drepa Mann [Vinyl]", [], "Drepa Mann"),
         ("Drepa Mann  [Vinyl]", [], "Drepa Mann"),
         ("The Castle [BLCKLPS009] Incl. Remix", ["BLCKLPS009"], "The Castle"),
         ("The Castle [BLCKLPS009] Incl. Remix", [], "The Castle"),
-        ('Anetha - "Ophiuchus EP"', ["Anetha"], "Ophiuchus"),
+        ('Anetha - "Ophiuchus EP"', ["Anetha"], "Ophiuchus EP"),
         ("Album (FREE DL)", [], "Album"),
         ("Devils Kiss VA", [], "Devils Kiss"),
         ("Devils Kiss VA001", [], "Devils Kiss VA001"),
