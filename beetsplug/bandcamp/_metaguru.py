@@ -88,7 +88,7 @@ PATTERNS: Dict[str, Pattern] = {
     "digital": [  # type: ignore
         re.compile(r"^(DIGI(TAL)? ?[\d.]+|Bonus\W{2,})\W*"),
         re.compile(
-            r"(?i:[^\w\)]+(bandcamp[^-]+|digi(tal)?)(\W*(\W+|only|bonus|exclusive)\W*$))"
+            r"[^\w\)]+(bandcamp[^-]+|digi(tal)?)(\W*(\W+|only|bonus|exclusive)\W*$)", re.I
         ),
     ],
     "remix_or_ft": re.compile(r" [\[\(].*(?i:mix|edit|f(ea)?t\.).*"),
@@ -110,8 +110,7 @@ class Helpers:
         for match in PATTERNS["vinyl_name"].finditer(name):
             count = match.group()
             return int(count) if count.isdigit() else conv[count.lower()]
-        else:
-            return 1
+        return 1
 
     @staticmethod
     def clear_digi_only(name: str) -> str:
@@ -619,7 +618,7 @@ class Metaguru(Helpers):
         ep_count = text.count(" EP")
         if lp_count >= ep_count and lp_count:
             return "album"
-        elif ep_count > lp_count:
+        if ep_count > lp_count:
             return "ep"
 
         if self.is_single:
