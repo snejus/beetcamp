@@ -164,6 +164,10 @@ def test_convert_title(title, expected):
             (("Erik Burka - A Baby Pigeon [MNRM003]"),),
             ("", "Erik Burka", "A Baby Pigeon", "A Baby Pigeon"),
         ),
+        (
+            (("Artist - Title [ONE001]"), "TWO001"),
+            ("", "Artist", "Title", "Title"),
+        ),
     ],
 )
 def test_parse_track_name(inputs, expected, beets_config):

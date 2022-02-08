@@ -193,7 +193,7 @@ class Helpers:
             ('"', ""),  # double quote anywhere in the string
             # spaces around dash in remixer names within parens
             (r"(\([^)]+) - ([^(]+\))", r"\1-\2"),
-            (r"\[[A-Z]+[0-9]+\]", ""),
+            (r"[\[(][A-Z]+[0-9]+[\])]", ""),
         ]:
             name = re.sub(pat, repl, name).strip()
         for arg in filter(op.truth, args):
