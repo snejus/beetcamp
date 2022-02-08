@@ -12,7 +12,7 @@ packages = [{ include = "beetsplug" }]
 include = ["LICENSE", "README.md"]
 
 [tool.poetry.dependencies]
-python = ">=3.6.2,<4.0"
+python = ">=3.6,<3.10"
 
 requests = "*"
 cached-property = "^1.5.2"
