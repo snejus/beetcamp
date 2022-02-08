@@ -5,8 +5,10 @@
 - `album`: following MusicBrainz [title format specification], strings **EP** and **LP**
   are from now on kept in place in album names
 - `catalognum`: To find the catalog number, we have previously been looking at the release
-  title or it being mentioned explicitly within the release description. Now, media title,
-  media description and the rest of the release description are also taken into account.
+  title and pointers such as **Catalogue Number:** within the release description.
+
+  In addition to the above, we now apply a generic search pattern across the rest of the
+  text, including media title, media description and the rest of the release description.
 
 - `track`: Support for tracks that do not use dash (`-`) but some other character to separate
   pieces of information in track names. For example, consider the following
@@ -22,28 +24,48 @@
   ```
 
   `beetcamp` now finds that `|` is being used as the delimiter and parses values for
-  `track_alt`, `artist` and `title` accordingly for each track.
+  `track_alt`, `artist` and `title` accordingly.
 
 ### Updated
 
-- singleton: `album` and `albumartist` fields are not populated anymore.
+- singleton: `album` and `albumartist` fields are not anymore populated.
 - `catalognum`
+
   - Artists like **PROCESS 404** are not assumed to be catalogue numbers anymore.
-  - Short catalognums, such as **WU55**, are accepted.
-  - Multiple words, such as **SMILE SESSIONS 003** are accepted as long as they are in
-    caps and are followed by multiple numbers.
+  - For those interested, at a high level the pattern used in the search looks like below
+
+    ```perl
+    (
+          [A-Z .]+\d{3}         # HANDS D300
+        | [A-Z-]{2,}\d+         # RIV4
+        | [A-Z]+[A-Z.$-]+\d{2,} # USE202, HEY-101, LI$025
+        | [A-Z.]{2,}[ ]\d{1,3}  # OBS.CUR 9
+        | \w+[A-z]0\d+          # 1ØPILLS018, fa036
+        | [a-z]+(cd|lp)\d+      # ostgutlp45
+        | [A-z]+\d+-\d+         # P90-003
+    )
+    ( # optionally followed by
+          [ ]?[A-Z]     # IBM001V
+        | [.][0-9]+     # ISMVA002.1
+        | -?[A-Z]+      # PLUS8024CD
+    )?
+    ```
+
 - `track_alt`: allow non-capital letters, like **a1** to be parsed and convert them to
   capitals.
 
 ### Fixed
 
+- Support for `beets<1.5` has been broken since `0.11.0`, - it should now work fine.
+  However, fields such as `comments` and `lyrics` are not available, and album-like metadata
+  like `catalognum` is not available for singletons. Thanks **@zane-schaffer** for reporting
+  this issue (Closes #22).
 - `singleton`: `catalognum`, if found, is now reliably removed from the title.
-- `track.title`: ` - ` delimiter is handled more appropriately when it is found in the song title.
+- `track.title`: `-` delimiter is handled more appropriately when it is found in the song title.
 
 [tracklist]: https://scumcllctv.bandcamp.com/album/scum002-arcadia
 [title format specification]: https://beta.musicbrainz.org/doc/Style/Titles
 [0.12.0]: https://github.com/snejus/beetcamp/releases/tag/0.12.0
-
 
 ## [0.11.0] 2021-11-12
 

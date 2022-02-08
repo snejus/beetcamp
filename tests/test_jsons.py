@@ -39,7 +39,8 @@ def check(actual, expected) -> None:
 def test_parse_single_track_release(release, beets_config):
     html, expected = release
     actual = Metaguru.from_html(html, beets_config).singleton
-    actual.pop("comments", None)
+    if hasattr(actual, "comments"):
+        actual.pop("comments")
 
     check(actual, expected.singleton)
 
@@ -70,7 +71,8 @@ def test_parse_various_types(release, beets_config):
 
     actual_album = guru.album
     expected_album = expected_release.albuminfo
-    actual_album.pop("comments", None)
+    if hasattr(actual_album, "comments"):
+        actual_album.pop("comments")
 
     assert hasattr(actual_album, "tracks")
     assert len(actual_album.tracks) == len(expected_album.tracks)

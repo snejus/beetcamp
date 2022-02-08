@@ -38,10 +38,9 @@ class ReleaseInfo:
             medium_index=kget("index"),
             medium_total=kget("medium_total"),
             disctitle=self.disctitle,
-            lyrics=kget("lyrics"),
         )
-        if not data["lyrics"]:
-            data.pop("lyrics")
+        if NEW_BEETS and "lyrics" in kwargs:
+            data["lyrics"] = kget("lyrics")
         return data
 
     def set_singleton(self, artist: str, title: str, length: int, **kwargs) -> None:
@@ -68,10 +67,12 @@ class ReleaseInfo:
             "alt",
             "lyrics",
         ]
+        if not NEW_BEETS:
+            fields.pop(-1)
         iter_tracks = [
             zip(fields, (len(tracks), idx, *track)) for idx, track in enumerate(tracks, 1)
         ]
-        self.albuminfo = AlbumInfo(
+        data = dict(
             album=kwargs["album"],
             album_id=self.album_id,
             artist=kwargs["albumartist"],
@@ -90,9 +91,13 @@ class ReleaseInfo:
             media=self.media,
             data_source=DATA_SOURCE,
             tracks=[TrackInfo(**self.track_data(**dict(t))) for t in iter_tracks],
-            genre=kwargs.get("genre"),
-            style=kwargs.get("style"),
         )
+        if NEW_BEETS:
+            data.update(
+                genre=kwargs.get("genre"),
+                style=kwargs.get("style")
+            )
+        self.albuminfo = AlbumInfo(**data)
 
 
 @pytest.fixture

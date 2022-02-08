@@ -726,10 +726,9 @@ class Metaguru(Helpers):
             "albumtype",
             "albumstatus",
             "country",
-            "style",
-            "genre",
-            "comments",
         ]
+        if NEW_BEETS:
+            fields.extend(["genre", "style", "comments"])
         common_data.update(self.get_fields(fields))
         reldate = self.release_date
         if reldate:
@@ -738,29 +737,32 @@ class Metaguru(Helpers):
         return common_data
 
     def _trackinfo(self, track: JSONDict, **kwargs: Any) -> TrackInfo:
-        track_info = TrackInfo(
-            **self._common,
+        track.pop("digi_only", None)
+        track.pop("main_title", None)
+        if not NEW_BEETS:
+            track.pop("lyrics", None)
+
+        data = dict(
             **track,
+            **self._common,
             disctitle=self.disctitle or None,
             medium=1,
             **kwargs,
         )
-        for field in set(track_info.keys()) & self.excluded_fields:
-            track_info[field] = None
+        for field in set(data.keys()) & self.excluded_fields:
+            data.pop(field)
 
-        track_info.pop("digi_only", None)
-        track_info.pop("main_title", None)
-
-        return track_info
+        return TrackInfo(**data)
 
     @cached_property
     def singleton(self) -> TrackInfo:
         self._singleton = True
         track: TrackInfo = self._trackinfo(self.tracks[0])
-        track.update(self._common_album)
-        if not track.get("artist"):
-            track["artist"] = self.bandcamp_albumartist
-        track.pop("album", None)
+        if NEW_BEETS:
+            track.update(self._common_album)
+            track.pop("album", None)
+        if not track.artist:
+            track.artist = self.bandcamp_albumartist
         track.index = track.medium_index = track.medium_total = 1
         track.track_id = track.data_url
         return track
@@ -784,5 +786,6 @@ class Metaguru(Helpers):
             mediums=self.mediums,
             tracks=list(map(get_trackinfo, tracks)),
         )
-        album_info.update(self.get_fields(["va"]))
+        for key, val in self.get_fields(["va"]).items():
+            setattr(album_info, key, val)
         return album_info
