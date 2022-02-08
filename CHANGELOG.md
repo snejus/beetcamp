@@ -32,6 +32,8 @@
   - Short catalognums, such as **WU55**, are accepted.
   - Multiple words, such as **SMILE SESSIONS 003** are accepted as long as they are in
     caps and are followed by multiple numbers.
+- `track_alt`: allow non-capital letters, like **a1** to be parsed and convert them to
+  capitals.
 
 ### Fixed
 

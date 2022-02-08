@@ -92,7 +92,7 @@ PATTERNS: Dict[str, Pattern] = {
         ),
     ],
     "remix_or_ft": re.compile(r" [\[\(].*(?i:mix|edit|f(ea)?t\.).*"),
-    "track_alt": re.compile(r"([ABCDEFGH]{1,3}[0-6])\W+"),
+    "track_alt": re.compile(r"([ABCDEFGH]{1,3}[0-6])\W+", re.I),
     "vinyl_name": re.compile(r"[1-5](?= ?(xLP|LP|x))|single|double|triple", re.I),
 }
 
@@ -128,7 +128,7 @@ class Helpers:
         # match track alt and remove it from the name
         match = PATTERNS["track_alt"].match(name)
         if match:
-            track["track_alt"] = match.expand(r"\1")
+            track["track_alt"] = match.expand(r"\1").upper()
             # do not strip a period from the end since it may end with an abbrev
             name = name.replace(match.group(), "")
 

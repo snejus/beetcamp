@@ -95,6 +95,7 @@ def test_convert_title(title, expected):
         (("A1 - Title",), ("A1", "", "Title", "Title")),
         (("B2 - Artist - Title",), ("B2", "Artist", "Title", "Title")),
         (("A2.  Two Spaces",), ("A2", "", "Two Spaces", "Two Spaces")),
+        (("a2.non caps - Title",), ("A2", "non caps", "Title", "Title")),
         (("D1 No Punct",), ("D1", "", "No Punct", "No Punct")),
         (
             ("DJ BEVERLY HILL$ - Raw Steeze",),
