@@ -1,14 +1,11 @@
-## [0.12.0-alpha.0] Unreleased
+## [0.12.0] 2022-02-08
 
 ### Added
 
-- `album`: following MusicBrainz [title format specification], strings **EP** and **LP**
-  are from now on kept in place in album names
-- `catalognum`: To find the catalog number, we have previously been looking at the release
-  title and pointers such as **Catalogue Number:** within the release description.
+- `album`: following MusicBrainz [title format specification], strings **EP** and **LP** are from now on kept in place in album names.
+- `catalognum`: To find the catalog number, we have previously been looking at the release title and pointers such as **Catalogue Number:** within the release description.
 
-  In addition to the above, we now apply a generic search pattern across the rest of the
-  text, including media title, media description and the rest of the release description.
+  In addition to the above, we now apply a generic search pattern across the rest of the text, including media title, media description and the rest of the release description.
 
   For those interested, at a high level the pattern used in the search looks like below
 
@@ -29,12 +26,9 @@
   )?
   ```
 
-- `albumtype`: similar to the `catalognum`, the descriptions are searched for **EP** and
-  **LP** strings presence to find out the `albumtype`.
+- `albumtype`: similar to the `catalognum`, the descriptions are searched for **EP** and **LP** strings presence to find out the `albumtype`.
 
-- `track`: Support for tracks that do not use dash (`-`) but some other character to separate
-  pieces of information in track names. For example, consider the following
-  [tracklist]:
+- `track`: Support for tracks that do not use dash (`-`) but some other character to separate pieces of information in track names. For example, consider the following [tracklist]:
 
   ```
   A1 | WHITESHADOWHURTS x TOXICSPIKEBACK | Arcadia
@@ -45,23 +39,18 @@
   B3 | WHITESHADOWHURTS | Corrupted Entity [OAT.M's Oldschool Mix]
   ```
 
-  `beetcamp` now finds that `|` is being used as the delimiter and parses values for
-  `track_alt`, `artist` and `title` accordingly.
+  `beetcamp` now finds that `|` is being used as the delimiter and parses values for `track_alt`, `artist` and `title` accordingly.
 
 ### Updated
 
 - singleton: `album` and `albumartist` fields are not anymore populated.
 - `catalognum`: artists like **PROCESS 404** are not assumed to be catalogue numbers anymore.
 
-- `track_alt`: allow non-capital letters, like **a1** to be parsed and convert them to
-  capitals.
+- `track_alt`: allow non-capital letters, like **a1** to be parsed and convert them to capitals.
 
 ### Fixed
 
-- Support for `beets<1.5` has been broken since `0.11.0`, - it should now work fine.
-  However, fields such as `comments` and `lyrics` are not available, and album-like metadata
-  like `catalognum` is not available for singletons. Thanks **@zane-schaffer** for reporting
-  this issue (Closes #22).
+- Support for `beets<1.5` has been broken since `0.11.0`, - it should now work fine. However, fields such as `comments` and `lyrics` are not available, and album-like metadata like `catalognum` is not available for singletons. Thanks **@zane-schaffer** for reporting this issue (Closes #22).
 - `singleton`: `catalognum`, if found, is now reliably removed from the title.
 - `track.title`: `-` delimiter is handled more appropriately when it is found in the song title.
 
