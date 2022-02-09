@@ -1,8 +1,9 @@
 import json
 import os
 import re
-from collections import defaultdict
+from collections import Counter, defaultdict, namedtuple
 from functools import partial
+from itertools import groupby
 
 import pytest
 from rich.columns import Columns
@@ -15,7 +16,7 @@ from beetsplug.bandcamp._metaguru import Metaguru
 pytestmark = pytest.mark.lib
 
 target_dir = "dev"
-compare_against = "4b021c3"
+compare_against = "cur"
 if not os.path.exists(target_dir):
     os.makedirs(target_dir)
 install(show_locals=True, extra_lines=8, width=int(os.environ.get("COLUMNS", 150)))
@@ -34,7 +35,8 @@ def file(request):
     return request.param
 
 
-diffs = defaultdict(list)
+Oldnew = namedtuple("Oldnew", ["old", "new", "diff"])
+oldnew = defaultdict(list)
 stats_map = defaultdict(lambda: 0)
 
 
@@ -64,14 +66,15 @@ def do_key(table, key: str, before, after) -> None:
         else:
             difftext = make_difftext(before, after)
         if difftext:
-            diffs[key].append(difftext)
+            oldnew[key].append(Oldnew(before, after, difftext))
             table.add_row(wrap(key, "b"), difftext)
 
 
 def compare(old, new) -> bool:
-    new["albumartist"] = new.pop("artist", "")
+    for entity in old, new:
+        entity["albumartist"] = entity.pop("artist", "")
+
     every_new = [new, *(new.get("tracks") or [])]
-    old["albumartist"] = old.pop("artist", "")
     every_old = [old, *(old.get("tracks") or [])]
     album_name = new.get("album")
     album_id = wrap(new.get("album_id"), "dim")
@@ -82,7 +85,7 @@ def compare(old, new) -> bool:
         title = " - ".join([new.get("artist") or "", new.get("title") or ""])
         title = wrap(album_name or title, "b")
         for key in sorted(set(new.keys()).union(set(old.keys())) - keys_excl):
-            do_key(table, key, str(old.get(key)), str(new.get(key)))
+            do_key(table, key, str(old.get(key, "")), str(new.get(key, "")))
 
     if table.rows:
         console.print(border_panel(table, title=title, subtitle=album_id))
@@ -116,16 +119,33 @@ def test_all(config):
 
         target = os.path.join(target_dir, testfile)
         json.dump(new, open(target, "w"), indent=2)
-        old = json.load(open(os.path.join(compare_against, testfile)))
+        try:
+            old = json.load(open(os.path.join(compare_against, testfile)))
+        except FileNotFoundError:
+            old = {}
         try:
             compare(old, new)
         except:  # noqa
             pass
 
     cols = []
-    for field in set(diffs.keys()) - {"comments"}:
-        if diffs[field]:
-            cols.append(border_panel(Columns(diffs[field], expand=True), title=field))
+    for field in set(oldnew.keys()) - {"comments"}:
+        field_diffs = sorted(oldnew[field], key=lambda x: x.new)
+        if not field_diffs:
+            continue
+        tab = new_table()
+        for new, all_old in groupby(field_diffs, lambda x: x.new):
+            tab.add_row(
+                " | ".join(
+                    map(
+                        lambda x: (f"{x[1]} x " if x[1] > 1 else "")
+                        + wrap(x[0], "b s red"),
+                        Counter(map(lambda x: x.old, all_old)).items(),
+                    )
+                ),
+                wrap(new, "b green"),
+            )
+        cols.append(border_panel(tab, title=field))
 
     console.print(Columns(cols, expand=True))
 

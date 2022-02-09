@@ -56,6 +56,7 @@ _catalognum = r"""(?<![/@])(\b
 (?![^.]+shirt)
 (
       [A-Z .]+\d{3}         # HANDS D300
+    | [A-z ][ ]0\d{2,3}     # Persephonic Sirens 012
     | [A-Z-]{2,}\d+         # RIV4
     | [A-Z]+[A-Z.$-]+\d{2,} # USE202, HEY-101, LI$025
     | [A-Z.]{2,}[ ]\d{1,3}  # OBS.CUR 9
