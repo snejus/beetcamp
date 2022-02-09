@@ -21,6 +21,7 @@ from typing import (
 )
 from unicodedata import normalize
 
+from beets import config as beets_config
 from beets.autotag.hooks import AlbumInfo, TrackInfo
 from cached_property import cached_property
 from pkg_resources import get_distribution, parse_version
@@ -345,10 +346,12 @@ class Metaguru(Helpers):
     meta: JSONDict
     config: JSONDict
     _singleton = False
+    va_name: str = VA
 
     def __init__(self, meta: JSONDict, config: Optional[JSONDict] = None) -> None:
         self.meta = meta
         self.config = config or {}
+        self.va_name = beets_config["va_name"].as_str() or self.va_name
 
     @classmethod
     def from_html(cls, html: str, config: JSONDict = None) -> "Metaguru":
@@ -601,16 +604,15 @@ class Metaguru(Helpers):
     @cached_property
     def albumartist(self) -> str:
         """Take into account the release contents and return the actual albumartist.
-        * 'Various Artists' for a compilation release
+        * 'Various Artists' (or `va_name` configuration option) for a compilation release
         * If every track has the same author, treat it as the albumartist
         """
-        if self.albumtype == "compilation":
-            return VA
-        tartists = self.track_artists
-        if len(tartists) == 1:
-            first_tartist = tartists.copy().pop()
-            if first_tartist != self.label:
-                return first_tartist
+        if self.va:
+            return self.va_name
+
+        artists = list(self.track_artists)
+        if len(artists) == 1 and artists[0] != self.label:
+            return artists[0]
         return self.bandcamp_albumartist
 
     @cached_property
@@ -631,7 +633,7 @@ class Metaguru(Helpers):
 
     @cached_property
     def va(self) -> bool:
-        return self.albumtype == "compilation"
+        return len(self.track_artists) > 3
 
     @cached_property
     def style(self) -> Optional[str]:

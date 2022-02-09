@@ -46,14 +46,16 @@
 
 - singleton: `album` and `albumartist` fields are not anymore populated.
 - `catalognum`: artists like **PROCESS 404** are not assumed to be catalogue numbers anymore.
-
 - `track_alt`: allow non-capital letters, like **a1** to be parsed and convert them to capitals.
+- `albumartist`: will use the name for various artists when a release includes more than
+  three different artists. Until now we only used this name for compilations.
 
 ### Fixed
 
 - Support for `beets<1.5` has been broken since `0.11.0`, - it should now work fine. However, fields such as `comments` and `lyrics` are not available, and album-like metadata like `catalognum` is not available for singletons. Thanks **@zane-schaffer** for reporting this issue (Closes #22).
 - `singleton`: `catalognum`, if found, is now reliably removed from the title.
 - `track.title`: `-` delimiter is handled more appropriately when it is found in the song title.
+- `albumartist`: for the Various Artists releases, the plugin will now use the globally configured `va_name` field instead of hard-coding _Various Artists_.
 
 [tracklist]: https://scumcllctv.bandcamp.com/album/scum002-arcadia
 [title format specification]: https://beta.musicbrainz.org/doc/Style/Titles
