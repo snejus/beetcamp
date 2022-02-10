@@ -17,7 +17,7 @@ from rich_tables.utils import border_panel, make_console, make_difftext, new_tab
 pytestmark = pytest.mark.lib
 
 target_dir = "dev"
-compare_against = "a9beacd"
+compare_against = "4b86dcc"
 if not os.path.exists(target_dir):
     os.makedirs(target_dir)
 install(show_locals=True, extra_lines=8, width=int(os.environ.get("COLUMNS", 150)))
@@ -32,8 +32,6 @@ def file(request):
 
 
 Oldnew = namedtuple("Oldnew", ["old", "new", "diff"])
-
-
 oldnew = defaultdict(list)
 
 

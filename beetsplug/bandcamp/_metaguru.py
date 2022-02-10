@@ -423,15 +423,18 @@ class Metaguru(Helpers):
             return self.meta["publisher"]["@id"]
 
     @cached_property
+    def raw_albumartist(self) -> str:
+        match = re.search(r"Artists?:([^\n]+)", self.all_media_comments)
+        if match:
+            return str(match.groups()[0].strip())
+        return self.meta["byArtist"]["name"]
+
+    @cached_property
     def bandcamp_albumartist(self) -> str:
         """Return the official release albumartist.
         It is correct in half of the cases. In others, we usually find the label name.
         """
-        match = re.search(r"Artists?:([^\n]+)", self.all_media_comments)
-        if match:
-            return str(match.groups()[0].strip())
-
-        albumartist = self.meta["byArtist"]["name"]
+        albumartist = self.raw_albumartist
         if self.label == albumartist:
             album = self.album_name
             albumartist = self.parse_track_name(album).get("artist") or albumartist
@@ -550,8 +553,6 @@ class Metaguru(Helpers):
     @cached_property
     def track_artists(self) -> Set[str]:
         artists = {(t.get("artist") or "") for t in self.tracks} - {""}
-        if not artists:
-            return {self.bandcamp_albumartist}
         return artists
 
     @cached_property
@@ -607,10 +608,7 @@ class Metaguru(Helpers):
         if self.va:
             return self.va_name
 
-        artists = list(self.unique_artists)
-        if len(artists) <= 4:
-            return ", ".join(sorted(artists))
-        return self.bandcamp_albumartist
+        return ", ".join(sorted(self.unique_artists))
 
     @cached_property
     def albumtype(self) -> str:
