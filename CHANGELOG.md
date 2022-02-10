@@ -47,9 +47,8 @@
 - singleton: `album` and `albumartist` fields are not anymore populated.
 - `catalognum`: artists like **PROCESS 404** are not assumed to be catalogue numbers anymore.
 - `track_alt`: allow non-capital letters, like **a1** to be parsed and convert them to capitals.
-- `albumartist`: will use the name for various artists when a release includes more than
-  three different artists. Until now we've only done so for compilations.
-- `genre`: the list of genres is now sorted alphabetically
+- `albumartist`: use **Various Artists** (or equivalent) when a release includes more than four different artists. Until now we've only done so for compilations.
+- `genre`: genres are now sorted alphabetically
 
 ### Fixed
 

@@ -85,119 +85,69 @@ def test_convert_title(title, expected):
 
 
 @pytest.mark.parametrize(
-    ("inputs", "expected"),
+    ("name", "expected"),
     [
-        (("Title",), ("", "", "Title", "Title")),
-        (("Artist - Title",), ("", "Artist", "Title", "Title")),
-        (("A1. Artist - Title",), ("A1", "Artist", "Title", "Title")),
-        (("A1- Artist - Title",), ("A1", "Artist", "Title", "Title")),
-        (("A1.- Artist - Title",), ("A1", "Artist", "Title", "Title")),
-        (("A1 - Title",), ("A1", "", "Title", "Title")),
-        (("B2 - Artist - Title",), ("B2", "Artist", "Title", "Title")),
-        (("A2.  Two Spaces",), ("A2", "", "Two Spaces", "Two Spaces")),
-        (("a2.non caps - Title",), ("A2", "non caps", "Title", "Title")),
-        (("D1 No Punct",), ("D1", "", "No Punct", "No Punct")),
+        ("Title", ("", "", "Title", "Title")),
+        ("Artist - Title", ("", "Artist", "Title", "Title")),
+        ("A1. Artist - Title", ("A1", "Artist", "Title", "Title")),
+        ("A1- Artist - Title", ("A1", "Artist", "Title", "Title")),
+        ("A1.- Artist - Title", ("A1", "Artist", "Title", "Title")),
+        ("A1 - Title", ("A1", "", "Title", "Title")),
+        ("B2 - Artist - Title", ("B2", "Artist", "Title", "Title")),
+        ("A2.  Two Spaces", ("A2", "", "Two Spaces", "Two Spaces")),
+        ("a2.non caps - Title", ("A2", "non caps", "Title", "Title")),
+        ("D1 No Punct", ("D1", "", "No Punct", "No Punct")),
         (
-            ("DJ BEVERLY HILL$ - Raw Steeze",),
+            "DJ BEVERLY HILL$ - Raw Steeze",
             ("", "DJ BEVERLY HILL$", "Raw Steeze", "Raw Steeze"),
         ),
+        ("&$%@#!", ("", "", "&$%@#!", "&$%@#!")),
+        ("24 Hours", ("", "", "24 Hours", "24 Hours")),
         (
-            ("LI$INGLE010 - cyberflex - LEVEL X", "LI$INGLE010"),
-            ("", "cyberflex", "LEVEL X", "LEVEL X"),
-        ),
-        (
-            ("I'll Become Pure N-R-G",),
-            ("", "", "I'll Become Pure N-R-G", "I'll Become Pure N-R-G"),
-        ),
-        (("&$%@#!",), ("", "", "&$%@#!", "&$%@#!")),
-        (("24 Hours",), ("", "", "24 Hours", "24 Hours")),
-        (
-            ("Some tune (Someone's Remix)",),
+            "Some tune (Someone's Remix)",
             ("", "", "Some tune (Someone's Remix)", "Some tune"),
         ),
+        ("19.85 - Colapso (FREE)", ("", "19.85", "Colapso", "Colapso")),
+        ("E7-E5", ("", "", "E7-E5", "E7-E5")),
         (
-            ("19.85 - Colapso Inevitable",),
-            ("", "19.85", "Colapso Inevitable", "Colapso Inevitable"),
-        ),
-        (
-            ("19.85 - Colapso Inevitable (FREE)",),
-            ("", "19.85", "Colapso Inevitable", "Colapso Inevitable"),
-        ),
-        (("E7-E5",), ("", "", "E7-E5", "E7-E5")),
-        (
-            ("Lacchesi - UNREALNUMBERS - MK4 (Lacchesi Remix)",),
+            "Lacchesi - UNREALNUMBERS - MK4 (Lacchesi Remix)",
             ("", "Lacchesi, UNREALNUMBERS", "MK4 (Lacchesi Remix)", "MK4"),
         ),
+        ("UNREALNUMBERS -Karaburan", ("", "UNREALNUMBERS", "Karaburan", "Karaburan")),
         (
-            ("UNREALNUMBERS -Karaburan",),
-            ("", "UNREALNUMBERS", "Karaburan", "Karaburan"),
+            "Ellie Goulding- Eyed ( ROWDIBOÏ EDIT))",
+            ("", "Ellie Goulding", "Eyed (ROWDIBOÏ EDIT)", "Eyed"),
         ),
-        (
-            ("Ellie Goulding- Starry Eyed ( ROWDIBOÏ EDIT))",),
-            ("", "Ellie Goulding", "Starry Eyed (ROWDIBOÏ EDIT)", "Starry Eyed"),
-        ),
-        (
-            ("Space Jam - (RZVX EDIT)",),
-            ("", "", "Space Jam (RZVX EDIT)", "Space Jam"),
-        ),
-        (("¯\\_(ツ)_/¯",), ("", "", "¯\\_(ツ)_/¯", "¯\\_(ツ)_/¯")),
-        (("VIENNA (WARM UP MIX",), ("", "", "VIENNA (WARM UP MIX", "VIENNA")),
-        (
-            ("MOD-R - ARE YOU RECEIVING ME",),
-            ("", "MOD-R", "ARE YOU RECEIVING ME", "ARE YOU RECEIVING ME"),
-        ),
-        (
-            ("K - The Lightning Princess",),
-            ("", "K", "The Lightning Princess", "The Lightning Princess"),
-        ),
-        (
-            ("MEAN-E - PLANETARY NEBULAE",),
-            ("", "MEAN-E", "PLANETARY NEBULAE", "PLANETARY NEBULAE"),
-        ),
-        (("f-theme",), ("", "", "f-theme", "f-theme")),
-        (
-            ("Mr. Free - The 4th Room",),
-            ("", "Mr. Free", "The 4th Room", "The 4th Room"),
-        ),
-        (("O)))Bow 1",), ("", "", "O)))Bow 1", "O)))Bow 1")),
-        (("H.E.L.L.O.",), ("", "", "H.E.L.L.O.", "H.E.L.L.O.")),
-        (
-            (("Erik Burka - A Baby Pigeon [MNRM003]"),),
-            ("", "Erik Burka", "A Baby Pigeon", "A Baby Pigeon"),
-        ),
-        (
-            (("Artist - Title [ONE001]"), "TWO001"),
-            ("", "Artist", "Title", "Title"),
-        ),
-        (
-            (("Artist + Other - Title"),),
-            ("", "Artist + Other", "Title", "Title"),
-        ),
+        ("Space Jam - (RZVX EDIT)", ("", "", "Space Jam (RZVX EDIT)", "Space Jam")),
+        ("¯\\_(ツ)_/¯", ("", "", "¯\\_(ツ)_/¯", "¯\\_(ツ)_/¯")),
+        ("VIENNA (WARM UP MIX", ("", "", "VIENNA (WARM UP MIX", "VIENNA")),
+        ("MOD-R - ARE YOU", ("", "MOD-R", "ARE YOU", "ARE YOU")),
+        ("K - The Lightning", ("", "K", "The Lightning", "The Lightning")),
+        ("MEAN-E - PLANETARY", ("", "MEAN-E", "PLANETARY", "PLANETARY")),
+        ("f-theme", ("", "", "f-theme", "f-theme")),
+        ("Mr. Free - The 4th Room", ("", "Mr. Free", "The 4th Room", "The 4th Room")),
+        ("O)))Bow 1", ("", "", "O)))Bow 1", "O)))Bow 1")),
+        ("H.E.L.L.O.", ("", "", "H.E.L.L.O.", "H.E.L.L.O.")),
+        ("Erik Burka - Pigeon [MNRM003]", ("", "Erik Burka", "Pigeon", "Pigeon")),
+        ("Artist - Title [ONE001]", ("", "Artist", "Title", "Title")),
+        ("Artist + Other - Title", ("", "Artist + Other", "Title", "Title")),
+        ("Artist (feat. Other) - Title", ("", "Artist feat. Other", "Title", "Title")),
+        ("Artist (some remix) - Title", ("", "Artist", "Title", "Title")),
     ],
 )
-def test_parse_track_name(inputs, expected, beets_config):
-    inputs = list(inputs)
-    name = inputs.pop(0)
-    track = {
-        "item": {
-            "@id": "album_url",
-            "name": name,
-        },
-        "position": 1,
-    }
+def test_parse_track_name(name, expected, beets_config):
+    track = {"item": {"@id": "album_url", "name": name}, "position": 1}
     meta = {
         "track": {"itemListElement": [track]},
         "name": "album",
         "publisher": {"name": "some label"},
         "byArtist": {"name": ""},
-        "tracks": [f"1. {name}"]
+        "tracks": [f"1. {name}"],
     }
     fields = "track_alt", "artist", "title", "main_title"
     expected = dict(zip(fields, expected))
 
     guru = Metaguru(meta, beets_config)
-    if inputs:
-        guru.catalognum = inputs[0]
     result_track = guru.tracks[0]
     result = dict(zip(fields, itemgetter(*fields)(result_track)))
     assert result == expected, print_result(name, expected, result)
@@ -206,6 +156,11 @@ def test_parse_track_name(inputs, expected, beets_config):
 @pytest.mark.parametrize(
     ("names", "catalognum", "expected"),
     [
+        (
+            ["LI$INGLE010 - cyberflex - LEVEL X"],
+            "LI$INGLE010",
+            ["cyberflex - LEVEL X"],
+        ),
         (
             ["1. Artist - Title", "2. Artist - Title"],
             "",

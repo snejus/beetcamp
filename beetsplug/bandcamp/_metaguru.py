@@ -143,6 +143,8 @@ class Helpers:
 
         title = parts.pop(-1)
         artist = ", ".join(sorted(set(parts)))
+        artist = re.sub(r" \(.*mix.*|,$", "", artist)
+        artist = re.sub(r"[(](f(ea)?t.*)[)]", r"\1", artist)
         if not track_alt:
             title, track_alt = get_trackalt(title)
         track.update(title=title, artist=artist)
@@ -425,7 +427,7 @@ class Metaguru(Helpers):
         """Return the official release albumartist.
         It is correct in half of the cases. In others, we usually find the label name.
         """
-        match = re.search(r"Artist:([^\n]+)", self.all_media_comments)
+        match = re.search(r"Artists?:([^\n]+)", self.all_media_comments)
         if match:
             return str(match.groups()[0].strip())
 
@@ -495,7 +497,7 @@ class Metaguru(Helpers):
             self.disctitle,
             self.all_media_comments,
             self.label,
-            artists=self.all_artists,
+            artists=self.raw_artists,
         )
 
     @cached_property
@@ -547,10 +549,26 @@ class Metaguru(Helpers):
 
     @cached_property
     def track_artists(self) -> Set[str]:
-        artists = {
-            re.sub(r" f(ea)?t.*", "", (t.get("artist") or "")) for t in self.tracks
-        }
-        artists.discard("")
+        artists = {(t.get("artist") or "") for t in self.tracks} - {""}
+        if not artists:
+            return {self.bandcamp_albumartist}
+        return artists
+
+    @cached_property
+    def unique_artists(self):
+        pat = re.compile(r" (?:[x+]|vs|f(?:ea)?t\.?) |, ")
+        split = map(lambda x: pat.split(x), self.track_artists)
+        artists = set(it.chain(*split))
+        for artist in list(artists):
+            if " X " in artist and artist.upper() == artist:
+                artists.discard(artist)
+                artists.update(artist.split(" X "))
+                continue
+
+            subartists = artist.split(" & ")
+            if len(subartists) > 1 and any(map(lambda x: x in artists, subartists)):
+                artists.discard(artist)
+                artists.update(subartists)
         return artists
 
     @cached_property
@@ -559,7 +577,7 @@ class Metaguru(Helpers):
         return list(map(lambda x: x.split(". ", maxsplit=1)[1], raw_tracks))
 
     @cached_property
-    def all_artists(self) -> Set[str]:
+    def raw_artists(self) -> Set[str]:
         def only_artist(name: str) -> str:
             return re.sub(r" - .*", "", PATTERNS["track_alt"].sub("", name))
 
@@ -589,9 +607,9 @@ class Metaguru(Helpers):
         if self.va:
             return self.va_name
 
-        artists = list(self.track_artists)
-        if len(artists) == 1 and artists[0] != self.label:
-            return artists[0]
+        artists = list(self.unique_artists)
+        if len(artists) <= 4:
+            return ", ".join(sorted(artists))
         return self.bandcamp_albumartist
 
     @cached_property
@@ -612,7 +630,7 @@ class Metaguru(Helpers):
 
     @cached_property
     def va(self) -> bool:
-        return len(self.track_artists) > 3
+        return len(self.unique_artists) > 4
 
     @cached_property
     def style(self) -> Optional[str]:
