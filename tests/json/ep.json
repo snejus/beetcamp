@@ -307,11 +307,6 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 385.8
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
             }
@@ -332,11 +327,6 @@
               "@type": "PropertyValue",
               "name": "track_id",
               "value": 1365259276
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 333.5
             },
             {
               "@type": "PropertyValue",
@@ -363,11 +353,6 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 315.203
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
             }
@@ -388,11 +373,6 @@
               "@type": "PropertyValue",
               "name": "track_id",
               "value": 1411519787
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 333.703
             },
             {
               "@type": "PropertyValue",

@@ -136,7 +136,7 @@
       }
     },
     {
-      "@id": "https://diffusereality.bandcamp.com/album/francois-dillinger-icosahedrone-lp#b45738897",
+      "@id": "https://diffusereality.bandcamp.com/album/francois-dillinger-icosahedrone-lp#b45762127",
       "@type": [
         "MusicRelease",
         "Product"
@@ -145,7 +145,7 @@
         {
           "@type": "PropertyValue",
           "name": "item_id",
-          "value": 45738897
+          "value": 45762127
         },
         {
           "@type": "PropertyValue",
@@ -165,7 +165,7 @@
         {
           "@type": "PropertyValue",
           "name": "art_id",
-          "value": 3284906663
+          "value": 2590020634
         },
         {
           "@type": "PropertyValue",
@@ -174,17 +174,17 @@
         }
       ],
       "image": [
-        "https://f4.bcbits.com/img/a3284906663_10.jpg"
+        "https://f4.bcbits.com/img/a2590020634_10.jpg"
       ],
       "musicReleaseFormat": "DigitalFormat",
-      "name": "full digital discography (481 releases)",
+      "name": "full digital discography (483 releases)",
       "offers": {
         "@type": "Offer",
         "additionalProperty": [
           {
             "@type": "PropertyValue",
             "name": "bundle_size",
-            "value": 481
+            "value": 483
           },
           {
             "@type": "PropertyValue",
@@ -198,12 +198,12 @@
           }
         ],
         "availability": "OnlineOnly",
-        "price": 765.76,
+        "price": 769.36,
         "priceCurrency": "EUR",
         "priceSpecification": {
-          "minPrice": 765.76
+          "minPrice": 769.36
         },
-        "url": "https://diffusereality.bandcamp.com/album/francois-dillinger-icosahedrone-lp#b45738897-buy"
+        "url": "https://diffusereality.bandcamp.com/album/francois-dillinger-icosahedrone-lp#b45762127-buy"
       }
     },
     {
@@ -388,11 +388,6 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 376
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
             }
@@ -413,11 +408,6 @@
               "@type": "PropertyValue",
               "name": "track_id",
               "value": 2952764834
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 347.317
             },
             {
               "@type": "PropertyValue",
@@ -444,11 +434,6 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 320
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
             }
@@ -469,11 +454,6 @@
               "@type": "PropertyValue",
               "name": "track_id",
               "value": 4099471097
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 341.28
             },
             {
               "@type": "PropertyValue",
@@ -500,11 +480,6 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 335.988
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
             }
@@ -525,11 +500,6 @@
               "@type": "PropertyValue",
               "name": "track_id",
               "value": 3254609518
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 378
             },
             {
               "@type": "PropertyValue",
@@ -556,11 +526,6 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 432
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
             }
@@ -581,11 +546,6 @@
               "@type": "PropertyValue",
               "name": "track_id",
               "value": 938275914
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 353.143
             },
             {
               "@type": "PropertyValue",
@@ -612,11 +572,6 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 320
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
             }
@@ -637,11 +592,6 @@
               "@type": "PropertyValue",
               "name": "track_id",
               "value": 1336260361
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 442
             },
             {
               "@type": "PropertyValue",

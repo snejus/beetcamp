@@ -423,7 +423,8 @@ def artist_mess() -> ReleaseInfo:
         disctitle=None,
     )
     # fmt: off
-    albumartist = "Psykovsky & Friends"
+    albumartist = "Various Artists"
+    psykovsky = "Psykovsky & Friends"
     lyrics = '''Little lark
 
 all alone
@@ -477,14 +478,14 @@ forlorn twilight'''
         ("so-we-sailed-till-we-found", "Psykovsky & Spiral", "So We Sailed Till We Found", 454, None),  # noqa
         ("doors-of-perception", "Psykovsky & Kasatka", "Doors Of Perception", 473, None),  # noqa
         ("variant-on-the-right", "Psykovsky & Spiral & Seeasound", "Variant On The Right", 736, None),  # noqa
-        ("call-of-beauty", albumartist, "Call Of Beauty", 769, None),
+        ("call-of-beauty", psykovsky, "Call Of Beauty", 769, None),
         ("many-many-krishnas", "Psykovsky & Orestis & Jobaba", "Many Many Krishnas", 729, None),  # noqa
         ("prem-i-um", "Psykovsky & Kashyyyk & Arcek", "Prem I Um", 409, None),
         ("now-here-nowhere", "Psykovsky & Arcek", "Now Here Nowhere", 557, None),
         ("holy-black-little-lark", "Psykovsky & Maleficium & Seeasound", "Holy Black / Little Lark", 1087, None, lyrics),  # noqa
-        ("worlds-of-wisdom", albumartist, "Worlds Of Wisdom", 408, None),
-        ("pc-transmission", albumartist, "PC Transmission", 561, None),
-        ("rs-lightmusic", albumartist, "RS Lightmusic", 411, None),
+        ("worlds-of-wisdom", psykovsky, "Worlds Of Wisdom", 408, None),
+        ("pc-transmission", psykovsky, "PC Transmission", 561, None),
+        ("rs-lightmusic", psykovsky, "RS Lightmusic", 411, None),
         ("ksolntsu", "Psykovsky & Quip Tone Beatz & Flish", "Ksolntsu", 555, None),
         ("dadme-albricios-hijos-deva", "Birds Of Praise", "Dadme albricios hijos d'Eva", 623, None),  # noqa
     ]
@@ -497,7 +498,7 @@ forlorn twilight'''
         catalognum="",
         label="Psykovsky",
         release_date=date(2015, 2, 12),
-        va=False,
+        va=True,
         country="NU",
         mediums=1,
         genre="experimental, psytrance",

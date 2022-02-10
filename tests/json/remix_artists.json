@@ -278,11 +278,6 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 383.662
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
             }
@@ -303,11 +298,6 @@
               "@type": "PropertyValue",
               "name": "track_id",
               "value": 987420966
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 352.448
             },
             {
               "@type": "PropertyValue",
@@ -334,11 +324,6 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 341.408
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
             }
@@ -359,11 +344,6 @@
               "@type": "PropertyValue",
               "name": "track_id",
               "value": 628289803
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 340.699
             },
             {
               "@type": "PropertyValue",
@@ -390,19 +370,10 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 362.774
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
             }
           ],
-          "byArtist": {
-            "@type": "MusicGroup",
-            "name": "Varya Karpova"
-          },
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H06M02S",
           "name": "UNREALNUMBERS - Unseen (Varya Karpova Remix)"
@@ -422,19 +393,10 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 350.897
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
             }
           ],
-          "byArtist": {
-            "@type": "MusicGroup",
-            "name": "Lacchesi"
-          },
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H05M50S",
           "name": "UNREALNUMBERS - MK4 (Lacchesi Remix)"

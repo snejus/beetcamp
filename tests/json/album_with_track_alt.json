@@ -320,11 +320,6 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 357.372
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
             }
@@ -345,11 +340,6 @@
               "@type": "PropertyValue",
               "name": "track_id",
               "value": 1382985841
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 351.961
             },
             {
               "@type": "PropertyValue",
@@ -376,11 +366,6 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 20.8
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
             }
@@ -401,11 +386,6 @@
               "@type": "PropertyValue",
               "name": "track_id",
               "value": 2674898874
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 315.224
             },
             {
               "@type": "PropertyValue",
@@ -432,11 +412,6 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 365.373
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
             }
@@ -457,11 +432,6 @@
               "@type": "PropertyValue",
               "name": "track_id",
               "value": 1813148828
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 20
             },
             {
               "@type": "PropertyValue",

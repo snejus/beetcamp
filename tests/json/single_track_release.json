@@ -15,11 +15,6 @@
     },
     {
       "@type": "PropertyValue",
-      "name": "duration_secs",
-      "value": 421.078
-    },
-    {
-      "@type": "PropertyValue",
       "name": "license_name",
       "value": "all_rights_reserved"
     }

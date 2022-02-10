@@ -142,7 +142,7 @@ class Helpers:
         parts = list(map(lambda x: x.strip(" -"), parts))
 
         title = parts.pop(-1)
-        artist = ", ".join(set(parts))
+        artist = ", ".join(sorted(set(parts)))
         if not track_alt:
             title, track_alt = get_trackalt(title)
         track.update(title=title, artist=artist)
@@ -185,8 +185,11 @@ class Helpers:
 
     @staticmethod
     def get_duration(source: JSONDict) -> int:
-        h, m, s = map(int, re.findall(r"[0-9]+", source["duration"]))
-        return h * 3600 + m * 60 + s
+        try:
+            h, m, s = map(int, re.findall(r"[0-9]+", source["duration"]))
+            return h * 3600 + m * 60 + s
+        except KeyError:
+            return 0
 
     @staticmethod
     def clean_name(name: str, *args: str, remove_extra: bool = False) -> str:
@@ -552,7 +555,8 @@ class Metaguru(Helpers):
 
     @cached_property
     def track_names(self) -> List[str]:
-        return list(map(lambda x: x.split(". ", maxsplit=1)[1], self.meta["tracks"]))
+        raw_tracks = self.meta.get("tracks") or []
+        return list(map(lambda x: x.split(". ", maxsplit=1)[1], raw_tracks))
 
     @cached_property
     def all_artists(self) -> Set[str]:

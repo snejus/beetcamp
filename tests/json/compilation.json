@@ -15,11 +15,6 @@
     },
     {
       "@type": "PropertyValue",
-      "name": "has_discounts",
-      "value": true
-    },
-    {
-      "@type": "PropertyValue",
       "name": "license_name",
       "value": "all_rights_reserved"
     }
@@ -66,7 +61,7 @@
       "name": "ISMVA003.3"
     },
     {
-      "@id": "https://ismusberlin.bandcamp.com/album/ismva0033#b45620211",
+      "@id": "https://ismusberlin.bandcamp.com/album/ismva0033#b45760447",
       "@type": [
         "MusicRelease",
         "Product"
@@ -75,7 +70,7 @@
         {
           "@type": "PropertyValue",
           "name": "item_id",
-          "value": 45620211
+          "value": 45760447
         },
         {
           "@type": "PropertyValue",
@@ -95,7 +90,7 @@
         {
           "@type": "PropertyValue",
           "name": "art_id",
-          "value": 1893912488
+          "value": 2588751690
         },
         {
           "@type": "PropertyValue",
@@ -104,17 +99,17 @@
         }
       ],
       "image": [
-        "https://f4.bcbits.com/img/a1893912488_10.jpg"
+        "https://f4.bcbits.com/img/a2588751690_10.jpg"
       ],
       "musicReleaseFormat": "DigitalFormat",
-      "name": "full digital discography (17 releases)",
+      "name": "full digital discography (18 releases)",
       "offers": {
         "@type": "Offer",
         "additionalProperty": [
           {
             "@type": "PropertyValue",
             "name": "bundle_size",
-            "value": 17
+            "value": 18
           },
           {
             "@type": "PropertyValue",
@@ -133,7 +128,7 @@
         "priceSpecification": {
           "minPrice": 29.25
         },
-        "url": "https://ismusberlin.bandcamp.com/album/ismva0033#b45620211-buy"
+        "url": "https://ismusberlin.bandcamp.com/album/ismva0033#b45760447-buy"
       }
     },
     {
@@ -324,11 +319,6 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 414
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
             }
@@ -349,11 +339,6 @@
               "@type": "PropertyValue",
               "name": "track_id",
               "value": 2486903435
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 361.558
             },
             {
               "@type": "PropertyValue",
@@ -380,11 +365,6 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 313.6
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
             }
@@ -405,11 +385,6 @@
               "@type": "PropertyValue",
               "name": "track_id",
               "value": 2033411417
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 388
             },
             {
               "@type": "PropertyValue",
@@ -436,11 +411,6 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 330
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
             }
@@ -461,11 +431,6 @@
               "@type": "PropertyValue",
               "name": "track_id",
               "value": 650634565
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 426
             },
             {
               "@type": "PropertyValue",
@@ -492,11 +457,6 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 414.247
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
             }
@@ -517,11 +477,6 @@
               "@type": "PropertyValue",
               "name": "track_id",
               "value": 571350648
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 390
             },
             {
               "@type": "PropertyValue",
@@ -548,11 +503,6 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 370.75
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
             }
@@ -573,11 +523,6 @@
               "@type": "PropertyValue",
               "name": "track_id",
               "value": 2384179591
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 374.75
             },
             {
               "@type": "PropertyValue",
@@ -604,11 +549,6 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 344.022
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
             }
@@ -632,11 +572,6 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 465
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
             }
@@ -657,11 +592,6 @@
               "@type": "PropertyValue",
               "name": "track_id",
               "value": 359530111
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 408.649
             },
             {
               "@type": "PropertyValue",

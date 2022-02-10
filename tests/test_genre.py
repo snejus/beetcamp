@@ -15,7 +15,7 @@ def test_style(beets_config):
     [
         ([], None),
         (["crazy music"], None),
-        (["ambient. techno. industrial"], "ambient, techno, industrial"),
+        (["ambient. techno. industrial"], "ambient, industrial, techno"),
         (["Drum & Bass"], "drum and bass"),
         (["Techno."], "techno"),
         (["E.B.M"], "ebm"),
@@ -86,8 +86,8 @@ def test_genre(keywords, mode, mode_result, beets_config):
 @pytest.mark.parametrize(
     ("capitalize", "maximum", "expected"),
     [
-        (True, 0, "Folk, House, Grime, Trance"),
-        (True, 3, "Folk, House, Grime"),
+        (True, 0, "Folk, Grime, House, Trance"),
+        (True, 3, "Folk, Grime, House"),
         (False, 2, "folk, house"),
     ],
 )
