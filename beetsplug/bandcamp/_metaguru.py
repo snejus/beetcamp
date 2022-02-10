@@ -6,6 +6,7 @@ import re
 from collections import Counter, defaultdict
 from datetime import date, datetime
 from functools import partial
+from html import unescape
 from typing import (
     Any,
     Callable,
@@ -264,7 +265,10 @@ class Helpers:
             match = re.search(r" ([^\w&()+ ]) ", string)
             return match.expand(r"\1") if match else "-"
 
-        delim, count = Counter(map(get_delim, names)).most_common(1).pop()
+        most_common = Counter(map(get_delim, names)).most_common(1)
+        if not most_common:
+            return ""
+        delim, count = most_common.pop()
         return delim if (len(names) == 1 or count > len(names) / 2) else "-"
 
     @staticmethod
@@ -360,7 +364,7 @@ class Metaguru(Helpers):
     def from_html(cls, html: str, config: JSONDict = None) -> "Metaguru":
         try:
             meta = json.loads(re.search(PATTERNS["meta"], html).group())  # type: ignore
-            meta["tracks"] = re.findall(r"^[0-9]+[.].*", html, re.M)
+            meta["tracks"] = list(map(unescape, re.findall(r"^[0-9]+[.] .*", html, re.M)))
         except AttributeError as exc:
             raise AttributeError("Could not find release metadata JSON") from exc
 

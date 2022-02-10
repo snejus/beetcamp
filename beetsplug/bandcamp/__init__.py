@@ -212,7 +212,7 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
     def handle(self, guru: Metaguru, attr: str, _id: str) -> Any:
         try:
             return getattr(guru, attr)
-        except (KeyError, ValueError, AttributeError):
+        except (KeyError, ValueError, AttributeError, IndexError):
             self._info("Failed obtaining {}", _id)
             return None
         except Exception:  # pylint: disable=broad-except
