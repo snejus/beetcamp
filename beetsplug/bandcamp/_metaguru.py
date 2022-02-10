@@ -86,7 +86,7 @@ rm_strings = [
 PATTERNS: Dict[str, Pattern] = {
     "clean_title": re.compile(fr"(?i: ?[\[\(]?\b({'|'.join(rm_strings)})(\b[\]\)]?|$))"),
     "clean_incl": re.compile(
-        r"((\(?incl|\((inc|tracks|.*remix( |es)))([^)]+\)|.*$))", re.I
+        r"((\(?incl|\((inc|tracks|.*remix( |es)))([^)]+\)|.*))", re.I
     ),
     "meta": re.compile(r".*dateModified.*", re.MULTILINE),
     "digital": [  # type: ignore
@@ -146,7 +146,7 @@ class Helpers:
 
         title = parts.pop(-1)
         artist = ", ".join(sorted(set(parts)))
-        artist = re.sub(r"( \(.*mix.*|,$)", "", artist)
+        artist = re.sub(r" \(.*mix.*", "", artist).strip(",")
         artist = re.sub(r"[(](f(ea)?t.*)[)]", r"\1", artist)
         if not track_alt:
             title, track_alt = get_trackalt(title)
