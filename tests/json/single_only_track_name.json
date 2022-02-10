@@ -11,22 +11,12 @@
     {
       "@type": "PropertyValue",
       "name": "art_id",
-      "value": 732802335
-    },
-    {
-      "@type": "PropertyValue",
-      "name": "duration_secs",
-      "value": 355.064
+      "value": 1255022292
     },
     {
       "@type": "PropertyValue",
       "name": "license_name",
       "value": "all_rights_reserved"
-    },
-    {
-      "@type": "PropertyValue",
-      "name": "streaming",
-      "value": true
     }
   ],
   "byArtist": {
@@ -35,10 +25,10 @@
     "name": "GUTKEIN"
   },
   "copyrightNotice": "All Rights Reserved",
-  "dateModified": "10 Jan 2021 19:56:09 GMT",
-  "datePublished": "10 Jan 2021 19:56:09 GMT",
+  "dateModified": "09 Nov 2021 05:15:25 GMT",
+  "datePublished": "10 Jan 2021 00:00:00 GMT",
   "duration": "P00H05M55S",
-  "image": "https://f4.bcbits.com/img/a0732802335_10.jpg",
+  "image": "https://f4.bcbits.com/img/a1255022292_10.jpg",
   "inAlbum": {
     "@type": "MusicAlbum",
     "albumRelease": [
@@ -72,15 +62,15 @@
           {
             "@type": "PropertyValue",
             "name": "art_id",
-            "value": 732802335
+            "value": 1255022292
           }
         ],
         "description": "Includes high-quality download in MP3, FLAC and more. Paying supporters also get unlimited streaming via the free Bandcamp app.",
         "image": [
-          "https://f4.bcbits.com/img/a0732802335_10.jpg"
+          "https://f4.bcbits.com/img/a1255022292_10.jpg"
         ],
         "musicReleaseFormat": "DigitalFormat",
-        "name": "OENERA",
+        "name": "oenera",
         "offers": {
           "@type": "Offer",
           "additionalProperty": [
@@ -106,17 +96,17 @@
       }
     ],
     "albumReleaseType": "SingleRelease",
-    "name": "OENERA",
+    "name": "oenera",
     "numTracks": 1
   },
   "keywords": [
     "Electronic",
-    "KETA",
-    "techno",
+    "keta techno",
+    "meta",
     "trance",
     "Russia"
   ],
-  "name": "OENERA",
+  "name": "oenera",
   "publisher": {
     "@id": "https://gutkeinforu.bandcamp.com",
     "@type": "MusicGroup",
@@ -152,7 +142,7 @@
         "value": 749
       }
     ],
-    "description": "have u ever seen a label located at the very tip of a k-hall?",
+    "description": "support a tiny acquarium on the tip of a K-hall ~)",
     "foundingLocation": {
       "@type": "Place",
       "name": "Russia"
@@ -175,8 +165,39 @@
     "subjectOf": [
       {
         "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "m"
+          }
+        ],
         "name": "music",
         "url": "https://gutkeinforu.bandcamp.com/music"
+      },
+      {
+        "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "p"
+          }
+        ],
+        "name": "merch",
+        "url": "https://gutkeinforu.bandcamp.com/merch"
+      },
+      {
+        "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "v"
+          }
+        ],
+        "name": "video",
+        "url": "https://gutkeinforu.bandcamp.com/video"
       }
     ]
   }

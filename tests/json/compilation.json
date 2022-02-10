@@ -15,11 +15,6 @@
     },
     {
       "@type": "PropertyValue",
-      "name": "has_discounts",
-      "value": true
-    },
-    {
-      "@type": "PropertyValue",
       "name": "license_name",
       "value": "all_rights_reserved"
     }
@@ -66,7 +61,7 @@
       "name": "ISMVA003.3"
     },
     {
-      "@id": "https://ismusberlin.bandcamp.com/album/ismva0033#b42222766",
+      "@id": "https://ismusberlin.bandcamp.com/album/ismva0033#b45760447",
       "@type": [
         "MusicRelease",
         "Product"
@@ -75,7 +70,7 @@
         {
           "@type": "PropertyValue",
           "name": "item_id",
-          "value": 42222766
+          "value": 45760447
         },
         {
           "@type": "PropertyValue",
@@ -95,31 +90,26 @@
         {
           "@type": "PropertyValue",
           "name": "art_id",
-          "value": 378822374
+          "value": 2588751690
         },
         {
           "@type": "PropertyValue",
           "name": "is_bfd",
           "value": true
-        },
-        {
-          "@type": "PropertyValue",
-          "name": "type_id",
-          "value": "d"
         }
       ],
       "image": [
-        "https://f4.bcbits.com/img/a0378822374_10.jpg"
+        "https://f4.bcbits.com/img/a2588751690_10.jpg"
       ],
       "musicReleaseFormat": "DigitalFormat",
-      "name": "full digital discography (16 releases)",
+      "name": "full digital discography (18 releases)",
       "offers": {
         "@type": "Offer",
         "additionalProperty": [
           {
             "@type": "PropertyValue",
             "name": "bundle_size",
-            "value": 16
+            "value": 18
           },
           {
             "@type": "PropertyValue",
@@ -138,7 +128,7 @@
         "priceSpecification": {
           "minPrice": 29.25
         },
-        "url": "https://ismusberlin.bandcamp.com/album/ismva0033#b42222766-buy"
+        "url": "https://ismusberlin.bandcamp.com/album/ismva0033#b45760447-buy"
       }
     },
     {
@@ -277,16 +267,37 @@
     "subjectOf": [
       {
         "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "m"
+          }
+        ],
         "name": "music",
         "url": "https://ismusberlin.bandcamp.com/music"
       },
       {
         "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "p"
+          }
+        ],
         "name": "merch",
         "url": "https://ismusberlin.bandcamp.com/merch"
       },
       {
         "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "c"
+          }
+        ],
         "name": "community",
         "url": "https://ismusberlin.bandcamp.com/community"
       }
@@ -308,23 +319,8 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 414
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 1
             }
           ],
           "copyrightNotice": "All Rights Reserved",
@@ -346,23 +342,8 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 361.558
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 2
             }
           ],
           "copyrightNotice": "All Rights Reserved",
@@ -384,23 +365,8 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 313.6
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 3
             }
           ],
           "copyrightNotice": "All Rights Reserved",
@@ -422,23 +388,8 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 388
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 4
             }
           ],
           "copyrightNotice": "All Rights Reserved",
@@ -460,23 +411,8 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 330
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 5
             }
           ],
           "copyrightNotice": "All Rights Reserved",
@@ -498,23 +434,8 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 426
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 6
             }
           ],
           "copyrightNotice": "All Rights Reserved",
@@ -536,23 +457,8 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 414.247
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 7
             }
           ],
           "copyrightNotice": "All Rights Reserved",
@@ -574,23 +480,8 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 390
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 8
             }
           ],
           "copyrightNotice": "All Rights Reserved",
@@ -612,23 +503,8 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 370.75
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 9
             }
           ],
           "copyrightNotice": "All Rights Reserved",
@@ -650,23 +526,8 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 374.75
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 10
             }
           ],
           "copyrightNotice": "All Rights Reserved",
@@ -688,23 +549,8 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 344.022
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 11
             }
           ],
           "copyrightNotice": "All Rights Reserved",
@@ -726,23 +572,8 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 465
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 12
             }
           ],
           "copyrightNotice": "All Rights Reserved",
@@ -764,23 +595,8 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 408.649
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 13
             }
           ],
           "copyrightNotice": "All Rights Reserved",

@@ -15,18 +15,8 @@
     },
     {
       "@type": "PropertyValue",
-      "name": "duration_secs",
-      "value": 421.078
-    },
-    {
-      "@type": "PropertyValue",
       "name": "license_name",
       "value": "all_rights_reserved"
-    },
-    {
-      "@type": "PropertyValue",
-      "name": "streaming",
-      "value": true
     }
   ],
   "byArtist": {
@@ -147,21 +137,49 @@
     "subjectOf": [
       {
         "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "a"
+          }
+        ],
         "name": "artists",
         "url": "https://mega-tech.bandcamp.com/artists"
       },
       {
         "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "m"
+          }
+        ],
         "name": "music",
         "url": "https://mega-tech.bandcamp.com/music"
       },
       {
         "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "p"
+          }
+        ],
         "name": "merch",
         "url": "https://mega-tech.bandcamp.com/merch"
       },
       {
         "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "c"
+          }
+        ],
         "name": "community",
         "url": "https://mega-tech.bandcamp.com/community"
       }

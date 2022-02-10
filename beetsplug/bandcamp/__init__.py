@@ -135,7 +135,7 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         if not html:
             html = self._get(url)
         if html:
-            self._gurucache[url] = Metaguru(html, self.config.flatten())
+            self._gurucache[url] = Metaguru.from_html(html, self.config.flatten())
         return self._gurucache.get(url)
 
     def loaded(self) -> None:
@@ -212,7 +212,7 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
     def handle(self, guru: Metaguru, attr: str, _id: str) -> Any:
         try:
             return getattr(guru, attr)
-        except (KeyError, ValueError, AttributeError):
+        except (KeyError, ValueError, AttributeError, IndexError):
             self._info("Failed obtaining {}", _id)
             return None
         except Exception:  # pylint: disable=broad-except

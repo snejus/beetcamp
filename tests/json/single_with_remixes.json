@@ -66,7 +66,7 @@
           {
             "@type": "PropertyValue",
             "name": "url_suffix",
-            "value": "from=btl"
+            "value": "?from=btl"
           }
         ],
         "name": "Kulør"
@@ -149,7 +149,7 @@
           {
             "@type": "PropertyValue",
             "name": "quantity_available",
-            "value": 32
+            "value": 25
           }
         ],
         "availability": "InStock",
@@ -261,16 +261,37 @@
     "subjectOf": [
       {
         "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "m"
+          }
+        ],
         "name": "music",
         "url": "https://reececox.bandcamp.com/music"
       },
       {
         "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "p"
+          }
+        ],
         "name": "merch",
         "url": "https://reececox.bandcamp.com/merch"
       },
       {
         "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "c"
+          }
+        ],
         "name": "community",
         "url": "https://reececox.bandcamp.com/community"
       }
@@ -292,23 +313,8 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 295.095
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 1
             }
           ],
           "copyrightNotice": "All Rights Reserved",
@@ -330,23 +336,8 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 521.279
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 2
             }
           ],
           "copyrightNotice": "All Rights Reserved",
@@ -368,23 +359,8 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 339.92
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 3
             }
           ],
           "copyrightNotice": "All Rights Reserved",
@@ -406,23 +382,8 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 400.483
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 4
             }
           ],
           "copyrightNotice": "All Rights Reserved",
@@ -444,23 +405,8 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 265.714
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 5
             }
           ],
           "copyrightNotice": "All Rights Reserved",

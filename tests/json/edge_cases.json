@@ -15,11 +15,6 @@
     },
     {
       "@type": "PropertyValue",
-      "name": "has_discounts",
-      "value": true
-    },
-    {
-      "@type": "PropertyValue",
       "name": "license_name",
       "value": "all_rights_reserved"
     }
@@ -66,7 +61,7 @@
       "name": "NYH244 Less Weird Parallel Universe  - Nearly 20 Years of Erikoisdance"
     },
     {
-      "@id": "https://newyorkhaunted.bandcamp.com/album/nyh244-less-weird-parallel-universe-nearly-20-years-of-erikoisdance#b43334244",
+      "@id": "https://newyorkhaunted.bandcamp.com/album/nyh244-less-weird-parallel-universe-nearly-20-years-of-erikoisdance#b45659762",
       "@type": [
         "MusicRelease",
         "Product"
@@ -75,7 +70,7 @@
         {
           "@type": "PropertyValue",
           "name": "item_id",
-          "value": 43334244
+          "value": 45659762
         },
         {
           "@type": "PropertyValue",
@@ -95,31 +90,26 @@
         {
           "@type": "PropertyValue",
           "name": "art_id",
-          "value": 2614409477
+          "value": 3309405927
         },
         {
           "@type": "PropertyValue",
           "name": "is_bfd",
           "value": true
-        },
-        {
-          "@type": "PropertyValue",
-          "name": "type_id",
-          "value": "d"
         }
       ],
       "image": [
-        "https://f4.bcbits.com/img/a2614409477_10.jpg"
+        "https://f4.bcbits.com/img/a3309405927_10.jpg"
       ],
       "musicReleaseFormat": "DigitalFormat",
-      "name": "full digital discography (289 releases)",
+      "name": "full digital discography (306 releases)",
       "offers": {
         "@type": "Offer",
         "additionalProperty": [
           {
             "@type": "PropertyValue",
             "name": "bundle_size",
-            "value": 289
+            "value": 306
           },
           {
             "@type": "PropertyValue",
@@ -133,12 +123,12 @@
           }
         ],
         "availability": "OnlineOnly",
-        "price": 87.1,
+        "price": 122.5,
         "priceCurrency": "EUR",
         "priceSpecification": {
-          "minPrice": 87.1
+          "minPrice": 122.5
         },
-        "url": "https://newyorkhaunted.bandcamp.com/album/nyh244-less-weird-parallel-universe-nearly-20-years-of-erikoisdance#b43334244-buy"
+        "url": "https://newyorkhaunted.bandcamp.com/album/nyh244-less-weird-parallel-universe-nearly-20-years-of-erikoisdance#b45659762-buy"
       }
     },
     {
@@ -280,7 +270,7 @@
         "value": 590
       }
     ],
-    "description": "NYH is the label of Dutch producer Drvg Cvltvre. Experimental house and techno. \n\nimagery created by @youtubeartifact\na bot by @dontsave\nand kandinsky.io",
+    "description": "NYH is the label of Dutch producer Drvg Cvltvre. Experimental house and techno. \n\nimagery created by @youtubeartifact\na bot by @dontsave, kandinsky.io and Dream by Wombo.",
     "foundingLocation": {
       "@type": "Place",
       "name": "Tilburg, Netherlands"
@@ -291,16 +281,37 @@
     "subjectOf": [
       {
         "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "m"
+          }
+        ],
         "name": "music",
         "url": "https://newyorkhaunted.bandcamp.com/music"
       },
       {
         "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "p"
+          }
+        ],
         "name": "merch",
         "url": "https://newyorkhaunted.bandcamp.com/merch"
       },
       {
         "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "c"
+          }
+        ],
         "name": "community",
         "url": "https://newyorkhaunted.bandcamp.com/community"
       }
@@ -322,23 +333,8 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 205.633
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 1
             }
           ],
           "copyrightNotice": "All Rights Reserved",
@@ -360,23 +356,8 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 224.52
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 2
             }
           ],
           "copyrightNotice": "All Rights Reserved",
@@ -398,23 +379,8 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 134.609
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 3
             }
           ],
           "copyrightNotice": "All Rights Reserved",
@@ -436,23 +402,8 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 280.361
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 4
             }
           ],
           "copyrightNotice": "All Rights Reserved",
@@ -474,23 +425,8 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 435.838
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 5
             }
           ],
           "copyrightNotice": "All Rights Reserved",
@@ -512,23 +448,8 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 92.3574
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 6
             }
           ],
           "copyrightNotice": "All Rights Reserved",
@@ -550,23 +471,8 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 595.497
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 7
             }
           ],
           "copyrightNotice": "All Rights Reserved",
@@ -588,23 +494,8 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 162.856
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 8
             }
           ],
           "copyrightNotice": "All Rights Reserved",
@@ -626,23 +517,8 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 215.407
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 9
             }
           ],
           "copyrightNotice": "All Rights Reserved",
@@ -664,23 +540,8 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 213.424
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 10
             }
           ],
           "copyrightNotice": "All Rights Reserved",
@@ -702,23 +563,8 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 162.433
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 11
             }
           ],
           "copyrightNotice": "All Rights Reserved",
@@ -740,23 +586,8 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 251.347
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 12
             }
           ],
           "copyrightNotice": "All Rights Reserved",
@@ -778,23 +609,8 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 178.252
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 13
             }
           ],
           "copyrightNotice": "All Rights Reserved",
@@ -816,23 +632,8 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 376.958
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 14
             }
           ],
           "copyrightNotice": "All Rights Reserved",
@@ -854,23 +655,8 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 358.398
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 15
             }
           ],
           "copyrightNotice": "All Rights Reserved",
@@ -892,23 +678,8 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 248.483
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 16
             }
           ],
           "copyrightNotice": "All Rights Reserved",
@@ -930,23 +701,8 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 287.696
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 17
             }
           ],
           "copyrightNotice": "All Rights Reserved",
@@ -968,23 +724,8 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 315.228
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 18
             }
           ],
           "copyrightNotice": "All Rights Reserved",

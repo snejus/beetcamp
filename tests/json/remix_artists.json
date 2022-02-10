@@ -61,7 +61,7 @@
       "name": "UNREALNUMBERS - Unseen EP (Varya Karpova & Lacchesi Remixes)"
     },
     {
-      "@id": "https://maisoncloserecords.bandcamp.com/album/unrealnumbers-unseen-ep-varya-karpova-lacchesi-remixes#b42347570",
+      "@id": "https://maisoncloserecords.bandcamp.com/album/unrealnumbers-unseen-ep-varya-karpova-lacchesi-remixes#b44109687",
       "@type": [
         "MusicRelease",
         "Product"
@@ -70,7 +70,7 @@
         {
           "@type": "PropertyValue",
           "name": "item_id",
-          "value": 42347570
+          "value": 44109687
         },
         {
           "@type": "PropertyValue",
@@ -90,31 +90,26 @@
         {
           "@type": "PropertyValue",
           "name": "art_id",
-          "value": 587506457
+          "value": 3034521613
         },
         {
           "@type": "PropertyValue",
           "name": "is_bfd",
           "value": true
-        },
-        {
-          "@type": "PropertyValue",
-          "name": "type_id",
-          "value": "d"
         }
       ],
       "image": [
-        "https://f4.bcbits.com/img/a0587506457_10.jpg"
+        "https://f4.bcbits.com/img/a3034521613_10.jpg"
       ],
       "musicReleaseFormat": "DigitalFormat",
-      "name": "full digital discography (8 releases)",
+      "name": "full digital discography (9 releases)",
       "offers": {
         "@type": "Offer",
         "additionalProperty": [
           {
             "@type": "PropertyValue",
             "name": "bundle_size",
-            "value": 8
+            "value": 9
           },
           {
             "@type": "PropertyValue",
@@ -128,12 +123,12 @@
           }
         ],
         "availability": "OnlineOnly",
-        "price": 42.6,
+        "price": 49.8,
         "priceCurrency": "EUR",
         "priceSpecification": {
-          "minPrice": 42.6
+          "minPrice": 49.8
         },
-        "url": "https://maisoncloserecords.bandcamp.com/album/unrealnumbers-unseen-ep-varya-karpova-lacchesi-remixes#b42347570-buy"
+        "url": "https://maisoncloserecords.bandcamp.com/album/unrealnumbers-unseen-ep-varya-karpova-lacchesi-remixes#b44109687-buy"
       }
     },
     {
@@ -231,16 +226,37 @@
     "subjectOf": [
       {
         "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "m"
+          }
+        ],
         "name": "music",
         "url": "https://maisoncloserecords.bandcamp.com/music"
       },
       {
         "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "p"
+          }
+        ],
         "name": "merch",
         "url": "https://maisoncloserecords.bandcamp.com/merch"
       },
       {
         "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "c"
+          }
+        ],
         "name": "community",
         "url": "https://maisoncloserecords.bandcamp.com/community"
       }
@@ -262,23 +278,8 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 383.662
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 1
             }
           ],
           "copyrightNotice": "All Rights Reserved",
@@ -300,23 +301,8 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 352.448
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 2
             }
           ],
           "copyrightNotice": "All Rights Reserved",
@@ -338,23 +324,8 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 341.408
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 3
             }
           ],
           "copyrightNotice": "All Rights Reserved",
@@ -376,23 +347,8 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 340.699
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 4
             }
           ],
           "copyrightNotice": "All Rights Reserved",
@@ -414,29 +370,10 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 362.774
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 5
             }
           ],
-          "byArtist": {
-            "@type": "MusicGroup",
-            "name": "Varya Karpova"
-          },
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H06M02S",
           "name": "UNREALNUMBERS - Unseen (Varya Karpova Remix)"
@@ -456,29 +393,10 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 350.897
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 6
             }
           ],
-          "byArtist": {
-            "@type": "MusicGroup",
-            "name": "Lacchesi"
-          },
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H05M50S",
           "name": "UNREALNUMBERS - MK4 (Lacchesi Remix)"

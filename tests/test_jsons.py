@@ -1,8 +1,10 @@
 import re
+from operator import itemgetter
 
 import pytest
-from beetsplug.bandcamp._metaguru import NEW_BEETS, Metaguru
 from pytest_lazyfixture import lazy_fixture
+
+from beetsplug.bandcamp._metaguru import NEW_BEETS, Metaguru
 
 pytestmark = pytest.mark.jsons
 
@@ -10,6 +12,7 @@ pytestmark = pytest.mark.jsons
 @pytest.fixture(name="release")
 def _release(request):
     """Read the json data and make it span a single line - same like it's found in htmls.
+    Prepend JSON data with a multiline track list.
     Fixture names map to the testfiles (minus the extension).
     """
     info = request.param
@@ -21,7 +24,19 @@ def _release(request):
 
     if filename:
         with open(filename) as file:
-            return re.sub(r"\n *", "", file.read()), info
+            json = re.sub(r"\n *", "", file.read())
+
+        if info.singleton:
+            return json, info
+
+        tracklist = []
+        for track in info.albuminfo.tracks:
+            tracklist.append(
+                f"{track['index']}. "
+                + (f"{track['track_alt']}. " if track["track_alt"] else "")
+                + f"{track['artist']} - {track['title']}"
+            )
+        return "\n".join([*tracklist, json]), info
 
 
 def check(actual, expected) -> None:
@@ -38,9 +53,12 @@ def check(actual, expected) -> None:
 )
 def test_parse_single_track_release(release, beets_config):
     html, expected = release
-    guru = Metaguru(html, beets_config)
+    print(html)
+    actual = Metaguru.from_html(html, beets_config).singleton
+    if hasattr(actual, "comments"):
+        actual.pop("comments")
 
-    check(guru.singleton, expected.singleton)
+    check(actual, expected.singleton)
 
 
 @pytest.mark.parametrize(
@@ -65,10 +83,12 @@ def test_parse_single_track_release(release, beets_config):
 def test_parse_various_types(release, beets_config):
     html, expected_release = release
     beets_config["preferred_media"] = expected_release.media
-    guru = Metaguru(html, beets_config)
+    guru = Metaguru.from_html(html, beets_config)
 
     actual_album = guru.album
     expected_album = expected_release.albuminfo
+    if hasattr(actual_album, "comments"):
+        actual_album.pop("comments")
 
     assert hasattr(actual_album, "tracks")
     assert len(actual_album.tracks) == len(expected_album.tracks)

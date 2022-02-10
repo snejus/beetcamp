@@ -190,11 +190,25 @@
     "subjectOf": [
       {
         "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "m"
+          }
+        ],
         "name": "music",
         "url": "https://psykovsky.bandcamp.com/music"
       },
       {
         "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "c"
+          }
+        ],
         "name": "community",
         "url": "https://psykovsky.bandcamp.com/community"
       }
@@ -216,29 +230,10 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 518.488
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 1
             }
           ],
-          "byArtist": {
-            "@type": "MusicGroup",
-            "name": "Psykovsky & Orestis"
-          },
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H08M38S",
           "name": "Ela Na Pame"
@@ -258,29 +253,10 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 673.161
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 2
             }
           ],
-          "byArtist": {
-            "@type": "MusicGroup",
-            "name": "Psykovsky & Luuli"
-          },
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H11M13S",
           "name": "Stone Sea"
@@ -300,29 +276,10 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 454.736
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 3
             }
           ],
-          "byArtist": {
-            "@type": "MusicGroup",
-            "name": "Psykovsky & Spiral"
-          },
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H07M34S",
           "name": "So We Sailed Till We Found"
@@ -342,29 +299,10 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 473.863
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 4
             }
           ],
-          "byArtist": {
-            "@type": "MusicGroup",
-            "name": "Psykovsky & Kasatka"
-          },
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H07M53S",
           "name": "Doors Of Perception"
@@ -384,29 +322,10 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 736.543
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 5
             }
           ],
-          "byArtist": {
-            "@type": "MusicGroup",
-            "name": "Psykovsky & Spiral & Seeasound"
-          },
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H12M16S",
           "name": "Variant On The Right"
@@ -426,23 +345,8 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 769.609
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "attribution_non_commercial_share_alike"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 6
             }
           ],
           "copyrightNotice": "Attribution Non Commercial Share Alike",
@@ -464,29 +368,10 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 729.883
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 7
             }
           ],
-          "byArtist": {
-            "@type": "MusicGroup",
-            "name": "Psykovsky & Orestis & Jobaba"
-          },
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H12M09S",
           "name": "Many Many Krishnas"
@@ -506,29 +391,10 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 409.205
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 8
             }
           ],
-          "byArtist": {
-            "@type": "MusicGroup",
-            "name": "Psykovsky & Kashyyyk & Arcek"
-          },
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H06M49S",
           "name": "Prem I Um"
@@ -548,29 +414,10 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 557.82
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 9
             }
           ],
-          "byArtist": {
-            "@type": "MusicGroup",
-            "name": "Psykovsky & Arcek"
-          },
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H09M17S",
           "name": "Now Here Nowhere"
@@ -590,29 +437,10 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 1087.81
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "attribution_non_commercial_share_alike"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 10
             }
           ],
-          "byArtist": {
-            "@type": "MusicGroup",
-            "name": "Psykovsky & Maleficium & Seeasound"
-          },
           "copyrightNotice": "Attribution Non Commercial Share Alike",
           "duration": "P00H18M07S",
           "name": "Holy Black / Little Lark",
@@ -639,23 +467,8 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 408.473
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 11
             }
           ],
           "copyrightNotice": "All Rights Reserved",
@@ -677,23 +490,8 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 561.487
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 12
             }
           ],
           "copyrightNotice": "All Rights Reserved",
@@ -715,23 +513,8 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 411.157
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "attribution_non_commercial_share_alike"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 13
             }
           ],
           "copyrightNotice": "Attribution Non Commercial Share Alike",
@@ -753,29 +536,10 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 555.756
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 14
             }
           ],
-          "byArtist": {
-            "@type": "MusicGroup",
-            "name": "Psykovsky & Quip Tone Beatz & Flish"
-          },
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H09M15S",
           "name": "Ksolntsu"
@@ -795,29 +559,10 @@
             },
             {
               "@type": "PropertyValue",
-              "name": "duration_secs",
-              "value": 623.999
-            },
-            {
-              "@type": "PropertyValue",
               "name": "license_name",
               "value": "all_rights_reserved"
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "streaming",
-              "value": true
-            },
-            {
-              "@type": "PropertyValue",
-              "name": "tracknum",
-              "value": 15
             }
           ],
-          "byArtist": {
-            "@type": "MusicGroup",
-            "name": "Birds Of Praise"
-          },
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H10M23S",
           "name": "Dadme albricios hijos d'Eva"

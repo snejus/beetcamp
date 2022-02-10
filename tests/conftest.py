@@ -22,7 +22,7 @@ class ReleaseInfo:
     def track_data(self, **kwargs) -> TrackInfo:
         kget = kwargs.get
         track_url = kget("track_id", f"{self.artist_id}/track/{kget('title_id')}")
-        return dict(
+        data = dict(
             title=kget("title"),
             track_id=track_url,
             artist=kget("artist"),
@@ -37,8 +37,10 @@ class ReleaseInfo:
             medium_index=kget("index"),
             medium_total=kget("medium_total"),
             disctitle=self.disctitle,
-            lyrics=kget("lyrics"),
         )
+        if NEW_BEETS and "lyrics" in kwargs:
+            data["lyrics"] = kget("lyrics")
+        return data
 
     def set_singleton(self, artist: str, title: str, length: int, **kwargs) -> None:
         data = self.track_data(
@@ -64,10 +66,12 @@ class ReleaseInfo:
             "alt",
             "lyrics",
         ]
+        if not NEW_BEETS:
+            fields.pop(-1)
         iter_tracks = [
             zip(fields, (len(tracks), idx, *track)) for idx, track in enumerate(tracks, 1)
         ]
-        self.albuminfo = AlbumInfo(
+        data = dict(
             album=kwargs["album"],
             album_id=self.album_id,
             artist=kwargs["albumartist"],
@@ -86,9 +90,10 @@ class ReleaseInfo:
             media=self.media,
             data_source=DATA_SOURCE,
             tracks=[TrackInfo(**self.track_data(**dict(t))) for t in iter_tracks],
-            genre=kwargs.get("genre"),
-            style=kwargs.get("style"),
         )
+        if NEW_BEETS:
+            data.update(genre=kwargs.get("genre"), style=kwargs.get("style"))
+        self.albuminfo = AlbumInfo(**data)
 
 
 @pytest.fixture
@@ -104,12 +109,10 @@ def single_track_release() -> ReleaseInfo:
         artist="Matriark",
         title="Arangel",
         length=421,
-        album="Matriark - Arangel",
-        albumartist="Matriark",
         albumstatus="Official",
         label="Megatech Industries",
         albumtype="single",
-        catalognum="",
+        catalognum="mt004",
         year=2020,
         month=11,
         day=9,
@@ -131,10 +134,8 @@ def single_only_track_name() -> ReleaseInfo:
     )
     info.set_singleton(
         artist="GUTKEIN",
-        title="OENERA",
+        title="oenera",
         length=355,
-        album="GUTKEIN - OENERA",
-        albumartist="GUTKEIN",
         albumstatus="Official",
         label="GUTKEIN",
         albumtype="single",
@@ -143,7 +144,7 @@ def single_only_track_name() -> ReleaseInfo:
         month=1,
         day=10,
         country="RU",
-        genre="techno, trance",
+        genre="trance",
         style="electronic",
     )
     return info
@@ -277,7 +278,7 @@ def album_with_track_alt() -> ReleaseInfo:
     ]
     info.set_albuminfo(
         tracks,
-        album="Common Assault",
+        album="Common Assault EP",
         albumartist=artist,
         albumtype="ep",
         catalognum="FLD001",
@@ -422,7 +423,8 @@ def artist_mess() -> ReleaseInfo:
         disctitle=None,
     )
     # fmt: off
-    albumartist = "Psykovsky & Friends"
+    albumartist = "Various Artists"
+    psykovsky = "Psykovsky & Friends"
     lyrics = '''Little lark
 
 all alone
@@ -476,14 +478,14 @@ forlorn twilight'''
         ("so-we-sailed-till-we-found", "Psykovsky & Spiral", "So We Sailed Till We Found", 454, None),  # noqa
         ("doors-of-perception", "Psykovsky & Kasatka", "Doors Of Perception", 473, None),  # noqa
         ("variant-on-the-right", "Psykovsky & Spiral & Seeasound", "Variant On The Right", 736, None),  # noqa
-        ("call-of-beauty", albumartist, "Call Of Beauty", 769, None),
+        ("call-of-beauty", psykovsky, "Call Of Beauty", 769, None),
         ("many-many-krishnas", "Psykovsky & Orestis & Jobaba", "Many Many Krishnas", 729, None),  # noqa
         ("prem-i-um", "Psykovsky & Kashyyyk & Arcek", "Prem I Um", 409, None),
         ("now-here-nowhere", "Psykovsky & Arcek", "Now Here Nowhere", 557, None),
         ("holy-black-little-lark", "Psykovsky & Maleficium & Seeasound", "Holy Black / Little Lark", 1087, None, lyrics),  # noqa
-        ("worlds-of-wisdom", albumartist, "Worlds Of Wisdom", 408, None),
-        ("pc-transmission", albumartist, "PC Transmission", 561, None),
-        ("rs-lightmusic", albumartist, "RS Lightmusic", 411, None),
+        ("worlds-of-wisdom", psykovsky, "Worlds Of Wisdom", 408, None),
+        ("pc-transmission", psykovsky, "PC Transmission", 561, None),
+        ("rs-lightmusic", psykovsky, "RS Lightmusic", 411, None),
         ("ksolntsu", "Psykovsky & Quip Tone Beatz & Flish", "Ksolntsu", 555, None),
         ("dadme-albricios-hijos-deva", "Birds Of Praise", "Dadme albricios hijos d'Eva", 623, None),  # noqa
     ]
@@ -496,7 +498,7 @@ forlorn twilight'''
         catalognum="",
         label="Psykovsky",
         release_date=date(2015, 2, 12),
-        va=False,
+        va=True,
         country="NU",
         mediums=1,
         genre="experimental, psytrance",
@@ -546,7 +548,7 @@ def ep() -> ReleaseInfo:
     info.set_albuminfo(
         tracks,
         album="Kickdown Vienna",
-        albumartist="jeånne, DJ DISRESPECT",
+        albumartist="DJ DISRESPECT, jeånne",
         albumtype="album",
         catalognum="fa010",
         label="falling apart",
@@ -566,8 +568,8 @@ def description_meta() -> ReleaseInfo:
     info = ReleaseInfo(
         artist_id="https://diffusereality.bandcamp.com",
         album_id="https://diffusereality.bandcamp.com/album/francois-dillinger-icosahedrone-lp",  # noqa
-        media="CD",
-        disctitle="Francois Dillinger - Icosahedrone [LP]",
+        media=DIGI_MEDIA,
+        disctitle=None,
     )
     tracks = [
         ("count-to-infinity", albumartist, "Count To Infinity", 376, None),
@@ -592,7 +594,7 @@ def description_meta() -> ReleaseInfo:
         va=False,
         country="PT",
         mediums=1,
-        genre="ambient, electro, rave, techno, trance",
+        genre="ambient, electro, minimal, rave, techno",
         style="electronic",
     )
     return info
@@ -674,7 +676,7 @@ def remix_artists() -> ReleaseInfo:
     ]
     info.set_albuminfo(
         tracks,
-        album="Unseen",
+        album="Unseen EP",
         albumartist=albumartist,
         albumtype="ep",
         catalognum="",
