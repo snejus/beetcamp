@@ -548,7 +548,7 @@ def ep() -> ReleaseInfo:
     info.set_albuminfo(
         tracks,
         album="Kickdown Vienna",
-        albumartist="jeånne, DJ DISRESPECT",
+        albumartist="DJ DISRESPECT, jeånne",
         albumtype="album",
         catalognum="fa010",
         label="falling apart",

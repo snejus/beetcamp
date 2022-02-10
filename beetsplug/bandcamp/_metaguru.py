@@ -84,7 +84,9 @@ rm_strings = [
 ]
 PATTERNS: Dict[str, Pattern] = {
     "clean_title": re.compile(fr"(?i: ?[\[\(]?\b({'|'.join(rm_strings)})(\b[\]\)]?|$))"),
-    "clean_incl": re.compile(r"(\(?incl|\((inc|tracks|.*remix( |es))).*$", re.I),
+    "clean_incl": re.compile(
+        r"(\(?incl|\((inc|tracks|.*remix( |es)))([^)]+\)|.*$)", re.I
+    ),
     "meta": re.compile(r".*dateModified.*", re.MULTILINE),
     "digital": [  # type: ignore
         re.compile(r"^(DIGI(TAL)? ?[\d.]+|Bonus\W{2,})\W*"),
@@ -667,8 +669,8 @@ class Metaguru(Helpers):
 
     @cached_property
     def clean_album_name(self) -> str:
-        upper_album = self.album_name.upper()
-        if " EP" in upper_album or " LP" in upper_album:
+        album = self.album_name
+        if " EP" in album or " LP" in album:
             # EP and LP strings also get normalised during the cleanup,
             # which is important for the next step
             no_catlabel = self.clean_name(self.album_name, self.catalognum, self.label)
