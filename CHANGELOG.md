@@ -48,7 +48,8 @@
 - `catalognum`: artists like **PROCESS 404** are not assumed to be catalogue numbers anymore.
 - `track_alt`: allow non-capital letters, like **a1** to be parsed and convert them to capitals.
 - `albumartist`: will use the name for various artists when a release includes more than
-  three different artists. Until now we only used this name for compilations.
+  three different artists. Until now we've only done so for compilations.
+- `genre`: the list of genres is now sorted alphabetically
 
 ### Fixed
 
@@ -56,6 +57,7 @@
 - `singleton`: `catalognum`, if found, is now reliably removed from the title.
 - `track.title`: `-` delimiter is handled more appropriately when it is found in the song title.
 - `albumartist`: for the Various Artists releases, the plugin will now use the globally configured `va_name` field instead of hard-coding _Various Artists_.
+- `artist`: Recent bandcamp updates of the JSON data removed artists names from most of compilations, therefore we are again having a peek at the raw HTML data to fetch the data from there.
 
 [tracklist]: https://scumcllctv.bandcamp.com/album/scum002-arcadia
 [title format specification]: https://beta.musicbrainz.org/doc/Style/Titles

@@ -6,7 +6,6 @@ from typing import Optional, Tuple
 
 import pytest
 from beets.autotag.hooks import AlbumInfo, TrackInfo
-
 from beetsplug.bandcamp import DEFAULT_CONFIG
 from beetsplug.bandcamp._metaguru import DATA_SOURCE, DIGI_MEDIA, NEW_BEETS
 
@@ -93,10 +92,7 @@ class ReleaseInfo:
             tracks=[TrackInfo(**self.track_data(**dict(t))) for t in iter_tracks],
         )
         if NEW_BEETS:
-            data.update(
-                genre=kwargs.get("genre"),
-                style=kwargs.get("style")
-            )
+            data.update(genre=kwargs.get("genre"), style=kwargs.get("style"))
         self.albuminfo = AlbumInfo(**data)
 
 

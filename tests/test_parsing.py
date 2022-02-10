@@ -181,9 +181,6 @@ def test_parse_track_name(inputs, expected, beets_config):
     track = {
         "item": {
             "@id": "album_url",
-            "additionalProperty": [
-                {"@type": "PropertyValue", "name": "duration_secs", "value": 445.217}
-            ],
             "name": name,
         },
         "position": 1,
@@ -193,6 +190,7 @@ def test_parse_track_name(inputs, expected, beets_config):
         "name": "album",
         "publisher": {"name": "some label"},
         "byArtist": {"name": ""},
+        "tracks": [f"1. {name}"]
     }
     fields = "track_alt", "artist", "title", "main_title"
     expected = dict(zip(fields, expected))
@@ -241,21 +239,6 @@ def test_clean_track_names(names, catalognum, expected):
 )
 def test_clean_ep_lp_name(album, artists, expected):
     assert Metaguru.clean_ep_lp_name(album, artists) == expected
-
-
-@pytest.mark.parametrize(
-    ("parsed", "official", "albumartist", "expected"),
-    [
-        (None, "", "AlbumA", "AlbumA"),
-        ("", "", "Artist1, Artist2", "Artist1, Artist2"),
-        ("Parsed", "", "AlbumA", "Parsed"),
-        ("Parsed", "Official", "AlbumA", "Parsed"),
-        (None, "Official", "AlbumA", "Official"),
-    ],
-)
-def test_get_track_artist(parsed, official, albumartist, expected):
-    item = {"byArtist": {"name": official}} if official else {}
-    assert Metaguru.get_track_artist(parsed, item, albumartist) == expected
 
 
 @pytest.mark.parametrize(

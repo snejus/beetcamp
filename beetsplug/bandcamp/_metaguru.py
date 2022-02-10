@@ -6,7 +6,6 @@ import re
 from collections import Counter, defaultdict
 from datetime import date, datetime
 from functools import partial
-from math import floor
 from typing import (
     Any,
     Callable,
@@ -124,31 +123,33 @@ class Helpers:
 
     @staticmethod
     def parse_track_name(name: str, delim: str = "-") -> Dict[str, str]:
-        track = defaultdict(str)
+        track: Dict[str, str] = defaultdict(str)
 
         # match track alt and remove it from the name
-        match = PATTERNS["track_alt"].match(name)
-        if match:
-            track["track_alt"] = match.expand(r"\1").upper()
-            # do not strip a period from the end since it may end with an abbrev
-            name = name.replace(match.group(), "")
+        def get_trackalt(name: str) -> Tuple[str, str]:
+            match = PATTERNS["track_alt"].match(name)
+            track_alt = ""
+            if match:
+                track_alt = match.expand(r"\1").upper()
+                # do not strip a period from the end since it may end with an abbrev
+                name = name.replace(match.group(), "")
+            return name, track_alt
 
-        track["title"] = name
-        parts = list(map(str.strip, re.split(fr" [{delim}]|[{delim}] ", name)))
-        track.update(title=parts.pop(-1), artist=", ".join(parts))
-        track["main_title"] = PATTERNS["remix_or_ft"].sub("", track["title"])
+        name, track_alt = get_trackalt(name)
+        parts = name.split(f" {delim} ")
+        if len(parts) == 1:
+            parts = re.split(fr" [{delim}]|[{delim}] ", name)
+        parts = list(map(lambda x: x.strip(" -"), parts))
+
+        title = parts.pop(-1)
+        artist = ", ".join(set(parts))
+        if not track_alt:
+            title, track_alt = get_trackalt(title)
+        track.update(title=title, artist=artist)
+        if track_alt:
+            track.update(track_alt=track_alt)
+        track.update(main_title=PATTERNS["remix_or_ft"].sub("", title))
         return track
-
-    @staticmethod
-    def get_track_artist(parsed_artist, raw_track, albumartist):
-        # type: (Optional[str], JSONDict, str) -> str
-        """Return the first of the following options, if found:
-        1. Parsed artist from the track title
-        2. Artist specified by Bandcamp (official)
-        3. Albumartist (worst case scenario)
-        """
-        official_artist = raw_track.get("byArtist", {}).get("name", "")
-        return parsed_artist or official_artist or albumartist
 
     @staticmethod
     def parse_catalognum(album, disctitle, description, label, **kwargs):
@@ -184,13 +185,8 @@ class Helpers:
 
     @staticmethod
     def get_duration(source: JSONDict) -> int:
-        def dur(item: JSONDict) -> bool:
-            return item.get("name") == "duration_secs"
-
-        try:
-            return next(filter(dur, source.get("additionalProperty", []))).get("value", 0)
-        except (StopIteration, KeyError):
-            return 0
+        h, m, s = map(int, re.findall(r"[0-9]+", source["duration"]))
+        return h * 3600 + m * 60 + s
 
     @staticmethod
     def clean_name(name: str, *args: str, remove_extra: bool = False) -> str:
@@ -357,6 +353,7 @@ class Metaguru(Helpers):
     def from_html(cls, html: str, config: JSONDict = None) -> "Metaguru":
         try:
             meta = json.loads(re.search(PATTERNS["meta"], html).group())  # type: ignore
+            meta["tracks"] = re.findall(r"^[0-9]+[.].*", html, re.M)
         except AttributeError as exc:
             raise AttributeError("Could not find release metadata JSON") from exc
 
@@ -518,12 +515,12 @@ class Metaguru(Helpers):
             raw_tracks = self.meta["track"]["itemListElement"]
         except KeyError:
             raw_tracks = [{"item": self.meta, "position": 1}]
-
-        names = list(map(lambda x: (x.get("item") or {}).get("name") or "", raw_tracks))
-
+        if self._singleton:
+            names = [raw_tracks[0].get("item").get("name") or ""]
+        else:
+            names = self.track_names
         delim = self.track_delimiter(names)
         names = self.clean_track_names(names, self.catalognum)
-        albumartist = self.bandcamp_albumartist
         tracks = []
         for item, position in map(op.itemgetter("item", "position"), raw_tracks):
             initial_name = names[position - 1]
@@ -534,10 +531,10 @@ class Metaguru(Helpers):
                 index=position or 1,
                 medium_index=position or 1,
                 track_id=item.get("@id"),
-                length=floor(self.get_duration(item)) or None,
+                length=self.get_duration(item) or None,
                 **self.parse_track_name(self.clean_name(name), delim),
             )
-            track["artist"] = self.get_track_artist(track["artist"], item, albumartist)
+            track["artist"] = track["artist"] or self.bandcamp_albumartist
             lyrics = item.get("recordingOf", {}).get("lyrics", {}).get("text")
             if lyrics:
                 track["lyrics"] = lyrics.replace("\r", "")
@@ -554,38 +551,16 @@ class Metaguru(Helpers):
         return artists
 
     @cached_property
-    def bandcamp_titles(self) -> List[str]:
-        try:
-            tracks = self.meta["track"]["itemListElement"]
-        except KeyError:
-            tracks = [{"item": self.meta}]
-
-        return list(
-            map(
-                lambda x: (x.get("byArtist", x) or x).get("name") or "",
-                map(op.itemgetter("item"), tracks),
-            )
-        )
+    def track_names(self) -> List[str]:
+        return list(map(lambda x: x.split(". ", maxsplit=1)[1], self.meta["tracks"]))
 
     @cached_property
     def all_artists(self) -> Set[str]:
         def only_artist(name: str) -> str:
             return re.sub(r" - .*", "", PATTERNS["track_alt"].sub("", name))
 
-        artists = set()
-        titles = self.bandcamp_titles
-        for t in titles:
-            if " - " in t:
-                artists.add(only_artist(t))
-            else:
-                artists.add(t)
-
-        match = re.search(r"Artist:([^\n]+)", self.all_media_comments)
-        if match:
-            albumartist = match.groups()[0].strip()
-        else:
-            albumartist = self.meta["byArtist"]["name"]
-        artists.update(albumartist.split(", "))
+        artists = set(map(only_artist, self.track_names))
+        artists.update(self.meta["byArtist"]["name"].split(", "))
         return artists
 
     @cached_property
@@ -661,7 +636,7 @@ class Metaguru(Helpers):
         if genre_cfg["maximum"]:
             genres = it.islice(genres, genre_cfg["maximum"])
 
-        return ", ".join(genres) or None
+        return ", ".join(sorted(genres)) or None
 
     @cached_property
     def parsed_album_name(self) -> str:
