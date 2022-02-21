@@ -17,7 +17,7 @@ from rich_tables.utils import border_panel, make_console, make_difftext, new_tab
 pytestmark = pytest.mark.lib
 
 target_dir = "dev"
-compare_against = "4b86dcc"
+compare_against = "0.12.0"
 if not os.path.exists(target_dir):
     os.makedirs(target_dir)
 install(show_locals=True, extra_lines=8, width=int(os.environ.get("COLUMNS", 150)))
