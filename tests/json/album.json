@@ -89,11 +89,6 @@
         },
         {
           "@type": "PropertyValue",
-          "name": "certified_seller",
-          "value": true
-        },
-        {
-          "@type": "PropertyValue",
           "name": "image_ids",
           "value": [
             22500386,
@@ -124,11 +119,6 @@
             "@type": "PropertyValue",
             "name": "download_type",
             "value": "a"
-          },
-          {
-            "@type": "PropertyValue",
-            "name": "fulfillment_days",
-            "value": 10
           },
           {
             "@type": "PropertyValue",

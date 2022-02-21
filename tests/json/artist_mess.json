@@ -234,6 +234,10 @@
               "value": "all_rights_reserved"
             }
           ],
+          "byArtist": {
+            "@type": "MusicGroup",
+            "name": "Psykovsky & Orestis"
+          },
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H08M38S",
           "name": "Ela Na Pame"
@@ -257,6 +261,10 @@
               "value": "all_rights_reserved"
             }
           ],
+          "byArtist": {
+            "@type": "MusicGroup",
+            "name": "Psykovsky & Luuli"
+          },
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H11M13S",
           "name": "Stone Sea"
@@ -280,6 +288,10 @@
               "value": "all_rights_reserved"
             }
           ],
+          "byArtist": {
+            "@type": "MusicGroup",
+            "name": "Psykovsky & Spiral"
+          },
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H07M34S",
           "name": "So We Sailed Till We Found"
@@ -303,6 +315,10 @@
               "value": "all_rights_reserved"
             }
           ],
+          "byArtist": {
+            "@type": "MusicGroup",
+            "name": "Psykovsky & Kasatka"
+          },
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H07M53S",
           "name": "Doors Of Perception"
@@ -326,6 +342,10 @@
               "value": "all_rights_reserved"
             }
           ],
+          "byArtist": {
+            "@type": "MusicGroup",
+            "name": "Psykovsky & Spiral & Seeasound"
+          },
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H12M16S",
           "name": "Variant On The Right"
@@ -372,6 +392,10 @@
               "value": "all_rights_reserved"
             }
           ],
+          "byArtist": {
+            "@type": "MusicGroup",
+            "name": "Psykovsky & Orestis & Jobaba"
+          },
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H12M09S",
           "name": "Many Many Krishnas"
@@ -395,6 +419,10 @@
               "value": "all_rights_reserved"
             }
           ],
+          "byArtist": {
+            "@type": "MusicGroup",
+            "name": "Psykovsky & Kashyyyk & Arcek"
+          },
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H06M49S",
           "name": "Prem I Um"
@@ -418,6 +446,10 @@
               "value": "all_rights_reserved"
             }
           ],
+          "byArtist": {
+            "@type": "MusicGroup",
+            "name": "Psykovsky & Arcek"
+          },
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H09M17S",
           "name": "Now Here Nowhere"
@@ -441,6 +473,10 @@
               "value": "attribution_non_commercial_share_alike"
             }
           ],
+          "byArtist": {
+            "@type": "MusicGroup",
+            "name": "Psykovsky & Maleficium & Seeasound"
+          },
           "copyrightNotice": "Attribution Non Commercial Share Alike",
           "duration": "P00H18M07S",
           "name": "Holy Black / Little Lark",
@@ -540,6 +576,10 @@
               "value": "all_rights_reserved"
             }
           ],
+          "byArtist": {
+            "@type": "MusicGroup",
+            "name": "Psykovsky & Quip Tone Beatz & Flish"
+          },
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H09M15S",
           "name": "Ksolntsu"
@@ -563,6 +603,10 @@
               "value": "all_rights_reserved"
             }
           ],
+          "byArtist": {
+            "@type": "MusicGroup",
+            "name": "Birds Of Praise"
+          },
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H10M23S",
           "name": "Dadme albricios hijos d'Eva"

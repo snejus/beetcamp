@@ -101,11 +101,6 @@
         },
         {
           "@type": "PropertyValue",
-          "name": "certified_seller",
-          "value": true
-        },
-        {
-          "@type": "PropertyValue",
           "name": "image_ids",
           "value": [
             23426665
@@ -138,18 +133,13 @@
           },
           {
             "@type": "PropertyValue",
-            "name": "fulfillment_days",
-            "value": 4
-          },
-          {
-            "@type": "PropertyValue",
             "name": "includes_digital_download",
             "value": true
           },
           {
             "@type": "PropertyValue",
             "name": "quantity_available",
-            "value": 25
+            "value": 24
           }
         ],
         "availability": "InStock",

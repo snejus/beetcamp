@@ -374,6 +374,10 @@
               "value": "all_rights_reserved"
             }
           ],
+          "byArtist": {
+            "@type": "MusicGroup",
+            "name": "Varya Karpova"
+          },
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H06M02S",
           "name": "UNREALNUMBERS - Unseen (Varya Karpova Remix)"
@@ -397,6 +401,10 @@
               "value": "all_rights_reserved"
             }
           ],
+          "byArtist": {
+            "@type": "MusicGroup",
+            "name": "Lacchesi"
+          },
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H05M50S",
           "name": "UNREALNUMBERS - MK4 (Lacchesi Remix)"

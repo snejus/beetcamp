@@ -123,11 +123,6 @@
           },
           {
             "@type": "PropertyValue",
-            "name": "fulfillment_days",
-            "value": 1
-          },
-          {
-            "@type": "PropertyValue",
             "name": "includes_digital_download",
             "value": true
           },

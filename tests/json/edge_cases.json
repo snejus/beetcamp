@@ -61,7 +61,7 @@
       "name": "NYH244 Less Weird Parallel Universe  - Nearly 20 Years of Erikoisdance"
     },
     {
-      "@id": "https://newyorkhaunted.bandcamp.com/album/nyh244-less-weird-parallel-universe-nearly-20-years-of-erikoisdance#b45659762",
+      "@id": "https://newyorkhaunted.bandcamp.com/album/nyh244-less-weird-parallel-universe-nearly-20-years-of-erikoisdance#b45942147",
       "@type": [
         "MusicRelease",
         "Product"
@@ -70,7 +70,7 @@
         {
           "@type": "PropertyValue",
           "name": "item_id",
-          "value": 45659762
+          "value": 45942147
         },
         {
           "@type": "PropertyValue",
@@ -90,7 +90,7 @@
         {
           "@type": "PropertyValue",
           "name": "art_id",
-          "value": 3309405927
+          "value": 3726609798
         },
         {
           "@type": "PropertyValue",
@@ -99,17 +99,17 @@
         }
       ],
       "image": [
-        "https://f4.bcbits.com/img/a3309405927_10.jpg"
+        "https://f4.bcbits.com/img/a3726609798_10.jpg"
       ],
       "musicReleaseFormat": "DigitalFormat",
-      "name": "full digital discography (306 releases)",
+      "name": "full digital discography (307 releases)",
       "offers": {
         "@type": "Offer",
         "additionalProperty": [
           {
             "@type": "PropertyValue",
             "name": "bundle_size",
-            "value": 306
+            "value": 307
           },
           {
             "@type": "PropertyValue",
@@ -123,12 +123,12 @@
           }
         ],
         "availability": "OnlineOnly",
-        "price": 122.5,
+        "price": 123,
         "priceCurrency": "EUR",
         "priceSpecification": {
-          "minPrice": 122.5
+          "minPrice": 123
         },
-        "url": "https://newyorkhaunted.bandcamp.com/album/nyh244-less-weird-parallel-universe-nearly-20-years-of-erikoisdance#b45659762-buy"
+        "url": "https://newyorkhaunted.bandcamp.com/album/nyh244-less-weird-parallel-universe-nearly-20-years-of-erikoisdance#b45942147-buy"
       }
     },
     {
