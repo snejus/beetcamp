@@ -52,13 +52,13 @@ MEDIA_MAP = {
 VA = "Various Artists"
 
 _catalognum = r"""(?<![/@])(\b
-(?!\W|VA|EP[ ]|L[PC][ ]|.*[ ][0-9]KG|AT[ ]0|GC1)
-(?!(?i:vol |mp3|christ|vinyl|disc|session|record|artist|the |maxi ))
+(?!\W|VA[\d ]+\b|[EL]P\W|.*[ ][0-9]KG|AT[ ]0|GC1|HF[.])
+(?!(?i:vol |mp3|christ|vinyl|disc|session|record|artist|the\ |maxi\ |rave\ ))
 (?![^.]+shirt)
 (
       [A-Z .]+\d{3}         # HANDS D300
     | [A-z ][ ]0\d{2,3}     # Persephonic Sirens 012
-    | [A-Z-]{2,}\d+         # RIV4
+    | [A-Z-]{3,}\d+         # RIV4
     | [A-Z]+[A-Z.$-]+\d{2,} # USE202, HEY-101, LI$025
     | [A-Z.]{2,}[ ]\d{1,3}  # OBS.CUR 9
     | \w+[A-z]0\d+          # 1ØPILLS018, fa036
@@ -70,25 +70,24 @@ _catalognum = r"""(?<![/@])(\b
     | [.][0-9]+     # ISMVA002.1
     | -?[A-Z]+      # PLUS8024CD
 )?
-\b)"""
+\b(?!["]))"""
 
 CATNUM_PAT = {
-    "with_header": re.compile(fr"(?:Cat[^:]+:[ \W]*){_catalognum}", re.VERBOSE),
+    "with_header": re.compile(fr"(?:[Cc]at[^:]+:[ \W]*){_catalognum}", re.VERBOSE),
     "start_or_end": re.compile(fr"((^|\n){_catalognum}|{_catalognum}(\n|$))", re.VERBOSE),
     "anywhere": re.compile(_catalognum, re.VERBOSE),
 }
 
 rm_strings = [
     "limited edition",
-    "various artists?|va|vinyl",
+    r"^EP [0-9]+",
+    r"va|vinyl|compiled by .*",
     r"free download|free dl|free\)",
 ]
 PATTERNS: Dict[str, Pattern] = {
-    "clean_title": re.compile(fr"(?i: ?[\[\(]?\b({'|'.join(rm_strings)})(\b[\]\)]?|$))"),
-    "clean_incl": re.compile(
-        r"((\(?incl|\((inc|tracks|.*remix( |es)))([^)]+\)|.*))", re.I
-    ),
-    "meta": re.compile(r".*dateModified.*", re.MULTILINE),
+    "clean_title": re.compile(fr"(?i:[\[(]?\b({'|'.join(rm_strings)})(\b\W*|$))"),
+    "clean_incl": re.compile(r"(\(?incl|\((inc|tracks|.*remix( |es)))([^)]+\)|.*)", re.I),
+    "meta": re.compile(r'.*"@id".*', re.M),
     "digital": [  # type: ignore
         re.compile(r"^(DIGI(TAL)? ?[\d.]+|Bonus\W{2,})\W*"),
         re.compile(
@@ -157,8 +156,8 @@ class Helpers:
         return track
 
     @staticmethod
-    def parse_catalognum(album, disctitle, description, label, **kwargs):
-        # type: (str, str, str, str, Any) -> str
+    def parse_catalognum(album, disctitle, description, label, exclude):
+        # type: (str, str, str, str, List[str]) -> str
         """Try getting the catalog number looking at text from various fields."""
         cases = [
             (CATNUM_PAT["with_header"], description),
@@ -170,7 +169,8 @@ class Helpers:
         if label:
             # if label name is followed by digits, it may form a cat number
             esc = re.escape(label)
-            cases.insert(0, (re.compile(fr"(?i:({esc} ?[A-Z]?\d+[A-Z]?))"), album))
+            pat = re.compile(fr"(?i:({esc} ?[A-Z]?\d+[A-Z]?\b)(?! [Yy]ear))")
+            cases.append((pat, album))
 
         def find(pat: Pattern, string: str) -> str:
             try:
@@ -178,7 +178,7 @@ class Helpers:
             except (IndexError, AttributeError):
                 return ""
 
-        ignored = set(map(str.casefold, kwargs.get("artists") or []) or [None, ""])
+        ignored = set(map(str.casefold, exclude or []) or [None, ""])
 
         def not_ignored(option: str) -> bool:
             return bool(option) and option.casefold() not in ignored
@@ -197,7 +197,8 @@ class Helpers:
             return 0
 
     @staticmethod
-    def clean_name(name: str, *args: str, remove_extra: bool = False) -> str:
+    def clean_name(name, *args, label="", remove_extra=False):
+        # type: (str, str, str, bool) -> str
         """Return clean album name / track title.
         If `remove_extra`, remove info from within the parentheses (usually remix info).
         """
@@ -217,11 +218,15 @@ class Helpers:
         for arg in filter(op.truth, args):
             esc = re.escape(arg)
             name = re.sub(fr"[^'\])\w]*(?i:{esc})[^'(\[\w]*", " ", name).strip()
+
+        rm = f"({VA}?|{label})" if label else VA
+        name = re.sub(
+            fr"(?i:(\W\W+{rm}\W*|\W*{rm}(\W\W+|$)|(^\W*{rm}\W*$)))", " ", name
+        ).strip()
         if remove_extra:
             # redundant information about 'remixes from xyz'
             name = PATTERNS["clean_incl"].sub("", name)
-        name = PATTERNS["clean_title"].sub("", name).strip(" -|/")
-        return re.sub("^'([^']+)'$", r"\1", name)
+        return PATTERNS["clean_title"].sub("", name).strip(" -|/")
 
     @staticmethod
     def clean_ep_lp_name(album: str, artists: List[str]) -> str:
@@ -232,7 +237,7 @@ class Helpers:
         * Otherwise, we will end up cleaning a release title such as 'Artist Album EP',
           where the artist is not clearly separated from the album name.
         """
-        match = re.search(r"[^-|]+[EL]P", album)
+        match = re.search(r".+[EL]P", re.sub(r".* [-|] | [\[(][^ ]*|[\])]", "", album))
         if not match:
             return ""
         album_with_artists = match.group().strip()
@@ -393,19 +398,17 @@ class Metaguru(Helpers):
     def all_media_comments(self) -> str:
         get_desc = op.methodcaller("get", "description", "")
         return "\n".join(
-            [
-                # self.comments,
-                *map(get_desc, self.meta.get("albumRelease", {})),
-                self.comments,
-            ]
+            [*map(get_desc, self.meta.get("albumRelease", {})), self.comments]
         )
 
     @cached_property
+    def official_album_name(self) -> str:
+        match = re.search(r"Title: ?([^\n\r]+)", self.all_media_comments)
+        return match.expand(r"\1").strip() if match else ""
+
+    @cached_property
     def album_name(self) -> str:
-        match = re.search(r"Title:([^\n]+)", self.all_media_comments)
-        if match:
-            return match.groups()[0].strip()
-        return self.meta["name"]
+        return self.official_album_name or self.meta["name"]
 
     @cached_property
     def label(self) -> str:
@@ -503,11 +506,11 @@ class Metaguru(Helpers):
     @cached_property
     def catalognum(self) -> str:
         return self.parse_catalognum(
-            self.album_name,
+            self.meta["name"],
             self.disctitle,
             self.all_media_comments,
             self.label,
-            artists=self.raw_artists,
+            self.raw_artists,
         )
 
     @cached_property
@@ -524,20 +527,20 @@ class Metaguru(Helpers):
             return WORLDWIDE
 
     @cached_property
+    def json_tracks(self) -> List[JSONDict]:
+        try:
+            return self.meta["track"]["itemListElement"]
+        except KeyError:
+            return [{"item": self.meta, "position": 1}]
+
+    @cached_property
     def tracks(self) -> List[JSONDict]:
         """Parse relevant details from the tracks' JSON."""
-        try:
-            raw_tracks = self.meta["track"]["itemListElement"]
-        except KeyError:
-            raw_tracks = [{"item": self.meta, "position": 1}]
-        if self._singleton:
-            names = [raw_tracks[0].get("item").get("name") or ""]
-        else:
-            names = self.track_names
+        names = self.track_names
         delim = self.track_delimiter(names)
         names = self.clean_track_names(names, self.catalognum)
         tracks = []
-        for item, position in map(op.itemgetter("item", "position"), raw_tracks):
+        for item, position in map(op.itemgetter("item", "position"), self.json_tracks):
             initial_name = names[position - 1]
             name = self.clear_digi_only(initial_name)
             track: JSONDict = defaultdict(
@@ -581,17 +584,19 @@ class Metaguru(Helpers):
 
     @cached_property
     def track_names(self) -> List[str]:
-        raw_tracks = self.meta.get("tracks") or []
-        return list(map(lambda x: x.split(". ", maxsplit=1)[1], raw_tracks))
+        raw_tracks = self.meta.get("tracks")
+        if raw_tracks:
+            return list(map(lambda x: x.split(". ", maxsplit=1)[1], raw_tracks))
+        return list(map(lambda x: x.get("item").get("name") or "", self.json_tracks))
 
     @cached_property
-    def raw_artists(self) -> Set[str]:
+    def raw_artists(self) -> List[str]:
         def only_artist(name: str) -> str:
             return re.sub(r" - .*", "", PATTERNS["track_alt"].sub("", name))
 
         artists = set(map(only_artist, self.track_names))
-        artists.update(self.meta["byArtist"]["name"].split(", "))
-        return artists
+        artists.update(self.raw_albumartist.split(", "))
+        return list(artists)
 
     @cached_property
     def is_single(self) -> bool:
@@ -667,37 +672,39 @@ class Metaguru(Helpers):
 
     @cached_property
     def parsed_album_name(self) -> str:
-        match = re.search(r"[:-] ?([\w ]+) [EL]P", self.all_media_comments)
-        if match:
-            return match.expand(r"\1")
-        return self.catalognum
+        match = re.search(r"[:-] ?([A-Z][\w ]+ ((?!an )[EL]P))", self.all_media_comments)
+        return match.expand(r"\1") if match else ""
 
     @cached_property
     def clean_album_name(self) -> str:
-        album = self.album_name
-        if " EP" in album or " LP" in album:
-            # EP and LP strings also get normalised during the cleanup,
-            # which is important for the next step
-            no_catlabel = self.clean_name(self.album_name, self.catalognum, self.label)
-            return self.clean_ep_lp_name(no_catlabel, self.albumartist.split(", "))
-
-        args = [self.catalognum]
-        if not self._singleton:
-            args.append(self.bandcamp_albumartist)
-            args.append(self.albumartist)
-            args.extend(self.albumartist.split(", "))
-        # leave label name in place for compilations
-        if self.albumtype == "compilation":
-            # it could have been added as an albumartist already
-            for _ in range(args.count(self.label)):
-                args.remove(self.label)
-        else:
-            args.append(self.label)
-
-        album = self.clean_name(self.album_name, *args, remove_extra=True)
+        album = self.official_album_name
         if album:
             return album
-        return self.parsed_album_name
+
+        album = self.album_name
+        # look for something in quotes
+        match = re.search(r"(?:^| )(['\"])(.+?)\1(?: |$)", album)
+        if match:
+            album = match.expand(r"\2")
+        album = self.clean_name(album, self.catalognum, remove_extra=True)
+        if (
+            album
+            and not re.search(r"\W | [EL]P", album)  # no delimiters
+            and album not in self.unique_artists  # and it isn't one of the artists
+        ):
+            return album
+
+        if " EP" in album or " LP" in album:
+            return self.clean_ep_lp_name(album, self.unique_artists)
+
+        if not self._singleton:
+            album = self.clean_name(
+                album,
+                self.bandcamp_albumartist,
+                *self.track_artists,
+                self.raw_albumartist,
+            )
+        return album or self.parsed_album_name or self.catalognum or self.album_name
 
     @cached_property
     def _common(self) -> JSONDict:

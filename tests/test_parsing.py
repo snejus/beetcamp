@@ -298,9 +298,11 @@ def test_parse_country(name, expected):
         ("", "TS G5000 hello hello t-shirt.", "", "", ""),
         ("GOOD GOOD001", "", "", "", "GOOD GOOD001"),
         ("BAd GOOD001", "", "", "", "GOOD001"),
-        ("bad GOOD001", "", "", "bad GOOD", "bad GOOD001"),
+        ("bad gOOD 001", "", "", "bad GOOD", "bad gOOD 001"),
         ("MNQ 049 Void Vision - Sour (2019 repress)", "", "", "", "MNQ 049"),
         ("P90-003", "", "", "", "P90-003"),
+        ("LP. 2", "", "", "", ""),
+        ("", "", 'CAT001"', "", ""),
     ],
 )
 def test_parse_catalognum(album, disctitle, description, label, expected, beets_config):
@@ -316,6 +318,7 @@ def test_parse_catalognum(album, disctitle, description, label, expected, beets_
                 "description": "",
             },
         ],
+        "tracks": ["1. Artist - Title"],
     }
 
     assert Metaguru(meta, beets_config).catalognum == expected
@@ -326,7 +329,7 @@ def test_parse_catalognum(album, disctitle, description, label, expected, beets_
     [
         ("Album - Various Artists", [], "Album"),
         ("Various Artists - Album", [], "Album"),
-        ("Various Artists Album", [], "Album"),
+        ("Various Artists Album", [], "Various Artists Album"),
         ("Album EP", [], "Album EP"),
         ("Album [EP]", [], "Album EP"),
         ("Album (EP)", [], "Album EP"),
@@ -360,7 +363,7 @@ def test_parse_catalognum(album, disctitle, description, label, expected, beets_
         ),
         ("WEAPONS 001 - VARIOUS ARTISTS", ["WEAPONS 001"], ""),
         ("Diva Hello", [], "Diva Hello"),
-        ("RR009 - Various Artist", ["RR009"], ""),
+        ("RR009 - Various Artist", ["RR009"], "Various Artist"),
         ("Diva (Incl. some sort of Remixes)", [], "Diva"),
         ("HWEP010 - MEZZ - COLOR OF WAR", ["HWEP010", "MEZZ"], "COLOR OF WAR"),
         ("O)))Bow 1", [], "O)))Bow 1"),

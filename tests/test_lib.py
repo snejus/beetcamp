@@ -3,21 +3,21 @@ import os
 import re
 from collections import Counter, defaultdict, namedtuple
 from functools import partial
-from itertools import groupby
 from html import unescape
+from itertools import groupby
 
 import pytest
-from beetsplug.bandcamp import BandcampPlugin
-from beetsplug.bandcamp._metaguru import Metaguru
 from rich.columns import Columns
 from rich.traceback import install
-
 from rich_tables.utils import border_panel, make_console, make_difftext, new_table, wrap
+
+from beetsplug.bandcamp import BandcampPlugin
+from beetsplug.bandcamp._metaguru import Metaguru
 
 pytestmark = pytest.mark.lib
 
 target_dir = "dev"
-compare_against = "0.12.0"
+compare_against = "v0.12.0"
 if not os.path.exists(target_dir):
     os.makedirs(target_dir)
 install(show_locals=True, extra_lines=8, width=int(os.environ.get("COLUMNS", 150)))
@@ -107,8 +107,9 @@ def do_key(table, key: str, before, after) -> None:
 
 
 def compare(old, new) -> bool:
-    for entity in old, new:
-        entity["albumartist"] = entity.pop("artist", "")
+    if "album" in new:
+        for entity in old, new:
+            entity["albumartist"] = entity.pop("artist", "")
 
     every_new = [new, *(new.get("tracks") or [])]
     every_old = [old, *(old.get("tracks") or [])]
@@ -133,7 +134,11 @@ def compare(old, new) -> bool:
 def test_file(file, config):
     meta_file = os.path.join("jsons", file)
     tracks_file = os.path.join("jsons", file.replace(".json", ".tracks"))
-    meta = open(meta_file).read() + "\n" + unescape(unescape(open(tracks_file).read()))
+    meta = open(meta_file).read() + (
+        ("\n" + unescape(unescape(open(tracks_file).read())))
+        if os.path.exists(tracks_file)
+        else ""
+    )
     guru = Metaguru.from_html(meta, config)
 
     if "_track_" in file:
@@ -144,5 +149,8 @@ def test_file(file, config):
     target = os.path.join(target_dir, file)
     json.dump(new, open(target, "w"), indent=2)
 
-    old = json.load(open(os.path.join(compare_against, file)))
+    try:
+        old = json.load(open(os.path.join(compare_against, file)))
+    except FileNotFoundError:
+        old = {}
     compare(old, new)

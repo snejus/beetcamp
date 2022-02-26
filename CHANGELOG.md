@@ -1,3 +1,25 @@
+## [0.13.0] Unreleased
+
+### Added
+
+- configuration: a new option `min_artists_count_for_va` which configures the point at
+  which the `albumartist` becomes `va_name` (Various Artists).
+
+### Updated
+
+- `album` search priority, step by step if not empty:
+  1. Whatever follows **Title: ** in the release **description**
+  1. Something in single or double quotes in the release **title**
+  1. If **EP** or **LP** is in the release **title**, whatever precedes it having removed `catalognum` and artists
+  1. Whatever is left in the release **title** having removed `catalognum` and artists
+  1. Whatever precedes **EP** or **LP** string in the release **description**
+  1. `catalognum`
+  1. The entire initial release **title**
+
+### Fixed
+
+- `catalognum`: fixed a bug where catalogue numbers starting with **VA** would be ignored
+
 ## [0.12.0] 2022-02-10
 
 ### Added
