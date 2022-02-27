@@ -81,6 +81,7 @@ CATNUM_PAT = {
 rm_strings = [
     "limited edition",
     r"^EP [0-9]+",
+    r"^Vol(ume)?\W*\d",
     r"(digital )?album\)",
     r"va|vinyl|compiled by .*",
     r"free download|free dl|free\)",
@@ -415,7 +416,7 @@ class Metaguru(Helpers):
     def label(self) -> str:
         match = re.search(r"Label:([^/,\n]+)", self.all_media_comments)
         if match:
-            return match.groups()[0].strip()
+            return match.groups()[0].strip(" '\"")
 
         try:
             return self.meta["albumRelease"][0]["recordLabel"]["name"]

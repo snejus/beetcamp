@@ -8,6 +8,7 @@
 ### Updated
 
 - `album` search priority, step by step if not empty:
+
   1. Whatever follows **Title: ** in the release **description**
   1. Something in single or double quotes in the release **title**
   1. If **EP** or **LP** is in the release **title**, whatever precedes it having removed `catalognum` and artists
@@ -17,6 +18,8 @@
   1. The entire initial release **title**
 
 - `album` cleanup: remove **((digital )?album)** from the album name
+
+- `label`: strip quotes when it's sourced from the description
 
 ### Fixed
 
