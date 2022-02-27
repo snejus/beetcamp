@@ -21,6 +21,9 @@
 
 - `label`: strip quotes when it's sourced from the description
 
+- `artist` and `albumartist`: when track artist is not given, use only the first of the
+  given comma-delimited album artists. The other ones are usually remixers
+
 ### Fixed
 
 - `catalognum`:

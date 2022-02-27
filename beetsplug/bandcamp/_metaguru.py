@@ -554,7 +554,7 @@ class Metaguru(Helpers):
                 length=self.get_duration(item) or None,
                 **self.parse_track_name(self.clean_name(name), delim),
             )
-            track["artist"] = track["artist"] or self.bandcamp_albumartist
+            track["artist"] = track["artist"] or self.bandcamp_albumartist.split(", ")[0]
             lyrics = item.get("recordingOf", {}).get("lyrics", {}).get("text")
             if lyrics:
                 track["lyrics"] = lyrics.replace("\r", "")
