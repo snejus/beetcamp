@@ -18,7 +18,9 @@
 
 ### Fixed
 
-- `catalognum`: fixed a bug where catalogue numbers starting with **VA** would be ignored
+- `catalognum`:
+  - catalogue numbers starting with **VA** are not anymore ignored
+  - match catalogue number when it is preceded by **number** in the description
 
 ## [0.12.0] 2022-02-10
 

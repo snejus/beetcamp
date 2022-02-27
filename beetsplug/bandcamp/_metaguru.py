@@ -73,7 +73,7 @@ _catalognum = r"""(?<![/@])(\b
 \b(?!["]))"""
 
 CATNUM_PAT = {
-    "with_header": re.compile(fr"(?:[Cc]at[^:]+:[ \W]*){_catalognum}", re.VERBOSE),
+    "with_header": re.compile(fr"(?:[Cc]at[^:]+:|number)\W*{_catalognum}", re.VERBOSE),
     "start_or_end": re.compile(fr"((^|\n){_catalognum}|{_catalognum}(\n|$))", re.VERBOSE),
     "anywhere": re.compile(_catalognum, re.VERBOSE),
 }
