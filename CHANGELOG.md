@@ -16,6 +16,8 @@
   1. `catalognum`
   1. The entire initial release **title**
 
+- `album` cleanup: remove **((digital )?album)** from the album name
+
 ### Fixed
 
 - `catalognum`:
