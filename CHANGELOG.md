@@ -4,6 +4,8 @@
 
 - configuration: a new option `min_artists_count_for_va` which configures the point at
   which the `albumartist` becomes `va_name` (Various Artists).
+- If we're looking to import an album but a track URL is given, check if it's part of an
+  album and fetch that album instead of failing
 
 ### Updated
 

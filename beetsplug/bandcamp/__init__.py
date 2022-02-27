@@ -27,6 +27,7 @@ import requests
 import six
 from beets import __version__, library, plugins
 from beets.autotag.hooks import AlbumInfo, TrackInfo
+
 from beetsplug import fetchart  # type: ignore[attr-defined]
 
 from ._metaguru import DATA_SOURCE, DIGI_MEDIA, Metaguru, urlify
@@ -49,7 +50,7 @@ DEFAULT_CONFIG: JSONDict = {
 }
 
 SEARCH_URL = "https://bandcamp.com/search?q={0}&page={1}"
-ALBUM_URL_IN_TRACK = re.compile(r'inAlbum":{[^}]*"@id":"([^"]*)"')
+ALBUM_URL_IN_TRACK = re.compile(r'<a id="buyAlbumLink" href="([^"]+)')
 SEARCH_ITEM_PAT = 'href="(https://[^/]*/{}/[^?]*)'
 USER_AGENT = f"beets/{__version__} +http://beets.radbox.org/"
 ALBUM_SEARCH = "album"
@@ -224,7 +225,13 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         """Return an AlbumInfo object for a bandcamp album page.
         If track url is given by mistake, find and fetch the album url instead.
         """
-        guru = self.guru(url, html=self._get(url))
+        html = self._get(url)
+        if "/track/" in url:
+            match = ALBUM_URL_IN_TRACK.search(html)
+            if match:
+                url = re.sub(r"/track/.*", match.expand(r"\1"), url)
+                html = self._get(url)
+        guru = self.guru(url, html=html)
         return self.handle(guru, "album", url) if guru else None
 
     def get_track_info(self, url: str) -> Optional[TrackInfo]:
