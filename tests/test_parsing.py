@@ -302,7 +302,9 @@ def test_parse_country(name, expected):
         ("MNQ 049 Void Vision - Sour (2019 repress)", "", "", "", "MNQ 049"),
         ("P90-003", "", "", "", "P90-003"),
         ("LP. 2", "", "", "", ""),
-        ("", "", 'CAT001"', "", ""),
+        ("", "", 'BAD001"', "", ""),
+        ("", "", "Modularz 40", "Modularz", "Modularz 40"),
+        ("", "", " catalogue number GOOD001 ", "", "GOOD001"),
     ],
 )
 def test_parse_catalognum(album, disctitle, description, label, expected, beets_config):

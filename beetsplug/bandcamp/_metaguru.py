@@ -7,6 +7,7 @@ from collections import Counter, defaultdict
 from datetime import date, datetime
 from functools import partial
 from html import unescape
+from string import Template
 from typing import (
     Any,
     Callable,
@@ -51,19 +52,23 @@ MEDIA_MAP = {
 }
 VA = "Various Artists"
 
-_catalognum = r"""(?<![/@])(\b
-(?!\W|VA[\d ]+\b|[EL]P\W|.*[ ][0-9]KG|AT[ ]0|GC1|HF[.])
+_catalognum = Template(
+    r"""(?<![/@])(\b
+(?!\W|VA[\d ]+|[EL]P\W|[^\n.]+[ ](?:[0-9]KG|20\d{2}|VA\d+)|AT[ ]0|GC1|HF[.])
 (?!(?i:vol |mp3|christ|vinyl|disc|session|record|artist|the\ |maxi\ |rave\ ))
 (?![^.]+shirt)
 (
       [A-Z .]+\d{3}         # HANDS D300
     | [A-z ][ ]0\d{2,3}     # Persephonic Sirens 012
     | [A-Z-]{3,}\d+         # RIV4
-    | [A-Z]+[A-Z.$-]+\d{2,} # USE202, HEY-101, LI$025
+    # dollar signs need escaping here since the $label below will be
+    # substituted later, and we do not want to touch these two
+    | [A-Z]+[A-Z.$$-]+\d{2,} # USE202, HEY-101, LI$$025
     | [A-Z.]{2,}[ ]\d{1,3}  # OBS.CUR 9
     | \w+[A-z]0\d+          # 1ØPILLS018, fa036
     | [a-z]+(cd|lp)\d+      # ostgutlp45
     | [A-z]+\d+-\d+         # P90-003
+    | (?i:$label[ ]?[A-Z]*\d+[A-Z]*)
 )
 ( # optionally followed by
       [ ]?[A-Z]     # IBM001V
@@ -71,11 +76,15 @@ _catalognum = r"""(?<![/@])(\b
     | -?[A-Z]+      # PLUS8024CD
 )?
 \b(?!["]))"""
+)
+_cat_pattern = _catalognum.template
 
 CATNUM_PAT = {
-    "with_header": re.compile(fr"(?:[Cc]at[^:]+:|number)\W*{_catalognum}", re.VERBOSE),
-    "start_or_end": re.compile(fr"((^|\n){_catalognum}|{_catalognum}(\n|$))", re.VERBOSE),
-    "anywhere": re.compile(_catalognum, re.VERBOSE),
+    "with_header": re.compile(
+        r"(?:^|\s)cat[\w .]+?(?:number:?|:) ?(\w[^\n]+?)(\W{2}|\n|$)", re.I
+    ),
+    "start_end": re.compile(fr"((^|\n){_cat_pattern}|{_cat_pattern}(\n|$))", re.VERBOSE),
+    "anywhere": re.compile(_cat_pattern, re.VERBOSE),
 }
 
 rm_strings = [
@@ -165,14 +174,12 @@ class Helpers:
             (CATNUM_PAT["with_header"], description),
             (CATNUM_PAT["anywhere"], disctitle),
             (CATNUM_PAT["anywhere"], album),
-            (CATNUM_PAT["start_or_end"], description),
+            (CATNUM_PAT["start_end"], description),
             (CATNUM_PAT["anywhere"], description),
         ]
         if label:
-            # if label name is followed by digits, it may form a cat number
-            esc = re.escape(label)
-            pat = re.compile(fr"(?i:({esc} ?[A-Z]?\d+[A-Z]?\b)(?! [Yy]ear))")
-            cases.append((pat, album))
+            pat = re.compile(_catalognum.substitute(label=re.escape(label)), re.VERBOSE)
+            cases.append((pat, "\n".join((album, disctitle, description))))
 
         def find(pat: Pattern, string: str) -> str:
             try:

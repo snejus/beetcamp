@@ -29,8 +29,10 @@
 ### Fixed
 
 - `catalognum`:
-  - catalogue numbers starting with **VA** are not anymore ignored
-  - match catalogue number when it is preceded by **number** in the description
+  - catalogue numbers starting with **VA** are not anymore ignored, if they are not
+    directly followed by numbers. **VA02** stays invalid while **VAHELLO001** is valid.
+  - match catalogue number when it is preceded by **number** in the description, like
+    **... catalogue number HELLO123 ...**.
 
 ## [0.12.0] 2022-02-10
 
