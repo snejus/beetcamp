@@ -11,7 +11,7 @@
 
 - `album` search priority, step by step if not empty:
 
-  1. Whatever follows **Title: ** in the release **description**
+  1. Whatever follows **Title:** in the release **description**
   1. Something in single or double quotes in the release **title**
   1. If **EP** or **LP** is in the release **title**, whatever precedes it having removed `catalognum` and artists
   1. Whatever is left in the release **title** having removed `catalognum` and artists
@@ -19,16 +19,15 @@
   1. `catalognum`
   1. The entire initial release **title**
 
-- `album` cleanup: remove **((digital )?album)** from the album name
 
-- `label`: strip quotes when it's sourced from the description
-
-- `artist` and `albumartist`: when track artist is not given, use only the first of the
-  given comma-delimited album artists. The other ones are usually remixers
-
-- `singleton`: do not populate **index**, **medium\_index**, **medium**, **medium\_total**
-
-### Fixed
+| field         | change                                                                                                                  | before                                               | after                     |
+| ---           | ---                                                                                                                     | ---                                                  | ---                       |
+| **album**     | remove **((digital )?album)** from the album name                                                                       | `Some Album (album)`                                 | `Some Album`              |
+| **label**     | strip quotes when it's sourced from the description                                                                     | `"Label"`                                            | `Label`                   |
+| **artist**    | exclude remix artists from both fields                                                                                  | _title: Choone (Some Remix)_, `artist: Artist, Some` | `artist: Artist`          |
+| **artist**    | artists like **B2** and **A4** are not anymore assumed to be `track_alt`                                                | _name: B2 - Some Title_, `track_alt: B2`             | `artist: B2, track_alt:` |
+| **artist**    | similarly, `track_alt` like **A** is correctly parsed given that the rest of the tracks have conventional `track_alt` s |                                                      |                           |
+| **singleton** | do not populate **index**, **medium_index**, **medium**, **medium_total**                                               | `index: 1`                                           | `index: None`
 
 - `catalognum`:
   - catalogue numbers starting with **VA** are not anymore ignored, if they are not

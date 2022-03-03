@@ -111,7 +111,7 @@ def test_convert_title(title, expected):
         ("E7-E5", ("", "", "E7-E5", "E7-E5")),
         (
             "Lacchesi - UNREALNUMBERS - MK4 (Lacchesi Remix)",
-            ("", "Lacchesi, UNREALNUMBERS", "MK4 (Lacchesi Remix)", "MK4"),
+            ("", "UNREALNUMBERS", "MK4 (Lacchesi Remix)", "MK4"),
         ),
         ("UNREALNUMBERS -Karaburan", ("", "UNREALNUMBERS", "Karaburan", "Karaburan")),
         (
@@ -197,12 +197,12 @@ def test_clean_ep_lp_name(album, artists, expected):
 
 
 @pytest.mark.parametrize(
-    ("artists", "expected"), [(["4.44.444.8", "4.44.444.8"], {"4.44.444.8"})]
+    ("artists", "expected"), [(["4.44.444.8", "4.44.444.8"], ["4.44.444.8"])]
 )
-def test_track_artists(artists, expected):
+def test_unique_artists(artists, expected):
     guru = Metaguru({})
     guru.tracks = [{"artist": a} for a in artists]
-    assert guru.track_artists == expected
+    assert guru.unique_artists == expected
 
 
 @pytest.mark.parametrize(
@@ -305,6 +305,7 @@ def test_parse_country(name, expected):
         ("", "", 'BAD001"', "", ""),
         ("", "", "Modularz 40", "Modularz", "Modularz 40"),
         ("", "", " catalogue number GOOD001 ", "", "GOOD001"),
+        ("LI$INGLE010 - cyberflex - LEVEL X", "", "", "", "LI$INGLE010"),
     ],
 )
 def test_parse_catalognum(album, disctitle, description, label, expected, beets_config):
