@@ -20,14 +20,15 @@
   1. The entire initial release **title**
 
 
-| field         | change                                                                                                                  | before                                               | after                     |
-| ---           | ---                                                                                                                     | ---                                                  | ---                       |
-| **album**     | remove **((digital )?album)** from the album name                                                                       | `Some Album (album)`                                 | `Some Album`              |
-| **label**     | strip quotes when it's sourced from the description                                                                     | `"Label"`                                            | `Label`                   |
-| **artist**    | exclude remix artists from both fields                                                                                  | _title: Choone (Some Remix)_, `artist: Artist, Some` | `artist: Artist`          |
-| **artist**    | artists like **B2** and **A4** are not anymore assumed to be `track_alt`                                                | _name: B2 - Some Title_, `track_alt: B2`             | `artist: B2, track_alt:` |
-| **artist**    | similarly, `track_alt` like **A** is correctly parsed given that the rest of the tracks have conventional `track_alt` s |                                                      |                           |
-| **singleton** | do not populate **index**, **medium_index**, **medium**, **medium_total**                                               | `index: 1`                                           | `index: None`
+| field              | change                                                                                                                  | before                                             | after                                     |
+| ---                | ---                                                                                                                     | ---                                                | ---                                       |
+| **album**          | remove **((digital )?album)** from the album name                                                                       | _Some Album (album)_                               | **Some Album**                            |
+| **label**          | strip quotes when it's sourced from the description                                                                     | _"Label"_                                          | **Label**                                 |
+| **artist**         | exclude remix artists from both fields                                                                                  | _title: Choone (Some Remix), artist: Artist, Some_ | **artist: Artist**                        |
+| **artist**         | artists like **B2** and **A4** are not anymore assumed to be `track_alt`                                                | _name: B2 - Some Title, track_alt: B2_             | **artist: B2, track_alt:**                |
+| **artist**         | similarly, `track_alt` like **A** is correctly parsed given that the rest of the tracks have conventional `track_alt` s |                                                    |                                           |
+| **artist / title** | **featuring** artists are moved to the `artist` field                                                                   | _artist: Artist, title: Title ft. Some_            | **artist: Artist ft. Some, title: Title** |
+| **singleton**      | do not populate **index**, **medium_index**, **medium**, **medium_total**                                               | _index: 1_                                         | **index: None**                           |
 
 - `catalognum`:
   - catalogue numbers starting with **VA** are not anymore ignored, if they are not

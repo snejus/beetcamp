@@ -107,7 +107,8 @@ PATTERNS: Dict[str, Pattern] = {
             r"[^\w\)]+(bandcamp[^-]+|digi(tal)?)(\W*(\W+|only|bonus|exclusive)\W*$)", re.I
         ),
     ],
-    "remix_or_ft": re.compile(r" [\[\(].*(?i:mix|edit|f(ea)?t\.).*"),
+    "remix_or_ft": re.compile(r" [\[(].*(?i:mix|edit|f(ea)?t([.]|uring)?).*"),
+    "ft": re.compile(r" *[( ](f(ea)?t([.]|uring)? [^()]+)[)]?", re.I),
     "track_alt": re.compile(r"([ABCDEFGH]{1,3}[0-6])\W+", re.I),
     "vinyl_name": re.compile(r"[1-5](?= ?(xLP|LP|x))|single|double|triple", re.I),
 }
@@ -138,6 +139,7 @@ class Helpers:
 
     @staticmethod
     def split_artists(artists: Iterable[str]) -> List[str]:
+        artists = list(map(lambda x: PATTERNS["ft"].sub("", x), artists))
         split = map(lambda x: PATTERNS["split_artists"].split(x), set(artists))
         split_artists = set(map(str.strip, it.chain(*split))) - {""}
         split_artists_list = list(split_artists)
@@ -187,9 +189,13 @@ class Helpers:
             artists.discard(artist)
             artist = ", ".join(artists)
         artist = re.sub(r" \(.*mix.*", "", artist).strip(",")
-        artist = re.sub(r"[(](f(ea)?t.*)[)]", r"\1", artist)
+        match = re.match(r"(.+?) *[( ](f(?:ea)?t(?:[.]|uring)? [^()]+)[()]?( .+)?", title)
+        ft = ""
+        if match:
+            title = (match.expand(r"\1") or "") + (match.expand(r"\3") or "")
+            ft = match.expand(r"\2")
         track["main_title"] = PATTERNS["remix_or_ft"].sub("", title)
-        track.update(title=title, artist=artist, track_alt=track_alt)
+        track.update(title=title, artist=artist, track_alt=track_alt, ft=ft)
         return track
 
     @staticmethod
@@ -610,6 +616,8 @@ class Metaguru(Helpers):
                     t["artist"] = aartist
             if not t["track_alt"]:
                 t["track_alt"] = None
+            if t["ft"]:
+                t["artist"] += f" {t['ft']}"
 
         return tracks
 
@@ -817,6 +825,7 @@ class Metaguru(Helpers):
     def _trackinfo(self, track: JSONDict, **kwargs: Any) -> TrackInfo:
         track.pop("digi_only", None)
         track.pop("main_title", None)
+        track.pop("ft", None)
         if not NEW_BEETS:
             track.pop("lyrics", None)
 
