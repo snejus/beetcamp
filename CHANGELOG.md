@@ -26,6 +26,8 @@
 - `artist` and `albumartist`: when track artist is not given, use only the first of the
   given comma-delimited album artists. The other ones are usually remixers
 
+- `singleton`: do not populate **index**, **medium\_index**, **medium**, **medium\_total**
+
 ### Fixed
 
 - `catalognum`:

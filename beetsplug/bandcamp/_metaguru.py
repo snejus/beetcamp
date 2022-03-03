@@ -144,7 +144,6 @@ class Helpers:
             track_alt = ""
             if match:
                 track_alt = match.expand(r"\1").upper()
-                # do not strip a period from the end since it may end with an abbrev
                 name = name.replace(match.group(), "")
             return name, track_alt
 
@@ -156,6 +155,8 @@ class Helpers:
 
         title = parts.pop(-1)
         artist = ", ".join(sorted(set(parts)))
+        # artist = parts[0] if parts else ""
+        # artist = ", ".join(sorted(filter(lambda x: x not in title, set(parts))))
         artist = re.sub(r" \(.*mix.*", "", artist).strip(",")
         artist = re.sub(r"[(](f(ea)?t.*)[)]", r"\1", artist)
         if not track_alt:
@@ -555,8 +556,7 @@ class Metaguru(Helpers):
             track: JSONDict = defaultdict(
                 str,
                 digi_only=name != initial_name,
-                index=position or 1,
-                medium_index=position or 1,
+                index=position,
                 track_id=item.get("@id"),
                 length=self.get_duration(item) or None,
                 **self.parse_track_name(self.clean_name(name), delim),
@@ -757,13 +757,9 @@ class Metaguru(Helpers):
         if not NEW_BEETS:
             track.pop("lyrics", None)
 
-        data = dict(
-            **track,
-            **self._common,
-            disctitle=self.disctitle or None,
-            medium=1,
-            **kwargs,
-        )
+        data = dict(**track, **self._common, **kwargs)
+        if "index" in data:
+            data.update(medium_index=data["index"])
         for field in set(data.keys()) & self.excluded_fields:
             data.pop(field)
 
@@ -772,13 +768,12 @@ class Metaguru(Helpers):
     @cached_property
     def singleton(self) -> TrackInfo:
         self._singleton = True
-        track: TrackInfo = self._trackinfo(self.tracks[0])
+        track: TrackInfo = self._trackinfo({**self.tracks[0], "index": None})
         if NEW_BEETS:
             track.update(self._common_album)
             track.pop("album", None)
         if not track.artist:
             track.artist = self.bandcamp_albumartist
-        track.index = track.medium_index = track.medium_total = 1
         track.track_id = track.data_url
         return track
 
@@ -791,8 +786,12 @@ class Metaguru(Helpers):
             tracks = it.filterfalse(op.itemgetter("digi_only"), tracks)
 
         tracks = list(map(op.methodcaller("copy"), tracks))
-
-        get_trackinfo = partial(self._trackinfo, medium_total=len(tracks))
+        get_trackinfo = partial(
+            self._trackinfo,
+            medium=1,
+            disctitle=self.disctitle or None,
+            medium_total=len(tracks),
+        )
         album_info = AlbumInfo(
             **self._common,
             **self._common_album,

@@ -33,7 +33,7 @@ class ReleaseInfo:
             length=kget("length"),
             track_alt=kget("alt"),
             media=self.media,
-            medium=1,
+            medium=kget("medium", 1),
             medium_index=kget("index"),
             medium_total=kget("medium_total"),
             disctitle=self.disctitle,
@@ -44,12 +44,10 @@ class ReleaseInfo:
 
     def set_singleton(self, artist: str, title: str, length: int, **kwargs) -> None:
         data = self.track_data(
-            medium_total=1,
             title=title,
             track_id=self.album_id,
             artist=artist,
             length=length,
-            index=1,
         )
         if NEW_BEETS:
             data.update(**kwargs)
@@ -119,6 +117,7 @@ def single_track_release() -> ReleaseInfo:
         country="SE",
         genre=None,
         style=None,
+        medium=None,
     )
     return info
 
@@ -146,6 +145,7 @@ def single_only_track_name() -> ReleaseInfo:
         country="RU",
         genre="trance",
         style="electronic",
+        medium=None,
     )
     return info
 

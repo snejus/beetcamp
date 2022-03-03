@@ -53,7 +53,6 @@ def check(actual, expected) -> None:
 )
 def test_parse_single_track_release(release, beets_config):
     html, expected = release
-    print(html)
     actual = Metaguru.from_html(html, beets_config).singleton
     if hasattr(actual, "comments"):
         actual.pop("comments")
