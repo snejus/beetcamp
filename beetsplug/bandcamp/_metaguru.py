@@ -438,8 +438,10 @@ class Metaguru(Helpers):
 
     @cached_property
     def official_album_name(self) -> str:
-        match = re.search(r"Title: ?([^\n\r]+)", self.all_media_comments)
-        return match.expand(r"\1").strip() if match else ""
+        match = re.search(
+            r"(Title: ?|Album(:|/Single) )([^\n:]+)(\n|$)", self.all_media_comments
+        )
+        return match.expand(r"\3").strip() if match else ""
 
     @cached_property
     def album_name(self) -> str:
