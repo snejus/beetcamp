@@ -1,6 +1,7 @@
 [![image](http://img.shields.io/pypi/v/beetcamp.svg)](https://pypi.python.org/pypi/beetcamp)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=snejus_beets-bandcamp&metric=alert_status)](https://sonarcloud.io/dashboard?id=snejus_beets-bandcamp)
 [![Coverage Status](https://coveralls.io/repos/github/snejus/beetcamp/badge.svg?branch=master)](https://coveralls.io/github/snejus/beetcamp?branch=master)
+[ ![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fsnejus%2Fbeetcamp&count_bg=%23842424&title_bg=%23846060&icon=postwoman.svg&icon_color=%23CF4D4D&title=hits&edge_flat=true)](https://hits.seeyoufarm.com)
 
 Plug-in for [beets] to use Bandcamp as an autotagger source. It mostly focuses on
 
