@@ -9,32 +9,60 @@
 
 ### Updated
 
-- `album` search priority, step by step if not empty:
+- `album`
 
-  1. Whatever follows **Title:** in the release **description**
-  1. Something in single or double quotes in the release **title**
-  1. If **EP** or **LP** is in the release **title**, whatever precedes it having removed `catalognum` and artists
-  1. Whatever is left in the release **title** having removed `catalognum` and artists
-  1. Whatever precedes **EP** or **LP** string in the release **description**
-  1. `catalognum`
-  1. The entire initial release **title**
+  - search priority: step by step until the first one which is found:
 
+    1. Whatever follows **Title:** in the release **description**
+    1. Something in single or double quotes in the release **title**
+    1. If **EP** or **LP** is in the release **title**, whatever precedes it having removed `catalognum` and artists
+    1. Whatever is left in the release **title** having removed `catalognum` and artists
+    1. Whatever precedes **EP** or **LP** string in the release **description**
+    1. `catalognum`
+    1. The entire initial release **title**
 
-| field              | change                                                                                                                  | before                                             | after                                     |
-| ---                | ---                                                                                                                     | ---                                                | ---                                       |
-| **album**          | remove **((digital )?album)** from the album name                                                                       | _Some Album (album)_                               | **Some Album**                            |
-| **label**          | strip quotes when it's sourced from the description                                                                     | _"Label"_                                          | **Label**                                 |
-| **artist**         | exclude remix artists from both fields                                                                                  | _title: Choone (Some Remix), artist: Artist, Some_ | **artist: Artist**                        |
-| **artist**         | artists like **B2** and **A4** are not anymore assumed to be `track_alt`                                                | _name: B2 - Some Title, track_alt: B2_             | **artist: B2, track_alt:**                |
-| **artist**         | similarly, `track_alt` like **A** is correctly parsed given that the rest of the tracks have conventional `track_alt` s |                                                    |                                           |
-| **artist / title** | **featuring** artists are moved to the `artist` field                                                                   | _artist: Artist, title: Title ft. Some_            | **artist: Artist ft. Some, title: Title** |
-| **singleton**      | do not populate **index**, **medium_index**, **medium**, **medium_total**                                               | _index: 1_                                         | **index: None**                           |
+  - remove **(digital album)** and **(album)** from the album name
+
+    ```yaml
+    Some Album (album) -> Some Album
+    ```
+
+- `label`: strip quotes if sourced from the description
+- `artist`
+
+  - exclude remix artists
+
+    ```yaml
+    title: Choone (Some Remix) -> title: Choone (Some Remix)
+    artist: Artist, Some       -> artist: Artist
+    ```
+
+  - artists like **B2** and **A4** are not anymore assumed to be `track_alt` when
+    `track_alt` is not present in any other track in that release.
+
+    ```yaml
+    # name: B2 - Some Title
+    title: Some Title -> Some Title
+    track_alt: B2     ->
+    artist: -> B2
+    ```
+
+  - and other way around, `track_alt` like **A** or **B** are correctly parsed if
+    `track_alt` was found for the rest of the tracks
+
+  - **featuring** artists are moved from `title` to the `artist` field
+
+    ```yaml
+    artist: Artist        -> Artist ft. Some
+    title: Title ft. Some -> Title
+    ```
+
+- `singleton`: do not populate `index`, `medium_index`, `medium`, `medium_total`
 
 - `catalognum`:
-  - catalogue numbers starting with **VA** are not anymore ignored, if they are not
-    directly followed by numbers. **VA02** stays invalid while **VAHELLO001** is valid.
-  - match catalogue number when it is preceded by **number** in the description, like
-    **... catalogue number HELLO123 ...**.
+  - catalogue numbers starting with **VA** are not anymore ignored, unless **VA** is
+    followed by numbers. **VA02** is still ignored while **VAHELLO001** is now parsed
+    correctly.
 
 ## [0.12.0] 2022-02-10
 
