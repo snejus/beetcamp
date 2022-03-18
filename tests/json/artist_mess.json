@@ -21,7 +21,7 @@
   ],
   "albumRelease": [
     {
-      "@id": "https://psykovsky.bandcamp.com/album/ksolntsu#a134886448",
+      "@id": "https://psykovsky.bandcamp.com/album/ksolntsu",
       "@type": [
         "MusicRelease",
         "Product"
@@ -61,63 +61,63 @@
       "name": "Ksolntsu"
     },
     {
-      "@id": "https://psykovsky.bandcamp.com/track/ela-na-pame#t3936209160",
+      "@id": "https://psykovsky.bandcamp.com/track/ela-na-pame",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://psykovsky.bandcamp.com/track/stone-sea#t1697462790",
+      "@id": "https://psykovsky.bandcamp.com/track/stone-sea",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://psykovsky.bandcamp.com/track/so-we-sailed-till-we-found#t100558700",
+      "@id": "https://psykovsky.bandcamp.com/track/so-we-sailed-till-we-found",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://psykovsky.bandcamp.com/track/doors-of-perception#t64137153",
+      "@id": "https://psykovsky.bandcamp.com/track/doors-of-perception",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://psykovsky.bandcamp.com/track/variant-on-the-right#t2945940491",
+      "@id": "https://psykovsky.bandcamp.com/track/variant-on-the-right",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://psykovsky.bandcamp.com/track/call-of-beauty#t249961523",
+      "@id": "https://psykovsky.bandcamp.com/track/call-of-beauty",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://psykovsky.bandcamp.com/track/many-many-krishnas#t1039297523",
+      "@id": "https://psykovsky.bandcamp.com/track/many-many-krishnas",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://psykovsky.bandcamp.com/track/prem-i-um#t2584951270",
+      "@id": "https://psykovsky.bandcamp.com/track/prem-i-um",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://psykovsky.bandcamp.com/track/now-here-nowhere#t1788081328",
+      "@id": "https://psykovsky.bandcamp.com/track/now-here-nowhere",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://psykovsky.bandcamp.com/track/holy-black-little-lark#t3407782947",
+      "@id": "https://psykovsky.bandcamp.com/track/holy-black-little-lark",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://psykovsky.bandcamp.com/track/worlds-of-wisdom#t386177510",
+      "@id": "https://psykovsky.bandcamp.com/track/worlds-of-wisdom",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://psykovsky.bandcamp.com/track/pc-transmission#t1401461526",
+      "@id": "https://psykovsky.bandcamp.com/track/pc-transmission",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://psykovsky.bandcamp.com/track/rs-lightmusic#t3234798938",
+      "@id": "https://psykovsky.bandcamp.com/track/rs-lightmusic",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://psykovsky.bandcamp.com/track/ksolntsu#t1634779854",
+      "@id": "https://psykovsky.bandcamp.com/track/ksolntsu",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://psykovsky.bandcamp.com/track/dadme-albricios-hijos-deva#t1223215058",
+      "@id": "https://psykovsky.bandcamp.com/track/dadme-albricios-hijos-deva",
       "@type": "MusicRelease"
     }
   ],
@@ -179,7 +179,7 @@
         "value": 1920
       }
     ],
-    "description": "a maverick electronic music producer, since 2000 Psykovsky has worked with a number of different solo and collaborative projects, and is nowadays acknowledged as one of the most auspicious psytrance artists - check out Psykovsky's alternative digital audio-visual releases at https://foundation.app/vPsykovsky and https://www.youtube.com/channel/UCu1BnVhnFn0pcVZnkwmOAZQ",
+    "description": "a maverick electronic music producer, since 2000 Psykovsky has worked with a number of different solo and collaborative projects, and is nowadays acknowledged as one of the most auspicious psytrance artists - check out Psykovsky's alternative digital audio-visual releases at https://opensea.io/VasilyPsykovsky?tab=created and https://www.youtube.com/channel/UCu1BnVhnFn0pcVZnkwmOAZQ",
     "foundingLocation": {
       "@type": "Place",
       "name": "Niue"

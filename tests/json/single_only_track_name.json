@@ -33,7 +33,7 @@
     "@type": "MusicAlbum",
     "albumRelease": [
       {
-        "@id": "https://gutkeinforu.bandcamp.com/track/oenera#t793629957",
+        "@id": "https://gutkeinforu.bandcamp.com/track/oenera",
         "@type": [
           "MusicRelease",
           "Product"
@@ -74,11 +74,6 @@
         "offers": {
           "@type": "Offer",
           "additionalProperty": [
-            {
-              "@type": "PropertyValue",
-              "name": "download_pref",
-              "value": 2
-            },
             {
               "@type": "PropertyValue",
               "name": "max_price",
@@ -186,18 +181,6 @@
         ],
         "name": "merch",
         "url": "https://gutkeinforu.bandcamp.com/merch"
-      },
-      {
-        "@type": "WebPage",
-        "additionalProperty": [
-          {
-            "@type": "PropertyValue",
-            "name": "nav_type",
-            "value": "v"
-          }
-        ],
-        "name": "video",
-        "url": "https://gutkeinforu.bandcamp.com/video"
       }
     ]
   }

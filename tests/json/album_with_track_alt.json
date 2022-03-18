@@ -21,7 +21,7 @@
   ],
   "albumRelease": [
     {
-      "@id": "https://foldrecords.bandcamp.com/album/fld001-gareth-wild-common-assault-ep#a3710011613",
+      "@id": "https://foldrecords.bandcamp.com/album/fld001-gareth-wild-common-assault-ep",
       "@type": [
         "MusicRelease",
         "Product"
@@ -127,22 +127,7 @@
         "additionalProperty": [
           {
             "@type": "PropertyValue",
-            "name": "download_type",
-            "value": "a"
-          },
-          {
-            "@type": "PropertyValue",
             "name": "includes_digital_download",
-            "value": true
-          },
-          {
-            "@type": "PropertyValue",
-            "name": "quantity_available",
-            "value": 0
-          },
-          {
-            "@type": "PropertyValue",
-            "name": "quantity_warning",
             "value": true
           }
         ],
@@ -156,27 +141,27 @@
       }
     },
     {
-      "@id": "https://foldrecords.bandcamp.com/track/a1-gareth-wild-live-wire#t2847020791",
+      "@id": "https://foldrecords.bandcamp.com/track/a1-gareth-wild-live-wire",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://foldrecords.bandcamp.com/track/a2-gareth-wild-live-wire-roll-dann-remix#t1382985841",
+      "@id": "https://foldrecords.bandcamp.com/track/a2-gareth-wild-live-wire-roll-dann-remix",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://foldrecords.bandcamp.com/track/a3-gareth-wild-dds-locked-groove#t2410206971",
+      "@id": "https://foldrecords.bandcamp.com/track/a3-gareth-wild-dds-locked-groove",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://foldrecords.bandcamp.com/track/aa1-gareth-wild-common-assault#t2674898874",
+      "@id": "https://foldrecords.bandcamp.com/track/aa1-gareth-wild-common-assault",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://foldrecords.bandcamp.com/track/aa2-gareth-wild-saturn-storm#t276309811",
+      "@id": "https://foldrecords.bandcamp.com/track/aa2-gareth-wild-saturn-storm",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://foldrecords.bandcamp.com/track/aa3-gareth-wild-quadrant-locked-groove#t1813148828",
+      "@id": "https://foldrecords.bandcamp.com/track/aa3-gareth-wild-quadrant-locked-groove",
       "@type": "MusicRelease"
     }
   ],

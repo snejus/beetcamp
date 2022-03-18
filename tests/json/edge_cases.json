@@ -21,7 +21,7 @@
   ],
   "albumRelease": [
     {
-      "@id": "https://newyorkhaunted.bandcamp.com/album/nyh244-less-weird-parallel-universe-nearly-20-years-of-erikoisdance#a555321025",
+      "@id": "https://newyorkhaunted.bandcamp.com/album/nyh244-less-weird-parallel-universe-nearly-20-years-of-erikoisdance",
       "@type": [
         "MusicRelease",
         "Product"
@@ -61,7 +61,7 @@
       "name": "NYH244 Less Weird Parallel Universe  - Nearly 20 Years of Erikoisdance"
     },
     {
-      "@id": "https://newyorkhaunted.bandcamp.com/album/nyh244-less-weird-parallel-universe-nearly-20-years-of-erikoisdance#b45942147",
+      "@id": "https://newyorkhaunted.bandcamp.com/album/nyh244-less-weird-parallel-universe-nearly-20-years-of-erikoisdance#b46359169",
       "@type": [
         "MusicRelease",
         "Product"
@@ -70,7 +70,7 @@
         {
           "@type": "PropertyValue",
           "name": "item_id",
-          "value": 45942147
+          "value": 46359169
         },
         {
           "@type": "PropertyValue",
@@ -90,7 +90,7 @@
         {
           "@type": "PropertyValue",
           "name": "art_id",
-          "value": 3726609798
+          "value": 3520791647
         },
         {
           "@type": "PropertyValue",
@@ -99,17 +99,17 @@
         }
       ],
       "image": [
-        "https://f4.bcbits.com/img/a3726609798_10.jpg"
+        "https://f4.bcbits.com/img/a3520791647_10.jpg"
       ],
       "musicReleaseFormat": "DigitalFormat",
-      "name": "full digital discography (307 releases)",
+      "name": "full digital discography (309 releases)",
       "offers": {
         "@type": "Offer",
         "additionalProperty": [
           {
             "@type": "PropertyValue",
             "name": "bundle_size",
-            "value": 307
+            "value": 309
           },
           {
             "@type": "PropertyValue",
@@ -123,84 +123,84 @@
           }
         ],
         "availability": "OnlineOnly",
-        "price": 123,
+        "price": 123.8,
         "priceCurrency": "EUR",
         "priceSpecification": {
-          "minPrice": 123
+          "minPrice": 123.8
         },
-        "url": "https://newyorkhaunted.bandcamp.com/album/nyh244-less-weird-parallel-universe-nearly-20-years-of-erikoisdance#b45942147-buy"
+        "url": "https://newyorkhaunted.bandcamp.com/album/nyh244-less-weird-parallel-universe-nearly-20-years-of-erikoisdance#b46359169-buy"
       }
     },
     {
-      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-01-mallisto-track-3#t1765925550",
+      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-01-mallisto-track-3",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-02-twisted-krister-music-for-dealers#t1998398008",
+      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-02-twisted-krister-music-for-dealers",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-03-erikoismies#t1251598717",
+      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-03-erikoismies",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-04-chris-angel-mind-freak#t4010114980",
+      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-04-chris-angel-mind-freak",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-05-mr-yakamoto-new-age-home-recording#t210486065",
+      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-05-mr-yakamoto-new-age-home-recording",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-06-non-baryonic-form-puujumala#t3216207004",
+      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-06-non-baryonic-form-puujumala",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-07-omni-gideon-flogiston-odj-harri-keys-of-life-house-music-edit#t1137318928",
+      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-07-omni-gideon-flogiston-odj-harri-keys-of-life-house-music-edit",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-08-poly-t-schweinfurt-green#t2953877677",
+      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-08-poly-t-schweinfurt-green",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-mallisto-laulu-numero-1#t1089671829",
+      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-mallisto-laulu-numero-1",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-10-non-baryonic-form-nitrogen-glaciers#t2239748918",
+      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-10-non-baryonic-form-nitrogen-glaciers",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-11-erikoismies-cdr-track-vi#t2465973750",
+      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-11-erikoismies-cdr-track-vi",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-12-die-todesmachine-mosktraumen#t2408056440",
+      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-12-die-todesmachine-mosktraumen",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-13-sauce-cop-mn-50#t139973535",
+      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-13-sauce-cop-mn-50",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-14-treepio-tsimplno#t820494330",
+      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-14-treepio-tsimplno",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-15-erikoismies-cdr-track-i#t2607172093",
+      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-15-erikoismies-cdr-track-i",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-16-non-baryonic-form-cb-skull#t799719279",
+      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-16-non-baryonic-form-cb-skull",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-17-omni-gideon-ytterbium-13#t1776876399",
+      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-17-omni-gideon-ytterbium-13",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-18-sauce-cop-quartz-crisis#t2765402059",
+      "@id": "https://newyorkhaunted.bandcamp.com/track/nyh244-18-sauce-cop-quartz-crisis",
       "@type": "MusicRelease"
     }
   ],

@@ -21,7 +21,7 @@
   ],
   "albumRelease": [
     {
-      "@id": "https://ute-rec.bandcamp.com/album/ute004#a2990976741",
+      "@id": "https://ute-rec.bandcamp.com/album/ute004",
       "@type": [
         "MusicRelease",
         "Product"
@@ -117,22 +117,7 @@
         "additionalProperty": [
           {
             "@type": "PropertyValue",
-            "name": "download_type",
-            "value": "a"
-          },
-          {
-            "@type": "PropertyValue",
             "name": "includes_digital_download",
-            "value": true
-          },
-          {
-            "@type": "PropertyValue",
-            "name": "quantity_available",
-            "value": 0
-          },
-          {
-            "@type": "PropertyValue",
-            "name": "quantity_warning",
             "value": true
           }
         ],
@@ -146,19 +131,19 @@
       }
     },
     {
-      "@id": "https://ute-rec.bandcamp.com/track/the-human-experience-empathy-mix#t2780084730",
+      "@id": "https://ute-rec.bandcamp.com/track/the-human-experience-empathy-mix",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://ute-rec.bandcamp.com/track/parallell#t4132926702",
+      "@id": "https://ute-rec.bandcamp.com/track/parallell",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://ute-rec.bandcamp.com/track/formulae#t2058726302",
+      "@id": "https://ute-rec.bandcamp.com/track/formulae",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://ute-rec.bandcamp.com/track/biotope#t3564730108",
+      "@id": "https://ute-rec.bandcamp.com/track/biotope",
       "@type": "MusicRelease"
     }
   ],

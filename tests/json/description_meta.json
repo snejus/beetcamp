@@ -21,7 +21,7 @@
   ],
   "albumRelease": [
     {
-      "@id": "https://diffusereality.bandcamp.com/album/francois-dillinger-icosahedrone-lp#a3569815948",
+      "@id": "https://diffusereality.bandcamp.com/album/francois-dillinger-icosahedrone-lp",
       "@type": [
         "MusicRelease",
         "Product"
@@ -109,18 +109,6 @@
       "name": "Francois Dillinger - Icosahedrone [LP]",
       "offers": {
         "@type": "Offer",
-        "additionalProperty": [
-          {
-            "@type": "PropertyValue",
-            "name": "quantity_available",
-            "value": 6
-          },
-          {
-            "@type": "PropertyValue",
-            "name": "quantity_warning",
-            "value": true
-          }
-        ],
         "availability": "InStock",
         "price": 8.99,
         "priceCurrency": "EUR",
@@ -131,7 +119,7 @@
       }
     },
     {
-      "@id": "https://diffusereality.bandcamp.com/album/francois-dillinger-icosahedrone-lp#b45938096",
+      "@id": "https://diffusereality.bandcamp.com/album/francois-dillinger-icosahedrone-lp#b46361516",
       "@type": [
         "MusicRelease",
         "Product"
@@ -140,7 +128,7 @@
         {
           "@type": "PropertyValue",
           "name": "item_id",
-          "value": 45938096
+          "value": 46361516
         },
         {
           "@type": "PropertyValue",
@@ -160,7 +148,7 @@
         {
           "@type": "PropertyValue",
           "name": "art_id",
-          "value": 918085929
+          "value": 2039258457
         },
         {
           "@type": "PropertyValue",
@@ -169,17 +157,17 @@
         }
       ],
       "image": [
-        "https://f4.bcbits.com/img/a0918085929_10.jpg"
+        "https://f4.bcbits.com/img/a2039258457_10.jpg"
       ],
       "musicReleaseFormat": "DigitalFormat",
-      "name": "full digital discography (487 releases)",
+      "name": "full digital discography (503 releases)",
       "offers": {
         "@type": "Offer",
         "additionalProperty": [
           {
             "@type": "PropertyValue",
             "name": "bundle_size",
-            "value": 487
+            "value": 503
           },
           {
             "@type": "PropertyValue",
@@ -193,52 +181,52 @@
           }
         ],
         "availability": "OnlineOnly",
-        "price": 775.57,
+        "price": 800.79,
         "priceCurrency": "EUR",
         "priceSpecification": {
-          "minPrice": 775.57
+          "minPrice": 800.79
         },
-        "url": "https://diffusereality.bandcamp.com/album/francois-dillinger-icosahedrone-lp#b45938096-buy"
+        "url": "https://diffusereality.bandcamp.com/album/francois-dillinger-icosahedrone-lp#b46361516-buy"
       }
     },
     {
-      "@id": "https://diffusereality.bandcamp.com/track/count-to-infinity#t3885956131",
+      "@id": "https://diffusereality.bandcamp.com/track/count-to-infinity",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://diffusereality.bandcamp.com/track/navigating-the-swamp-2#t2952764834",
+      "@id": "https://diffusereality.bandcamp.com/track/navigating-the-swamp-2",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://diffusereality.bandcamp.com/track/sit-and-wait-2#t4283494502",
+      "@id": "https://diffusereality.bandcamp.com/track/sit-and-wait-2",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://diffusereality.bandcamp.com/track/the-cup-runneth-over#t4099471097",
+      "@id": "https://diffusereality.bandcamp.com/track/the-cup-runneth-over",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://diffusereality.bandcamp.com/track/clockroaches#t3534669991",
+      "@id": "https://diffusereality.bandcamp.com/track/clockroaches",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://diffusereality.bandcamp.com/track/ego-purge#t3254609518",
+      "@id": "https://diffusereality.bandcamp.com/track/ego-purge",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://diffusereality.bandcamp.com/track/giving-in#t643361449",
+      "@id": "https://diffusereality.bandcamp.com/track/giving-in",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://diffusereality.bandcamp.com/track/ending-endlessly#t938275914",
+      "@id": "https://diffusereality.bandcamp.com/track/ending-endlessly",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://diffusereality.bandcamp.com/track/sing-the-pain-away#t1106482452",
+      "@id": "https://diffusereality.bandcamp.com/track/sing-the-pain-away",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://diffusereality.bandcamp.com/track/dream-thief#t1336260361",
+      "@id": "https://diffusereality.bandcamp.com/track/dream-thief",
       "@type": "MusicRelease"
     }
   ],

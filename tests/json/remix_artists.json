@@ -21,7 +21,7 @@
   ],
   "albumRelease": [
     {
-      "@id": "https://maisoncloserecords.bandcamp.com/album/unrealnumbers-unseen-ep-varya-karpova-lacchesi-remixes#a832154543",
+      "@id": "https://maisoncloserecords.bandcamp.com/album/unrealnumbers-unseen-ep-varya-karpova-lacchesi-remixes",
       "@type": [
         "MusicRelease",
         "Product"
@@ -132,27 +132,27 @@
       }
     },
     {
-      "@id": "https://maisoncloserecords.bandcamp.com/track/unrealnumbers-unseen#t3030790431",
+      "@id": "https://maisoncloserecords.bandcamp.com/track/unrealnumbers-unseen",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://maisoncloserecords.bandcamp.com/track/unrealnumbers-mk4#t987420966",
+      "@id": "https://maisoncloserecords.bandcamp.com/track/unrealnumbers-mk4",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://maisoncloserecords.bandcamp.com/track/unrealnumbers-karaburan#t3850977436",
+      "@id": "https://maisoncloserecords.bandcamp.com/track/unrealnumbers-karaburan",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://maisoncloserecords.bandcamp.com/track/unrealnumbers-rekon#t628289803",
+      "@id": "https://maisoncloserecords.bandcamp.com/track/unrealnumbers-rekon",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://maisoncloserecords.bandcamp.com/track/unrealnumbers-unseen-varya-karpova-remix#t3533046617",
+      "@id": "https://maisoncloserecords.bandcamp.com/track/unrealnumbers-unseen-varya-karpova-remix",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://maisoncloserecords.bandcamp.com/track/unrealnumbers-mk4-lacchesi-remix#t359910911",
+      "@id": "https://maisoncloserecords.bandcamp.com/track/unrealnumbers-mk4-lacchesi-remix",
       "@type": "MusicRelease"
     }
   ],

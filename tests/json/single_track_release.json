@@ -33,7 +33,7 @@
     "@type": "MusicAlbum",
     "albumRelease": [
       {
-        "@id": "https://mega-tech.bandcamp.com/track/arangel#t2868806546",
+        "@id": "https://mega-tech.bandcamp.com/track/arangel",
         "@type": [
           "MusicRelease",
           "Product"
@@ -74,11 +74,6 @@
         "offers": {
           "@type": "Offer",
           "additionalProperty": [
-            {
-              "@type": "PropertyValue",
-              "name": "download_pref",
-              "value": 2
-            },
             {
               "@type": "PropertyValue",
               "name": "max_price",

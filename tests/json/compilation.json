@@ -21,7 +21,7 @@
   ],
   "albumRelease": [
     {
-      "@id": "https://ismusberlin.bandcamp.com/album/ismva0033#a1149529108",
+      "@id": "https://ismusberlin.bandcamp.com/album/ismva0033",
       "@type": [
         "MusicRelease",
         "Product"
@@ -61,7 +61,7 @@
       "name": "ISMVA003.3"
     },
     {
-      "@id": "https://ismusberlin.bandcamp.com/album/ismva0033#b45760447",
+      "@id": "https://ismusberlin.bandcamp.com/album/ismva0033#b45988727",
       "@type": [
         "MusicRelease",
         "Product"
@@ -70,7 +70,7 @@
         {
           "@type": "PropertyValue",
           "name": "item_id",
-          "value": 45760447
+          "value": 45988727
         },
         {
           "@type": "PropertyValue",
@@ -90,7 +90,7 @@
         {
           "@type": "PropertyValue",
           "name": "art_id",
-          "value": 2588751690
+          "value": 1846697007
         },
         {
           "@type": "PropertyValue",
@@ -99,17 +99,17 @@
         }
       ],
       "image": [
-        "https://f4.bcbits.com/img/a2588751690_10.jpg"
+        "https://f4.bcbits.com/img/a1846697007_10.jpg"
       ],
       "musicReleaseFormat": "DigitalFormat",
-      "name": "full digital discography (18 releases)",
+      "name": "full digital discography (19 releases)",
       "offers": {
         "@type": "Offer",
         "additionalProperty": [
           {
             "@type": "PropertyValue",
             "name": "bundle_size",
-            "value": 18
+            "value": 19
           },
           {
             "@type": "PropertyValue",
@@ -128,59 +128,59 @@
         "priceSpecification": {
           "minPrice": 29.25
         },
-        "url": "https://ismusberlin.bandcamp.com/album/ismva0033#b45760447-buy"
+        "url": "https://ismusberlin.bandcamp.com/album/ismva0033#b45988727-buy"
       }
     },
     {
-      "@id": "https://ismusberlin.bandcamp.com/track/zebar-zimo-wish-granter-original-mix#t2573934244",
+      "@id": "https://ismusberlin.bandcamp.com/track/zebar-zimo-wish-granter-original-mix",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://ismusberlin.bandcamp.com/track/alpha-tracks-valimba-original-mix#t2486903435",
+      "@id": "https://ismusberlin.bandcamp.com/track/alpha-tracks-valimba-original-mix",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://ismusberlin.bandcamp.com/track/less-distress-wheres-my-arc-paulie-original-mix#t283685132",
+      "@id": "https://ismusberlin.bandcamp.com/track/less-distress-wheres-my-arc-paulie-original-mix",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://ismusberlin.bandcamp.com/track/lucas-martins-south-original-mix#t2033411417",
+      "@id": "https://ismusberlin.bandcamp.com/track/lucas-martins-south-original-mix",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://ismusberlin.bandcamp.com/track/pro-athlete-floorcrusher-original-mix#t2012833122",
+      "@id": "https://ismusberlin.bandcamp.com/track/pro-athlete-floorcrusher-original-mix",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://ismusberlin.bandcamp.com/track/zwyrg-point-of-no-return-original-mix#t650634565",
+      "@id": "https://ismusberlin.bandcamp.com/track/zwyrg-point-of-no-return-original-mix",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://ismusberlin.bandcamp.com/track/ndym-succession-original-mix#t1306777172",
+      "@id": "https://ismusberlin.bandcamp.com/track/ndym-succession-original-mix",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://ismusberlin.bandcamp.com/track/kl-ne-woke-up-in-a-broken-world-original-mix#t571350648",
+      "@id": "https://ismusberlin.bandcamp.com/track/kl-ne-woke-up-in-a-broken-world-original-mix",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://ismusberlin.bandcamp.com/track/i-e-diva-plavalaguna-original-mix#t3160434405",
+      "@id": "https://ismusberlin.bandcamp.com/track/i-e-diva-plavalaguna-original-mix",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://ismusberlin.bandcamp.com/track/dj-g2g-darkbreak-escape-original-mix#t2384179591",
+      "@id": "https://ismusberlin.bandcamp.com/track/dj-g2g-darkbreak-escape-original-mix",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://ismusberlin.bandcamp.com/track/mr-free-the-4th-room-original-mix#t3204960381",
+      "@id": "https://ismusberlin.bandcamp.com/track/mr-free-the-4th-room-original-mix",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://ismusberlin.bandcamp.com/track/abem-black-powder-original-mix#t2339272420",
+      "@id": "https://ismusberlin.bandcamp.com/track/abem-black-powder-original-mix",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://ismusberlin.bandcamp.com/track/dj-reiz-plan-9-from-outer-space-original-mix#t359530111",
+      "@id": "https://ismusberlin.bandcamp.com/track/dj-reiz-plan-9-from-outer-space-original-mix",
       "@type": "MusicRelease"
     }
   ],
