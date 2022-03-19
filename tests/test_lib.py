@@ -7,23 +7,34 @@ from html import unescape
 from itertools import groupby
 
 import pytest
+from beetsplug.bandcamp import BandcampPlugin
+from beetsplug.bandcamp._metaguru import Metaguru
 from rich.columns import Columns
 from rich.traceback import install
 from rich_tables.utils import border_panel, make_console, make_difftext, new_table, wrap
 
-from beetsplug.bandcamp import BandcampPlugin
-from beetsplug.bandcamp._metaguru import Metaguru
-
 pytestmark = pytest.mark.lib
 
-target_dir = "dev"
-compare_against = "a045eaa"
+IGNORE_FIELDS = {
+    "bandcamp_artist_id",
+    "bandcamp_album_id",
+    "art_url_id",
+    "art_url",
+    "tracks",
+    "comments",
+    "length",
+    "price",
+}
+
+base_dir = "lib_tests"
+target_dir = os.path.join(base_dir, "dev")
+compare_against = os.path.join(base_dir, "6797670")
 if not os.path.exists(target_dir):
     os.makedirs(target_dir)
 install(show_locals=True, extra_lines=8, width=int(os.environ.get("COLUMNS", 150)))
 console = make_console(stderr=True)
 
-testfiles = list(filter(lambda x: x.endswith("json"), os.listdir("jsons")))
+testfiles = sorted(filter(lambda x: x.endswith("json"), os.listdir("jsons")))
 
 
 @pytest.fixture(params=testfiles)
@@ -106,27 +117,31 @@ def do_key(table, key: str, before, after) -> None:
             table.add_row(wrap(key, "b"), difftext)
 
 
-def compare(old, new) -> bool:
+def compare(old, new) -> None:
+    every_new = [new]
+    every_old = [old]
     if "album" in new:
         for entity in old, new:
             entity["albumartist"] = entity.pop("artist", "")
 
-    every_new = [new, *(new.get("tracks") or [])]
-    every_old = [old, *(old.get("tracks") or [])]
-    album_name = new.get("album")
-    album_id = wrap(new.get("album_id"), "dim")
-    keys_excl = {"bandcamp_artist_id", "bandcamp_album_id", "art_url_id", "art_url"}
-    keys_excl.update(("tracks", "comments", "length"))
+        every_new.extend(new.get("tracks"))
+        every_old.extend(old.get("tracks"))
+        desc = new.get("album")
+        _id = new.get("album_id")
+    else:
+        desc = " - ".join([new.get("artist") or "", new.get("title") or ""])
+        _id = new.get("track_id")
+
     table = new_table()
     for new, old in zip(every_new, every_old):
-        title = " - ".join([new.get("artist") or "", new.get("title") or ""])
-        title = wrap(album_name or title, "b")
-        for key in sorted(set(new.keys()).union(set(old.keys())) - keys_excl):
+        for key in sorted(set(new.keys()).union(set(old.keys())) - IGNORE_FIELDS):
             do_key(table, key, str(old.get(key, "")), str(new.get(key, "")))
 
     if table.rows:
         console.print("")
-        console.print(border_panel(table, title=title, subtitle=album_id))
+        console.print(
+            border_panel(table, title=wrap(desc, "b"), subtitle=wrap(_id, "dim"))
+        )
         pytest.fail(pytrace=False)
 
 
@@ -134,23 +149,21 @@ def compare(old, new) -> bool:
 def test_file(file, config):
     meta_file = os.path.join("jsons", file)
     tracks_file = os.path.join("jsons", file.replace(".json", ".tracks"))
+    compare_file = os.path.join(compare_against, file)
+
     meta = open(meta_file).read() + (
         ("\n" + unescape(unescape(open(tracks_file).read())))
         if os.path.exists(tracks_file)
         else ""
     )
     guru = Metaguru.from_html(meta, config)
-
-    if "_track_" in file:
-        new = guru.singleton
-    else:
-        new = guru.album
+    new = guru.singleton if "_track_" in file else guru.album
 
     target = os.path.join(target_dir, file)
-    json.dump(new, open(target, "w"), indent=2)
+    json.dumps(new, open(target, "w"), indent=2)
 
     try:
-        old = json.load(open(os.path.join(compare_against, file)))
+        old = json.load(open(compare_file))
     except FileNotFoundError:
         old = {}
     compare(old, new)

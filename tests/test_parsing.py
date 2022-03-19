@@ -133,6 +133,7 @@ def test_convert_title(title, expected):
         ("Artist + Other - Title", ("", "Artist + Other", "Title", "Title")),
         ("Artist (feat. Other) - Title", ("", "Artist feat. Other", "Title", "Title")),
         ("Artist (some remix) - Title", ("", "Artist", "Title", "Title")),
+        ("Artist - Title feat.Other", ("", "Artist feat.Other", "Title", "Title")),
     ],
 )
 def test_parse_track_name(name, expected, beets_config):
