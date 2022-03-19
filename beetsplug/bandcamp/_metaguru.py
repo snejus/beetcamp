@@ -610,7 +610,7 @@ class Metaguru(Helpers):
                 match = re.match(r"([A-B]{,2})\W+", t["artist"])
                 if match:
                     t["track_alt"] = match.expand(r"\1")
-                    t["artist"] = t["artist"].replace(match.group(), "", count=1)
+                    t["artist"] = t["artist"].replace(match.group(), "", 1)
 
             if len(tracks) > 1 and not t["artist"]:
                 if t["track_alt"] and len(track_alts) == 1:
@@ -619,8 +619,6 @@ class Metaguru(Helpers):
                 else:
                     # use the albumartist
                     t["artist"] = aartist
-            if not t["track_alt"]:
-                t["track_alt"] = None
 
         return tracks
 

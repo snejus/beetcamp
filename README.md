@@ -143,6 +143,7 @@ bandcamp:
     - lyrics
     - comments
 ```
+
 and the plugin will skip them.
 
 You cannot exclude `album`, `album_id`, `artist_id`, `media` and `data_url` album fields.
@@ -175,13 +176,15 @@ genre and what is not. See below (we use the list of [musicbrainz genres] for re
 **genre.always_include**: genre patterns that override the mode and always match
 successfully. For example, if you want to bypass checks for every keyword that ends with
 `core`, you could specify
+
 ```yaml
-  genre:
-    always_include:
-      - "core$"
+genre:
+  always_include:
+    - "core$"
 ```
 
 ##### `genre` modes
+
 We can place all keywords into the following buckets:
 
 | type  |                                      |                                                                      |
