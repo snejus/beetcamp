@@ -108,7 +108,7 @@ PATTERNS: Dict[str, Pattern] = {
         ),
     ],
     "remix_or_ft": re.compile(r" [\[(].*(?i:mix|edit|f(ea)?t([.]|uring)?).*"),
-    "ft": re.compile(r" *[( ](f(ea)?t([.]|uring)? [^()]+)[)]?", re.I),
+    "ft": re.compile(r" *[( ](f(ea)?t([ .]|uring)?[^()]+)[)]?", re.I),
     "track_alt": re.compile(r"([ABCDEFGH]{1,3}[0-6])\W+", re.I),
     "vinyl_name": re.compile(r"[1-5](?= ?(xLP|LP|x))|single|double|triple", re.I),
 }
@@ -182,20 +182,24 @@ class Helpers:
             title, track_alt = get_trackalt(title)
         match = re.search(r"\( *([^)(]+?)(?i:(re)?mix|edit)", title, re.I)
         remixer = match.expand(r"\1") if match else ""
+        unique: Set[str] = set(parts)
 
-        artist = ", ".join(set(parts))
+        artist = ", ".join(unique)
         artists = set(Helpers.split_artists(parts))
         for artist in filter(lambda x: x in remixer, artists.copy()):
             artists.discard(artist)
             artist = ", ".join(artists)
         artist = re.sub(r" \(.*mix.*", "", artist).strip(",")
-        match = re.match(r"(.+?) *[( ](f(?:ea)?t(?:[.]|uring)? [^()]+)[()]?( .+)?", title)
-        ft = ""
-        if match:
-            title = (match.expand(r"\1") or "") + (match.expand(r"\3") or "")
-            ft = match.expand(r"\2")
-        track["main_title"] = PATTERNS["remix_or_ft"].sub("", title)
-        track.update(title=title, artist=artist, track_alt=track_alt, ft=ft)
+        track.update(title=title, artist=artist, track_alt=track_alt)
+
+        pat = re.compile(r" *[( ]((?![^()]+?mix)f(ea)?t([. ]|uring)[^()]+)[)]? *", re.I)
+        for entity in "artist", "title":
+            match = pat.search(track[entity])
+            if match:
+                track[entity] = track[entity].replace(match.group(), " ").strip()
+                track["ft"] = match.expand(r"\1")
+
+        track["main_title"] = PATTERNS["remix_or_ft"].sub("", track["title"])
         return track
 
     @staticmethod
@@ -603,21 +607,20 @@ class Metaguru(Helpers):
                 and not t["digi_only"]
                 and len(track_alts) == len(tracks) - 1
             ):
-                match = re.match(r"^([A-G]{,2})\W+", t["artist"])
+                match = re.match(r"([A-B]{,2})\W+", t["artist"])
                 if match:
                     t["track_alt"] = match.expand(r"\1")
-                    t["artist"] = t["artist"].replace(match.group(), "")
-            if not t["artist"]:
+                    t["artist"] = t["artist"].replace(match.group(), "", count=1)
+
+            if len(tracks) > 1 and not t["artist"]:
                 if t["track_alt"] and len(track_alts) == 1:
                     # one of the artists ended up as a track alt, like 'B2'
-                    t.update(artist=t.get("track_alt"), track_alt=None)
+                    t.update(artist=t.get("track_alt"))
                 else:
                     # use the albumartist
                     t["artist"] = aartist
             if not t["track_alt"]:
                 t["track_alt"] = None
-            if t["ft"]:
-                t["artist"] += f" {t['ft']}"
 
         return tracks
 
@@ -825,7 +828,9 @@ class Metaguru(Helpers):
     def _trackinfo(self, track: JSONDict, **kwargs: Any) -> TrackInfo:
         track.pop("digi_only", None)
         track.pop("main_title", None)
-        track.pop("ft", None)
+        ft = track.pop("ft", None)
+        if ft:
+            track["artist"] += f" {ft}"
         if not NEW_BEETS:
             track.pop("lyrics", None)
 
@@ -840,12 +845,13 @@ class Metaguru(Helpers):
     @cached_property
     def singleton(self) -> TrackInfo:
         self._singleton = True
-        track: TrackInfo = self._trackinfo({**self.tracks[0], "index": None})
+        track = self.tracks[0]
+        if not track["artist"]:
+            track["artist"] = self.bandcamp_albumartist
+        track: TrackInfo = self._trackinfo({**track, "index": None})
         if NEW_BEETS:
             track.update(self._common_album)
             track.pop("album", None)
-        if not track.artist:
-            track.artist = self.bandcamp_albumartist
         track.track_id = track.data_url
         return track
 
@@ -874,7 +880,4 @@ class Metaguru(Helpers):
         )
         for key, val in self.get_fields(["va"]).items():
             setattr(album_info, key, val)
-        # if album_info.albumtype == "compilation":
-        #     album_info.albumtype = "album"
-        #     album_info.albumtypes = "album; compilation"
         return album_info
