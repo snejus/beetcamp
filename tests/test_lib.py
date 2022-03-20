@@ -28,7 +28,7 @@ IGNORE_FIELDS = {
 
 base_dir = "lib_tests"
 target_dir = os.path.join(base_dir, "dev")
-compare_against = os.path.join(base_dir, "6797670")
+compare_against = os.path.join(base_dir, "4f5d074")
 if not os.path.exists(target_dir):
     os.makedirs(target_dir)
 install(show_locals=True, extra_lines=8, width=int(os.environ.get("COLUMNS", 150)))
@@ -120,7 +120,7 @@ def do_key(table, key: str, before, after) -> None:
 def compare(old, new) -> None:
     every_new = [new]
     every_old = [old]
-    if "album" in new:
+    if "/album/" in new["data_url"]:
         for entity in old, new:
             entity["albumartist"] = entity.pop("artist", "")
 
@@ -160,7 +160,7 @@ def test_file(file, config):
     new = guru.singleton if "_track_" in file else guru.album
 
     target = os.path.join(target_dir, file)
-    json.dumps(new, open(target, "w"), indent=2)
+    json.dump(new, open(target, "w"), indent=2)
 
     try:
         old = json.load(open(compare_file))

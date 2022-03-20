@@ -41,14 +41,15 @@ def test_return_none_for_gibberish():
 
 
 def test_search():
-    query = "matriark"
+    query = "arangel"
     search_type = "track"
+    artist = "matriark"
     expect_to_find = "https://mega-tech.bandcamp.com/track/arangel"
 
     plugin = BandcampPlugin()
-    urls = list(plugin._search(query, search_type))
+    result = plugin._search(query, search_type, artist, search_max=1)[0]
 
-    assert expect_to_find in urls
+    assert result["url"] == expect_to_find
 
 
 def test_get_single_track_album(single_track_release):

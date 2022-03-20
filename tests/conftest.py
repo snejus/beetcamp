@@ -6,6 +6,7 @@ from typing import Optional, Tuple
 
 import pytest
 from beets.autotag.hooks import AlbumInfo, TrackInfo
+
 from beetsplug.bandcamp import DEFAULT_CONFIG
 from beetsplug.bandcamp._metaguru import DATA_SOURCE, DIGI_MEDIA, NEW_BEETS
 
@@ -793,8 +794,8 @@ def issues_18() -> ReleaseInfo:
         ("54-regi-2", albumartist, "54 regi", 227, None),
         (
             "mile-high-monsta-ft-nation",
-            albumartist,
-            "Mile high monsta ft.nation",
+            albumartist + " ft.nation",
+            "Mile high monsta",
             157,
             None,
         ),
@@ -802,16 +803,16 @@ def issues_18() -> ReleaseInfo:
         ("smoke-interlude", albumartist, "Smoke interlude", 69, None),
         (
             "ganja-tune-ft-spellbinder",
-            albumartist,
-            "Ganja tune ft.spellbinder",
+            albumartist + " ft.spellbinder",
+            "Ganja tune",
             235,
             None,
         ),
-        ("war-ft-spellbinder", albumartist, "War ft.spellbinder", 203, None),
+        ("war-ft-spellbinder", albumartist + " ft.spellbinder", "War", 203, None),
         (
             "w-m-m-a-where-my-money-ft-spellbinder",
-            albumartist,
-            "w.m.m.a(where my money @) ft.Spellbinder",
+            albumartist + " ft.Spellbinder",
+            "w.m.m.a(where my money @)",
             147,
             None,
         ),
@@ -819,12 +820,18 @@ def issues_18() -> ReleaseInfo:
         ("hustle-aint-no-game", albumartist, "Hustle Ain't no game", 197, None),
         (
             "its-ova-ft-scrilla-scratch",
-            albumartist,
-            "It's ova ft. scrilla scratch",
+            albumartist + " ft. scrilla scratch",
+            "It's ova",
             201,
             None,
         ),
-        ("dont-stop-ft-spellbinder", albumartist, "Don't stop ft.Spellbinder", 244, None),
+        (
+            "dont-stop-ft-spellbinder",
+            albumartist + " ft.Spellbinder",
+            "Don't stop",
+            244,
+            None,
+        ),
     ]
     info.set_albuminfo(
         tracks,

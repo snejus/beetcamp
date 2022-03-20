@@ -52,7 +52,7 @@ Navigate to your `beets` virtual environment and install the plug-in with
 bandcamp:
   preferred_media: Vinyl,CD,Cassette
   include_digital_only_tracks: true
-  search_max: 5
+  search_max: 2
   art: yes
   comments_separator: "\n---\n"
   exclude_extra_fields: []

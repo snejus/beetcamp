@@ -615,7 +615,7 @@ class Metaguru(Helpers):
             if len(tracks) > 1 and not t["artist"]:
                 if t["track_alt"] and len(track_alts) == 1:
                     # one of the artists ended up as a track alt, like 'B2'
-                    t.update(artist=t.get("track_alt"))
+                    t.update(artist=t.get("track_alt"), track_alt=None)
                 else:
                     # use the albumartist
                     t["artist"] = aartist
@@ -831,6 +831,7 @@ class Metaguru(Helpers):
             track["artist"] += f" {ft}"
         if not NEW_BEETS:
             track.pop("lyrics", None)
+        track["track_alt"] = track["track_alt"] or None
 
         data = dict(**track, **self._common, **kwargs)
         if "index" in data:
@@ -846,7 +847,7 @@ class Metaguru(Helpers):
         track = self.tracks[0]
         if not track["artist"]:
             track["artist"] = self.bandcamp_albumartist
-        track: TrackInfo = self._trackinfo({**track, "index": None})
+        track = self._trackinfo({**track, "index": None})
         if NEW_BEETS:
             track.update(self._common_album)
             track.pop("album", None)
