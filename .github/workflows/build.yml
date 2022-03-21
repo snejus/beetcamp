@@ -32,6 +32,10 @@ jobs:
       - name: Pytest
         run: |
           pytest -k 'not need_connection'
+      - uses: actions/upload-artifact@master
+        with:
+          name: coverage
+          path: .reports/coverage.xml
 
   lint-report:
     if: ${{ always() }}
@@ -42,6 +46,10 @@ jobs:
         with:
           # Disabling shallow clone is recommended for improving relevancy of reporting
           fetch-depth: 0
+      - uses: actions/download-artifact@master
+        with:
+          name: coverage
+          path: .reports/coverage.xml
       - name: Set up Python ${{ matrix.python }}
         uses: actions/setup-python@v3
         with:
