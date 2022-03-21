@@ -28,7 +28,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip setuptools wheel
-          pip install . coverage pytest pytest-cov pytest-randomly pytest-lazy-fixture
+          pip install . coverage pytest pytest-cov pytest-randomly pytest-lazy-fixture pytest-clarity
           pip install beets==${{ matrix.beets }}
       - name: Pytest
         run: |
