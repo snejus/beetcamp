@@ -10,5 +10,6 @@ sed -nr '
     x
     s/ \n/==/
     s/\n//g
+    /dataclasses/s/.*/&; python_version < "3.7"/
     /./p
   }' poetry.lock >requirements.txt
