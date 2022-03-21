@@ -13,10 +13,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # python: [3.6, 3.7, 3.8, 3.9, "3.10"]
-        # beets: [1.4.9, 1.5.0, 1.6.0]
-        python: [3.6]
-        beets: [1.6.0]
+        python: ["3.6", "3.7", "3.8", "3.9", "3.10"]
+        beets: ["1.4.9", "1.5.0", "1.6.0"]
     steps:
       - uses: actions/checkout@v3
         with:
@@ -38,12 +36,13 @@ jobs:
       - name: Pytest
         run: |
           pytest -k 'not need_connection'
-      # - name: Coveralls
-      #   run: |
-      #     pip install coveralls
-      #     coveralls
-      #   env:
-      #     COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+      - name: Coveralls
+        if: ${{ matrix.python }} == "3.10" && ${{ matrix.beets }} == "1.6.0"
+        run: |
+          pip install coveralls
+          coveralls
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
       # - name: Flake8
       #   run: poetry run flake8 . --output-file flake.log  --exit-zero
       # - name: Pylint
