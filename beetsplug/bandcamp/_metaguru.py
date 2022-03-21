@@ -25,7 +25,7 @@ from unicodedata import normalize
 from beets import config as beets_config
 from beets.autotag.hooks import AlbumInfo, TrackInfo
 from cached_property import cached_property
-from ordered_set import OrderedSet as set
+from ordered_set import OrderedSet as ordset
 from pkg_resources import get_distribution, parse_version
 from pycountry import countries, subdivisions
 
@@ -97,7 +97,7 @@ rm_strings = [
     r"free download|free dl|free\)",
 ]
 PATTERNS: Dict[str, Pattern] = {
-    "split_artists": re.compile(r", | (?:[x+/-]|vs|f(?:ea)?t)[.]? "),
+    "split_artists": re.compile(r", | (?:[x+/-]|vs)[.]? "),
     "clean_title": re.compile(fr"(?i:[\[(]?\b({'|'.join(rm_strings)})(\b\W*|$))"),
     "clean_incl": re.compile(r"(\(?incl|\((inc|tracks|.*remix( |es)))([^)]+\)|.*)", re.I),
     "meta": re.compile(r'.*"@id".*', re.M),
@@ -108,7 +108,7 @@ PATTERNS: Dict[str, Pattern] = {
         ),
     ],
     "remix_or_ft": re.compile(r" [\[(].*(?i:mix|edit|f(ea)?t([.]|uring)?).*"),
-    "ft": re.compile(r" *[( ](f(ea)?t([ .]|uring)?[^()]+)[)]?", re.I),
+    "ft": re.compile(r" *[( ]((?![^()]+?mix)f(ea)?t([. ]|uring)[^()]+)[)]? *", re.I),
     "track_alt": re.compile(r"([ABCDEFGH]{1,3}[0-6])\W+", re.I),
     "vinyl_name": re.compile(r"[1-5](?= ?(xLP|LP|x))|single|double|triple", re.I),
 }
@@ -140,8 +140,8 @@ class Helpers:
     @staticmethod
     def split_artists(artists: Iterable[str]) -> List[str]:
         artists = list(map(lambda x: PATTERNS["ft"].sub("", x), artists))
-        split = map(lambda x: PATTERNS["split_artists"].split(x), set(artists))
-        split_artists = set(map(str.strip, it.chain(*split))) - {""}
+        split = map(lambda x: PATTERNS["split_artists"].split(x), ordset(artists))
+        split_artists = ordset(map(str.strip, it.chain(*split))) - {""}
         split_artists_list = list(split_artists)
 
         for artist in split_artists_list:
@@ -159,48 +159,91 @@ class Helpers:
         return list(split_artists)
 
     @staticmethod
+    def get_trackalt(name: str) -> Tuple[str, str]:
+        """Match track alt and remove it from the name, if found."""
+        track_alt = ""
+        match = PATTERNS["track_alt"].match(name)
+        if match:
+            track_alt = match.expand(r"\1").upper()
+            name = name.replace(match.group(), "")
+        return name, track_alt
+
+    @staticmethod
     def parse_track_name(name: str, delim: str = "-") -> Dict[str, str]:
         track: Dict[str, str] = defaultdict(str)
 
-        # match track alt and remove it from the name
-        def get_trackalt(name: str) -> Tuple[str, str]:
-            track_alt = ""
-            match = PATTERNS["track_alt"].match(name)
-            if match:
-                track_alt = match.expand(r"\1").upper()
-                name = name.replace(match.group(), "")
-            return name, track_alt
-
-        name, track_alt = get_trackalt(name)
+        name, track_alt = Helpers.get_trackalt(name)
+        # firstly attempt to split using appropriate spacing
         parts = name.split(f" {delim} ")
         if len(parts) == 1:
+            # only if not split, then attempt at correcting it
+            # some titles contain such patterns like below, so we want to avoid
+            # splitting them if there's no reason to
             parts = re.split(fr" [{delim}]|[{delim}] ", name)
-        parts = list(map(lambda x: x.strip(" -"), parts))
+        parts = list(map(lambda x: x.strip(f" {delim}"), parts))
 
         title = parts.pop(-1)
         if not track_alt:
-            title, track_alt = get_trackalt(title)
-        match = re.search(r"\( *([^)(]+?)(?i:(re)?mix|edit)", title, re.I)
-        remixer = match.expand(r"\1") if match else ""
-        unique: Set[str] = set(parts)
+            # track alt may be found before the title, and not before the artist
+            title, track_alt = Helpers.get_trackalt(title)
 
-        artist = ", ".join(unique)
-        artists = set(Helpers.split_artists(parts))
+        # find the remixer
+        match = re.search(r"\( *[^)(]+?(?i:(re)?mix|edit)[)]", name, re.I)
+        remixer = match.group() if match else ""
+
+        # remove any duplicate artists keeping the order
+        artist = ", ".join(ordset(parts))
+        # remove remixer
+        artist = artist.replace(remixer, "").strip(",")
+        # split them taking into account other delimiters
+        artists = ordset(Helpers.split_artists(parts))
+
+        # remove remixer. We cannot use equality here since it is not reliable
+        # consider Hello, Bye = Nice day (Bye Lovely Day Mix). Bye != Bye Lovely Day,
+        # therefore we check whether Bye is contained in Bye Lovely Day instead
         for artist in filter(lambda x: x in remixer, artists.copy()):
             artists.discard(artist)
             artist = ", ".join(artists)
-        artist = re.sub(r" \(.*mix.*", "", artist).strip(",")
+
         track.update(title=title, artist=artist, track_alt=track_alt)
 
-        pat = re.compile(r" *[( ]((?![^()]+?mix)f(ea)?t([. ]|uring)[^()]+)[)]? *", re.I)
+        # find the featuring artist, remove it from artist/title and make it available
+        # in the `ft` field, later to be appended to the artist
         for entity in "artist", "title":
-            match = pat.search(track[entity])
+            match = PATTERNS["ft"].search(track[entity])
             if match:
                 track[entity] = track[entity].replace(match.group(), " ").strip()
                 track["ft"] = match.expand(r"\1")
 
         track["main_title"] = PATTERNS["remix_or_ft"].sub("", track["title"])
         return track
+
+    @staticmethod
+    def adjust_artists(tracks: List[JSONDict], aartist: str) -> List[JSONDict]:
+        track_alts = set(filter(op.truth, (t["track_alt"] for t in tracks)))
+        for t in tracks:
+            # a single track_alt is missing -> check for a single letter, like 'A',
+            # in the artist field
+            if (
+                len(tracks) > 1
+                and not t["track_alt"]
+                and not t["digi_only"]
+                and len(track_alts) == len(tracks) - 1
+            ):
+                match = re.match(r"([A-B]{,2})\W+", t["artist"])
+                if match:
+                    t["track_alt"] = match.expand(r"\1")
+                    t["artist"] = t["artist"].replace(match.group(), "", 1)
+
+            if len(tracks) > 1 and not t["artist"]:
+                if t["track_alt"] and len(track_alts) == 1:
+                    # one of the artists ended up as a track alt, like 'B2'
+                    t.update(artist=t.get("track_alt"), track_alt=None)
+                else:
+                    # use the albumartist
+                    t["artist"] = aartist
+
+        return tracks
 
     @staticmethod
     def parse_catalognum(album, disctitle, description, label, exclude):
@@ -461,7 +504,7 @@ class Metaguru(Helpers):
     def label(self) -> str:
         match = re.search(r"Label:([^/,\n]+)", self.all_media_comments)
         if match:
-            return match.groups()[0].strip(" '\"")
+            return match.expand(r"\1").strip(" '\"")
 
         try:
             return self.meta["albumRelease"][0]["recordLabel"]["name"]
@@ -595,32 +638,6 @@ class Metaguru(Helpers):
             return self.meta["track"]["itemListElement"]
         except KeyError:
             return [{"item": self.meta, "position": 1}]
-
-    def adjust_artists(self, tracks: List[JSONDict], aartist: str) -> List[JSONDict]:
-        track_alts = set(filter(op.truth, (t["track_alt"] for t in tracks)))
-        for t in tracks:
-            # a single track_alt is missing -> check for a single letter, like 'A',
-            # in the artist field
-            if (
-                len(tracks) > 1
-                and not t["track_alt"]
-                and not t["digi_only"]
-                and len(track_alts) == len(tracks) - 1
-            ):
-                match = re.match(r"([A-B]{,2})\W+", t["artist"])
-                if match:
-                    t["track_alt"] = match.expand(r"\1")
-                    t["artist"] = t["artist"].replace(match.group(), "", 1)
-
-            if len(tracks) > 1 and not t["artist"]:
-                if t["track_alt"] and len(track_alts) == 1:
-                    # one of the artists ended up as a track alt, like 'B2'
-                    t.update(artist=t.get("track_alt"), track_alt=None)
-                else:
-                    # use the albumartist
-                    t["artist"] = aartist
-
-        return tracks
 
     @cached_property
     def tracks(self) -> List[JSONDict]:
