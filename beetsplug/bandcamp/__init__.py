@@ -166,7 +166,7 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
                 return url
         return ""
 
-    def candidates(self, items, artist, album, *args, **kwargs):
+    def candidates(self, items, artist, album, *_, **__):
         # type: (List[library.Item], str, str, Any, Any) -> Iterable[AlbumInfo]
         """Return a sequence of AlbumInfo objects that match the
         album whose items are provided.

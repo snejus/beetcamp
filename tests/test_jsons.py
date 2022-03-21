@@ -1,10 +1,8 @@
 import re
-from operator import itemgetter
 
 import pytest
-from pytest_lazyfixture import lazy_fixture
-
 from beetsplug.bandcamp._metaguru import NEW_BEETS, Metaguru
+from pytest_lazyfixture import lazy_fixture
 
 pytestmark = pytest.mark.jsons
 
