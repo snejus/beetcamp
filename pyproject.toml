@@ -20,6 +20,7 @@ pycountry = ">=20.7.3"
 python-dateutil = ">=2.8.2"
 beets = "*"
 rich = "*"
+ordered-set = "^4.0"
 
 [tool.poetry.dev-dependencies]
 dataclasses = { version = "*", python = "<3.7" }
