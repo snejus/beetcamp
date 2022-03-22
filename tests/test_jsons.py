@@ -1,10 +1,8 @@
 import re
-from operator import itemgetter
 
 import pytest
-from pytest_lazyfixture import lazy_fixture
-
 from beetsplug.bandcamp._metaguru import NEW_BEETS, Metaguru
+from pytest_lazyfixture import lazy_fixture
 
 pytestmark = pytest.mark.jsons
 
@@ -32,9 +30,9 @@ def _release(request):
         tracklist = []
         for track in info.albuminfo.tracks:
             tracklist.append(
-                f"{track['index']}. "
-                + (f"{track['track_alt']}. " if track["track_alt"] else "")
-                + f"{track['artist']} - {track['title']}"
+                f"{track.index}. "
+                + (f"{track.track_alt}. " if track.track_alt else "")
+                + f"{track.artist} - {track.title}"
             )
         return "\n".join([*tracklist, json]), info
 
@@ -53,7 +51,6 @@ def check(actual, expected) -> None:
 )
 def test_parse_single_track_release(release, beets_config):
     html, expected = release
-    print(html)
     actual = Metaguru.from_html(html, beets_config).singleton
     if hasattr(actual, "comments"):
         actual.pop("comments")

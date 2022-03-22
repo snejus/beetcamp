@@ -19,14 +19,16 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import logging
 import re
+from difflib import SequenceMatcher
 from html import unescape
 from operator import truth
-from typing import Any, Dict, Iterator, List, Optional, Sequence, Set
+from typing import Any, Dict, Iterable, List, Optional, Sequence
 
 import requests
 import six
 from beets import __version__, library, plugins
 from beets.autotag.hooks import AlbumInfo, TrackInfo
+
 from beetsplug import fetchart  # type: ignore[attr-defined]
 
 from ._metaguru import DATA_SOURCE, DIGI_MEDIA, Metaguru, urlify
@@ -36,7 +38,7 @@ JSONDict = Dict[str, Any]
 DEFAULT_CONFIG: JSONDict = {
     "preferred_media": DIGI_MEDIA,
     "include_digital_only_tracks": True,
-    "search_max": 10,
+    "search_max": 2,
     "art": False,
     "exclude_extra_fields": [],
     "genre": {
@@ -48,12 +50,10 @@ DEFAULT_CONFIG: JSONDict = {
     "comments_separator": "\n---\n",
 }
 
-SEARCH_URL = "https://bandcamp.com/search?q={0}&page={1}"
-ALBUM_URL_IN_TRACK = re.compile(r'inAlbum":{[^}]*"@id":"([^"]*)"')
-SEARCH_ITEM_PAT = 'href="(https://[^/]*/{}/[^?]*)'
+SEARCH_URL = "https://bandcamp.com/search?q={}&item_type={}"
+ALBUM_URL_IN_TRACK = re.compile(r"inAlbum.+(https://[^/]+/album/[\w-]+)")
 USER_AGENT = f"beets/{__version__} +http://beets.radbox.org/"
 ALBUM_SEARCH = "album"
-ARTIST_SEARCH = "band"
 TRACK_SEARCH = "track"
 
 
@@ -84,7 +84,7 @@ class BandcampAlbumArt(BandcampRequestsHandler, fetchart.RemoteArtSource):
     NAME = "Bandcamp"
 
     def get(self, album, plugin, paths):
-        # type: (AlbumInfo, plugins.BeetsPlugin, List) -> Iterator[fetchart.Candidate]  # noqa
+        # type: (AlbumInfo, plugins.BeetsPlugin, List) -> Iterable[fetchart.Candidate]  # noqa
         """Return the url for the cover from the bandcamp album page.
         This only returns cover art urls for bandcamp albums (by id).
         """
@@ -153,45 +153,49 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
                     break
 
     def _cheat_mode(self, item: library.Item, name: str, _type: str) -> str:
-        reimport_url: str = getattr(item, f"mb_{_type}id", "")
-        if "bandcamp" in reimport_url:
-            return reimport_url
+        url: str = getattr(item, f"mb_{_type}id", "")
+        if "bandcamp" in url:
+            self._info("Fetching the URL attached to the first item, {}", url)
+            return url
 
         if item.comments.startswith("Visit"):
-            match = re.search(r"https:[/a-z.-]+com", item.comments)
+            match = re.search(r"https:[\w/.-]+com", item.comments)
             if match:
                 url = f"{match.group()}/{_type}/{urlify(name)}"
                 self._info("Trying our guess {} before searching", url)
                 return url
         return ""
 
-    def candidates(self, items, artist, album, va_likely, extra_tags=None):
-        # type: (List[library.Item], str, str, bool, Optional[JSONDict]) -> Iterator[AlbumInfo]  # noqa
+    def candidates(self, items, artist, album, *_, **__):
+        # type: (List[library.Item], str, str, Any, Any) -> Iterable[AlbumInfo]
         """Return a sequence of AlbumInfo objects that match the
         album whose items are provided.
         """
         if items:
-            initial_url = self._cheat_mode(items[0], album, ALBUM_SEARCH)
-            initial_guess = self.get_album_info(initial_url) if initial_url else None
+            url = self._cheat_mode(items[0], album, ALBUM_SEARCH)
+            initial_guess = self.get_album_info(url) if url else None
             if initial_guess:
                 return iter([initial_guess])
 
-        return filter(truth, map(self.get_album_info, self._search(album, ALBUM_SEARCH)))
+        results = map(lambda x: x["url"], self._search(album, ALBUM_SEARCH, artist))
+        return filter(truth, map(self.get_album_info, results))
 
     def item_candidates(self, item, artist, title):
-        # type: (library.Item, str, str) -> Iterator[TrackInfo]
+        # type: (library.Item, str, str) -> Iterable[TrackInfo]
         """Return a sequence of TrackInfo objects that match the provided item.
         If the track was downloaded directly from bandcamp, it should contain
         a comment saying 'Visit <label-url>' - we look at this first by converting
         title into the format that Bandcamp use.
         """
-        initial_url = self._cheat_mode(item, title, TRACK_SEARCH)
-        initial_guess = self.get_track_info(initial_url) if initial_url else None
+        url = self._cheat_mode(item, title, TRACK_SEARCH)
+        initial_guess = self.get_track_info(url) if url else None
         if initial_guess:
             return iter([initial_guess])
 
-        query = title or item.album or artist
-        return filter(truth, map(self.get_track_info, self._search(query, TRACK_SEARCH)))
+        query = title or item.album
+
+        results = map(lambda x: x["url"], self._search(query, TRACK_SEARCH, artist))
+        return filter(truth, map(self.get_track_info, results))
 
     def album_for_id(self, album_id: str) -> Optional[AlbumInfo]:
         """Fetch an album by its bandcamp ID."""
@@ -214,17 +218,22 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
             return getattr(guru, attr)
         except (KeyError, ValueError, AttributeError, IndexError):
             self._info("Failed obtaining {}", _id)
-            return None
         except Exception:  # pylint: disable=broad-except
             url = "https://github.com/snejus/beetcamp/issues/new"
             self._exc("Unexpected error obtaining {}, please report at {}", _id, url)
-            return None
+        return None
 
     def get_album_info(self, url: str) -> Optional[AlbumInfo]:
         """Return an AlbumInfo object for a bandcamp album page.
         If track url is given by mistake, find and fetch the album url instead.
         """
-        guru = self.guru(url, html=self._get(url))
+        html = self._get(url)
+        if "/track/" in url:
+            match = ALBUM_URL_IN_TRACK.search(html)
+            if match:
+                url = re.sub(r"/track/.*", match.expand(r"\1"), url)
+                html = self._get(url)
+        guru = self.guru(url, html=html)
         return self.handle(guru, "album", url) if guru else None
 
     def get_track_info(self, url: str) -> Optional[TrackInfo]:
@@ -232,35 +241,54 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         guru = self.guru(url)
         return self.handle(guru, "singleton", url) if guru else None
 
-    def _search(self, query: str, search_type: str = ALBUM_SEARCH) -> Iterator[str]:
-        """Return an iterator for item URLs of type search_type matching the query."""
-        max_urls = self.config["search_max"].as_number()
-        urls: Set[str] = set()
+    @staticmethod
+    def _parse_and_sort_results(html: str, release: str, artist: str) -> List[JSONDict]:
+        """Given the html string, find release URLs and artists and sort them
+        by similarity.
+        similarity = length(longest match between query and result) / length(query)
+        When both release name and artist are given, we use the average.
+        """
+        pat = r"""
+(?P<url>https://[^/]+/(album|track)/[\w-]+)[^>]+>
+\s*(?P<release>[^\n]+)
+.+?\ by\ (?P<artist>[^\n]+)
+"""
+        pattern = re.compile(pat, re.DOTALL + re.VERBOSE)
 
-        page = 1
-        html = "page=1"
-        pattern = SEARCH_ITEM_PAT.format(search_type)
+        def get_similarity(a: str, b: str) -> float:
+            return SequenceMatcher(a=a, b=b).find_longest_match().size / len(a)
 
-        def next_page_exists() -> bool:
-            return bool(re.search(rf"page={page}", html))
+        results: List[JSONDict] = []
+        for block in html.split('class="heading"'):
+            match = pattern.search(block)
+            if match:
+                res = match.groupdict()
+                similarity = get_similarity(release, res["release"])
+                if artist:
+                    similarity += get_similarity(artist.lower(), res["artist"].lower())
+                    similarity /= 2
+                res["similarity"] = similarity
+                results.append(res)
+        return sorted(results, key=lambda x: x["similarity"], reverse=True)
 
-        self._info("Searching {}s for {}", search_type, query)
-        while next_page_exists():
-            self._info("Page {}", str(page))
-            html = self._get(SEARCH_URL.format(query, page))
+    def _search(
+        self,
+        query: str,
+        search_type: str = ALBUM_SEARCH,
+        artist: str = "",
+        search_max: int = 0,
+    ) -> Iterable[JSONDict]:
+        """Return an iterator for item URLs of type search_type matching the query.
+        Bandcamp search may be unpredictable, therefore the search results get sorted
+        regarding their similarity to what's being queried.
+        """
+        url = SEARCH_URL.format(query, search_type[0])
+        self._info("Searching {}s for {}, URL: {}", search_type, query, url)
+        html = self._get(url)
 
-            for match in re.finditer(pattern, html or ""):
-                if len(urls) == max_urls:
-                    break
-                url = match.groups()[0]
-                if url not in urls:
-                    urls.add(url)
-                    yield url
-            else:
-                self._info("{} total URLs", str(len(urls)))
-                page += 1
-                continue
-            break
+        results = self._parse_and_sort_results(html, query, artist)
+        search_max = search_max or self.config["search_max"].as_number()
+        return results[:search_max]
 
 
 def main():

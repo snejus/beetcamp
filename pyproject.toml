@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "beetcamp"
-version = "0.12.0"
+version = "0.13.0"
 description = "Bandcamp autotagger source for beets (http://beets.io)."
 authors = ["Šarūnas Nejus <snejus@pm.me>"]
 readme = "README.md"
@@ -11,15 +11,28 @@ repository = "https://github.com/snejus/beetcamp"
 packages = [{ include = "beetsplug" }]
 include = ["LICENSE", "README.md"]
 
+keywords = ["music", "bandcamp", "beets", "metadata"]
+classifiers = [
+    "Environment :: Console",
+    "Intended Audience :: End Users/Desktop",
+    "Operating System :: OS Independent",
+    "Topic :: Multimedia :: Sound/Audio",
+    "Topic :: Text Processing :: General",
+]
+
+[tool.poetry.urls]
+Changelog = "https://github.com/snejus/beetcamp/blob/master/CHANGELOG.md"
+"Bug Tracker" = "https://github.com/snejus/beetcamp/issues"
+
 [tool.poetry.dependencies]
-python = ">=3.6,<3.10"
+python = ">=3.6.2, <4"
 
 requests = "*"
-cached-property = "^1.5.2"
-pycountry = "^20.7.3"
-python-dateutil = "^2.8.2"
-beets = "*"
-rich = "*"
+cached-property = { version = ">=1.5.2", python = "<3.8" }
+pycountry = ">=20.7.3"
+python-dateutil = ">=2.8.2"
+beets = ">=1.4"
+ordered-set = ">=4.0"
 
 [tool.poetry.dev-dependencies]
 dataclasses = { version = "*", python = "<3.7" }
@@ -28,15 +41,16 @@ flake8-bandit = ">=2.0.0"
 mypy = ">=0.790"
 pylint = ">=2.7.4"
 pytest = ">=6.2"
+pytest-clarity = ">=1.0.1"
 pytest-cov = ">=2.10.1"
 pytest-randomly = "*"
 pytest-lazy-fixture = ">=0.6.3"
+rich = ">11"
 tox = ">=3.21.1"
-types-setuptools = "^57.0.0"
-types-requests = "^2.25.0"
-types-six = "^0.1.7"
-types-python-dateutil = "^2.8.2"
-pytest-clarity = "^1.0.1"
+types-setuptools = ">=57.0.0"
+types-requests = ">=2.25.0"
+types-six = ">=0.1.7"
+types-python-dateutil = ">=2.8.2"
 
 [tool.poetry.scripts]
 beetcamp = "beetsplug.bandcamp:main"

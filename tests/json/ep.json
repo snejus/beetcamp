@@ -21,7 +21,7 @@
   ],
   "albumRelease": [
     {
-      "@id": "https://fallingapart.bandcamp.com/album/fa010-kickdown-vienna#a4190194561",
+      "@id": "https://fallingapart.bandcamp.com/album/fa010-kickdown-vienna",
       "@type": [
         "MusicRelease",
         "Product"
@@ -118,23 +118,8 @@
         "additionalProperty": [
           {
             "@type": "PropertyValue",
-            "name": "download_type",
-            "value": "a"
-          },
-          {
-            "@type": "PropertyValue",
-            "name": "fulfillment_days",
-            "value": 1
-          },
-          {
-            "@type": "PropertyValue",
             "name": "includes_digital_download",
             "value": true
-          },
-          {
-            "@type": "PropertyValue",
-            "name": "quantity_available",
-            "value": 93
           }
         ],
         "availability": "InStock",
@@ -147,19 +132,19 @@
       }
     },
     {
-      "@id": "https://fallingapart.bandcamp.com/track/je-nne-the-devils-not-s-bl-ck-s-he-is-p-inted-h-rd-mix#t1568631558",
+      "@id": "https://fallingapart.bandcamp.com/track/je-nne-the-devils-not-s-bl-ck-s-he-is-p-inted-h-rd-mix",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://fallingapart.bandcamp.com/track/je-nne-the-p-th-to-p-r-dise-begins-in-hell#t1365259276",
+      "@id": "https://fallingapart.bandcamp.com/track/je-nne-the-p-th-to-p-r-dise-begins-in-hell",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://fallingapart.bandcamp.com/track/dj-disrespect-vienna-warm-up-mix#t2270629014",
+      "@id": "https://fallingapart.bandcamp.com/track/dj-disrespect-vienna-warm-up-mix",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://fallingapart.bandcamp.com/track/dj-disrespect-transition-athletic-mix#t1411519787",
+      "@id": "https://fallingapart.bandcamp.com/track/dj-disrespect-transition-athletic-mix",
       "@type": "MusicRelease"
     }
   ],

@@ -4,5 +4,6 @@
 .reports
 beets_bandcamp.egg-info
 dist
-reports
 htmls
+lib_tests
+reports

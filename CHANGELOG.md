@@ -1,3 +1,82 @@
+## [0.13.0] 2022-03-22
+
+### Added
+
+- search: considerable improvements in search results accuracy
+
+  - Release name and artist is parsed for each found release
+  - They are compared to what's being queried and sorted by best matches
+  - Therefore, from now on we will check the first search results page only which should
+    yield up to 18 results.
+  - `search_max` parameter is now **2** by default, - in most cases you should get by fine
+    with it being set to **1**. This will make the search nearly instant and reduce the
+    loads that Bandcamp need to deal with.
+
+- Python 3.10 is now supported.
+
+### Updated
+
+- `album`
+
+  - search priority: step by step until the first one which is found:
+
+    1. Whatever follows **Title:** in the release **description**
+    1. Something in single or double quotes in the release **title**
+    1. If **EP** or **LP** is in the release **title**, whatever precedes it having removed `catalognum` and artists
+    1. Whatever is left in the release **title** having removed `catalognum` and artists
+    1. Whatever precedes **EP** or **LP** string in the release **description**
+    1. `catalognum`
+    1. The entire initial release **title**
+
+  - remove **(digital album)** and **(album)** from the album name
+
+    ```yaml
+    Some Album (album) -> Some Album
+    ```
+
+- `label`: strip quotes if sourced from the description
+
+- `artist`/`albumartist`: remove remixers from artists fields
+  ```yaml
+  title: Choone (Some Remix) -> title: Choone (Some Remix)
+  artist: Artist, Some       -> artist: Artist
+  ```
+
+- `artist`/`title`: **featuring** artists are moved from `title` to the `artist` field
+    ```yaml
+    artist: Artist        -> Artist ft. Some
+    title: Title ft. Some -> Title
+    ```
+
+- `singleton`: do not populate `albumstatus`, `index`, `medium_index`, `medium`,
+  `medium_total` fields
+
+### Fixed
+
+- `artist` / `track_alt`: 
+  - artists like **B2** and **A4** are not anymore assumed to be `track_alt` when
+  `track_alt` is not present in any other track in that release.
+
+  ```yaml
+  # name: B2 - Some Title
+  title: Some Title -> Some Title
+  track_alt: B2     ->
+  artist:           -> B2
+
+  ```
+
+  - and other way around, `track_alt` like **A** or **B** are correctly parsed if
+    `track_alt` was found for the rest of the tracks
+
+- `catalognum`: catalogue numbers starting with **VA** are not anymore ignored, unless
+  **VA** is followed by numbers. **VA02** is still ignored while **VAHELLO001** is now
+  parsed correctly.
+
+- Fixed Github workflow which tests the package across various python and `beets` versions: they should now fail reliably. Dependencies are from now on cached, so they run fairly quickly.
+
+- Clarified that `preferred_media` should include **Digital Media** (not **Digital**) in
+  the README.
+
 ## [0.12.0] 2022-02-10
 
 ### Added

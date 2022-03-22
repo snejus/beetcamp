@@ -21,7 +21,7 @@
   ],
   "albumRelease": [
     {
-      "@id": "https://reececox.bandcamp.com/album/emotion-1-kul-r-008#a1858109989",
+      "@id": "https://reececox.bandcamp.com/album/emotion-1-kul-r-008",
       "@type": [
         "MusicRelease",
         "Product"
@@ -101,11 +101,6 @@
         },
         {
           "@type": "PropertyValue",
-          "name": "certified_seller",
-          "value": true
-        },
-        {
-          "@type": "PropertyValue",
           "name": "image_ids",
           "value": [
             23426665
@@ -133,23 +128,8 @@
         "additionalProperty": [
           {
             "@type": "PropertyValue",
-            "name": "download_type",
-            "value": "a"
-          },
-          {
-            "@type": "PropertyValue",
-            "name": "fulfillment_days",
-            "value": 4
-          },
-          {
-            "@type": "PropertyValue",
             "name": "includes_digital_download",
             "value": true
-          },
-          {
-            "@type": "PropertyValue",
-            "name": "quantity_available",
-            "value": 25
           }
         ],
         "availability": "InStock",
@@ -162,23 +142,23 @@
       }
     },
     {
-      "@id": "https://reececox.bandcamp.com/track/emotion-1#t4095985028",
+      "@id": "https://reececox.bandcamp.com/track/emotion-1",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://reececox.bandcamp.com/track/emotion-1-ibons-dizzy-stomp-mix#t2433903511",
+      "@id": "https://reececox.bandcamp.com/track/emotion-1-ibons-dizzy-stomp-mix",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://reececox.bandcamp.com/track/emotion-1-parris-remix#t3231912467",
+      "@id": "https://reececox.bandcamp.com/track/emotion-1-parris-remix",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://reececox.bandcamp.com/track/emotion-1-call-super-remix#t1217738624",
+      "@id": "https://reececox.bandcamp.com/track/emotion-1-call-super-remix",
       "@type": "MusicRelease"
     },
     {
-      "@id": "https://reececox.bandcamp.com/track/emotion-1-upsammy-remix#t1473625405",
+      "@id": "https://reececox.bandcamp.com/track/emotion-1-upsammy-remix",
       "@type": "MusicRelease"
     }
   ],

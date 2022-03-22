@@ -3,12 +3,11 @@ from datetime import date
 from operator import itemgetter
 
 import pytest
+from beetsplug.bandcamp._metaguru import Metaguru, urlify
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
-
-from beetsplug.bandcamp._metaguru import Metaguru, urlify
 
 pytestmark = pytest.mark.parsing
 
@@ -87,52 +86,53 @@ def test_convert_title(title, expected):
 @pytest.mark.parametrize(
     ("name", "expected"),
     [
-        ("Title", ("", "", "Title", "Title")),
-        ("Artist - Title", ("", "Artist", "Title", "Title")),
-        ("A1. Artist - Title", ("A1", "Artist", "Title", "Title")),
-        ("A1- Artist - Title", ("A1", "Artist", "Title", "Title")),
-        ("A1.- Artist - Title", ("A1", "Artist", "Title", "Title")),
-        ("A1 - Title", ("A1", "", "Title", "Title")),
-        ("B2 - Artist - Title", ("B2", "Artist", "Title", "Title")),
-        ("A2.  Two Spaces", ("A2", "", "Two Spaces", "Two Spaces")),
-        ("a2.non caps - Title", ("A2", "non caps", "Title", "Title")),
-        ("D1 No Punct", ("D1", "", "No Punct", "No Punct")),
+        ("Title", ("", "", "", "Title", "Title")),
+        ("Artist - Title", ("", "Artist", "", "Title", "Title")),
+        ("A1. Artist - Title", ("A1", "Artist", "", "Title", "Title")),
+        ("A1- Artist - Title", ("A1", "Artist", "", "Title", "Title")),
+        ("A1.- Artist - Title", ("A1", "Artist", "", "Title", "Title")),
+        ("A1 - Title", ("A1", "", "", "Title", "Title")),
+        ("B2 - Artist - Title", ("B2", "Artist", "", "Title", "Title")),
+        ("A2.  Two Spaces", ("A2", "", "", "Two Spaces", "Two Spaces")),
+        ("a2.non caps - Title", ("A2", "non caps", "", "Title", "Title")),
+        ("D1 No Punct", ("D1", "", "", "No Punct", "No Punct")),
         (
             "DJ BEVERLY HILL$ - Raw Steeze",
-            ("", "DJ BEVERLY HILL$", "Raw Steeze", "Raw Steeze"),
+            ("", "DJ BEVERLY HILL$", "", "Raw Steeze", "Raw Steeze"),
         ),
-        ("&$%@#!", ("", "", "&$%@#!", "&$%@#!")),
-        ("24 Hours", ("", "", "24 Hours", "24 Hours")),
+        ("&$%@#!", ("", "", "", "&$%@#!", "&$%@#!")),
+        ("24 Hours", ("", "", "", "24 Hours", "24 Hours")),
         (
             "Some tune (Someone's Remix)",
-            ("", "", "Some tune (Someone's Remix)", "Some tune"),
+            ("", "", "", "Some tune (Someone's Remix)", "Some tune"),
         ),
-        ("19.85 - Colapso (FREE)", ("", "19.85", "Colapso", "Colapso")),
-        ("E7-E5", ("", "", "E7-E5", "E7-E5")),
+        ("19.85 - Colapso (FREE)", ("", "19.85", "", "Colapso", "Colapso")),
+        ("E7-E5", ("", "", "", "E7-E5", "E7-E5")),
         (
             "Lacchesi - UNREALNUMBERS - MK4 (Lacchesi Remix)",
-            ("", "Lacchesi, UNREALNUMBERS", "MK4 (Lacchesi Remix)", "MK4"),
+            ("", "UNREALNUMBERS", "", "MK4 (Lacchesi Remix)", "MK4"),
         ),
-        ("UNREALNUMBERS -Karaburan", ("", "UNREALNUMBERS", "Karaburan", "Karaburan")),
+        ("UNREALNUMBERS -Karaburan", ("", "UNREALNUMBERS", "", "Karaburan", "Karaburan")),
         (
             "Ellie Goulding- Eyed ( ROWDIBOÏ EDIT))",
-            ("", "Ellie Goulding", "Eyed (ROWDIBOÏ EDIT)", "Eyed"),
+            ("", "Ellie Goulding", "", "Eyed (ROWDIBOÏ EDIT)", "Eyed"),
         ),
-        ("Space Jam - (RZVX EDIT)", ("", "", "Space Jam (RZVX EDIT)", "Space Jam")),
-        ("¯\\_(ツ)_/¯", ("", "", "¯\\_(ツ)_/¯", "¯\\_(ツ)_/¯")),
-        ("VIENNA (WARM UP MIX", ("", "", "VIENNA (WARM UP MIX", "VIENNA")),
-        ("MOD-R - ARE YOU", ("", "MOD-R", "ARE YOU", "ARE YOU")),
-        ("K - The Lightning", ("", "K", "The Lightning", "The Lightning")),
-        ("MEAN-E - PLANETARY", ("", "MEAN-E", "PLANETARY", "PLANETARY")),
-        ("f-theme", ("", "", "f-theme", "f-theme")),
-        ("Mr. Free - The 4th Room", ("", "Mr. Free", "The 4th Room", "The 4th Room")),
-        ("O)))Bow 1", ("", "", "O)))Bow 1", "O)))Bow 1")),
-        ("H.E.L.L.O.", ("", "", "H.E.L.L.O.", "H.E.L.L.O.")),
-        ("Erik Burka - Pigeon [MNRM003]", ("", "Erik Burka", "Pigeon", "Pigeon")),
-        ("Artist - Title [ONE001]", ("", "Artist", "Title", "Title")),
-        ("Artist + Other - Title", ("", "Artist + Other", "Title", "Title")),
-        ("Artist (feat. Other) - Title", ("", "Artist feat. Other", "Title", "Title")),
-        ("Artist (some remix) - Title", ("", "Artist", "Title", "Title")),
+        ("Space Jam - (RZVX EDIT)", ("", "", "", "Space Jam (RZVX EDIT)", "Space Jam")),
+        ("¯\\_(ツ)_/¯", ("", "", "", "¯\\_(ツ)_/¯", "¯\\_(ツ)_/¯")),
+        ("VIENNA (WARM UP MIX", ("", "", "", "VIENNA (WARM UP MIX", "VIENNA")),
+        ("MOD-R - ARE YOU", ("", "MOD-R", "", "ARE YOU", "ARE YOU")),
+        ("K - The Lightning", ("", "K", "", "The Lightning", "The Lightning")),
+        ("MEAN-E - PLANETARY", ("", "MEAN-E", "", "PLANETARY", "PLANETARY")),
+        ("f-theme", ("", "", "", "f-theme", "f-theme")),
+        ("Mr. Free - The 4th Room", ("", "Mr. Free", "", "The 4th Room", "The 4th Room")),
+        ("O)))Bow 1", ("", "", "", "O)))Bow 1", "O)))Bow 1")),
+        ("H.E.L.L.O.", ("", "", "", "H.E.L.L.O.", "H.E.L.L.O.")),
+        ("Erik Burka - Pigeon [MNRM003]", ("", "Erik Burka", "", "Pigeon", "Pigeon")),
+        ("Artist - Title [ONE001]", ("", "Artist", "", "Title", "Title")),
+        ("Artist + Other - Title", ("", "Artist + Other", "", "Title", "Title")),
+        ("Artist (feat. Other) - Title", ("", "Artist", "feat. Other", "Title", "Title")),
+        ("Artist (some remix) - Title", ("", "Artist", "", "Title", "Title")),
+        ("Artist - Title feat.Other", ("", "Artist", "feat.Other", "Title", "Title")),
     ],
 )
 def test_parse_track_name(name, expected, beets_config):
@@ -144,7 +144,7 @@ def test_parse_track_name(name, expected, beets_config):
         "byArtist": {"name": ""},
         "tracks": [f"1. {name}"],
     }
-    fields = "track_alt", "artist", "title", "main_title"
+    fields = "track_alt", "artist", "ft", "title", "main_title"
     expected = dict(zip(fields, expected))
 
     guru = Metaguru(meta, beets_config)
@@ -197,12 +197,12 @@ def test_clean_ep_lp_name(album, artists, expected):
 
 
 @pytest.mark.parametrize(
-    ("artists", "expected"), [(["4.44.444.8", "4.44.444.8"], {"4.44.444.8"})]
+    ("artists", "expected"), [(["4.44.444.8", "4.44.444.8"], ["4.44.444.8"])]
 )
-def test_track_artists(artists, expected):
+def test_unique_artists(artists, expected):
     guru = Metaguru({})
     guru.tracks = [{"artist": a} for a in artists]
-    assert guru.track_artists == expected
+    assert guru.unique_artists == expected
 
 
 @pytest.mark.parametrize(
@@ -242,7 +242,7 @@ def test_check_digi_only(name, expected_digi_only, expected_name):
         ("Seattle, Washington", "US"),
         ("Los Angeles, California", "US"),
         ("New York", "US"),
-        ("No Ones, Land", "XW"),
+        ("No, Ones Land", "XW"),
         ("", "XW"),
         ("Utrecht, The Netherlands", "NL"),
         ("Russia", "RU"),
@@ -298,9 +298,14 @@ def test_parse_country(name, expected):
         ("", "TS G5000 hello hello t-shirt.", "", "", ""),
         ("GOOD GOOD001", "", "", "", "GOOD GOOD001"),
         ("BAd GOOD001", "", "", "", "GOOD001"),
-        ("bad GOOD001", "", "", "bad GOOD", "bad GOOD001"),
+        ("bad gOOD 001", "", "", "bad GOOD", "bad gOOD 001"),
         ("MNQ 049 Void Vision - Sour (2019 repress)", "", "", "", "MNQ 049"),
         ("P90-003", "", "", "", "P90-003"),
+        ("LP. 2", "", "", "", ""),
+        ("", "", 'BAD001"', "", ""),
+        ("", "", "Modularz 40", "Modularz", "Modularz 40"),
+        ("", "", " catalogue number GOOD001 ", "", "GOOD001"),
+        ("LI$INGLE010 - cyberflex - LEVEL X", "", "", "", "LI$INGLE010"),
     ],
 )
 def test_parse_catalognum(album, disctitle, description, label, expected, beets_config):
@@ -316,6 +321,7 @@ def test_parse_catalognum(album, disctitle, description, label, expected, beets_
                 "description": "",
             },
         ],
+        "tracks": ["1. Artist - Title"],
     }
 
     assert Metaguru(meta, beets_config).catalognum == expected
@@ -326,7 +332,7 @@ def test_parse_catalognum(album, disctitle, description, label, expected, beets_
     [
         ("Album - Various Artists", [], "Album"),
         ("Various Artists - Album", [], "Album"),
-        ("Various Artists Album", [], "Album"),
+        ("Various Artists Album", [], "Various Artists Album"),
         ("Album EP", [], "Album EP"),
         ("Album [EP]", [], "Album EP"),
         ("Album (EP)", [], "Album EP"),
