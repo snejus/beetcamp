@@ -30,9 +30,9 @@ def _release(request):
         tracklist = []
         for track in info.albuminfo.tracks:
             tracklist.append(
-                f"{track['index']}. "
-                + (f"{track['track_alt']}. " if track["track_alt"] else "")
-                + f"{track['artist']} - {track['title']}"
+                f"{track.index}. "
+                + (f"{track.track_alt}. " if track.track_alt else "")
+                + f"{track.artist} - {track.title}"
             )
         return "\n".join([*tracklist, json]), info
 

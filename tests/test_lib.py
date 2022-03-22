@@ -15,6 +15,10 @@ from rich_tables.utils import border_panel, make_console, make_difftext, new_tab
 
 pytestmark = pytest.mark.lib
 
+BASE_DIR = "lib_tests"
+TEST_DIR = "dev"
+REFERENCE_DIR = "v0.12.0"
+
 IGNORE_FIELDS = {
     "bandcamp_artist_id",
     "bandcamp_album_id",
@@ -26,9 +30,8 @@ IGNORE_FIELDS = {
     "price",
 }
 
-base_dir = "lib_tests"
-target_dir = os.path.join(base_dir, "dev")
-compare_against = os.path.join(base_dir, "4f5d074")
+target_dir = os.path.join(BASE_DIR, TEST_DIR)
+compare_against = os.path.join(BASE_DIR, REFERENCE_DIR)
 if not os.path.exists(target_dir):
     os.makedirs(target_dir)
 install(show_locals=True, extra_lines=8, width=int(os.environ.get("COLUMNS", 150)))
@@ -124,8 +127,8 @@ def compare(old, new) -> None:
         for entity in old, new:
             entity["albumartist"] = entity.pop("artist", "")
 
-        every_new.extend(new.get("tracks"))
-        every_old.extend(old.get("tracks"))
+        every_new.extend(new.get("tracks") or [])
+        every_old.extend(old.get("tracks") or [])
         desc = new.get("album")
         _id = new.get("album_id")
     else:

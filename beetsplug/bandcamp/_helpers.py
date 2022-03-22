@@ -267,7 +267,7 @@ class Helpers:
             esc = re.escape(arg)
             name = re.sub(fr"[^'\])\w]*(?i:{esc})[^'(\[\w]*", " ", name).strip()
 
-        rm = f"(Various Artists?|{label})" if label else "Various Artists"
+        rm = f"(Various Artists?|{label})" if label else "Various Artists?"
         name = re.sub(
             fr"(?i:(\W\W+{rm}\W*|\W*{rm}(\W\W+|$)|(^\W*{rm}\W*$)))", " ", name
         ).strip()

@@ -49,6 +49,7 @@ class ReleaseInfo:
             track_id=self.album_id,
             artist=artist,
             length=length,
+            medium=None,
         )
         if NEW_BEETS:
             data.update(**kwargs)
@@ -118,7 +119,6 @@ def single_track_release() -> ReleaseInfo:
         country="SE",
         genre=None,
         style=None,
-        medium=None,
     )
     return info
 
@@ -146,7 +146,6 @@ def single_only_track_name() -> ReleaseInfo:
         country="RU",
         genre="trance",
         style="electronic",
-        medium=None,
     )
     return info
 

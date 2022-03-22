@@ -3,12 +3,11 @@ from datetime import date
 from operator import itemgetter
 
 import pytest
+from beetsplug.bandcamp._metaguru import Metaguru, urlify
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
-
-from beetsplug.bandcamp._metaguru import Metaguru, urlify
 
 pytestmark = pytest.mark.parsing
 
@@ -367,7 +366,7 @@ def test_parse_catalognum(album, disctitle, description, label, expected, beets_
         ),
         ("WEAPONS 001 - VARIOUS ARTISTS", ["WEAPONS 001"], ""),
         ("Diva Hello", [], "Diva Hello"),
-        ("RR009 - Various Artist", ["RR009"], "Various Artist"),
+        ("RR009 - Various Artist", ["RR009"], ""),
         ("Diva (Incl. some sort of Remixes)", [], "Diva"),
         ("HWEP010 - MEZZ - COLOR OF WAR", ["HWEP010", "MEZZ"], "COLOR OF WAR"),
         ("O)))Bow 1", [], "O)))Bow 1"),

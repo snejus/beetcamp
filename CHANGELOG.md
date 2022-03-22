@@ -36,17 +36,14 @@
     ```
 
 - `label`: strip quotes if sourced from the description
-- `artist`
 
-  - exclude remix artists
+- `artist`/`albumartist`: remove remixers from artists fields
+  ```yaml
+  title: Choone (Some Remix) -> title: Choone (Some Remix)
+  artist: Artist, Some       -> artist: Artist
+  ```
 
-    ```yaml
-    title: Choone (Some Remix) -> title: Choone (Some Remix)
-    artist: Artist, Some       -> artist: Artist
-    ```
-
-  - **featuring** artists are moved from `title` to the `artist` field
-
+- `artist`/`title`: **featuring** artists are moved from `title` to the `artist` field
     ```yaml
     artist: Artist        -> Artist ft. Some
     title: Title ft. Some -> Title

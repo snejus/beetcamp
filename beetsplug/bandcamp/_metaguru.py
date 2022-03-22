@@ -464,10 +464,10 @@ class Metaguru(Helpers):
     @cached_property
     def singleton(self) -> TrackInfo:
         self._singleton = True
-        track = self.tracks[0]
-        if not track["artist"]:
-            track["artist"] = self.bandcamp_albumartist
-        track = self._trackinfo({**track, "index": None})
+        track_dict = self.tracks[0]
+        if not track_dict["artist"]:
+            track_dict["artist"] = self.bandcamp_albumartist
+        track = self._trackinfo({**track_dict, "index": None})
         if NEW_BEETS:
             track.update(self._common_album)
             track.pop("album", None)
