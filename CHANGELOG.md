@@ -28,7 +28,8 @@
     1. `catalognum`
     1. The entire initial release **title**
 
-  - remove **(digital album)** and **(album)** from the album name
+  - do not remove **VA** from the end
+  - remove **(digital album)** and **(album)**
 
     ```yaml
     Some Album (album) -> Some Album
