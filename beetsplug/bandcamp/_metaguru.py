@@ -3,6 +3,7 @@ import itertools as it
 import json
 import operator as op
 import re
+import sys
 from collections import defaultdict
 from datetime import date, datetime
 from functools import partial
@@ -12,11 +13,15 @@ from unicodedata import normalize
 
 from beets import config as beets_config
 from beets.autotag.hooks import AlbumInfo, TrackInfo
-from cached_property import cached_property
 from pkg_resources import get_distribution, parse_version
 from pycountry import countries, subdivisions
 
 from ._helpers import MEDIA_MAP, PATTERNS, Helpers
+
+if sys.version_info.minor > 7:
+    from functools import cached_property
+else:
+    from cached_property import cached_property
 
 NEW_BEETS = get_distribution("beets").parsed_version >= parse_version("1.5.0")
 

@@ -40,10 +40,15 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           COVERALLS_FLAG_NAME: python${{ matrix.python }}_beets${{ matrix.beets }}
           COVERALLS_PARALLEL: true
-      - uses: actions/upload-artifact@master
-        with:
-          name: coverage
-          path: .reports/coverage.xml
+      - name: Flake8
+        run: flake8 . --output-file flake.log --exit-zero
+      - name: Pylint
+        run: pylint --output pylint.log --exit-zero $(git ls-files '*.py')
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   coveralls:
     if: ${{ always() }}
     name: Indicate completion to coveralls.io
@@ -57,35 +62,3 @@ jobs:
           coveralls --service=github --finish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  # lint-report:
-  #   if: ${{ always() }}
-  #   needs: test-pythons
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #       with:
-  #         # Disabling shallow clone is recommended for improving relevancy of reporting
-  #         fetch-depth: 0
-  #     - uses: actions/download-artifact@master
-  #       with:
-  #         name: coverage
-  #         path: .reports/coverage.xml
-  #     - name: Set up Python ${{ matrix.python }}
-  #       uses: actions/setup-python@v3
-  #       with:
-  #         python-version: "3.10"
-  #     - name: Coveralls
-  #       run: |
-  #         pip install coveralls
-  #         coveralls
-  #       env:
-  #         COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
-  # - name: Flake8
-  #   run: poetry run flake8 . --output-file flake.log  --exit-zero
-  # - name: Pylint
-  #   run: poetry run pylint --output pylint.log --exit-zero beetsplug/**/*.py
-  # - name: SonarCloud Scan
-  #   uses: SonarSource/sonarcloud-github-action@master
-  #   env:
-  #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
