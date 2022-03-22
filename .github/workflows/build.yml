@@ -28,9 +28,9 @@ jobs:
           cache: pip
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip setuptools wheel
-          pip install -r requirements.txt
-          pip install . beets==${{ matrix.beets }}
+          pip install --upgrade pip setuptools wheel
+          pip install -r requirements.txt beets==${{ matrix.beets }}
+          pip install -e .
       - name: Pytest
         run: pytest -k 'not need_connection'
       - name: Upload coverage data to coveralls.io
@@ -79,12 +79,12 @@ jobs:
   #         coveralls
   #       env:
   #         COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
-      # - name: Flake8
-      #   run: poetry run flake8 . --output-file flake.log  --exit-zero
-      # - name: Pylint
-      #   run: poetry run pylint --output pylint.log --exit-zero beetsplug/**/*.py
-      # - name: SonarCloud Scan
-      #   uses: SonarSource/sonarcloud-github-action@master
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  # - name: Flake8
+  #   run: poetry run flake8 . --output-file flake.log  --exit-zero
+  # - name: Pylint
+  #   run: poetry run pylint --output pylint.log --exit-zero beetsplug/**/*.py
+  # - name: SonarCloud Scan
+  #   uses: SonarSource/sonarcloud-github-action@master
+  #   env:
+  #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
