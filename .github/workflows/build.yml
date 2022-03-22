@@ -17,6 +17,9 @@ jobs:
         beets: ["1.4.9", "1.5.0", "1.6.0"]
     steps:
       - uses: actions/checkout@v3
+        with:
+          # Disabling shallow clone is recommended for improving relevancy of reporting
+          fetch-depth: 0
       - name: Generate requirements.txt
         run: |
           ./generate_requirements
