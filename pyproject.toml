@@ -11,6 +11,19 @@ repository = "https://github.com/snejus/beetcamp"
 packages = [{ include = "beetsplug" }]
 include = ["LICENSE", "README.md"]
 
+keywords = ["music", "bandcamp", "beets", "metadata"]
+classifiers = [
+    "Environment :: Console",
+    "Intended Audience :: End Users/Desktop",
+    "Operating System :: OS Independent",
+    "Topic :: Multimedia :: Sound/Audio",
+    "Topic :: Text Processing :: General",
+]
+
+[tool.poetry.urls]
+Changelog = "https://github.com/snejus/beetcamp/blob/master/CHANGELOG.md"
+"Bug Tracker" = "https://github.com/snejus/beetcamp/issues"
+
 [tool.poetry.dependencies]
 python = ">=3.6.2, <4"
 

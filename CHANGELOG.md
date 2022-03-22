@@ -12,6 +12,8 @@
     with it being set to **1**. This will make the search nearly instant and reduce the
     loads that Bandcamp need to deal with.
 
+- Python 3.10 is now supported.
+
 ### Updated
 
 - `album`
@@ -46,7 +48,8 @@
     title: Title ft. Some -> Title
     ```
 
-- `singleton`: do not populate `index`, `medium_index`, `medium`, `medium_total`
+- `singleton`: do not populate `albumstatus`, `index`, `medium_index`, `medium`,
+  `medium_total` fields
 
 ### Fixed
 
@@ -71,6 +74,8 @@
 
 - Fixed Github workflow which tests the package across various python and `beets` versions: they should now fail reliably. Dependencies are from now on cached, so they run fairly quickly.
 
+- Clarified that `preferred_media` should include **Digital Media** (not **Digital**) in
+  the README.
 
 ## [0.12.0] 2022-02-10
 

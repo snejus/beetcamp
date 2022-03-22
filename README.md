@@ -50,7 +50,7 @@ Navigate to your `beets` virtual environment and install the plug-in with
 
 ```yaml
 bandcamp:
-  preferred_media: Vinyl,CD,Cassette
+  preferred_media: Digital Media
   include_digital_only_tracks: true
   search_max: 2
   art: yes
@@ -68,13 +68,13 @@ bandcamp:
 #### `preferred_media`
 
 - Type: **string**
-- Default: `Digital`
+- Default: `Digital Media`
 
 A comma-separated list of media to prioritize when fetching albums. For example:
 `preferred_media: Vinyl,Cassette` will ignore `CD`, check for a `Vinyl`, and then for a
-`Cassette`, in the end defaulting to `Digital` (always available) if none of the two are
+`Cassette`, in the end defaulting to `Digital Media` (always available) if none of the two are
 found. Any combination of the following is supported: `Vinyl`, `CD`, `Cassette`,
-`Digital`.
+`Digital Media`.
 
 ---
 
@@ -234,37 +234,37 @@ select `enter Id` and paste the URL that you have.
 
 ## Supported metadata
 
-|          field | singleton | album track | album |                                        note                                         |
+| field          | singleton | album track | album | note                                                                                |
 | -------------: | :-------: | :---------: | :---: | :---------------------------------------------------------------------------------: |
-|        `album` |    \*✔    |             |   ✔   |                                                                                     |
-|     `album_id` |           |             |   ✔   |                                release bandcamp URL                                 |
-|  `albumartist` |     ✔     |             |   ✔   |                                                                                     |
-|  `albumstatus` |    \*✔    |             |   ✔   |                                                                                     |
-|    `albumtype` |    \*✔    |             |   ✔   |                                                                                     |
-|       `artist` |     ✔     |      ✔      |   ✔   |                                                                                     |
-|    `artist_id` |     ✔     |             |   ✔   |                               publisher bandcamp URL                                |
-|   `catalognum` |    \*✔    |             |   ✔   |                                                                                     |
-|     `comments` |     ✔     |             |   ✔   |                     release and media descriptions, and credits                     |
-|      `country` |    \*✔    |             |   ✔   |                                                                                     |
-|          `day` |    \*✔    |             |   ✔   |                                                                                     |
-|    `disctitle` |    \*✔    |      ✔      |       |                                                                                     |
-|        `genre` |    \*✔    |             |   ✔   |    comma-delimited list of **release keywords** which match [musicbrainz genres]    |
-|        `image` |     ✔     |             |   ✔   |                                                                                     |
-|        `index` |     ✔     |      ✔      |       |                                                                                     |
-|        `label` |    \*✔    |             |   ✔   |                                                                                     |
-|       `length` |     ✔     |      ✔      |       |                                                                                     |
-|       `lyrics` |     ✔     |      ✔      |       |                                                                                     |
-|        `media` |    \*✔    |      ✔      |   ✔   |                                                                                     |
-|       `medium` |    \*✔    |      ✔      |       |                                                                                     |
-|      `mediums` |           |             |   ✔   |                                                                                     |
-| `medium_index` |    \*✔    |      ✔      |       | likely to be inaccurate, since it depends on information in the release description |
-| `medium_total` |    \*✔    |      ✔      |       |                                      see above                                      |
-|        `month` |    \*✔    |             |   ✔   |                                                                                     |
-|        `style` |    \*✔    |             |   ✔   |                                 Bandcamp genre tag                                  |
-|        `title` |     ✔     |      ✔      |       |                                                                                     |
-|    `track_alt` |     ✔     |      ✔      |       |                                                                                     |
-|           `va` |           |             |   ✔   |                                                                                     |
-|         `year` |    \*✔    |             |   ✔   |                                                                                     |
+| `album`        |           |             | ✔     |                                                                                     |
+| `album_id`     |           |             | ✔     | release Bandcamp URL                                                                |
+| `albumartist`  |           |             | ✔     |                                                                                     |
+| `albumstatus`  |           |             | ✔     |                                                                                     |
+| `albumtype`    | \*✔       |             | ✔     |                                                                                     |
+| `artist`       | ✔         | ✔           | ✔     |                                                                                     |
+| `artist_id`    | ✔         |             | ✔     | label / publisher Bandcamp URL                                                      |
+| `catalognum`   | \*✔       |             | ✔     |                                                                                     |
+| `comments`     | ✔         | ✔           |       | release and media descriptions, and credits                                         |
+| `country`      | \*✔       |             | ✔     |                                                                                     |
+| `day`          | \*✔       |             | ✔     |                                                                                     |
+| `disctitle`    | \*✔       | ✔           |       |                                                                                     |
+| `genre`        | \*✔       |             | ✔     | comma-delimited list of **release keywords** which match [musicbrainz genres]       |
+| `index`        |           | ✔           |       |                                                                                     |
+| `label`        | \*✔       |             | ✔     |                                                                                     |
+| `length`       | ✔         | ✔           |       |                                                                                     |
+| `lyrics`       | ✔         | ✔           |       |                                                                                     |
+| `media`        | \*✔       | ✔           | ✔     |                                                                                     |
+| `medium`       |           | ✔           |       | likely to be inaccurate, since it depends on information in the release description |
+| `mediums`      |           |             | ✔     |                                                                                     |
+| `medium_index` |           | ✔           |       | for now, same as `index`                                                            |
+| `medium_total` |           | ✔           |       | total number of tracks in the release                                               |
+| `month`        | \*✔       |             | ✔     |                                                                                     |
+| `style`        | \*✔       |             | ✔     | Bandcamp genre tag                                                                  |
+| `title`        | ✔         | ✔           |       |                                                                                     |
+| `track_alt`    | ✔         | ✔           |       |                                                                                     |
+| `track_id`     |           | ✔           |       | track URL                                                                           |
+| `va`           |           |             | ✔     |                                                                                     |
+| `year`         | \*✔       |             | ✔     |                                                                                     |
 
 **\*** These singleton fields are available if you use `beets` version `1.5` or higher.
 

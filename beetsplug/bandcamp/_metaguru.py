@@ -471,6 +471,7 @@ class Metaguru(Helpers):
         if NEW_BEETS:
             track.update(self._common_album)
             track.pop("album", None)
+            track.pop("albumstatus", None)
         track.track_id = track.data_url
         return track
 
