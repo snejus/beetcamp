@@ -454,6 +454,8 @@ class Metaguru(Helpers):
         if not NEW_BEETS:
             track.pop("lyrics", None)
         track["track_alt"] = track["track_alt"] or None
+        if not track["artist"]:
+            track["artist"] = self.albumartist
 
         data = dict(**track, **self._common, **kwargs)
         if "index" in data:

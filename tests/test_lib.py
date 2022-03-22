@@ -35,7 +35,7 @@ compare_against = os.path.join(BASE_DIR, REFERENCE_DIR)
 if not os.path.exists(target_dir):
     os.makedirs(target_dir)
 install(show_locals=True, extra_lines=8, width=int(os.environ.get("COLUMNS", 150)))
-console = make_console(stderr=True)
+console = make_console(stderr=True, record=True)
 
 testfiles = sorted(filter(lambda x: x.endswith("json"), os.listdir("jsons")))
 
@@ -80,6 +80,7 @@ def _report():
     if stats_table.rows:
         stats_table.add_row("total", str(len(testfiles)))
         console.print(stats_table)
+    console.save_html("results.html")
 
 
 stats_map = defaultdict(lambda: 0)
