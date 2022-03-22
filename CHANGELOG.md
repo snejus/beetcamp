@@ -12,9 +12,6 @@
     with it being set to **1**. This will make the search nearly instant and reduce the
     loads that Bandcamp need to deal with.
 
-- configuration: a new option `min_artists_count_for_va` which configures the point at
-  which the `albumartist` becomes `va_name` (Various Artists).
-
 ### Updated
 
 - `album`
@@ -68,10 +65,11 @@
   - and other way around, `track_alt` like **A** or **B** are correctly parsed if
     `track_alt` was found for the rest of the tracks
 
-- `catalognum`:
-  - catalogue numbers starting with **VA** are not anymore ignored, unless **VA** is
-    followed by numbers. **VA02** is still ignored while **VAHELLO001** is now parsed
-    correctly.
+- `catalognum`: catalogue numbers starting with **VA** are not anymore ignored, unless
+  **VA** is followed by numbers. **VA02** is still ignored while **VAHELLO001** is now
+  parsed correctly.
+
+- Fixed Github workflow which tests the package across various python and `beets` versions: they should now fail reliably. Dependencies are from now on cached, so they run fairly quickly.
 
 
 ## [0.12.0] 2022-02-10
