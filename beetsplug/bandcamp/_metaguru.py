@@ -321,7 +321,9 @@ class Metaguru(Helpers):
         if self.va:
             return self.va_name
 
-        return ", ".join(sorted(self.unique_artists))
+        if self.unique_artists:
+            return ", ".join(sorted(self.unique_artists))
+        return self.official_albumartist
 
     @cached_property
     def albumtype(self) -> str:
