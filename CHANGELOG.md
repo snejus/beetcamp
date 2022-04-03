@@ -1,3 +1,11 @@
+## [0.13.2] 2022-04-03
+
+### Fixed
+
+* Fixed importing of officially purchased Bandcamp tracks which have **Visit {label_url}** in their `COMMENT` field (at least for FLAC files) when the album name does not contain a single ASCII alphanumeric character. We here use the album name to guess the release url, and in this case the plugin has previously been failing to take into account this edge case and failed the import process immediately.
+
+[0.13.2]: https://github.com/snejus/beetcamp/releases/tag/0.13.2
+
 ## [0.13.1] 2022-04-03
 
 ### Fixed

@@ -28,7 +28,6 @@ import requests
 import six
 from beets import __version__, library, plugins
 from beets.autotag.hooks import AlbumInfo, TrackInfo
-
 from beetsplug import fetchart  # type: ignore[attr-defined]
 
 from ._metaguru import DATA_SOURCE, DIGI_MEDIA, Metaguru, urlify
@@ -110,9 +109,14 @@ class BandcampAlbumArt(BandcampRequestsHandler, fetchart.RemoteArtSource):
 
 
 def _from_bandcamp(clue: str) -> bool:
-    return ".bandcamp." in clue or (
-        clue.startswith("http") and ("/album/" in clue or "/track/" in clue)
-    )
+    """Check if the clue is likely to be a bandcamp url.
+    We could check whether 'bandcamp' is found in the url, however, we would be ignoring
+    cases where the publisher uses their own domain (for example https://eaux.ro) which
+    in reality points to their Bandcamp page. Historically, we found that regardless
+    of the domain, the rest of the url stays the same, therefore '/album/' or '/track/'
+    is what we are looking for in a valid url here.
+    """
+    return bool(re.match(r"http[^ ]+/(album|track)/", clue))
 
 
 class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
@@ -152,18 +156,34 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
                     plugin.sources = [bandcamp_fetchart, *plugin.sources]
                     break
 
-    def _cheat_mode(self, item: library.Item, name: str, _type: str) -> str:
-        url: str = getattr(item, f"mb_{_type}id", "")
-        if "bandcamp" in url:
+    def _find_url(self, item: library.Item, name: str, _type: str) -> str:
+        """If the item has previously been imported, `mb_albumid` (or `mb_trackid`
+        for singletons) contains the release url.
+
+        As of 2022 April, Bandcamp purchases (at least in FLAC format) contain string
+        *Visit {label_url}* in the `comments` field, therefore we try our luck here.
+
+        If it is found, then the album/track name is converted into a valid url
+        representation and appended to the `label_url`. This ends up being the correct
+        url except when:
+            * album name has been updated on Bandcamp but the file contains the old one
+            * album name does not contain a single ascii alphanumeric character
+              - in reality, this becomes '--{num}' in the url, where `num` depends on
+              the number of previous releases that also did not have any valid alphanums.
+              Therefore, we cannot make a reliable guess here.
+        """
+        url = getattr(item, f"mb_{_type}id", "")
+        if _from_bandcamp(url):
             self._info("Fetching the URL attached to the first item, {}", url)
             return url
 
-        if item.comments.startswith("Visit"):
-            match = re.search(r"https:[\w/.-]+com", item.comments)
-            if match:
-                url = f"{match.group()}/{_type}/{urlify(name)}"
-                self._info("Trying our guess {} before searching", url)
-                return url
+        match = re.match(r"Visit (https:[\w/.-]+com)", item.comments)
+        urlified_name = urlify(name)
+        if match and urlified_name:
+            label = match.expand(r"\1")
+            url = "/".join([label, _type, urlified_name])
+            self._info("Trying our guess {} before searching", url)
+            return url
         return ""
 
     def candidates(self, items, artist, album, *_, **__):
@@ -172,7 +192,7 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         album whose items are provided.
         """
         if items:
-            url = self._cheat_mode(items[0], album, ALBUM_SEARCH)
+            url = self._find_url(items[0], album, ALBUM_SEARCH)
             initial_guess = self.get_album_info(url) if url else None
             if initial_guess:
                 return iter([initial_guess])
@@ -187,7 +207,7 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         a comment saying 'Visit <label-url>' - we look at this first by converting
         title into the format that Bandcamp use.
         """
-        url = self._cheat_mode(item, title, TRACK_SEARCH)
+        url = self._find_url(item, title, TRACK_SEARCH)
         initial_guess = self.get_track_info(url) if url else None
         if initial_guess:
             return iter([initial_guess])
