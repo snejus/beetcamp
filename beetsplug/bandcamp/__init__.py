@@ -256,7 +256,11 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         pattern = re.compile(pat, re.DOTALL + re.VERBOSE)
 
         def get_similarity(a: str, b: str) -> float:
-            return SequenceMatcher(a=a, b=b).find_longest_match().size / len(a)
+            """Return the similarity between two strings normalized to [0, 1]
+            with two decimal places.
+            """
+            match = SequenceMatcher(a=a, b=b).find_longest_match(0, len(a), 0, len(b))
+            return round(float(match.size / len(a)), 2)
 
         results: List[JSONDict] = []
         for block in html.split('class="heading"'):

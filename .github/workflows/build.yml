@@ -1,12 +1,7 @@
 ---
 name: Code quality
 on:
-  push:
-    branches:
-      - master
-      - dev
-  pull_request:
-    types: [opened, synchronize, reopened]
+  push
 jobs:
   test:
     runs-on: ubuntu-latest
