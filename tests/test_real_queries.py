@@ -73,17 +73,13 @@ def test_candidates(ep):
 
 
 def test_singleton_item_candidates(single_track_release):
-    """Normally it takes ~10s to search and find a match."""
+    """Our test singleton should be the first search result."""
     expected = single_track_release.singleton
     pl = BandcampPlugin()
 
-    candidates = pl.item_candidates(Item(), expected.artist, expected.title)
-    for track in candidates:
-        if track.title == expected.title:
-            assert vars(track) == vars(expected)
-            break
-    else:
-        pytest.fail("Expected singleton was not returned.")
+    track = next(pl.item_candidates(Item(), expected.artist, expected.title))
+    assert track
+    assert vars(track) == vars(expected)
 
 
 @pytest.mark.parametrize("method", ["album_for_id", "track_for_id"])
