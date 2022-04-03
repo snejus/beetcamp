@@ -1,3 +1,11 @@
+## [0.13.1] 2022-04-03
+
+### Fixed
+
+* search: changes introduced in [0.13.0] broke searching functionality for `python 3.6-3.8` due to changes in the built-in `difflib` library. This has been fixed and tests for the searching logic are now added. Thanks to @emanuele-virgillito for reporting the issue.
+
+[0.13.1]: https://github.com/snejus/beetcamp/releases/tag/0.13.1
+
 ## [0.13.0] 2022-03-22
 
 ### Added
@@ -76,6 +84,8 @@
 
 - Clarified that `preferred_media` should include **Digital Media** (not **Digital**) in
   the README.
+
+[0.13.0]: https://github.com/snejus/beetcamp/releases/tag/0.13.0
 
 ## [0.12.0] 2022-02-10
 
