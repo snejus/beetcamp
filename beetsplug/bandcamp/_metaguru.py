@@ -398,9 +398,8 @@ class Metaguru(Helpers):
             return album
 
         if " EP" in album or " LP" in album:
-            return self.clean_ep_lp_name(album, self.unique_artists)
-
-        if not self._singleton:
+            album = self.clean_ep_lp_name(album, self.unique_artists)
+        else:
             album = self.clean_name(
                 album,
                 self.bandcamp_albumartist,
