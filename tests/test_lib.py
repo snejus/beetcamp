@@ -17,7 +17,7 @@ pytestmark = pytest.mark.lib
 
 BASE_DIR = "lib_tests"
 TEST_DIR = "dev"
-REFERENCE_DIR = "v0.12.0"
+REFERENCE_DIR = "0.13.2"
 
 IGNORE_FIELDS = {
     "bandcamp_artist_id",
@@ -28,6 +28,8 @@ IGNORE_FIELDS = {
     "comments",
     "length",
     "price",
+    "mastering",
+    "artwork",
 }
 
 target_dir = os.path.join(BASE_DIR, TEST_DIR)
