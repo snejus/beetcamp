@@ -55,7 +55,7 @@ CATNUM_PAT = {
 
 rm_strings = [
     "limited edition",
-    r"^EP [0-9]+",
+    r"^[EL]P( [0-9]+)?",
     r"^Vol(ume)?\W*\d",
     r"(digital )?album\)",
     r"va|vinyl|compiled by .*",
