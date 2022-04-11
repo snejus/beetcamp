@@ -357,8 +357,6 @@ def test_parse_catalognum(album, disctitle, description, label, expected, beets_
         ("The Castle [BLCKLPS009] Incl. Remix", [], "The Castle"),
         ('Anetha - "Ophiuchus EP"', ["Anetha"], "Ophiuchus EP"),
         ("Album (FREE DL)", [], "Album"),
-        ("Devils Kiss VA", [], "Devils Kiss"),
-        ("Devils Kiss VA001", [], "Devils Kiss VA001"),
         (
             "Dax J - EDLX.051 Illusions Of Power",
             ["EDLX.051", "Dax J"],
@@ -371,7 +369,13 @@ def test_parse_catalognum(album, disctitle, description, label, expected, beets_
         ("HWEP010 - MEZZ - COLOR OF WAR", ["HWEP010", "MEZZ"], "COLOR OF WAR"),
         ("O)))Bow 1", [], "O)))Bow 1"),
         ("hi'Hello", ["hi"], "'Hello"),
-        ("Blood Moon †INVI VA006†", ["INVI VA006"], "Blood Moon"),
+        # only remove VA if album name starts or ends with it
+        ("Album VA", [], "Album"),
+        ("VA Album", [], "Album"),
+        ("Album VA001", [], "Album VA001"),
+        ("Album VA 03", [], "Album VA 03"),
+        # remove (weird chars too) regardless of its position if explicitly excluded
+        ("Album †INVI VA006†", ["INVI VA006"], "Album"),
     ],
 )
 def test_clean_name(name, extras, expected):

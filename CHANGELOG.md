@@ -3,11 +3,8 @@
 ### Fixed
 
 * `album`: 
-  * An edge case when the release name only included artist names followed by
-  **EP** or **LP**, which previously resulted in an empty album name. Now it's populated
-  correctly.
-  * Remove **EP** or **LP** from the beginning reliably
-
+  * Remove **EP** or **LP** from the beginning more reliably
+  * Only remove **VA** if album name starts or ends with it
 
 
 ## [0.13.2] 2022-04-03

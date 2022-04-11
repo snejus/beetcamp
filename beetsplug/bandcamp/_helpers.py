@@ -20,7 +20,7 @@ MEDIA_MAP = {
 
 _catalognum = Template(
     r"""(?<![/@])(\b
-(?!\W|VA[\d ]+|[EL]P\W|[^\n.]+[ ](?:[0-9]KG|20\d{2}|VA\d+)|AT[ ]0|GC1|HF[.])
+(?!\W|VA[\d ]+|[EL]P\W|[^\n.]+[ ](?:[0-9]KG|20\d{2}|VA[ \d]+)|AT[ ]0|GC1|HF[.])
 (?!(?i:vol |mp3|christ|vinyl|disc|session|record|artist|the\ |maxi\ |rave\ ))
 (?![^.]+shirt)
 (
@@ -58,7 +58,7 @@ rm_strings = [
     r"^[EL]P( [0-9]+)?",
     r"^Vol(ume)?\W*\d",
     r"(digital )?album\)",
-    r"va|vinyl|compiled by .*",
+    r"^va|va$|vinyl|compiled by .*",
     r"free download|free dl|free\)",
 ]
 PATTERNS: Dict[str, Pattern] = {
