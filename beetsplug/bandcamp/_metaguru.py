@@ -21,7 +21,7 @@ from ._helpers import PATTERNS, Helpers, MediaInfo
 if sys.version_info.minor > 7:
     from functools import cached_property
 else:
-    from cached_property import cached_property
+    from cached_property import cached_property  # type: ignore
 
 NEW_BEETS = get_distribution("beets").parsed_version >= parse_version("1.5.0")
 
@@ -60,6 +60,8 @@ class Metaguru(Helpers):
         self.media_formats = Helpers.get_media_map(
             (meta.get("inAlbum") or meta).get("albumRelease") or []
         )
+        if self.media_formats:
+            self.media = self.media_formats[0]
         self.config = config or {}
         self.va_name = beets_config["va_name"].as_str() or self.va_name
 
@@ -231,6 +233,16 @@ class Metaguru(Helpers):
             return [{"item": self.meta, "position": 1}]
 
     @cached_property
+    def json_artists(self) -> List[str]:
+        artists = []
+        for item in map(lambda x: x["item"], self.json_tracks):
+            try:
+                artists.append(item["byArtist"]["name"])
+            except KeyError:
+                continue
+        return artists
+
+    @cached_property
     def tracks(self) -> List[JSONDict]:
         """Parse relevant details from the tracks' JSON."""
         names = self.track_names
@@ -264,7 +276,7 @@ class Metaguru(Helpers):
 
     @cached_property
     def track_artists(self) -> List[str]:
-        return list(filter(op.truth, map(lambda x: x.get("artist"), self.tracks)))
+        return list(filter(op.truth, map(lambda x: x.get("artist") or "", self.tracks)))
 
     @cached_property
     def unique_artists(self) -> List[str]:
@@ -272,10 +284,18 @@ class Metaguru(Helpers):
 
     @cached_property
     def track_names(self) -> List[str]:
-        raw_tracks = self.meta.get("tracks")
+        raw_tracks = self.meta.get("tracks") or []
         if raw_tracks:
             return list(map(lambda x: x.split(". ", maxsplit=1)[1], raw_tracks))
-        return list(map(lambda x: x.get("item").get("name") or "", self.json_tracks))
+
+        for item in map(lambda x: x["item"], self.json_tracks):
+            name = item["name"]
+            artist = item.get("byArtist", {}).get("name")
+            if not self._singleton and artist and artist != self.label:
+                name = artist + " - " + name
+            raw_tracks.append(name)
+
+        return raw_tracks
 
     @cached_property
     def raw_artists(self) -> List[str]:

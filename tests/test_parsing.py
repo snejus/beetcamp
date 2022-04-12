@@ -44,14 +44,10 @@ def print_result(case, expected, result):
         _p("stuff", "sick vinyl", "creds", "stuff\nsick vinyl\ncreds", id="all"),
     ],
 )
-def test_comments(descr, disctitle, creds, expected):
-    meta = dict(
-        description=descr,
-        albumRelease=[{"musicReleaseFormat": "VinylFormat", "description": disctitle}],
-        creditText=creds,
-        dateModified="doesntmatter",
-    )
-    config = {"preferred_media": "Vinyl", "comments_separator": "\n"}
+def test_comments(descr, disctitle, creds, expected, media_format):
+    media_format["description"] = disctitle
+    meta = dict(description=descr, albumRelease=[media_format], creditText=creds)
+    config = {"comments_separator": "\n"}
     guru = Metaguru(meta, config)
     assert guru.comments == expected, vars(guru)
 
@@ -79,7 +75,7 @@ def test_mediums_count(name, expected):
         ("X23 & Høbie - Exhibit A", "x23-h-bie-exhibit-a"),
     ],
 )
-def test_convert_title(title, expected):
+def test_urlify(title, expected):
     assert urlify(title) == expected
 
 
@@ -156,11 +152,7 @@ def test_parse_track_name(name, expected, beets_config):
 @pytest.mark.parametrize(
     ("names", "catalognum", "expected"),
     [
-        (
-            ["LI$INGLE010 - cyberflex - LEVEL X"],
-            "LI$INGLE010",
-            ["cyberflex - LEVEL X"],
-        ),
+        (["LI$INGLE010 - cyberflex - LEVEL X"], "LI$INGLE010", ["cyberflex - LEVEL X"]),
         (
             ["1. Artist - Title", "2. Artist - Title"],
             "",
@@ -187,7 +179,7 @@ def test_clean_track_names(names, catalognum, expected):
     [
         ("Album EP", [], "Album EP"),
         ("Artist Album EP", ["Artist"], "Album EP"),
-        ("Artist EP", ["Artist"], "Artist EP"),
+        ("Artist EP", ["Artist"], ""),
         ("Album Artist EP", ["Artist"], "Album EP"),
         ("CAT001 - Artist Album EP", ["Artist"], "Album EP"),
     ],
@@ -308,22 +300,17 @@ def test_parse_country(name, expected):
         ("LI$INGLE010 - cyberflex - LEVEL X", "", "", "", "LI$INGLE010"),
     ],
 )
-def test_parse_catalognum(album, disctitle, description, label, expected, beets_config):
+def test_parse_catalognum(
+    album, disctitle, description, label, expected, beets_config, media_format
+):
+    media_format.update(name=disctitle, description="")
     meta = {
         "name": album,
         "description": description,
         "publisher": {"name": label},
         "byArtist": {"name": ""},
-        "albumRelease": [
-            {
-                "name": disctitle,
-                "musicReleaseFormat": "VinylFormat",
-                "description": "",
-            },
-        ],
-        "tracks": ["1. Artist - Title"],
+        "albumRelease": [media_format],
     }
-
     assert Metaguru(meta, beets_config).catalognum == expected
 
 

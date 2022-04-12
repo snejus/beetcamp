@@ -1,5 +1,6 @@
 """End to end tests aimed at catching html updates on bandcamp side."""
 import pytest
+from beets.autotag.hooks import AlbumInfo, TrackInfo
 from beets.library import Item
 from beetsplug.bandcamp import BandcampPlugin
 
@@ -52,18 +53,12 @@ def test_search():
     assert result["url"] == expect_to_find
 
 
-def test_get_single_track_album(single_track_release):
-    expected_track = single_track_release.singleton
-    url = single_track_release.album_id
+@pytest.mark.parametrize("release", ["ep"], indirect=["release"])
+def test_candidates(release):
+    _, expected_albums = release
+    expected_album = AlbumInfo(**expected_albums[0])
+    expected_album.tracks = list(map(lambda x: TrackInfo(**x), expected_album.tracks))
 
-    plugin = BandcampPlugin()
-    actual = plugin.get_track_info(url)
-
-    assert vars(actual) == vars(expected_track)
-
-
-def test_candidates(ep):
-    expected_album = ep.albuminfo
     plugin = BandcampPlugin()
 
     albums = plugin.candidates([], expected_album.artist, expected_album.album, False)
@@ -72,9 +67,12 @@ def test_candidates(ep):
     check_album(next(albums), expected_album)
 
 
-def test_singleton_item_candidates(single_track_release):
+@pytest.mark.parametrize("release", ["single_track_release"], indirect=["release"])
+def test_singleton_item_candidates(release):
     """Our test singleton should be the first search result."""
-    expected = single_track_release.singleton
+    _, expected_track = release
+    expected = TrackInfo(**expected_track)
+
     pl = BandcampPlugin()
 
     track = next(pl.item_candidates(Item(), expected.artist, expected.title))

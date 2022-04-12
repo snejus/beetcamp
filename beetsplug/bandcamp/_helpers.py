@@ -6,7 +6,7 @@ from functools import partial
 from string import Template
 from typing import Any, Callable, Dict, Iterable, List, NamedTuple, Pattern, Tuple, Union
 
-from ordered_set import OrderedSet as ordset  # typing: ignore
+from ordered_set import OrderedSet as ordset
 
 from .genres_lookup import GENRES
 
@@ -40,7 +40,7 @@ _catalognum = Template(
     | [A-Z-]{3,}\d+         # RIV4
     # dollar signs need escaping here since the $label below will be
     # substituted later, and we do not want to touch these two
-    | [A-Z]+[A-Z.$$-]+\d{2,} # USE202, HEY-101, LI$$025
+    | [A-Z]{2,}[A-Z.$$-]*\d{2,} # HS11, USE202, HEY-101, LI$$INGLE025
     | [A-Z.]{2,}[ ]\d{1,3}  # OBS.CUR 9
     | \w+[A-z]0\d+          # 1ØPILLS018, fa036
     | [a-z]+(cd|lp)\d+      # ostgutlp45
@@ -425,23 +425,19 @@ class Helpers:
         20      p          Sweater/Hoodie
         """
 
-        def has_props(obj: JSONDict) -> bool:
-            return "additionalProperty" in obj
-
         def valid_format(obj: JSONDict) -> bool:
             return (
+                {"name", "item_type"} < set(obj)
                 # not a discography
-                obj["item_type"] != "b"
+                and obj["item_type"] != "b"
                 # musicReleaseFormat format is given or it is a USB
-                and (bool(obj.get("musicReleaseFormat")) or obj["type_id"] == 5)
+                and ("musicReleaseFormat" in obj or obj["type_id"] == 5)
                 # it is not a vinyl bundle
                 and "bundle" not in obj["name"].lower()
             )
 
         formats = []
-        for _format in filter(
-            valid_format, map(Helpers.unpack_props, filter(has_props, format_list))
-        ):
+        for _format in filter(valid_format, map(Helpers.unpack_props, format_list)):
             formats.append(
                 MediaInfo(
                     _format["@id"],

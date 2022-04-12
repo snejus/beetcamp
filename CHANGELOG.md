@@ -7,6 +7,11 @@
   option `bandcamp.preferred_media` is not used anymore - feel free to remove it from your
   configs. You can instead use global option `preferred.media` for the same purpose.
 
+### Updated
+
+* internal: Tests clean up: pytest fixtures have been replaced with JSON files that
+  contain expected output data.
+
 ### Fixed
 
 * `album`: 
