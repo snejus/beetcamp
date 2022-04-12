@@ -345,6 +345,9 @@ class Metaguru(Helpers):
         if "LP" in disctitles:
             return "album"
 
+        if disctitles and len(self.tracks) == 4:
+            return "ep"
+
         text = "\n".join([self.album_name, disctitles, self.comments])
         lp_count = text.count(" LP")
         ep_count = text.count(" EP")
@@ -352,6 +355,7 @@ class Metaguru(Helpers):
             return "album"
         if ep_count > lp_count:
             return "ep"
+        # TODO: count 'album'
 
         if self.is_single:
             return "single"
