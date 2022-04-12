@@ -340,9 +340,9 @@ class Metaguru(Helpers):
     @cached_property
     def albumtype(self) -> str:
         disctitles = self.vinyl_disctitles.upper().replace("REPRESS", "")
-        if "EP" in disctitles:
+        if self.clean_album_name.endswith(" EP") or "EP" in disctitles:
             return "ep"
-        if "LP" in disctitles:
+        if self.clean_album_name.endswith(" LP") or "LP" in disctitles:
             return "album"
 
         if disctitles and len(self.tracks) == 4:
