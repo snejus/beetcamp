@@ -2,15 +2,20 @@
 
 ### Added
 
-* `search` and `media`: all available media formats except merch are now returned
-  instantly, similar to Discogs and MusicBrainz autotaggers. Therefore, configuration
-  option `bandcamp.preferred_media` is not used anymore - feel free to remove it from your
-  configs. You can instead use global option `preferred.media` for the same purpose.
+* `media`: 
+  * previously, we picked the very first **Vinyl**, **CD** etc. media available and the
+    rest did not exist from the plugin's point of view. This is now updated: every media
+    which maps to tracks in the same release will get returned, similar to Discogs and
+    MusicBrainz autotaggers. 
+
+    Therefore, `bandcamp.preferred_media` configuration option does not have any effect
+    anymore and it can be safely removed from your configuration. Instead, use the global
+    `preferred.media` option and adjust distance weights correspondingly.
 
 ### Updated
 
-* internal: Tests clean up: pytest fixtures have been replaced with JSON files that
-  contain expected output data.
+* internal: Tests clean up: pytest fixture-spaghetti has been replaced with JSON files that
+  contain the expected output data.
 
 ### Fixed
 
