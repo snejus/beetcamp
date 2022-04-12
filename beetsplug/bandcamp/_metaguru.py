@@ -339,6 +339,9 @@ class Metaguru(Helpers):
 
     @cached_property
     def albumtype(self) -> str:
+        if self._singleton:
+            return "single"
+
         disctitles = self.vinyl_disctitles.upper().replace("REPRESS", "")
         if self.clean_album_name.endswith(" EP") or "EP" in disctitles:
             return "ep"
@@ -357,8 +360,8 @@ class Metaguru(Helpers):
             return "ep"
         # TODO: count 'album'
 
-        if self.is_single:
-            return "single"
+        # if self.is_single:
+        #     return "single"
         if self.is_va:
             return "compilation"
         return "album"
