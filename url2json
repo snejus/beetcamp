@@ -11,14 +11,11 @@
 # · Save output to a file
 #    url2json https://hello.bandcamp.com/album/hi > ./tests/json/testcase.json
 #
-# · Open directly
+# · Open with jq and less
 #    url2json -h https://hello.bandcamp.com/album/hi
 #
 # · Update all json test data
 #    url2json -u
-#
-# · Format and print tracklist for our pytest fixtures
-#    url2json --tracklist-for-tests ./tests/jsons/compilation.json
 #
 JQARGS=(--sort-keys 'del(.comment, .sponsor, .albumRelease[0].offers)')
 
@@ -31,22 +28,9 @@ get_human_json () {
   get_json "$1" | less -R
 }
 
-tracklist_for_tests () {
-  jq < "$1" -r '
-    "("
-    + (.track.itemListElement[].item
-    | [
-      "\"" + (.["@id"] | sub(".*/"; "")) + "\"",
-      ((select(.name | test(" - .*")) | "\"" + sub(" - .*"; "") + "\"" | sub("\"\""; "")) // "albumartist"),
-      "\"" + (.name | sub(".* - "; "")) + "\"",
-      (.additionalProperty[] | select(.name == "duration_secs").value | floor) // "None",
-      "None"
-    ]
-    | join(", ")) + "),"'
-}
-
 update_test_jsons () {
-  for file in ./tests/json/*.json; do
+  for file in ./tests/json/{,issues/}*.json; do
+    [[ $file == *_expected* ]] && continue
     cp "$file" "$file.old"
     url=$(jq -r '.["@id"]' "$file")
     printf '%-50s' "$file"
@@ -60,7 +44,7 @@ update_test_jsons () {
       echo -e ' \e[1;32mNo changes\e[0m'
     else
       echo
-      diff --side-by-side --suppress-common-lines --color=auto "$file.old" "$file"
+      diff --side-by-side --suppress-common-lines --color=always "$file.old" "$file"
     fi
     rm "$file.old"
   done
