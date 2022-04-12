@@ -334,8 +334,18 @@ class Metaguru(Helpers):
         return self.official_albumartist
 
     @cached_property
+    def vinyl_disctitles(self) -> str:
+        return " ".join([m.title for m in self.media_formats if m.name == "Vinyl"])
+
+    @cached_property
     def albumtype(self) -> str:
-        text = "\n".join([self.album_name, self.disctitle, self.comments])
+        disctitles = self.vinyl_disctitles.upper().replace("REPRESS", "")
+        if "EP" in disctitles:
+            return "ep"
+        if "LP" in disctitles:
+            return "album"
+
+        text = "\n".join([self.album_name, disctitles, self.comments])
         lp_count = text.count(" LP")
         ep_count = text.count(" EP")
         if lp_count >= ep_count and lp_count:

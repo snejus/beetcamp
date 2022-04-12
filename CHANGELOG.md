@@ -17,6 +17,8 @@
 * internal: Tests clean up: pytest fixture-spaghetti has been replaced with JSON files that
   contain the expected output data.
 
+* `albumtype`: accuracy improvements for releases that have **Vinyl** media
+
 ### Fixed
 
 * `album`: 
