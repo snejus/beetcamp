@@ -1,5 +1,12 @@
 ## [0.14.0-alpha.0] Unreleased
 
+### Added
+
+* `search` and `media`: all available media formats except merch are now returned
+  instantly, similar to Discogs and MusicBrainz autotaggers. Therefore, configuration
+  option `bandcamp.preferred_media` is not used anymore - feel free to remove it from your
+  configs. You can instead use global option `preferred.media` for the same purpose.
+
 ### Fixed
 
 * `album`: 

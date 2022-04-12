@@ -55,7 +55,6 @@ Navigate to your `beets` virtual environment and install the plug-in with
 
 ```yaml
 bandcamp:
-  preferred_media: Digital Media
   include_digital_only_tracks: true
   search_max: 2
   art: yes
@@ -67,19 +66,6 @@ bandcamp:
     always_include: []
     mode: progressive # classical, progressive or psychedelic
 ```
-
----
-
-#### `preferred_media`
-
-- Type: **string**
-- Default: `Digital Media`
-
-A comma-separated list of media to prioritize when fetching albums. For example:
-`preferred_media: Vinyl,Cassette` will ignore `CD`, check for a `Vinyl`, and then for a
-`Cassette`, in the end defaulting to `Digital Media` (always available) if none of the two are
-found. Any combination of the following is supported: `Vinyl`, `CD`, `Cassette`,
-`Digital Media`.
 
 ---
 
@@ -99,12 +85,10 @@ the tracks that are supposed to be found in that media.
 #### `search_max`
 
 - Type: **int**
-- Default: `10`.
+- Default: `2`.
 
-Maximum number of items to fetch through search queries. Depending on the specificity of
-queries and whether a suitable match is found, it could fetch 50+ results which may take a
-minute, so it'd make sense to bound this to some sort of sensible number. Usually, a match
-is found among the first 5 items.
+Number of items to fetch through search, maximum is 18. Usually, a matching release should
+be found among the first two items.
 
 ---
 

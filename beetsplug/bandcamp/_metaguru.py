@@ -16,7 +16,7 @@ from beets.autotag.hooks import AlbumInfo, TrackInfo
 from pkg_resources import get_distribution, parse_version
 from pycountry import countries, subdivisions
 
-from ._helpers import MEDIA_MAP, PATTERNS, Helpers
+from ._helpers import PATTERNS, Helpers, MediaInfo
 
 if sys.version_info.minor > 7:
     from functools import cached_property
@@ -47,13 +47,19 @@ def urlify(pretty_string: str) -> str:
 
 
 class Metaguru(Helpers):
+    _singleton = False
+    va_name = VA
+    media = MediaInfo("", "", "", "")
+
     meta: JSONDict
     config: JSONDict
-    _singleton = False
-    va_name: str = VA
+    media_formats: List[MediaInfo]
 
     def __init__(self, meta: JSONDict, config: Optional[JSONDict] = None) -> None:
         self.meta = meta
+        self.media_formats = Helpers.get_media_map(
+            (meta.get("inAlbum") or meta).get("albumRelease") or []
+        )
         self.config = config or {}
         self.va_name = beets_config["va_name"].as_str() or self.va_name
 
@@ -71,13 +77,13 @@ class Metaguru(Helpers):
     def excluded_fields(self) -> Set[str]:
         return set(self.config.get("excluded_fields") or [])
 
-    @cached_property
+    @property
     def comments(self) -> str:
         """Return release, media descriptions and credits separated by
         the configured separator string.
         """
         parts = [self.meta.get("description")]
-        media_desc = self.media.get("description")
+        media_desc = self.media.description
         if media_desc and not media_desc.startswith("Includes high-quality"):
             parts.append(media_desc)
 
@@ -144,9 +150,10 @@ class Metaguru(Helpers):
             aartist = self.parse_track_name(self.album_name).get("artist") or aartist
 
         aartists = Helpers.split_artists([aartist])
+        remixers_str = " ".join(self.remixers)
 
         def not_remixer(x: str) -> bool:
-            return not any(map(lambda y: y in self.remixers, {x, *x.split(" & ")}))
+            return not any(map(lambda y: y in remixers_str, {x, *x.split(" & ")}))
 
         valid = list(filter(not_remixer, aartists))
         if (
@@ -180,44 +187,25 @@ class Metaguru(Helpers):
         reldate = self.release_date
         return "Official" if reldate and reldate <= date.today() else "Promotional"
 
-    @cached_property
-    def media(self) -> JSONDict:
-        media = self.meta.get("albumRelease", [{}])[0]
-        try:
-            media_index = self._get_media_reference(self.meta)
-        except (KeyError, AttributeError):
-            pass
-        else:
-            # if preference is given and the format is available, use it
-            for preference in (self.config.get("preferred_media") or "").split(","):
-                if preference in media_index:
-                    media = media_index[preference]
-                    break
-        return media
-
-    @cached_property
-    def media_name(self) -> str:
-        """Return the human-readable version of the media format."""
-        return MEDIA_MAP.get(self.media.get("musicReleaseFormat", ""), DIGI_MEDIA)
-
-    @cached_property
+    @property
     def disctitle(self) -> str:
         """Return medium's disc title if found."""
-        return "" if self.media_name == DIGI_MEDIA else self.media.get("name", "")
+        return "" if self.media.name == DIGI_MEDIA else self.media.title
 
-    @cached_property
+    @property
     def mediums(self) -> int:
-        return self.get_vinyl_count(self.disctitle) if self.media_name == "Vinyl" else 1
+        return self.get_vinyl_count(self.disctitle) if self.media.name == "Vinyl" else 1
 
-    @cached_property
+    @property
     def catalognum(self) -> str:
-        artists = [self.official_albumartist]
+        artists = [self.raw_albumartist or self.official_albumartist]
         if not self._singleton or len(self.raw_artists) > 1:
             artists.extend(self.raw_artists)
+            artists.extend(self.remixers)
         return self.parse_catalognum(
             self.meta["name"],
             self.disctitle,
-            self.all_media_comments,
+            self.media.description + "\n" + self.comments,
             self.label,
             artists,
         )
@@ -268,11 +256,11 @@ class Metaguru(Helpers):
         return self.adjust_artists(tracks, self.bandcamp_albumartist)
 
     @cached_property
-    def remixers(self) -> str:
+    def remixers(self) -> Set[str]:
         titles = " ".join(self.track_names)
         names = re.finditer(r"\( *([^)]+) (?i:(re)?mix|edit)\)", titles, re.I)
         ft = re.finditer(r"[( ](f(ea)?t[.]? [^()]+)[)]?", titles, re.I)
-        return " ".join(set(map(lambda x: x.expand(r"\1"), it.chain(names, ft))))
+        return set(map(lambda x: x.expand(r"\1"), it.chain(names, ft)))
 
     @cached_property
     def track_artists(self) -> List[str]:
@@ -408,11 +396,11 @@ class Metaguru(Helpers):
             )
         return album or self.parsed_album_name or self.catalognum or self.album_name
 
-    @cached_property
+    @property
     def _common(self) -> JSONDict:
         return dict(
             data_source=DATA_SOURCE,
-            media=self.media_name,
+            media=self.media.name,
             data_url=self.album_id,
             artist_id=self.artist_id,
         )
@@ -425,16 +413,10 @@ class Metaguru(Helpers):
             return {field: getattr(self, field)}
         return dict(zip(fields, iter(op.attrgetter(*fields)(src or self))))
 
-    @cached_property
+    @property
     def _common_album(self) -> JSONDict:
         common_data: JSONDict = dict(album=self.clean_album_name)
-        fields = [
-            "label",
-            "catalognum",
-            "albumtype",
-            "albumstatus",
-            "country",
-        ]
+        fields = ["label", "catalognum", "albumtype", "albumstatus", "country"]
         if NEW_BEETS:
             fields.extend(["genre", "style", "comments"])
         common_data.update(self.get_fields(fields))
@@ -467,6 +449,7 @@ class Metaguru(Helpers):
     @cached_property
     def singleton(self) -> TrackInfo:
         self._singleton = True
+        self.media = self.media_formats[0]
         track_dict = self.tracks[0]
         if not track_dict["artist"]:
             track_dict["artist"] = self.bandcamp_albumartist
@@ -478,12 +461,12 @@ class Metaguru(Helpers):
         track.track_id = track.data_url
         return track
 
-    @cached_property
-    def album(self) -> AlbumInfo:
+    def _album(self, media: MediaInfo) -> AlbumInfo:
         """Return album for the appropriate release format."""
+        self.media = media
         tracks: Iterable[JSONDict] = self.tracks
         include_digi = self.config.get("include_digital_only_tracks")
-        if not include_digi and self.media_name != DIGI_MEDIA:
+        if not include_digi and self.media.name != DIGI_MEDIA:
             tracks = it.filterfalse(op.itemgetter("digi_only"), tracks)
 
         tracks = list(map(op.methodcaller("copy"), tracks))
@@ -503,4 +486,10 @@ class Metaguru(Helpers):
         )
         for key, val in self.get_fields(["va"]).items():
             setattr(album_info, key, val)
+        album_info.album_id = self.media.album_id
         return album_info
+
+    @cached_property
+    def albums(self) -> Iterable[AlbumInfo]:
+        """Return album for the appropriate release format."""
+        return list(map(self._album, self.media_formats))

@@ -4,19 +4,30 @@ import re
 from collections import Counter, defaultdict
 from functools import partial
 from string import Template
-from typing import Any, Callable, Dict, Iterable, List, Pattern, Tuple, Union
+from typing import Any, Callable, Dict, Iterable, List, NamedTuple, Pattern, Tuple, Union
 
-from ordered_set import OrderedSet as ordset
+from ordered_set import OrderedSet as ordset  # typing: ignore
 
 from .genres_lookup import GENRES
 
 JSONDict = Dict[str, Any]
-MEDIA_MAP = {
+DIGI_MEDIA = "Digital Media"
+FORMAT_TO_MEDIA = {
     "VinylFormat": "Vinyl",
     "CDFormat": "CD",
     "CassetteFormat": "Cassette",
-    "DigitalFormat": "Digital Media",
+    "DigitalFormat": DIGI_MEDIA,
+    "DVDFormat": "DVD",
+    "USB Flash Drive": DIGI_MEDIA,
 }
+
+
+class MediaInfo(NamedTuple):
+    album_id: str
+    name: str
+    title: str
+    description: str
+
 
 _catalognum = Template(
     r"""(?<![/@])(\b
@@ -69,8 +80,7 @@ PATTERNS: Dict[str, Pattern] = {
     "digital": [  # type: ignore
         re.compile(r"^(DIGI(TAL)? ?[\d.]+|Bonus\W{2,})\W*"),
         re.compile(
-            r"[^\w\)]+(bandcamp[^-]+|digi(tal)?)(\W*(\W+|only|bonus|exclusive)\W*$)",
-            re.I,
+            r"[^\w\)]+(bandcamp[^-]+|digi(tal)?)(\W*(\W+|only|bonus|exclusive)\W*$)", re.I
         ),
     ],
     "remix_or_ft": re.compile(r" [\[(].*(?i:mix|edit|f(ea)?t([.]|uring)?).*"),
@@ -384,20 +394,60 @@ class Helpers:
         return it.filterfalse(duplicate, genres)
 
     @staticmethod
-    def _get_media_reference(meta: JSONDict) -> JSONDict:
-        """Get release media from the metadata, excluding bundles.
-        Return a dictionary with a human mapping (Digital|CD|Vinyl|Cassette) -> media.
+    def unpack_props(obj: JSONDict) -> JSONDict:
+        """Add all 'additionalProperty'-ies to the parent dictionary."""
+        for prop in obj.get("additionalProperty") or []:
+            obj[prop["name"]] = prop["value"]
+        return obj
+
+    @staticmethod
+    def get_media_map(format_list: List[JSONDict]) -> List[MediaInfo]:
+        """Return filtered Bandcamp media formats as a list of MediaInfo objects.
+        Formats are filtered using the following fields,
+
+        type_id item_type  type_name          musicReleaseFormat
+                a          Digital            DigitalFormat   # digital album
+                b          Digital            DigitalFormat   # discography
+                t          Digital            DigitalFormat   # digital track
+        0       p          Other
+        1       p          Compact Disc (CD)  CDFormat
+        2       p          Vinyl LP           VinylFormat
+        3       p          Cassette           CassetteFormat
+        4       p          DVD                DVDFormat
+        5       p          USB Flash Drive
+        10      p          Poster/Print
+        11      p          T-Shirt/Apparel
+        15      p          2 x Vinyl LP       VinylFormat
+        16      p          7" Vinyl           VinylFormat
+        17      p          Vinyl Box Set      VinylFormat
+        18      p          Other Vinyl        VinylFormat
+        19      p          T-Shirt/Shirt
+        20      p          Sweater/Hoodie
         """
 
-        def is_bundle(fmt: JSONDict) -> bool:
-            return "bundle" in (fmt.get("name") or "").casefold()
+        def has_props(obj: JSONDict) -> bool:
+            return "additionalProperty" in obj
 
-        media: Dict[str, JSONDict] = {}
-        for _format in it.filterfalse(is_bundle, meta["albumRelease"]):
-            try:
-                medium = _format["musicReleaseFormat"]
-            except KeyError:
-                continue
-            human_name = MEDIA_MAP[medium]
-            media[human_name] = _format
-        return media
+        def valid_format(obj: JSONDict) -> bool:
+            return (
+                # not a discography
+                obj["item_type"] != "b"
+                # musicReleaseFormat format is given or it is a USB
+                and (bool(obj.get("musicReleaseFormat")) or obj["type_id"] == 5)
+                # it is not a vinyl bundle
+                and "bundle" not in obj["name"].lower()
+            )
+
+        formats = []
+        for _format in filter(
+            valid_format, map(Helpers.unpack_props, filter(has_props, format_list))
+        ):
+            formats.append(
+                MediaInfo(
+                    _format["@id"],
+                    FORMAT_TO_MEDIA[_format.get("musicReleaseFormat") or "DigitalFormat"],
+                    _format["name"],
+                    _format.get("description") or "",
+                )
+            )
+        return formats

@@ -5,6 +5,7 @@ from collections import Counter, defaultdict, namedtuple
 from functools import partial
 from html import unescape
 from itertools import groupby
+from operator import truth
 
 import pytest
 from beetsplug.bandcamp import BandcampPlugin
@@ -17,7 +18,7 @@ pytestmark = pytest.mark.lib
 
 BASE_DIR = "lib_tests"
 TEST_DIR = "dev"
-REFERENCE_DIR = "16407f6"
+REFERENCE_DIR = "5cbdf1e"
 
 IGNORE_FIELDS = {
     "bandcamp_artist_id",
@@ -40,11 +41,6 @@ install(show_locals=True, extra_lines=8, width=int(os.environ.get("COLUMNS", 150
 console = make_console(stderr=True, record=True)
 
 testfiles = sorted(filter(lambda x: x.endswith("json"), os.listdir("jsons")))
-
-
-@pytest.fixture(params=testfiles)
-def file(request):
-    return request.param
 
 
 Oldnew = namedtuple("Oldnew", ["old", "new", "diff"])
@@ -123,12 +119,16 @@ def do_key(table, key: str, before, after) -> None:
             table.add_row(wrap(key, "b"), difftext)
 
 
-def compare(old, new) -> None:
+def compare(old, new):
     every_new = [new]
     every_old = [old]
     if "/album/" in new["data_url"]:
         for entity in old, new:
             entity["albumartist"] = entity.pop("artist", "")
+            if "tracks" in entity:
+                for track in entity["tracks"]:
+                    entity["disctitle"] = track.pop("disctitle", "")
+                    # track.pop("media")
 
         every_new.extend(new.get("tracks") or [])
         every_old.extend(old.get("tracks") or [])
@@ -144,32 +144,68 @@ def compare(old, new) -> None:
             do_key(table, key, str(old.get(key, "")), str(new.get(key, "")))
 
     if table.rows:
+        subtitle = wrap(_id + "-" + (new.get("media") or ""), "dim")
         console.print("")
-        console.print(
-            border_panel(table, title=wrap(desc, "b"), subtitle=wrap(_id, "dim"))
-        )
-        pytest.fail(pytrace=False)
+        console.print(border_panel(table, title=wrap(desc, "b"), subtitle=subtitle))
+        return False
+    return True
 
 
-@pytest.mark.usefixtures("_report")
-def test_file(file, config):
+@pytest.fixture(params=testfiles)
+def file(request):
+    return request.param
+
+
+@pytest.fixture
+def guru(file, config):
     meta_file = os.path.join("jsons", file)
     tracks_file = os.path.join("jsons", file.replace(".json", ".tracks"))
-    compare_file = os.path.join(compare_against, file)
 
     meta = open(meta_file).read() + (
         ("\n" + unescape(unescape(open(tracks_file).read())))
         if os.path.exists(tracks_file)
         else ""
     )
-    guru = Metaguru.from_html(meta, config)
-    new = guru.singleton if "_track_" in file else guru.album
+    return Metaguru.from_html(meta, config)
 
-    target = os.path.join(target_dir, file)
-    json.dump(new, open(target, "w"), indent=2)
+
+@pytest.mark.usefixtures("_report")
+def test_file(file, guru):
+    IGNORE_FIELDS.update({"album_id", "media", "mediums", "disctitle"})
+
+    target_file = os.path.join(target_dir, file)
+    new = guru.singleton if "_track_" in file else guru.albums[0]
+    new.catalognum = " / ".join(filter(truth, map(lambda x: x.catalognum, guru.albums)))
+    json.dump(new, open(target_file, "w"), indent=2)
 
     try:
-        old = json.load(open(compare_file))
+        old = json.load(open(os.path.join(compare_against, file)))
     except FileNotFoundError:
         old = {}
-    compare(old, new)
+
+    if not compare(old, new):
+        pytest.fail(pytrace=False)
+
+
+@pytest.mark.usefixtures("_report")
+def test_media(file, guru):
+    if "_track_" in file:
+        entities = [guru.singleton]
+    else:
+        entities = guru.albums
+
+    same = False
+    for new in entities:
+        file = (new.get("album_id") or new.track_id).replace("/", "_") + ".json"
+        target_file = os.path.join(target_dir, file)
+        json.dump(new, open(target_file, "w"), indent=2)
+
+        compare_file = os.path.join(compare_against, file)
+        try:
+            old = json.load(open(compare_file))
+        except FileNotFoundError:
+            old = {}
+        same = compare(old, new)
+
+    if not same:
+        pytest.fail(pytrace=False)

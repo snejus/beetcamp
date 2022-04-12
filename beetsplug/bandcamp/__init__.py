@@ -21,6 +21,7 @@ import logging
 import re
 from difflib import SequenceMatcher
 from html import unescape
+from itertools import chain
 from operator import truth
 from typing import Any, Dict, Iterable, List, Optional, Sequence
 
@@ -30,12 +31,11 @@ from beets import __version__, library, plugins
 from beets.autotag.hooks import AlbumInfo, TrackInfo
 from beetsplug import fetchart  # type: ignore[attr-defined]
 
-from ._metaguru import DATA_SOURCE, DIGI_MEDIA, Metaguru, urlify
+from ._metaguru import DATA_SOURCE, Metaguru, urlify
 
 JSONDict = Dict[str, Any]
 
 DEFAULT_CONFIG: JSONDict = {
-    "preferred_media": DIGI_MEDIA,
     "include_digital_only_tracks": True,
     "search_max": 2,
     "art": False,
@@ -195,10 +195,10 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
             url = self._find_url(items[0], album, ALBUM_SEARCH)
             initial_guess = self.get_album_info(url) if url else None
             if initial_guess:
-                return iter([initial_guess])
+                return iter(initial_guess)
 
         results = map(lambda x: x["url"], self._search(album, ALBUM_SEARCH, artist))
-        return filter(truth, map(self.get_album_info, results))
+        return chain(*filter(truth, map(self.get_album_info, results)))
 
     def item_candidates(self, item, artist, title):
         # type: (library.Item, str, str) -> Iterable[TrackInfo]
@@ -243,7 +243,7 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
             self._exc("Unexpected error obtaining {}, please report at {}", _id, url)
         return None
 
-    def get_album_info(self, url: str) -> Optional[AlbumInfo]:
+    def get_album_info(self, url: str) -> Iterable[AlbumInfo]:
         """Return an AlbumInfo object for a bandcamp album page.
         If track url is given by mistake, find and fetch the album url instead.
         """
@@ -254,7 +254,7 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
                 url = re.sub(r"/track/.*", match.expand(r"\1"), url)
                 html = self._get(url)
         guru = self.guru(url, html=html)
-        return self.handle(guru, "album", url) if guru else None
+        return self.handle(guru, "albums", url) if guru else None
 
     def get_track_info(self, url: str) -> Optional[TrackInfo]:
         """Returns a TrackInfo object for a bandcamp track page."""
