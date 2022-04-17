@@ -4,7 +4,7 @@ import json
 import operator as op
 import re
 import sys
-from collections import defaultdict
+from collections import Counter, defaultdict
 from datetime import date, datetime
 from functools import partial
 from html import unescape
@@ -95,13 +95,13 @@ class Metaguru(Helpers):
 
     @cached_property
     def all_media_comments(self) -> str:
-        get_desc = op.methodcaller("get", "description", "")
-        return "\n".join(
-            [*map(get_desc, self.meta.get("albumRelease", {})), self.comments]
+        return (
+            "\n".join(map(op.attrgetter("description"), self.media_formats))
+            + self.comments
         )
 
     @cached_property
-    def official_album_name(self) -> str:
+    def original_album_name(self) -> str:
         match = re.search(
             r"(Title: ?|Album(:|/Single) )([^\n:]+)(\n|$)", self.all_media_comments
         )
@@ -109,7 +109,7 @@ class Metaguru(Helpers):
 
     @cached_property
     def album_name(self) -> str:
-        return self.official_album_name or self.meta["name"]
+        return self.original_album_name or self.meta["name"]
 
     @cached_property
     def label(self) -> str:
@@ -134,12 +134,12 @@ class Metaguru(Helpers):
             return self.meta["publisher"]["@id"]
 
     @cached_property
-    def raw_albumartist(self) -> str:
+    def parsed_albumartist(self) -> str:
         match = re.search(r"Artists?:([^\n]+)", self.all_media_comments)
         return match.expand(r"\1").strip() if match else ""
 
     @cached_property
-    def official_albumartist(self) -> str:
+    def original_albumartist(self) -> str:
         return self.meta["byArtist"]["name"]
 
     @cached_property
@@ -147,7 +147,7 @@ class Metaguru(Helpers):
         """Return the official release albumartist.
         It is correct in half of the cases. In others, we usually find the label name.
         """
-        aartist = self.raw_albumartist or self.official_albumartist
+        aartist = self.parsed_albumartist or self.original_albumartist
         if self.label == aartist:
             aartist = self.parse_track_name(self.album_name).get("artist") or aartist
 
@@ -200,7 +200,7 @@ class Metaguru(Helpers):
 
     @property
     def catalognum(self) -> str:
-        artists = [self.raw_albumartist or self.official_albumartist]
+        artists = [self.parsed_albumartist or self.original_albumartist]
         if not self._singleton or len(self.raw_artists) > 1:
             artists.extend(self.raw_artists)
             artists.extend(self.remixers)
@@ -310,16 +310,14 @@ class Metaguru(Helpers):
         return self._singleton or len(set(t["main_title"] for t in self.tracks)) == 1
 
     @cached_property
-    def is_va(self) -> bool:
-        track_count = len(self.tracks)
-
+    def is_comp(self) -> bool:
         def first_one(artist: str) -> str:
             return PATTERNS["split_artists"].split(artist.replace(" & ", ", "))[0]
 
         truly_unique = set(map(first_one, self.track_artists))
-        return VA.casefold() in self.album_name.casefold() or (
-            len(truly_unique) > min(4, track_count - 2) and track_count >= 4
-        )
+        return bool(
+            re.search(r"compilation|best of|anniversary", self.album_name, re.I)
+        ) or (len(truly_unique) > 3 and len(self.tracks) > 4)
 
     @cached_property
     def albumartist(self) -> str:
@@ -331,39 +329,63 @@ class Metaguru(Helpers):
 
         if self.unique_artists:
             return ", ".join(sorted(self.unique_artists))
-        return self.official_albumartist
+        return self.original_albumartist
 
     @cached_property
     def vinyl_disctitles(self) -> str:
         return " ".join([m.title for m in self.media_formats if m.name == "Vinyl"])
 
+    def search_albumtype(self, word: str) -> bool:
+        """Return whether the given word (ep or lp) matches the release albumtype.
+        True when one of the following conditions is met:
+        * if it's found in the album name
+        * if it's found in any media disctitle
+        * if it's found in the same sentence as 'this' or '{album_name}', where
+        sentences are read from release and media descriptions.
+        """
+        sentences = re.split(r"[.]\s+|\n", self.comments)
+        word_pat = re.compile(fr"\b{word}\b", re.I)
+        name_pat = re.compile(fr"\b(this|{re.escape(self.clean_album_name)})\b", re.I)
+        return bool(
+            word_pat.search(self.clean_album_name)
+            or word_pat.search(self.vinyl_disctitles)
+            or any(map(lambda s: word_pat.search(s) and name_pat.search(s), sentences))
+        )
+
+    @cached_property
+    def is_lp(self) -> bool:
+        return self.search_albumtype("lp")
+
+    @cached_property
+    def is_ep(self) -> bool:
+        return bool(
+            self.search_albumtype("ep")
+            or (self.vinyl_disctitles and len(self.tracks) == 4)
+        )
+
     @cached_property
     def albumtype(self) -> str:
         if self._singleton:
             return "single"
-
-        disctitles = self.vinyl_disctitles.upper().replace("REPRESS", "")
-        if self.clean_album_name.endswith(" EP") or "EP" in disctitles:
+        if self.is_ep:
             return "ep"
-        if self.clean_album_name.endswith(" LP") or "LP" in disctitles:
+        if self.is_lp:
             return "album"
-
-        if disctitles and len(self.tracks) == 4:
-            return "ep"
-
-        text = "\n".join([self.album_name, disctitles, self.comments])
-        lp_count = text.count(" LP")
-        ep_count = text.count(" EP")
-        if lp_count >= ep_count and lp_count:
-            return "album"
-        if ep_count > lp_count:
-            return "ep"
-        # TODO: count 'album'
-
-        # if self.is_single:
-        #     return "single"
-        if self.is_va:
+        if self.is_comp:
             return "compilation"
+
+        matches = re.findall(r"\b(album|ep|lp)\b", self.all_media_comments.lower())
+        if matches:
+            counts = Counter(map(lambda x: x.replace("lp", "album"), matches))
+            if len(counts) == 1:
+                return list(counts.keys())[0]
+            elif counts["album"] > counts["ep"]:
+                return "album"
+            # if equal, we assume it's an EP since it's more likely that an EP is
+            # referred to as an "album" rather than the other way around
+            else:
+                return "ep"
+
         return "album"
 
     @cached_property
@@ -405,7 +427,7 @@ class Metaguru(Helpers):
 
     @cached_property
     def clean_album_name(self) -> str:
-        album = self.official_album_name
+        album = self.original_album_name
         if album:
             return album
 
@@ -429,7 +451,7 @@ class Metaguru(Helpers):
                 album,
                 self.bandcamp_albumartist,
                 *self.unique_artists,
-                self.raw_albumartist,
+                self.parsed_albumartist,
             )
         return album or self.parsed_album_name or self.catalognum or self.album_name
 

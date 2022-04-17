@@ -17,9 +17,12 @@
 * internal: Tests clean up: pytest fixture-spaghetti has been replaced with JSON files that
   contain the expected output data.
 
-* `albumtype`: accuracy improvements for **Vinyl** media
-  * all `disctitle`s are immediately checked for **EP** or **LP** presence
-  * a single vinyl medium and 4 release tracks automatically become **EP**
+* `albumtype`: some accuracy improvements
+  * For **Vinyl** media, all `disctitle`s are immediately checked for **EP** or **LP** presence
+  * Release with a single vinyl medium and 4 release tracks automatically becomes **EP**
+  * We check how many times words **EP**, **LP** and **album** appear in release and media descriptions
+  * If **compilation**, **best of** or **anniversary** is present in the album name, then
+    the release is a compilation
 
 ### Fixed
 
