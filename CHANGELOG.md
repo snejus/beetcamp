@@ -18,10 +18,9 @@
   contain the expected output data.
 
 * `albumtype`: some accuracy improvements
-  * For **Vinyl** media, all `disctitle`s are immediately checked for **EP** or **LP** presence
-  * Release with a single vinyl medium and 4 release tracks automatically becomes **EP**
-  * We check how many times words **EP**, **LP** and **album** appear in release and media descriptions
-  * If **compilation**, **best of** or **anniversary** is present in the album name, then
+  * For **Vinyl** media, all `disctitle`s are checked for **EP** or **LP** presence
+  * **EP**, **LP** and **album** words in release and media descriptions are counted and decide the album type
+  * If **compilation** or **best of** or **anniversary** is present in the album name, then
     the release is a compilation
 
 ### Fixed
