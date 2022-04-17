@@ -18,7 +18,7 @@ pytestmark = pytest.mark.lib
 
 BASE_DIR = "lib_tests"
 TEST_DIR = "dev"
-REFERENCE_DIR = "969e7ef"
+REFERENCE_DIR = "e6574a2"
 
 IGNORE_FIELDS = {
     "bandcamp_artist_id",

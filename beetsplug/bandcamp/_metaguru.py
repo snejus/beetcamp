@@ -338,17 +338,18 @@ class Metaguru(Helpers):
     def search_albumtype(self, word: str) -> bool:
         """Return whether the given word (ep or lp) matches the release albumtype.
         True when one of the following conditions is met:
-        * if it's found in the album name
-        * if it's found in any media disctitle
+        * if {word}[0-9] is found in the catalognum
+        * if it's found in the album name or any media disctitle or release description
         * if it's found in the same sentence as 'this' or '{album_name}', where
         sentences are read from release and media descriptions.
         """
         sentences = re.split(r"[.]\s+|\n", self.all_media_comments)
         word_pat = re.compile(fr"\b{word}\b", re.I)
+        catnum_pat = re.compile(fr"{word}[0-9]", re.I)
         name_pat = re.compile(fr"\b(this|{re.escape(self.clean_album_name)})\b", re.I)
         return bool(
-            word_pat.search(self.clean_album_name)
-            or word_pat.search(self.vinyl_disctitles)
+            catnum_pat.search(self.catalognum)
+            or word_pat.search(self.clean_album_name + " " + self.vinyl_disctitles)
             or any(map(lambda s: word_pat.search(s) and name_pat.search(s), sentences))
         )
 
