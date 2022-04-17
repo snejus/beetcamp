@@ -310,16 +310,6 @@ class Metaguru(Helpers):
         return self._singleton or len(set(t["main_title"] for t in self.tracks)) == 1
 
     @cached_property
-    def is_comp(self) -> bool:
-        def first_one(artist: str) -> str:
-            return PATTERNS["split_artists"].split(artist.replace(" & ", ", "))[0]
-
-        truly_unique = set(map(first_one, self.track_artists))
-        return bool(
-            re.search(r"compilation|best of|anniversary", self.album_name, re.I)
-        ) or (len(truly_unique) > 3 and len(self.tracks) > 4)
-
-    @cached_property
     def albumartist(self) -> str:
         """Take into account the release contents and return the actual albumartist.
         * 'Various Artists' (or `va_name` configuration option) for a compilation release
@@ -339,7 +329,7 @@ class Metaguru(Helpers):
         """Return whether the given word (ep or lp) matches the release albumtype.
         True when one of the following conditions is met:
         * if {word}[0-9] is found in the catalognum
-        * if it's found in the album name or any media disctitle or release description
+        * if it's found in the original album name or any vinyl disctitle
         * if it's found in the same sentence as 'this' or '{album_name}', where
         sentences are read from release and media descriptions.
         """
@@ -349,32 +339,46 @@ class Metaguru(Helpers):
         name_pat = re.compile(fr"\b(this|{re.escape(self.clean_album_name)})\b", re.I)
         return bool(
             catnum_pat.search(self.catalognum)
-            or word_pat.search(self.clean_album_name + " " + self.vinyl_disctitles)
+            or word_pat.search(self.album_name + " " + self.vinyl_disctitles)
             or any(map(lambda s: word_pat.search(s) and name_pat.search(s), sentences))
         )
 
     @cached_property
     def is_lp(self) -> bool:
+        """Return whether the release is an LP."""
         return self.search_albumtype("lp")
 
     @cached_property
     def is_ep(self) -> bool:
+        """Return whether the release is an EP."""
         return bool(
             self.search_albumtype("ep")
             or (self.vinyl_disctitles and len(self.tracks) == 4)
         )
 
     def check_albumtype_in_descriptions(self) -> str:
+        """Count 'lp', 'album' and 'ep' words in the release and media descriptions
+        and return the albumtype that represents the word matching the most times.
+        """
         matches = re.findall(r"\b(album|ep|lp)\b", self.all_media_comments.lower())
         if matches:
             counts = Counter(map(lambda x: x.replace("lp", "album"), matches))
-            if len(counts) == 1:
-                return list(counts.keys())[0]
             # if equal, we assume it's an EP since it's more likely that an EP is
             # referred to as an "album" rather than the other way around
-            elif counts["ep"] >= counts["album"]:
+            if counts["ep"] >= counts["album"]:
                 return "ep"
         return "album"
+
+    @cached_property
+    def is_comp(self) -> bool:
+        """Return whether the release is a compilation."""
+        def first_one(artist: str) -> str:
+            return PATTERNS["split_artists"].split(artist.replace(" & ", ", "))[0]
+
+        truly_unique = set(map(first_one, self.track_artists))
+        return bool(
+            re.search(r"compilation|best of|anniversary", self.album_name, re.I)
+        ) or (len(truly_unique) > 3 and len(self.tracks) > 4)
 
     @cached_property
     def albumtype(self) -> str:
@@ -385,8 +389,8 @@ class Metaguru(Helpers):
         if self.is_lp:
             return "album"
 
-        most_common = self.check_albumtype_in_descriptions()
-        if most_common == "ep":
+        atype = self.check_albumtype_in_descriptions()
+        if atype == "ep":
             return "ep"
         # otherwise, it's an album, but we firstly need to check if it's a compilation
         if self.is_comp:
