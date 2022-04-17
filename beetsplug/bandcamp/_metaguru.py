@@ -306,10 +306,6 @@ class Metaguru(Helpers):
         return self.split_artists(artists)
 
     @cached_property
-    def is_single(self) -> bool:
-        return self._singleton or len(set(t["main_title"] for t in self.tracks)) == 1
-
-    @cached_property
     def albumartist(self) -> str:
         """Take into account the release contents and return the actual albumartist.
         * 'Various Artists' (or `va_name` configuration option) for a compilation release
@@ -342,6 +338,10 @@ class Metaguru(Helpers):
             or word_pat.search(self.album_name + " " + self.vinyl_disctitles)
             or any(map(lambda s: word_pat.search(s) and name_pat.search(s), sentences))
         )
+
+    @cached_property
+    def is_single(self) -> bool:
+        return self._singleton or len(self.track_names) == 1
 
     @cached_property
     def is_lp(self) -> bool:
@@ -382,7 +382,7 @@ class Metaguru(Helpers):
 
     @cached_property
     def albumtype(self) -> str:
-        if self._singleton:
+        if self.is_single:
             return "single"
         if self.is_ep:
             return "ep"
