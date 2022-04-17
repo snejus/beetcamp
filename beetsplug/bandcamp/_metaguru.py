@@ -343,7 +343,7 @@ class Metaguru(Helpers):
         * if it's found in the same sentence as 'this' or '{album_name}', where
         sentences are read from release and media descriptions.
         """
-        sentences = re.split(r"[.]\s+|\n", self.comments)
+        sentences = re.split(r"[.]\s+|\n", self.all_media_comments)
         word_pat = re.compile(fr"\b{word}\b", re.I)
         name_pat = re.compile(fr"\b(this|{re.escape(self.clean_album_name)})\b", re.I)
         return bool(
@@ -363,6 +363,18 @@ class Metaguru(Helpers):
             or (self.vinyl_disctitles and len(self.tracks) == 4)
         )
 
+    def check_albumtype_in_descriptions(self) -> str:
+        matches = re.findall(r"\b(album|ep|lp)\b", self.all_media_comments.lower())
+        if matches:
+            counts = Counter(map(lambda x: x.replace("lp", "album"), matches))
+            if len(counts) == 1:
+                return list(counts.keys())[0]
+            # if equal, we assume it's an EP since it's more likely that an EP is
+            # referred to as an "album" rather than the other way around
+            elif counts["ep"] >= counts["album"]:
+                return "ep"
+        return "album"
+
     @cached_property
     def albumtype(self) -> str:
         if self._singleton:
@@ -371,20 +383,13 @@ class Metaguru(Helpers):
             return "ep"
         if self.is_lp:
             return "album"
+
+        most_common = self.check_albumtype_in_descriptions()
+        if most_common == "ep":
+            return "ep"
+        # otherwise, it's an album, but we firstly need to check if it's a compilation
         if self.is_comp:
             return "compilation"
-
-        matches = re.findall(r"\b(album|ep|lp)\b", self.all_media_comments.lower())
-        if matches:
-            counts = Counter(map(lambda x: x.replace("lp", "album"), matches))
-            if len(counts) == 1:
-                return list(counts.keys())[0]
-            elif counts["album"] > counts["ep"]:
-                return "album"
-            # if equal, we assume it's an EP since it's more likely that an EP is
-            # referred to as an "album" rather than the other way around
-            else:
-                return "ep"
 
         return "album"
 
