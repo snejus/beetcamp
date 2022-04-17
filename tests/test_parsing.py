@@ -297,7 +297,6 @@ def test_parse_country(name, expected):
         ("", "", 'BAD001"', "", ""),
         ("", "", "Modularz 40", "Modularz", "Modularz 40"),
         ("", "", " catalogue number GOOD001 ", "", "GOOD001"),
-        ("LI$INGLE010 - cyberflex - LEVEL X", "", "", "", "LI$INGLE010"),
     ],
 )
 def test_parse_catalognum(

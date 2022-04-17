@@ -22,6 +22,7 @@
   * **EP**, **LP** and **album** words in release and media descriptions are counted and decide the album type
   * If **compilation** or **best of** or **anniversary** is present in the album name, then
     the release is a compilation
+  * A single album with an original track and several remixes now has **album** albumtype, not **single**
 
 ### Fixed
 
