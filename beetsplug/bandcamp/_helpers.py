@@ -401,7 +401,7 @@ class Helpers:
         return obj
 
     @staticmethod
-    def get_media_map(format_list: List[JSONDict]) -> List[MediaInfo]:
+    def get_media_formats(format_list: List[JSONDict]) -> List[MediaInfo]:
         """Return filtered Bandcamp media formats as a list of MediaInfo objects.
         Formats are filtered using the following fields,
 

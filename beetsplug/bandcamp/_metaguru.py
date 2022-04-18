@@ -57,7 +57,7 @@ class Metaguru(Helpers):
 
     def __init__(self, meta: JSONDict, config: Optional[JSONDict] = None) -> None:
         self.meta = meta
-        self.media_formats = Helpers.get_media_map(
+        self.media_formats = Helpers.get_media_formats(
             (meta.get("inAlbum") or meta).get("albumRelease") or []
         )
         if self.media_formats:

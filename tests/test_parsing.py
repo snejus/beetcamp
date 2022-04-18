@@ -368,19 +368,20 @@ def test_clean_name(name, extras, expected):
     assert Metaguru.clean_name(name, *extras, remove_extra=True) == expected
 
 
-def test_bundles_get_excluded():
-    meta = {
-        "albumRelease": [
-            {"name": "Vinyl Bundle", "musicReleaseFormat": "VinylFormat"},
-            {"name": "Vinyl", "musicReleaseFormat": "VinylFormat"},
-        ]
-    }
-    assert set(Metaguru._get_media_reference(meta)) == {"Vinyl"}
-
-
 @pytest.mark.parametrize(
     ("date", "expected"), [("08 Dec 2020 00:00:00 GMT", date(2020, 12, 8)), (None, None)]
 )
 def test_handles_missing_publish_date(date, expected):
     guru = Metaguru({"datePublished": date})
     assert guru.release_date == expected
+
+
+def test_unpack_props(bc_media_formats):
+    result = Metaguru.unpack_props(bc_media_formats[0])
+    assert {"some_id", "item_type"} < set(result)
+
+
+def test_bundles_get_excluded(bc_media_formats):
+    result = Metaguru.get_media_formats(bc_media_formats)
+    assert len(result) == 1
+    assert result[0].name == "Vinyl"

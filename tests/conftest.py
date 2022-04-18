@@ -24,6 +24,28 @@ def media_format():
 
 
 @pytest.fixture
+def bc_media_formats():
+    return [
+        {
+            "@id": "https://bandcamp.com/album/hello",
+            "name": "Vinyl",
+            "musicReleaseFormat": "VinylFormat",
+            "description": "hello",
+            "additionalProperty": [
+                {"name": "some_id", "value": "some_value"},
+                {"name": "item_type", "value": "a"},
+            ],
+        },
+        {
+            "@id": "https://bandcamp.com/album/bye",
+            "name": "Vinyl Bundle",
+            "musicReleaseFormat": "VinylFormat",
+            "additionalProperty": [{"name": "item_type", "value": "b"}],
+        },
+    ]
+
+
+@pytest.fixture
 def release(request):
     """Read the json data and make it span a single line - same like it's found in htmls.
     Prepend JSON data with a multiline track list.
