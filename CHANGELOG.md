@@ -12,6 +12,9 @@
     anymore and it can be safely removed from your configuration. Instead, use the global
     `preferred.media` option and adjust distance weights correspondingly.
 
+* new field `albumtypes` which contains secondary release types, such as **remix**,
+  **live**, **soundtrack** etc. Applies to `beets >= 1.5`
+
 ### Updated
 
 * internal: Tests clean up: pytest fixture-spaghetti has been replaced with JSON files that

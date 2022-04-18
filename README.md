@@ -230,31 +230,32 @@ select `enter Id` and paste the URL that you have.
 | `albumartist`  |           |             | ✔     |                                                                                     |
 | `albumstatus`  |           |             | ✔     |                                                                                     |
 | `albumtype`    | \*✔       |             | ✔     |                                                                                     |
+| `albumtypes`   | \*✔       |             | \*✔   |                                                                                     |
 | `artist`       | ✔         | ✔           | ✔     |                                                                                     |
 | `artist_id`    | ✔         |             | ✔     | label / publisher Bandcamp URL                                                      |
 | `catalognum`   | \*✔       |             | ✔     |                                                                                     |
-| `comments`     | ✔         | ✔           |       | release and media descriptions, and credits                                         |
+| `comments`     | \*✔       |             | \*✔   | release and media descriptions, and credits                                         |
 | `country`      | \*✔       |             | ✔     |                                                                                     |
 | `day`          | \*✔       |             | ✔     |                                                                                     |
 | `disctitle`    | \*✔       | ✔           |       |                                                                                     |
-| `genre`        | \*✔       |             | ✔     | comma-delimited list of **release keywords** which match [musicbrainz genres]       |
+| `genre`        | \*✔       |             | \*✔   | comma-delimited list of **release keywords** which match [musicbrainz genres]       |
 | `index`        |           | ✔           |       |                                                                                     |
 | `label`        | \*✔       |             | ✔     |                                                                                     |
 | `length`       | ✔         | ✔           |       |                                                                                     |
-| `lyrics`       | ✔         | ✔           |       |                                                                                     |
+| `lyrics`       | \*✔       | \*✔         |       |                                                                                     |
 | `media`        | \*✔       | ✔           | ✔     |                                                                                     |
 | `medium`       |           | ✔           |       | likely to be inaccurate, since it depends on information in the release description |
 | `mediums`      |           |             | ✔     |                                                                                     |
 | `medium_index` |           | ✔           |       | for now, same as `index`                                                            |
 | `medium_total` |           | ✔           |       | total number of tracks in the release                                               |
 | `month`        | \*✔       |             | ✔     |                                                                                     |
-| `style`        | \*✔       |             | ✔     | Bandcamp genre tag                                                                  |
+| `style`        | \*✔       |             | \*✔   | Bandcamp genre tag                                                                  |
 | `title`        | ✔         | ✔           |       |                                                                                     |
 | `track_alt`    | ✔         | ✔           |       |                                                                                     |
 | `track_id`     |           | ✔           |       | track URL                                                                           |
 | `va`           |           |             | ✔     |                                                                                     |
 | `year`         | \*✔       |             | ✔     |                                                                                     |
 
-**\*** These singleton fields are available if you use `beets` version `1.5` or higher.
+**\*** Available with `beets` versions `1.5` or higher.
 
 [musicbrainz genres]: https://beta.musicbrainz.org/genres

@@ -102,6 +102,10 @@ class Metaguru(Helpers):
 
     @cached_property
     def original_album_name(self) -> str:
+        return self.meta["name"]
+
+    @cached_property
+    def parsed_album_name(self) -> str:
         match = re.search(
             r"(Title: ?|Album(:|/Single) )([^\n:]+)(\n|$)", self.all_media_comments
         )
@@ -109,7 +113,7 @@ class Metaguru(Helpers):
 
     @cached_property
     def album_name(self) -> str:
-        return self.original_album_name or self.meta["name"]
+        return self.parsed_album_name or self.original_album_name
 
     @cached_property
     def label(self) -> str:
@@ -335,7 +339,7 @@ class Metaguru(Helpers):
         name_pat = re.compile(fr"\b(this|{re.escape(self.clean_album_name)})\b", re.I)
         return bool(
             catnum_pat.search(self.catalognum)
-            or word_pat.search(self.album_name + " " + self.vinyl_disctitles)
+            or word_pat.search(self.original_album_name + " " + self.vinyl_disctitles)
             or any(map(lambda s: word_pat.search(s) and name_pat.search(s), sentences))
         )
 
@@ -369,6 +373,7 @@ class Metaguru(Helpers):
     @cached_property
     def is_comp(self) -> bool:
         """Return whether the release is a compilation."""
+
         def first_one(artist: str) -> str:
             return PATTERNS["split_artists"].split(artist.replace(" & ", ", "))[0]
 
@@ -394,6 +399,21 @@ class Metaguru(Helpers):
             return "compilation"
 
         return "album"
+
+    @cached_property
+    def albumtypes(self) -> str:
+        albumtypes = {self.albumtype}
+        if self.albumtype == "compilation":
+            albumtypes.add("album")
+        if self.is_lp:
+            albumtypes.add("lp")
+        if len({t["main_title"] for t in self.tracks}) == 1:
+            albumtypes.add("single")
+        for word in ["remix", "live", "soundtrack"]:
+            if word in self.album_name.lower():
+                albumtypes.add(word)
+
+        return "; ".join(sorted(albumtypes))
 
     @cached_property
     def va(self) -> bool:
@@ -428,15 +448,14 @@ class Metaguru(Helpers):
         return ", ".join(sorted(genres)) or None
 
     @cached_property
-    def parsed_album_name(self) -> str:
+    def album_name_with_eplp(self) -> str:
         match = re.search(r"[:-] ?([A-Z][\w ]+ ((?!an )[EL]P))", self.all_media_comments)
         return match.expand(r"\1") if match else ""
 
     @cached_property
     def clean_album_name(self) -> str:
-        album = self.original_album_name
-        if album:
-            return album
+        if self.parsed_album_name:
+            return self.parsed_album_name
 
         album = self.album_name
         # look for something in quotes
@@ -460,7 +479,7 @@ class Metaguru(Helpers):
                 *self.unique_artists,
                 self.parsed_albumartist,
             )
-        return album or self.parsed_album_name or self.catalognum or self.album_name
+        return album or self.album_name_with_eplp or self.catalognum or self.album_name
 
     @property
     def _common(self) -> JSONDict:
@@ -482,9 +501,15 @@ class Metaguru(Helpers):
     @property
     def _common_album(self) -> JSONDict:
         common_data: JSONDict = dict(album=self.clean_album_name)
-        fields = ["label", "catalognum", "albumtype", "albumstatus", "country"]
+        fields = [
+            "label",
+            "catalognum",
+            "albumtype",
+            "albumstatus",
+            "country",
+        ]
         if NEW_BEETS:
-            fields.extend(["genre", "style", "comments"])
+            fields.extend(["genre", "style", "comments", "albumtypes"])
         common_data.update(self.get_fields(fields))
         reldate = self.release_date
         if reldate:

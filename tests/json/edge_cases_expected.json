@@ -5,6 +5,7 @@
     "albumdisambig": null,
     "albumstatus": "Official",
     "albumtype": "compilation",
+    "albumtypes": "album; compilation",
     "artist": "Various Artists",
     "artist_credit": null,
     "artist_id": "https://newyorkhaunted.bandcamp.com",
