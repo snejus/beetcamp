@@ -455,7 +455,8 @@ class Helpers:
 
     @staticmethod
     def add_track_alts(album: AlbumInfo, comments: str) -> AlbumInfo:
-        track_alts = PATTERNS["track_alt"].findall(comments)
+        # using an ordered set here in case of duplicates
+        track_alts = ordset(PATTERNS["track_alt"].findall(comments))
 
         @lru_cache(maxsize=None)
         def get_medium_total(medium: int) -> int:
