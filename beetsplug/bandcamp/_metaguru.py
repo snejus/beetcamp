@@ -578,6 +578,8 @@ class Metaguru(Helpers):
         for key, val in self.get_fields(["va"]).items():
             setattr(album_info, key, val)
         album_info.album_id = self.media.album_id
+        if self.media.name == "Vinyl":
+            album_info = self.add_track_alts(album_info, self.comments)
         return album_info
 
     @cached_property

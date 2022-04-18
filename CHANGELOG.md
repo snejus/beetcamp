@@ -12,6 +12,10 @@
     anymore and it can be safely removed from your configuration. Instead, use the global
     `preferred.media` option and adjust distance weights correspondingly.
 
+  * If **Vinyl** format track list is found in its description, then `track_alt`,
+    `medium`, `medium_index` and `medium_total` are adjusted accordingly.
+
+
 * new field `albumtypes` which contains secondary release types, such as **remix**,
   **live**, **soundtrack** etc. Applies to `beets >= 1.5`
 
@@ -33,6 +37,7 @@
   * Remove **EP** or **LP** from the beginning more reliably
   * Only remove **VA** if album name starts or ends with it
 
+[0.14.0]: https://github.com/snejus/beetcamp/releases/tag/0.14.0
 
 ## [0.13.2] 2022-04-03
 

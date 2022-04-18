@@ -2,10 +2,11 @@ import itertools as it
 import operator as op
 import re
 from collections import Counter, defaultdict
-from functools import partial
+from functools import lru_cache, partial
 from string import Template
 from typing import Any, Callable, Dict, Iterable, List, NamedTuple, Pattern, Tuple, Union
 
+from beets.autotag.hooks import AlbumInfo
 from ordered_set import OrderedSet as ordset
 
 from .genres_lookup import GENRES
@@ -85,7 +86,7 @@ PATTERNS: Dict[str, Pattern] = {
     ],
     "remix_or_ft": re.compile(r" [\[(].*(?i:mix|edit|f(ea)?t([.]|uring)?).*"),
     "ft": re.compile(r" *[( ]((?![^()]+?mix)f(ea)?t([. ]|uring)[^()]+)[)]? *", re.I),
-    "track_alt": re.compile(r"([ABCDEFGH]{1,3}[0-6])\W+", re.I),
+    "track_alt": re.compile(r"^([ABCDEFGHIJ]{1,3}[0-6])\W+", re.I + re.M),
     "vinyl_name": re.compile(r"[1-5](?= ?(xLP|LP|x))|single|double|triple", re.I),
 }
 
@@ -447,3 +448,27 @@ class Helpers:
                 )
             )
         return formats
+
+    @staticmethod
+    def add_track_alts(album: AlbumInfo, comments: str) -> AlbumInfo:
+        track_alts = PATTERNS["track_alt"].findall(comments)
+
+        @lru_cache(maxsize=None)
+        def get_medium_total(medium: int) -> int:
+            starts = {1: "AB", 2: "CD", 3: "EF", 4: "GH", 5: "IJ"}[medium]
+            return len(re.findall(fr"^[{starts}]", "\n".join(track_alts), re.M))
+
+        medium = 1
+        medium_index = 1
+        if len(track_alts) == len(album.tracks):
+            for track, track_alt in zip(album.tracks, track_alts):
+                track.track_alt = track_alt
+                track.medium_index = medium_index
+                track.medium = medium
+                track.medium_total = get_medium_total(medium)
+                if track.medium_index == track.medium_total:
+                    medium += 1
+                    medium_index = 1
+                else:
+                    medium_index += 1
+        return album

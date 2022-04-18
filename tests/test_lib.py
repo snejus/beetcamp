@@ -174,7 +174,16 @@ def test_file(file, guru):
     IGNORE_FIELDS.update({"album_id", "media", "mediums", "disctitle"})
 
     target_file = os.path.join(target_dir, file)
-    new = guru.singleton if "_track_" in file else guru.albums[0]
+    if "_track_" in file:
+        new = guru.singleton
+    else:
+        for album in guru.albums:
+            if album.media == "Vinyl":
+                new = album
+                break
+        else:
+            new = guru.albums[0]
+
     new.catalognum = " / ".join(filter(truth, map(lambda x: x.catalognum, guru.albums)))
     json.dump(new, open(target_file, "w"), indent=2)
 

@@ -2,6 +2,7 @@
 import json
 import re
 from copy import deepcopy
+from os import path
 
 import pytest
 from beetsplug.bandcamp import DEFAULT_CONFIG
@@ -51,15 +52,15 @@ def release(request):
     Prepend JSON data with a multiline track list.
     Each of the JSON test cases has a corresponding 'expected' JSON output data file.
     """
-    name = request.param
-    if name.startswith("issues"):
-        filename = "tests/json/issues/{}".format(name.replace("issues_", ""))
-    else:
-        filename = "tests/json/{}".format(name)
+    filename = request.param + ".json"
+    input_folder = path.join("tests", "json")
+    if filename.startswith("issues"):
+        input_folder = path.join(input_folder, "issues")
+        filename = filename.replace("issues_", "")
 
-    with open(filename + ".json") as input_f:
+    with open(path.join(input_folder, filename)) as input_f:
         input_json = re.sub(r"\n *", "", input_f.read())
-    with open(filename + "_expected.json") as expected_f:
+    with open(path.join(input_folder, "expected", filename)) as expected_f:
         expected_output = json.load(expected_f)
 
     return input_json, expected_output
