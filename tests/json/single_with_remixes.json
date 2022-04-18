@@ -206,17 +206,17 @@
       {
         "@type": "PropertyValue",
         "name": "image_height",
-        "value": 2000
+        "value": 700
       },
       {
         "@type": "PropertyValue",
         "name": "image_id",
-        "value": 21721983
+        "value": 28280113
       },
       {
         "@type": "PropertyValue",
         "name": "image_width",
-        "value": 2000
+        "value": 700
       }
     ],
     "foundingLocation": {
@@ -224,7 +224,7 @@
       "name": "Berlin, Germany"
     },
     "genre": "https://bandcamp.com/tag/electronic",
-    "image": "https://f4.bcbits.com/img/0021721983_10.jpg",
+    "image": "https://f4.bcbits.com/img/0028280113_10.jpg",
     "mainEntityOfPage": [
       {
         "@type": "WebSite",

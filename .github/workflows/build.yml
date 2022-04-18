@@ -31,7 +31,7 @@ jobs:
           pip install beets==${{ matrix.beets }}
           pip install -e .
       - name: Pytest
-        run: pytest -k 'not need_connection'
+        run: pytest -k 'not need_connection' --ignore-glob='*test_lib*'
       - name: Upload coverage data to coveralls.io
         run: coveralls --service=github
         env:
@@ -43,6 +43,7 @@ jobs:
       - name: Pylint
         run: pylint --output pylint.log --exit-zero $(git ls-files '*.py')
       - name: SonarCloud Scan
+        if: ${{ matrix.beets == '1.5.0' && matrix.python == '3.8' }}
         uses: SonarSource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

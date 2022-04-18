@@ -1,26 +1,39 @@
+"""Module with a Helpers class that contains various static, independent functions."""
 import itertools as it
 import operator as op
 import re
 from collections import Counter, defaultdict
-from functools import partial
+from functools import lru_cache, partial
 from string import Template
-from typing import Any, Callable, Dict, Iterable, List, Pattern, Tuple, Union
+from typing import Any, Callable, Dict, Iterable, List, NamedTuple, Pattern, Tuple, Union
 
+from beets.autotag.hooks import AlbumInfo
 from ordered_set import OrderedSet as ordset
 
 from .genres_lookup import GENRES
 
 JSONDict = Dict[str, Any]
-MEDIA_MAP = {
+DIGI_MEDIA = "Digital Media"
+FORMAT_TO_MEDIA = {
     "VinylFormat": "Vinyl",
     "CDFormat": "CD",
     "CassetteFormat": "Cassette",
-    "DigitalFormat": "Digital Media",
+    "DigitalFormat": DIGI_MEDIA,
+    "DVDFormat": "DVD",
+    "USB Flash Drive": DIGI_MEDIA,
 }
+
+
+class MediaInfo(NamedTuple):
+    album_id: str
+    name: str
+    title: str
+    description: str
+
 
 _catalognum = Template(
     r"""(?<![/@])(\b
-(?!\W|VA[\d ]+|[EL]P\W|[^\n.]+[ ](?:[0-9]KG|20\d{2}|VA\d+)|AT[ ]0|GC1|HF[.])
+(?!\W|VA[\d ]+|[EL]P\W|[^\n.]+[ ](?:[0-9]KG|20\d{2}|VA[ \d]+)|AT[ ]0|GC1|HF[.])
 (?!(?i:vol |mp3|christ|vinyl|disc|session|record|artist|the\ |maxi\ |rave\ ))
 (?![^.]+shirt)
 (
@@ -29,7 +42,7 @@ _catalognum = Template(
     | [A-Z-]{3,}\d+         # RIV4
     # dollar signs need escaping here since the $label below will be
     # substituted later, and we do not want to touch these two
-    | [A-Z]+[A-Z.$$-]+\d{2,} # USE202, HEY-101, LI$$025
+    | [A-Z]{2,}[A-Z.$$-]*\d{2,} # HS11, USE202, HEY-101, LI$$INGLE025
     | [A-Z.]{2,}[ ]\d{1,3}  # OBS.CUR 9
     | \w+[A-z]0\d+          # 1ØPILLS018, fa036
     | [a-z]+(cd|lp)\d+      # ostgutlp45
@@ -46,19 +59,17 @@ _catalognum = Template(
 _cat_pattern = _catalognum.template
 
 CATNUM_PAT = {
-    "with_header": re.compile(
-        r"(?:^|\s)cat[\w .]+?(?:number:?|:) ?(\w[^\n]+?)(\W{2}|\n|$)", re.I
-    ),
+    "with_header": re.compile(r"(?:^|\s)cat[\w .]+?(?:number:?|:) ?(\w[^\n,]+)", re.I),
     "start_end": re.compile(fr"((^|\n){_cat_pattern}|{_cat_pattern}(\n|$))", re.VERBOSE),
     "anywhere": re.compile(_cat_pattern, re.VERBOSE),
 }
 
 rm_strings = [
     "limited edition",
-    r"^EP [0-9]+",
+    r"^[EL]P( [0-9]+)?",
     r"^Vol(ume)?\W*\d",
     r"(digital )?album\)",
-    r"va|vinyl|compiled by .*",
+    r"^va|va$|vinyl|compiled by .*",
     r"free download|free dl|free\)",
 ]
 PATTERNS: Dict[str, Pattern] = {
@@ -69,13 +80,12 @@ PATTERNS: Dict[str, Pattern] = {
     "digital": [  # type: ignore
         re.compile(r"^(DIGI(TAL)? ?[\d.]+|Bonus\W{2,})\W*"),
         re.compile(
-            r"[^\w\)]+(bandcamp[^-]+|digi(tal)?)(\W*(\W+|only|bonus|exclusive)\W*$)",
-            re.I,
+            r"[^\w\)]+(bandcamp[^-]+|digi(tal)?)(\W*(\W+|only|bonus|exclusive)\W*$)", re.I
         ),
     ],
     "remix_or_ft": re.compile(r" [\[(].*(?i:mix|edit|f(ea)?t([.]|uring)?).*"),
-    "ft": re.compile(r" *[( ]((?![^()]+?mix)f(ea)?t([. ]|uring)[^()]+)[)]? *", re.I),
-    "track_alt": re.compile(r"([ABCDEFGH]{1,3}[0-6])\W+", re.I),
+    "ft": re.compile(r" *[( ]((?![^()]+?mix)f(ea)?t([. ]|uring)[^()]+)\)? *", re.I),
+    "track_alt": re.compile(r"^([ABCDEFGHIJ]{1,3}[0-6])\W+", re.I + re.M),
     "vinyl_name": re.compile(r"[1-5](?= ?(xLP|LP|x))|single|double|triple", re.I),
 }
 
@@ -99,19 +109,24 @@ class Helpers:
 
     @staticmethod
     def split_artists(artists: Iterable[str]) -> List[str]:
+        """Split artists taking into account delimiters such as ',', '+', 'x', 'X' etc.
+        Note: featuring artists are removed since they are not main artists.
+        """
         artists = list(map(lambda x: PATTERNS["ft"].sub("", x), artists))
-        split = map(lambda x: PATTERNS["split_artists"].split(x), ordset(artists))
+        split = map(PATTERNS["split_artists"].split, ordset(artists))
         split_artists = ordset(map(str.strip, it.chain(*split))) - {""}
         split_artists_list = list(split_artists)
 
         for artist in split_artists_list:
             subartists = artist.split(" X ")
-            if len(list(artists)) == len(split_artists_list) or any(
+            if len(artists) == len(split_artists_list) or any(
                 map(lambda x: x in split_artists, subartists)
             ):
                 split_artists.discard(artist)
                 split_artists.update(subartists)
 
+            # ' & ' may be part of single artist name, so we need to be careful here
+            # we check whether any of the split artists appears on their own
             subartists = artist.split(" & ")
             if len(subartists) > 1 and any(map(lambda x: x in split_artists, subartists)):
                 split_artists.discard(artist)
@@ -148,7 +163,7 @@ class Helpers:
             title, track_alt = Helpers.get_trackalt(title)
 
         # find the remixer
-        match = re.search(r" *\( *[^)(]+?(?i:(re)?mix|edit)[)]", name, re.I)
+        match = re.search(r" *\( *[^)(]+?(?i:(re)?mix|edit)\)", name, re.I)
         remixer = match.group() if match else ""
 
         # remove any duplicate artists keeping the order
@@ -206,7 +221,7 @@ class Helpers:
         return tracks
 
     @staticmethod
-    def parse_catalognum(album, disctitle, description, label, exclude):
+    def parse_catalognum(album, disctitle, description, label, exclude=[]):
         # type: (str, str, str, str, List[str]) -> str
         """Try getting the catalog number looking at text from various fields."""
         cases = [
@@ -226,7 +241,7 @@ class Helpers:
             except (IndexError, AttributeError):
                 return ""
 
-        ignored = set(map(str.casefold, exclude or []) or [None, ""])
+        ignored = set(map(str.casefold, exclude))
 
         def not_ignored(option: str) -> bool:
             return bool(option) and option.casefold() not in ignored
@@ -384,20 +399,81 @@ class Helpers:
         return it.filterfalse(duplicate, genres)
 
     @staticmethod
-    def _get_media_reference(meta: JSONDict) -> JSONDict:
-        """Get release media from the metadata, excluding bundles.
-        Return a dictionary with a human mapping (Digital|CD|Vinyl|Cassette) -> media.
+    def unpack_props(obj: JSONDict) -> JSONDict:
+        """Add all 'additionalProperty'-ies to the parent dictionary."""
+        for prop in obj.get("additionalProperty") or []:
+            obj[prop["name"]] = prop["value"]
+        return obj
+
+    @staticmethod
+    def get_media_formats(format_list: List[JSONDict]) -> List[MediaInfo]:
+        """Return filtered Bandcamp media formats as a list of MediaInfo objects.
+        Formats are filtered using the following fields,
+
+        type_id item_type  type_name          musicReleaseFormat
+                a          Digital            DigitalFormat   # digital album
+                b          Digital            DigitalFormat   # discography
+                t          Digital            DigitalFormat   # digital track
+        0       p          Other
+        1       p          Compact Disc (CD)  CDFormat
+        2       p          Vinyl LP           VinylFormat
+        3       p          Cassette           CassetteFormat
+        4       p          DVD                DVDFormat
+        5       p          USB Flash Drive
+        10      p          Poster/Print
+        11      p          T-Shirt/Apparel
+        15      p          2 x Vinyl LP       VinylFormat
+        16      p          7" Vinyl           VinylFormat
+        17      p          Vinyl Box Set      VinylFormat
+        18      p          Other Vinyl        VinylFormat
+        19      p          T-Shirt/Shirt
+        20      p          Sweater/Hoodie
         """
 
-        def is_bundle(fmt: JSONDict) -> bool:
-            return "bundle" in (fmt.get("name") or "").casefold()
+        def valid_format(obj: JSONDict) -> bool:
+            return (
+                {"name", "item_type"} < set(obj)
+                # not a discography
+                and obj["item_type"] != "b"
+                # musicReleaseFormat format is given or it is a USB
+                and ("musicReleaseFormat" in obj or obj["type_id"] == 5)
+                # it is not a vinyl bundle
+                and "bundle" not in obj["name"].lower()
+            )
 
-        media: Dict[str, JSONDict] = {}
-        for _format in it.filterfalse(is_bundle, meta["albumRelease"]):
-            try:
-                medium = _format["musicReleaseFormat"]
-            except KeyError:
-                continue
-            human_name = MEDIA_MAP[medium]
-            media[human_name] = _format
-        return media
+        formats = []
+        for _format in filter(valid_format, map(Helpers.unpack_props, format_list)):
+            formats.append(
+                MediaInfo(
+                    _format["@id"],
+                    FORMAT_TO_MEDIA[_format.get("musicReleaseFormat") or "DigitalFormat"],
+                    _format["name"],
+                    _format.get("description") or "",
+                )
+            )
+        return formats
+
+    @staticmethod
+    def add_track_alts(album: AlbumInfo, comments: str) -> AlbumInfo:
+        # using an ordered set here in case of duplicates
+        track_alts = ordset(PATTERNS["track_alt"].findall(comments))
+
+        @lru_cache(maxsize=None)
+        def get_medium_total(medium: int) -> int:
+            starts = {1: "AB", 2: "CD", 3: "EF", 4: "GH", 5: "IJ"}[medium]
+            return len(re.findall(fr"^[{starts}]", "\n".join(track_alts), re.M))
+
+        medium = 1
+        medium_index = 1
+        if len(track_alts) == len(album.tracks):
+            for track, track_alt in zip(album.tracks, track_alts):
+                track.track_alt = track_alt
+                track.medium_index = medium_index
+                track.medium = medium
+                track.medium_total = get_medium_total(medium)
+                if track.medium_index == track.medium_total:
+                    medium += 1
+                    medium_index = 1
+                else:
+                    medium_index += 1
+        return album

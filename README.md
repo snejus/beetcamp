@@ -55,7 +55,6 @@ Navigate to your `beets` virtual environment and install the plug-in with
 
 ```yaml
 bandcamp:
-  preferred_media: Digital Media
   include_digital_only_tracks: true
   search_max: 2
   art: yes
@@ -67,19 +66,6 @@ bandcamp:
     always_include: []
     mode: progressive # classical, progressive or psychedelic
 ```
-
----
-
-#### `preferred_media`
-
-- Type: **string**
-- Default: `Digital Media`
-
-A comma-separated list of media to prioritize when fetching albums. For example:
-`preferred_media: Vinyl,Cassette` will ignore `CD`, check for a `Vinyl`, and then for a
-`Cassette`, in the end defaulting to `Digital Media` (always available) if none of the two are
-found. Any combination of the following is supported: `Vinyl`, `CD`, `Cassette`,
-`Digital Media`.
 
 ---
 
@@ -99,12 +85,10 @@ the tracks that are supposed to be found in that media.
 #### `search_max`
 
 - Type: **int**
-- Default: `10`.
+- Default: `2`.
 
-Maximum number of items to fetch through search queries. Depending on the specificity of
-queries and whether a suitable match is found, it could fetch 50+ results which may take a
-minute, so it'd make sense to bound this to some sort of sensible number. Usually, a match
-is found among the first 5 items.
+Number of items to fetch through search, maximum is 18. Usually, a matching release should
+be found among the first two items.
 
 ---
 
@@ -246,31 +230,32 @@ select `enter Id` and paste the URL that you have.
 | `albumartist`  |           |             | ✔     |                                                                                     |
 | `albumstatus`  |           |             | ✔     |                                                                                     |
 | `albumtype`    | \*✔       |             | ✔     |                                                                                     |
+| `albumtypes`   | \*✔       |             | \*✔   |                                                                                     |
 | `artist`       | ✔         | ✔           | ✔     |                                                                                     |
 | `artist_id`    | ✔         |             | ✔     | label / publisher Bandcamp URL                                                      |
 | `catalognum`   | \*✔       |             | ✔     |                                                                                     |
-| `comments`     | ✔         | ✔           |       | release and media descriptions, and credits                                         |
+| `comments`     | \*✔       |             | \*✔   | release and media descriptions, and credits                                         |
 | `country`      | \*✔       |             | ✔     |                                                                                     |
 | `day`          | \*✔       |             | ✔     |                                                                                     |
 | `disctitle`    | \*✔       | ✔           |       |                                                                                     |
-| `genre`        | \*✔       |             | ✔     | comma-delimited list of **release keywords** which match [musicbrainz genres]       |
+| `genre`        | \*✔       |             | \*✔   | comma-delimited list of **release keywords** which match [musicbrainz genres]       |
 | `index`        |           | ✔           |       |                                                                                     |
 | `label`        | \*✔       |             | ✔     |                                                                                     |
 | `length`       | ✔         | ✔           |       |                                                                                     |
-| `lyrics`       | ✔         | ✔           |       |                                                                                     |
+| `lyrics`       | \*✔       | \*✔         |       |                                                                                     |
 | `media`        | \*✔       | ✔           | ✔     |                                                                                     |
 | `medium`       |           | ✔           |       | likely to be inaccurate, since it depends on information in the release description |
 | `mediums`      |           |             | ✔     |                                                                                     |
 | `medium_index` |           | ✔           |       | for now, same as `index`                                                            |
 | `medium_total` |           | ✔           |       | total number of tracks in the release                                               |
 | `month`        | \*✔       |             | ✔     |                                                                                     |
-| `style`        | \*✔       |             | ✔     | Bandcamp genre tag                                                                  |
+| `style`        | \*✔       |             | \*✔   | Bandcamp genre tag                                                                  |
 | `title`        | ✔         | ✔           |       |                                                                                     |
 | `track_alt`    | ✔         | ✔           |       |                                                                                     |
 | `track_id`     |           | ✔           |       | track URL                                                                           |
 | `va`           |           |             | ✔     |                                                                                     |
 | `year`         | \*✔       |             | ✔     |                                                                                     |
 
-**\*** These singleton fields are available if you use `beets` version `1.5` or higher.
+**\*** Available with `beets` versions `1.5` or higher.
 
 [musicbrainz genres]: https://beta.musicbrainz.org/genres

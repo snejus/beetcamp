@@ -1,3 +1,46 @@
+## [0.14.0] 2022-04-18
+
+### Added
+
+* `media`: 
+  * previously, we picked the very first **Vinyl**, **CD** etc. media available and the
+    rest did not exist from the plugin's point of view. This is now updated: every media
+    which maps to tracks in the same release will get returned, similar to Discogs and
+    MusicBrainz autotaggers. 
+
+    Therefore, `bandcamp.preferred_media` configuration option does not have any effect
+    anymore and it can be safely removed from your configuration. Instead, use the global
+    `preferred.media` option and adjust distance weights correspondingly.
+
+  * If **Vinyl** format track list is found in its description, then `track_alt`,
+    `medium`, `medium_index` and `medium_total` are adjusted accordingly.
+
+
+* new field `albumtypes` which contains secondary release types, such as **remix**,
+  **live**, **soundtrack** etc. Applies to `beets >= 1.5`
+
+### Updated
+
+* internal: Tests clean up: pytest fixture-spaghetti has been replaced with JSON files that
+  contain the expected output data.
+
+* `albumtype`: some accuracy improvements
+  * For **Vinyl** media, all `disctitle`s are checked for **EP** or **LP** presence
+  * **EP**, **LP** and **album** words in release and media descriptions are counted and decide the album type
+  * If **compilation** or **best of** or **anniversary** is present in the album name, then
+    the release is a compilation
+  * A single album with an original track and several remixes now has **album** albumtype, not **single**
+
+* `albumartist`: every release with more than 3 artists will now have **Various Artists** (or `va_name`) albumartist
+
+### Fixed
+
+* `album`: 
+  * Remove **EP** or **LP** from the beginning more reliably
+  * Only remove **VA** if album name starts or ends with it
+
+[0.14.0]: https://github.com/snejus/beetcamp/releases/tag/0.14.0
+
 ## [0.13.2] 2022-04-03
 
 ### Fixed

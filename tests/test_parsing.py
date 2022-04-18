@@ -44,14 +44,10 @@ def print_result(case, expected, result):
         _p("stuff", "sick vinyl", "creds", "stuff\nsick vinyl\ncreds", id="all"),
     ],
 )
-def test_comments(descr, disctitle, creds, expected):
-    meta = dict(
-        description=descr,
-        albumRelease=[{"musicReleaseFormat": "VinylFormat", "description": disctitle}],
-        creditText=creds,
-        dateModified="doesntmatter",
-    )
-    config = {"preferred_media": "Vinyl", "comments_separator": "\n"}
+def test_comments(descr, disctitle, creds, expected, media_format):
+    media_format["description"] = disctitle
+    meta = dict(description=descr, albumRelease=[media_format], creditText=creds)
+    config = {"comments_separator": "\n"}
     guru = Metaguru(meta, config)
     assert guru.comments == expected, vars(guru)
 
@@ -79,7 +75,7 @@ def test_mediums_count(name, expected):
         ("X23 & Høbie - Exhibit A", "x23-h-bie-exhibit-a"),
     ],
 )
-def test_convert_title(title, expected):
+def test_urlify(title, expected):
     assert urlify(title) == expected
 
 
@@ -156,11 +152,7 @@ def test_parse_track_name(name, expected, beets_config):
 @pytest.mark.parametrize(
     ("names", "catalognum", "expected"),
     [
-        (
-            ["LI$INGLE010 - cyberflex - LEVEL X"],
-            "LI$INGLE010",
-            ["cyberflex - LEVEL X"],
-        ),
+        (["LI$INGLE010 - cyberflex - LEVEL X"], "LI$INGLE010", ["cyberflex - LEVEL X"]),
         (
             ["1. Artist - Title", "2. Artist - Title"],
             "",
@@ -187,7 +179,7 @@ def test_clean_track_names(names, catalognum, expected):
     [
         ("Album EP", [], "Album EP"),
         ("Artist Album EP", ["Artist"], "Album EP"),
-        ("Artist EP", ["Artist"], "Artist EP"),
+        ("Artist EP", ["Artist"], ""),
         ("Album Artist EP", ["Artist"], "Album EP"),
         ("CAT001 - Artist Album EP", ["Artist"], "Album EP"),
     ],
@@ -305,25 +297,19 @@ def test_parse_country(name, expected):
         ("", "", 'BAD001"', "", ""),
         ("", "", "Modularz 40", "Modularz", "Modularz 40"),
         ("", "", " catalogue number GOOD001 ", "", "GOOD001"),
-        ("LI$INGLE010 - cyberflex - LEVEL X", "", "", "", "LI$INGLE010"),
     ],
 )
-def test_parse_catalognum(album, disctitle, description, label, expected, beets_config):
+def test_parse_catalognum(
+    album, disctitle, description, label, expected, beets_config, media_format
+):
+    media_format.update(name=disctitle, description="")
     meta = {
         "name": album,
         "description": description,
         "publisher": {"name": label},
         "byArtist": {"name": ""},
-        "albumRelease": [
-            {
-                "name": disctitle,
-                "musicReleaseFormat": "VinylFormat",
-                "description": "",
-            },
-        ],
-        "tracks": ["1. Artist - Title"],
+        "albumRelease": [media_format],
     }
-
     assert Metaguru(meta, beets_config).catalognum == expected
 
 
@@ -357,8 +343,6 @@ def test_parse_catalognum(album, disctitle, description, label, expected, beets_
         ("The Castle [BLCKLPS009] Incl. Remix", [], "The Castle"),
         ('Anetha - "Ophiuchus EP"', ["Anetha"], "Ophiuchus EP"),
         ("Album (FREE DL)", [], "Album"),
-        ("Devils Kiss VA", [], "Devils Kiss"),
-        ("Devils Kiss VA001", [], "Devils Kiss VA001"),
         (
             "Dax J - EDLX.051 Illusions Of Power",
             ["EDLX.051", "Dax J"],
@@ -371,21 +355,17 @@ def test_parse_catalognum(album, disctitle, description, label, expected, beets_
         ("HWEP010 - MEZZ - COLOR OF WAR", ["HWEP010", "MEZZ"], "COLOR OF WAR"),
         ("O)))Bow 1", [], "O)))Bow 1"),
         ("hi'Hello", ["hi"], "'Hello"),
-        ("Blood Moon †INVI VA006†", ["INVI VA006"], "Blood Moon"),
+        # only remove VA if album name starts or ends with it
+        ("Album VA", [], "Album"),
+        ("VA Album", [], "Album"),
+        ("Album VA001", [], "Album VA001"),
+        ("Album VA 03", [], "Album VA 03"),
+        # remove (weird chars too) regardless of its position if explicitly excluded
+        ("Album †INVI VA006†", ["INVI VA006"], "Album"),
     ],
 )
 def test_clean_name(name, extras, expected):
     assert Metaguru.clean_name(name, *extras, remove_extra=True) == expected
-
-
-def test_bundles_get_excluded():
-    meta = {
-        "albumRelease": [
-            {"name": "Vinyl Bundle", "musicReleaseFormat": "VinylFormat"},
-            {"name": "Vinyl", "musicReleaseFormat": "VinylFormat"},
-        ]
-    }
-    assert set(Metaguru._get_media_reference(meta)) == {"Vinyl"}
 
 
 @pytest.mark.parametrize(
@@ -394,3 +374,14 @@ def test_bundles_get_excluded():
 def test_handles_missing_publish_date(date, expected):
     guru = Metaguru({"datePublished": date})
     assert guru.release_date == expected
+
+
+def test_unpack_props(bc_media_formats):
+    result = Metaguru.unpack_props(bc_media_formats[0])
+    assert {"some_id", "item_type"} < set(result)
+
+
+def test_bundles_get_excluded(bc_media_formats):
+    result = Metaguru.get_media_formats(bc_media_formats)
+    assert len(result) == 1
+    assert result[0].name == "Vinyl"

@@ -1,0 +1,780 @@
+{
+  "@context": "https://schema.org",
+  "@id": "https://dominikeulberg.bandcamp.com/album/mannigfaltig",
+  "@type": "MusicAlbum",
+  "additionalProperty": [
+    {
+      "@type": "PropertyValue",
+      "name": "art_id",
+      "value": 725877052
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "featured_track_num",
+      "value": 8
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "license_name",
+      "value": "all_rights_reserved"
+    }
+  ],
+  "albumRelease": [
+    {
+      "@id": "https://dominikeulberg.bandcamp.com/album/mannigfaltig",
+      "@type": [
+        "MusicRelease",
+        "Product"
+      ],
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "item_id",
+          "value": 1473845193
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "item_type",
+          "value": "a"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "selling_band_id",
+          "value": 233016894
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_name",
+          "value": "Digital"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "art_id",
+          "value": 725877052
+        }
+      ],
+      "description": "Includes high-quality download in MP3, FLAC and more. Paying supporters also get unlimited streaming via the free Bandcamp app.",
+      "identifier": "0730003738067",
+      "image": [
+        "https://f4.bcbits.com/img/a0725877052_10.jpg"
+      ],
+      "musicReleaseFormat": "DigitalFormat",
+      "name": "Mannigfaltig",
+      "recordLabel": {
+        "@id": "https://k7records.bandcamp.com",
+        "@type": "MusicGroup",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "url_suffix",
+            "value": "?from=btl"
+          }
+        ],
+        "name": "!K7 Records"
+      }
+    },
+    {
+      "@id": "https://dominikeulberg.bandcamp.com/album/mannigfaltig#p3952929687",
+      "@type": [
+        "MusicRelease",
+        "Product"
+      ],
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "item_id",
+          "value": 3952929687
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "item_type",
+          "value": "p"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "selling_band_id",
+          "value": 233016894
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_name",
+          "value": "Other Vinyl"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "image_ids",
+          "value": [
+            26205270
+          ]
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "is_music_merch",
+          "value": true
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_id",
+          "value": 18
+        }
+      ],
+      "description": "A1: Eintagsfliege\nA2: Zweibrütiger Scheckenfalter\n\nB1: Dreizehenspecht\nB2: Vierfleck\n\nC1: Fünffleck-Widderchen\nC2: Sechslinien-Bodeneule\n\nD1: Siebenschläfer\nD2: Goldene Acht\n\nE1: Neuntöter\nE2: Zehnpunkt-Marienkäfer\n\nF1 Elfenbein-Flechtenbärchen\nF2 Zwölfpunkt-Spargelkäfer",
+      "image": [
+        "https://f4.bcbits.com/img/0026205270_10.jpg"
+      ],
+      "musicReleaseFormat": "VinylFormat",
+      "name": "Mannigfaltig (3LP)",
+      "offers": {
+        "@type": "Offer",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "includes_digital_download",
+            "value": true
+          }
+        ],
+        "availability": "InStock",
+        "price": 28,
+        "priceCurrency": "EUR",
+        "priceSpecification": {
+          "minPrice": 28
+        },
+        "url": "https://dominikeulberg.bandcamp.com/album/mannigfaltig#p3952929687-buy"
+      }
+    },
+    {
+      "@id": "https://dominikeulberg.bandcamp.com/album/mannigfaltig#p2900502284",
+      "@type": [
+        "MusicRelease",
+        "Product"
+      ],
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "item_id",
+          "value": 2900502284
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "item_type",
+          "value": "p"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "selling_band_id",
+          "value": 233016894
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_name",
+          "value": "Compact Disc (CD)"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "image_ids",
+          "value": [
+            26205310
+          ]
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "is_music_merch",
+          "value": true
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_id",
+          "value": 1
+        }
+      ],
+      "description": "1.Eintagsfliege\n2.Zweibrütiger Scheckenfalter\n3.Dreizehenspecht\n4.Vierfleck\n5.Fünffleck-Widderchen\n6.Sechslinien-Bodeneule\n7.Siebenschläfer\n8.Goldene Acht\n9.Neuntöter\n10.Zehnpunkt-Marienkäfer\n11.Elfenbein-Flechtenbärchen\n12.Zwölfpunkt-Spargelkäfer",
+      "image": [
+        "https://f4.bcbits.com/img/0026205310_10.jpg"
+      ],
+      "musicReleaseFormat": "CDFormat",
+      "name": "Mannigfaltig (CD)",
+      "offers": {
+        "@type": "Offer",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "includes_digital_download",
+            "value": true
+          }
+        ],
+        "availability": "InStock",
+        "price": 12,
+        "priceCurrency": "EUR",
+        "priceSpecification": {
+          "minPrice": 12
+        },
+        "url": "https://dominikeulberg.bandcamp.com/album/mannigfaltig#p2900502284-buy"
+      }
+    },
+    {
+      "@id": "https://dominikeulberg.bandcamp.com/album/mannigfaltig#p974145596",
+      "@type": [
+        "MusicRelease",
+        "Product"
+      ],
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "item_id",
+          "value": 974145596
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "item_type",
+          "value": "p"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "selling_band_id",
+          "value": 233016894
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_name",
+          "value": "Other Vinyl"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "image_ids",
+          "value": [
+            17154151,
+            17154152,
+            17154153,
+            17154154,
+            17154156
+          ]
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "is_music_merch",
+          "value": true
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_id",
+          "value": 18
+        }
+      ],
+      "description": "How can you fulfil the desire to have something tangible that you can hold in your hand, when music is now primarily digital? Dominik Eulberg has come up with a very special solution in the form of the Mannigfaltig album memo game. It’s a deck of 24 beautifully designed cards, consisting of the 12 pairs of animals featured on the album. Each game comes with a digital download code for the full album, making it a great gift or addition to your own collection. All cards include information about the animal and their importance to the environment, in both English and German, making it a great educational tool. The set comes in a sturdy box with a linen-paper cover from an old Westerwald factory and follows the previous game 'Fliegende Edelsteine'.\n\nExternal dimensions: 84 x 134 x 35 mm\n\nWeight: 145 g\n\nUm dem zeitgenössischen Dilemma vom Anspruch nach digitaler Verfügbarkeit und dennoch haptischem Erlebnis entgegenzuwirken, haben wir uns etwas ganz Besonders überlegt. Das Album Mannigfaltig gibt es auch als hochwertiges Memo Game inklusive Downloadcode! So werden alle Bedürfnisse befriedigt: Man hat die Musik in digitaler Form und zusätzlich etwas Tolles zum Sammeln oder Verschenken. Gleichzeitig ist es ein wunderbares Sensibilisierungs-Spiel. Die zwölf tierischen Protagonisten sind in einem Memo Game mit 24 Karten verewigt. Erst wenn man die Pärchen findet, ergeben Fragmente von Erläuterungstexten auf den Spielkarten einen Sinn und erörtern dieses Lebewesen. Das Spiel kommt in einer massive Stülpschachtel mit robustem Leinenpapierüberzug aus einer alten Manufaktur im Westerwald, deren Qualität ihr vielleicht schon von dem Vogelquartett „Fliegende Edelsteine“ kennt.  \n\nAußenmaß: 84 x 134 x 35 mm \n\nGewicht: 145 g",
+      "image": [
+        "https://f4.bcbits.com/img/0017154151_10.jpg",
+        "https://f4.bcbits.com/img/0017154152_10.jpg",
+        "https://f4.bcbits.com/img/0017154153_10.jpg",
+        "https://f4.bcbits.com/img/0017154154_10.jpg",
+        "https://f4.bcbits.com/img/0017154156_10.jpg"
+      ],
+      "musicReleaseFormat": "VinylFormat",
+      "name": "Memo Game with album download card",
+      "offers": {
+        "@type": "Offer",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "includes_digital_download",
+            "value": true
+          }
+        ],
+        "availability": "InStock",
+        "price": 18,
+        "priceCurrency": "EUR",
+        "priceSpecification": {
+          "minPrice": 18
+        },
+        "url": "https://dominikeulberg.bandcamp.com/album/mannigfaltig#p974145596-buy"
+      }
+    },
+    {
+      "@id": "https://dominikeulberg.bandcamp.com/track/eintagsfliege",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://dominikeulberg.bandcamp.com/track/zweibr-tiger-scheckenfalter",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://dominikeulberg.bandcamp.com/track/dreizehenspecht",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://dominikeulberg.bandcamp.com/track/vierfleck",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://dominikeulberg.bandcamp.com/track/f-nffleck-widderchen-2",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://dominikeulberg.bandcamp.com/track/sechslinien-bodeneule",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://dominikeulberg.bandcamp.com/track/siebenschl-fer",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://dominikeulberg.bandcamp.com/track/goldene-acht-5",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://dominikeulberg.bandcamp.com/track/neunt-ter-4",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://dominikeulberg.bandcamp.com/track/zehnpunkt-marienk-fer",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://dominikeulberg.bandcamp.com/track/elfenbein-flechtenb-rchen",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://dominikeulberg.bandcamp.com/track/zw-lfpunkt-spargelk-fer",
+      "@type": "MusicRelease"
+    }
+  ],
+  "albumReleaseType": "AlbumRelease",
+  "byArtist": {
+    "@id": "https://dominikeulberg.bandcamp.com",
+    "@type": "MusicGroup",
+    "name": "Dominik Eulberg"
+  },
+  "copyrightNotice": "All Rights Reserved",
+  "creditText": "2019, !K7 Music",
+  "dateModified": "28 Mar 2022 16:35:07 GMT",
+  "datePublished": "06 Sep 2019 00:00:00 GMT",
+  "description": "Finally. More than eight years after Diorama, Dominik Eulberg releases his long awaited fifth studio album Mannigfaltig. With twelve elaborate pieces of music, he creates a burning plea to preserve the breathtaking biodiversity of nature and at the same time warns of the threat posed to it by humans. It is a detailed record that demands close listening and showcases Eulberg's considerable synth craft, with drawn out pads and delicate keys laid over undulating rhythms that slowly take you through a wide range of emotions. Elements of ambient, downtempo, electronica, pop and minimal are infused with the sounds of nature, a choral sense of musicality and wistful air of grace across all the majestically composed pieces.\r\n\r\nOn his return and finally serving up a new album, Eulberg says, “music only makes sense for me if it has something to say. And I have something to say now! \r\nHe feels he has found a holistic and fulfilling way to use his musical platform to continue to advocate for the importance of biodiversity. “It's my mission—my calling, if you will —to sensitise people to nature,” says the qualified biologist and ecologist, specialist nature author, ambassador and accomplished producer. \r\n\r\nHe came up with the idea for the new album’s concept during a hiking tour in his home town when he first happened upon a butterfly whose name is literally translated as ‘golden-eight.’ Then he saw a songbird called ‘nine-slayer’ and heard the calls of a dormouse, whose name in German is ‘seven-sleeper.’ This is when he discovered that the seemingly casual chain went further - that for every number from one to twelve there is a name of a native animal species.\r\n\r\nOur nature is so diverse, or more beautifully expressed so manifold (hence the album title, ‘mannigfaltig,’ which means manifold in German). But the threat to it from human behaviour has never been more real, with more species than ever before going extinct in such a short space of time. This record is his attempt to point out the importance of “giving our animal friends back the space they need.”\r\n\r\nMannigfaltig is an album about the variety and colourfulness of nature, which for Eulberg is “the greatest artist of all” and something that soothes his soul and is the “easiest, healthiest and most cost-effective key to happiness”. With a clear concept behind each album, this latest one is a musical attempt to mirror the endless variation of nature and “highlight the entire colour palette” while always going with the flow of his inner feelings. “I always look for an innovative momentum, and never try to imitate anything, or even myself.” The album is an artistic advancement on Diorama thanks to new synths, mixers and developing new production techniques.\r\n\r\nIt is a positive record, a mosaic of many small pleasures that can be listened to in a range of settings, from comedowns to long drives thanks to many rewarding layers of richness and complexity. “The most beautiful setting would be of course along with contemplative observations of nature, for that is indeed its origin.”\r\n\r\nEulberg uses his synths like a water-colour painter, spreading them across the airwaves in soft tones and with blurred edges. Gentle rhythms propel the tracks as glistening percussion and angelic harmonies lift your spirits. Reconciling the beauty of nature with the beauty of sound, Eulberg takes you through dewy mornings, spring afternoons and brightly lit forest rambles with a real deftness and delicacy that replicates the majesty of the natural world in which we live.\r\n\r\nFrom melancholy to euphoria and back again, this is an invigorating, inspiring record that washed over you in waves of soul-stirring sound.",
+  "image": "https://f4.bcbits.com/img/a0725877052_10.jpg",
+  "keywords": [
+    "Dance",
+    "Dominik Eulberg",
+    "Electronic",
+    "ambient",
+    "deep techno",
+    "electronic",
+    "melodic",
+    "nature",
+    "techno",
+    "Montabaur"
+  ],
+  "name": "Mannigfaltig",
+  "numTracks": 12,
+  "publisher": {
+    "@id": "https://dominikeulberg.bandcamp.com",
+    "@type": "MusicGroup",
+    "additionalProperty": [
+      {
+        "@type": "PropertyValue",
+        "name": "band_id",
+        "value": 799180214
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "currency",
+        "value": "EUR"
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "has_any_downloads",
+        "value": true
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "has_download_codes",
+        "value": true
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_height",
+        "value": 941
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_id",
+        "value": 14226291
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_width",
+        "value": 1150
+      }
+    ],
+    "event": [
+      {
+        "@type": "MusicEvent",
+        "location": {
+          "@type": "MusicVenue",
+          "address": "Konstanz, Germany",
+          "name": "Bodenseestadion"
+        },
+        "name": "Dominik Eulberg",
+        "startDate": "13 May 2022 00:00:00 GMT",
+        "url": "https://www.songkick.com/festivals/2281729-campus-konstanz/id/39972767-campus-festival-konstanz-2022?utm_source=1471&utm_medium=partner"
+      },
+      {
+        "@type": "MusicEvent",
+        "location": {
+          "@type": "MusicVenue",
+          "address": "Le Bourget, France",
+          "name": "Musée de l'Air et de l'Espace"
+        },
+        "name": "Dominik Eulberg",
+        "startDate": "14 May 2022 00:00:00 GMT",
+        "url": "https://www.songkick.com/festivals/3302769-cercle/id/40229492-cercle-festival-2022?utm_source=1471&utm_medium=partner"
+      },
+      {
+        "@type": "MusicEvent",
+        "location": {
+          "@type": "MusicVenue",
+          "address": "Memmingen, Germany",
+          "name": "Ikarus Festival"
+        },
+        "name": "Dominik Eulberg",
+        "startDate": "02 Jun 2022 00:00:00 GMT",
+        "url": "https://www.songkick.com/festivals/1319688-ikarus/id/39548080-ikarus-festival-2022?utm_source=1471&utm_medium=partner"
+      },
+      {
+        "@type": "MusicEvent",
+        "location": {
+          "@type": "MusicVenue",
+          "address": "Bonn, Germany",
+          "name": "Freizeitpark Rheinaue"
+        },
+        "name": "Dominik Eulberg",
+        "startDate": "01 Jul 2022 00:00:00 GMT",
+        "url": "https://www.songkick.com/festivals/1005553-panama-open-air/id/39405828-panama-open-air-2022?utm_source=1471&utm_medium=partner"
+      }
+    ],
+    "foundingLocation": {
+      "@type": "Place",
+      "name": "Montabaur, Germany"
+    },
+    "genre": "https://bandcamp.com/tag/electronic",
+    "image": "https://f4.bcbits.com/img/0014226291_10.jpg",
+    "name": "Dominik Eulberg",
+    "subjectOf": [
+      {
+        "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "m"
+          }
+        ],
+        "name": "music",
+        "url": "https://dominikeulberg.bandcamp.com/music"
+      },
+      {
+        "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "p"
+          }
+        ],
+        "name": "merch",
+        "url": "https://dominikeulberg.bandcamp.com/merch"
+      },
+      {
+        "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "c"
+          }
+        ],
+        "name": "community",
+        "url": "https://dominikeulberg.bandcamp.com/community"
+      }
+    ]
+  },
+  "track": {
+    "@type": "ItemList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://dominikeulberg.bandcamp.com/track/eintagsfliege",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 2982815316
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H07M08S",
+          "name": "Eintagsfliege"
+        },
+        "position": 1
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://dominikeulberg.bandcamp.com/track/zweibr-tiger-scheckenfalter",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 1110956541
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H07M13S",
+          "name": "Zweibrütiger Scheckenfalter"
+        },
+        "position": 2
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://dominikeulberg.bandcamp.com/track/dreizehenspecht",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 3356016608
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H03M34S",
+          "name": "Dreizehenspecht"
+        },
+        "position": 3
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://dominikeulberg.bandcamp.com/track/vierfleck",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 2157183897
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H06M12S",
+          "name": "Vierfleck"
+        },
+        "position": 4
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://dominikeulberg.bandcamp.com/track/f-nffleck-widderchen-2",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 1466195724
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H09M08S",
+          "name": "Fünffleck-Widderchen"
+        },
+        "position": 5
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://dominikeulberg.bandcamp.com/track/sechslinien-bodeneule",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 1393832717
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H08M36S",
+          "name": "Sechslinien-Bodeneule"
+        },
+        "position": 6
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://dominikeulberg.bandcamp.com/track/siebenschl-fer",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 3510739004
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H06M01S",
+          "name": "Siebenschläfer"
+        },
+        "position": 7
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://dominikeulberg.bandcamp.com/track/goldene-acht-5",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 4040803035
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H08M52S",
+          "name": "Goldene Acht"
+        },
+        "position": 8
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://dominikeulberg.bandcamp.com/track/neunt-ter-4",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 2344054745
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H07M29S",
+          "name": "Neuntöter"
+        },
+        "position": 9
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://dominikeulberg.bandcamp.com/track/zehnpunkt-marienk-fer",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 634395149
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H11M03S",
+          "name": "Zehnpunkt-Marienkäfer"
+        },
+        "position": 10
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://dominikeulberg.bandcamp.com/track/elfenbein-flechtenb-rchen",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 2211100162
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H07M00S",
+          "name": "Elfenbein-Flechtenbärchen"
+        },
+        "position": 11
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://dominikeulberg.bandcamp.com/track/zw-lfpunkt-spargelk-fer",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 2876764040
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H04M43S",
+          "name": "Zwölfpunkt-Spargelkäfer"
+        },
+        "position": 12
+      }
+    ],
+    "numberOfItems": 12
+  }
+}

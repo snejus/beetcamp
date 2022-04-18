@@ -1,3 +1,7 @@
+"""Tests which process a bunch of Bandcamp JSONs and compare results with the specified
+reference JSONs. Currently they are only executed locally and are based on
+the maintainer's beets library.
+"""
 import json
 import os
 import re
@@ -5,6 +9,7 @@ from collections import Counter, defaultdict, namedtuple
 from functools import partial
 from html import unescape
 from itertools import groupby
+from operator import truth
 
 import pytest
 from beetsplug.bandcamp import BandcampPlugin
@@ -17,7 +22,7 @@ pytestmark = pytest.mark.lib
 
 BASE_DIR = "lib_tests"
 TEST_DIR = "dev"
-REFERENCE_DIR = "v0.12.0"
+REFERENCE_DIR = "593e757"
 
 IGNORE_FIELDS = {
     "bandcamp_artist_id",
@@ -28,6 +33,8 @@ IGNORE_FIELDS = {
     "comments",
     "length",
     "price",
+    "mastering",
+    "artwork",
 }
 
 target_dir = os.path.join(BASE_DIR, TEST_DIR)
@@ -40,13 +47,10 @@ console = make_console(stderr=True, record=True)
 testfiles = sorted(filter(lambda x: x.endswith("json"), os.listdir("jsons")))
 
 
-@pytest.fixture(params=testfiles)
-def file(request):
-    return request.param
-
-
 Oldnew = namedtuple("Oldnew", ["old", "new", "diff"])
 oldnew = defaultdict(list)
+
+open = partial(open, encoding="utf-8")  # pylint: disable=redefined-builtin
 
 
 @pytest.fixture(scope="session")
@@ -87,7 +91,7 @@ stats_map = defaultdict(lambda: 0)
 
 
 @pytest.fixture(scope="module")
-def config(request):
+def config():
     yield BandcampPlugin().config.flatten()
 
 
@@ -121,12 +125,16 @@ def do_key(table, key: str, before, after) -> None:
             table.add_row(wrap(key, "b"), difftext)
 
 
-def compare(old, new) -> None:
+def compare(old, new):
     every_new = [new]
     every_old = [old]
     if "/album/" in new["data_url"]:
         for entity in old, new:
             entity["albumartist"] = entity.pop("artist", "")
+            if "tracks" in entity:
+                for track in entity["tracks"]:
+                    entity["disctitle"] = track.pop("disctitle", "")
+                    # track.pop("media")
 
         every_new.extend(new.get("tracks") or [])
         every_old.extend(old.get("tracks") or [])
@@ -142,32 +150,81 @@ def compare(old, new) -> None:
             do_key(table, key, str(old.get(key, "")), str(new.get(key, "")))
 
     if table.rows:
+        subtitle = wrap(_id + "-" + (new.get("media") or ""), "dim")
         console.print("")
-        console.print(
-            border_panel(table, title=wrap(desc, "b"), subtitle=wrap(_id, "dim"))
-        )
+        console.print(border_panel(table, title=wrap(desc, "b"), subtitle=subtitle))
+        return False
+    return True
+
+
+@pytest.fixture(params=testfiles)
+def file(request):
+    return request.param
+
+
+@pytest.fixture
+def guru(file, config):
+    meta_file = os.path.join("jsons", file)
+    tracks_file = os.path.join("jsons", file.replace(".json", ".tracks"))
+
+    with open(meta_file) as f:
+        meta = f.read()
+
+    if os.path.exists(tracks_file):
+        with open(tracks_file) as f:
+            meta += "\n" + unescape(unescape(f.read()))
+    return Metaguru.from_html(meta, config)
+
+
+@pytest.mark.usefixtures("_report")
+def test_file(file, guru):
+    IGNORE_FIELDS.update({"album_id", "media", "mediums", "disctitle"})
+
+    target_file = os.path.join(target_dir, file)
+    if "_track_" in file:
+        new = guru.singleton
+    else:
+        for album in guru.albums:
+            if album.media == "Vinyl":
+                new = album
+                break
+        else:
+            new = guru.albums[0]
+
+    new.catalognum = " / ".join(filter(truth, map(lambda x: x.catalognum, guru.albums)))
+    with open(target_file, "w") as f:
+        json.dump(new, f, indent=2)
+
+    try:
+        with open(os.path.join(compare_against, file)) as f:
+            old = json.load(f)
+    except FileNotFoundError:
+        old = {}
+
+    if not compare(old, new):
         pytest.fail(pytrace=False)
 
 
 @pytest.mark.usefixtures("_report")
-def test_file(file, config):
-    meta_file = os.path.join("jsons", file)
-    tracks_file = os.path.join("jsons", file.replace(".json", ".tracks"))
-    compare_file = os.path.join(compare_against, file)
+def test_media(file, guru):
+    if "_track_" in file:
+        entities = [guru.singleton]
+    else:
+        entities = guru.albums
 
-    meta = open(meta_file).read() + (
-        ("\n" + unescape(unescape(open(tracks_file).read())))
-        if os.path.exists(tracks_file)
-        else ""
-    )
-    guru = Metaguru.from_html(meta, config)
-    new = guru.singleton if "_track_" in file else guru.album
+    same = False
+    for new in entities:
+        file = (new.get("album_id") or new.track_id).replace("/", "_") + ".json"
+        target_file = os.path.join(target_dir, file)
+        with open(target_file, "w") as f:
+            json.dump(new, f, indent=2)
 
-    target = os.path.join(target_dir, file)
-    json.dump(new, open(target, "w"), indent=2)
+        try:
+            with open(os.path.join(compare_against, file)) as f:
+                old = json.load(f)
+        except FileNotFoundError:
+            old = {}
+        same = compare(old, new)
 
-    try:
-        old = json.load(open(compare_file))
-    except FileNotFoundError:
-        old = {}
-    compare(old, new)
+    if not same:
+        pytest.fail(pytrace=False)
