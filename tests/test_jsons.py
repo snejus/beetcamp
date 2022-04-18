@@ -1,3 +1,4 @@
+"""Tests that compare beetcamp outputs against expected JSON outputs."""
 from operator import itemgetter
 
 import pytest

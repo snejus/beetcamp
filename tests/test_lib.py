@@ -50,6 +50,8 @@ testfiles = sorted(filter(lambda x: x.endswith("json"), os.listdir("jsons")))
 Oldnew = namedtuple("Oldnew", ["old", "new", "diff"])
 oldnew = defaultdict(list)
 
+open = partial(open, encoding="utf-8")  # pylint: disable=redefined-builtin
+
 
 @pytest.fixture(scope="session")
 def _report():
@@ -89,7 +91,7 @@ stats_map = defaultdict(lambda: 0)
 
 
 @pytest.fixture(scope="module")
-def config(request):
+def config():
     yield BandcampPlugin().config.flatten()
 
 
@@ -165,11 +167,12 @@ def guru(file, config):
     meta_file = os.path.join("jsons", file)
     tracks_file = os.path.join("jsons", file.replace(".json", ".tracks"))
 
-    meta = open(meta_file).read() + (
-        ("\n" + unescape(unescape(open(tracks_file).read())))
-        if os.path.exists(tracks_file)
-        else ""
-    )
+    with open(meta_file) as f:
+        meta = f.read()
+
+    if os.path.exists(tracks_file):
+        with open(tracks_file) as f:
+            meta += "\n" + unescape(unescape(f.read()))
     return Metaguru.from_html(meta, config)
 
 
@@ -189,10 +192,12 @@ def test_file(file, guru):
             new = guru.albums[0]
 
     new.catalognum = " / ".join(filter(truth, map(lambda x: x.catalognum, guru.albums)))
-    json.dump(new, open(target_file, "w"), indent=2)
+    with open(target_file, "w") as f:
+        json.dump(new, f, indent=2)
 
     try:
-        old = json.load(open(os.path.join(compare_against, file)))
+        with open(os.path.join(compare_against, file)) as f:
+            old = json.load(f)
     except FileNotFoundError:
         old = {}
 
@@ -211,11 +216,12 @@ def test_media(file, guru):
     for new in entities:
         file = (new.get("album_id") or new.track_id).replace("/", "_") + ".json"
         target_file = os.path.join(target_dir, file)
-        json.dump(new, open(target_file, "w"), indent=2)
+        with open(target_file, "w") as f:
+            json.dump(new, f, indent=2)
 
-        compare_file = os.path.join(compare_against, file)
         try:
-            old = json.load(open(compare_file))
+            with open(os.path.join(compare_against, file)) as f:
+                old = json.load(f)
         except FileNotFoundError:
             old = {}
         same = compare(old, new)
