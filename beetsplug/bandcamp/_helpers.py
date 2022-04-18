@@ -1,3 +1,4 @@
+"""Module with a Helpers class that contains various static, independent functions."""
 import itertools as it
 import operator as op
 import re
@@ -58,9 +59,7 @@ _catalognum = Template(
 _cat_pattern = _catalognum.template
 
 CATNUM_PAT = {
-    "with_header": re.compile(
-        r"(?:^|\s)cat[\w .]+?(?:number:?|:) ?(\w[^\n]+?)(\W{2}|\n|$)", re.I
-    ),
+    "with_header": re.compile(r"(?:^|\s)cat[\w .]+?(?:number:?|:) ?(\w[^\n,]+)", re.I),
     "start_end": re.compile(fr"((^|\n){_cat_pattern}|{_cat_pattern}(\n|$))", re.VERBOSE),
     "anywhere": re.compile(_cat_pattern, re.VERBOSE),
 }
@@ -85,7 +84,7 @@ PATTERNS: Dict[str, Pattern] = {
         ),
     ],
     "remix_or_ft": re.compile(r" [\[(].*(?i:mix|edit|f(ea)?t([.]|uring)?).*"),
-    "ft": re.compile(r" *[( ]((?![^()]+?mix)f(ea)?t([. ]|uring)[^()]+)[)]? *", re.I),
+    "ft": re.compile(r" *[( ]((?![^()]+?mix)f(ea)?t([. ]|uring)[^()]+)\)? *", re.I),
     "track_alt": re.compile(r"^([ABCDEFGHIJ]{1,3}[0-6])\W+", re.I + re.M),
     "vinyl_name": re.compile(r"[1-5](?= ?(xLP|LP|x))|single|double|triple", re.I),
 }
@@ -110,8 +109,11 @@ class Helpers:
 
     @staticmethod
     def split_artists(artists: Iterable[str]) -> List[str]:
+        """Split artists taking into account delimiters such as ',', '+', 'x', 'X' etc.
+        Note: featuring artists are removed since they are not main artists.
+        """
         artists = list(map(lambda x: PATTERNS["ft"].sub("", x), artists))
-        split = map(lambda x: PATTERNS["split_artists"].split(x), ordset(artists))
+        split = map(PATTERNS["split_artists"].split, ordset(artists))
         split_artists = ordset(map(str.strip, it.chain(*split))) - {""}
         split_artists_list = list(split_artists)
 
@@ -159,7 +161,7 @@ class Helpers:
             title, track_alt = Helpers.get_trackalt(title)
 
         # find the remixer
-        match = re.search(r" *\( *[^)(]+?(?i:(re)?mix|edit)[)]", name, re.I)
+        match = re.search(r" *\( *[^)(]+?(?i:(re)?mix|edit)\)", name, re.I)
         remixer = match.group() if match else ""
 
         # remove any duplicate artists keeping the order

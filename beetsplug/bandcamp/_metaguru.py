@@ -19,7 +19,7 @@ from pycountry import countries, subdivisions
 from ._helpers import PATTERNS, Helpers, MediaInfo
 
 if sys.version_info.minor > 7:
-    from functools import cached_property
+    from functools import cached_property  # pylint: disable=ungrouped-imports
 else:
     from cached_property import cached_property  # type: ignore
 
@@ -165,7 +165,7 @@ class Metaguru(Helpers):
         if (
             len(aartists) == 1
             or len(valid) == len(aartists)
-            and not len(self.raw_artists) > 4
+            and len(self.raw_artists) <= 4
         ):
             return aartist
         return ", ".join(valid)
@@ -275,7 +275,7 @@ class Metaguru(Helpers):
     def remixers(self) -> Set[str]:
         titles = " ".join(self.track_names)
         names = re.finditer(r"\( *([^)]+) (?i:(re)?mix|edit)\)", titles, re.I)
-        ft = re.finditer(r"[( ](f(ea)?t[.]? [^()]+)[)]?", titles, re.I)
+        ft = re.finditer(r"[( ](f(ea)?t[.]? [^()]+)\)?", titles, re.I)
         return set(map(lambda x: x.expand(r"\1"), it.chain(names, ft)))
 
     @cached_property

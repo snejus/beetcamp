@@ -1,3 +1,4 @@
+"""Tests for searching functionality."""
 import pytest
 from beets.library import Item
 from beetsplug.bandcamp import BandcampPlugin

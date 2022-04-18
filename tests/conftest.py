@@ -1,4 +1,4 @@
-"""Data prep / fixtures for tests."""
+"""Pytest fixtures for tests."""
 import json
 import re
 from copy import deepcopy
@@ -58,9 +58,11 @@ def release(request):
         input_folder = path.join(input_folder, "issues")
         filename = filename.replace("issues_", "")
 
-    with open(path.join(input_folder, filename)) as input_f:
+    with open(path.join(input_folder, filename), encoding="utf-8") as input_f:
         input_json = re.sub(r"\n *", "", input_f.read())
-    with open(path.join(input_folder, "expected", filename)) as expected_f:
+    with open(
+        path.join(input_folder, "expected", filename), encoding="utf-8"
+    ) as expected_f:
         expected_output = json.load(expected_f)
 
     return input_json, expected_output

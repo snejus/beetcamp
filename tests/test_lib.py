@@ -1,3 +1,7 @@
+"""Tests which process a bunch of Bandcamp JSONs and compare results with the specified
+reference JSONs. Currently they are only executed locally and are based on
+the maintainer's beets library.
+"""
 import json
 import os
 import re
@@ -18,7 +22,7 @@ pytestmark = pytest.mark.lib
 
 BASE_DIR = "lib_tests"
 TEST_DIR = "dev"
-REFERENCE_DIR = "4937a39"
+REFERENCE_DIR = "593e757"
 
 IGNORE_FIELDS = {
     "bandcamp_artist_id",
