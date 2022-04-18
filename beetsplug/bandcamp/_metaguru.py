@@ -417,7 +417,7 @@ class Metaguru(Helpers):
 
     @cached_property
     def va(self) -> bool:
-        return len(self.unique_artists) > 4
+        return len(self.unique_artists) > 3
 
     @cached_property
     def style(self) -> Optional[str]:

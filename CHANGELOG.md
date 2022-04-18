@@ -1,4 +1,4 @@
-## [0.14.0-alpha.1] Unreleased
+## [0.14.0] 2022-04-18
 
 ### Added
 
@@ -30,6 +30,8 @@
   * If **compilation** or **best of** or **anniversary** is present in the album name, then
     the release is a compilation
   * A single album with an original track and several remixes now has **album** albumtype, not **single**
+
+* `albumartist`: every release with more than 3 artists will now have **Various Artists** (or `va_name`) albumartist
 
 ### Fixed
 

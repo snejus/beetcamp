@@ -119,12 +119,14 @@ class Helpers:
 
         for artist in split_artists_list:
             subartists = artist.split(" X ")
-            if len(list(artists)) == len(split_artists_list) or any(
+            if len(artists) == len(split_artists_list) or any(
                 map(lambda x: x in split_artists, subartists)
             ):
                 split_artists.discard(artist)
                 split_artists.update(subartists)
 
+            # ' & ' may be part of single artist name, so we need to be careful here
+            # we check whether any of the split artists appears on their own
             subartists = artist.split(" & ")
             if len(subartists) > 1 and any(map(lambda x: x in split_artists, subartists)):
                 split_artists.discard(artist)
@@ -219,7 +221,7 @@ class Helpers:
         return tracks
 
     @staticmethod
-    def parse_catalognum(album, disctitle, description, label, exclude):
+    def parse_catalognum(album, disctitle, description, label, exclude=[]):
         # type: (str, str, str, str, List[str]) -> str
         """Try getting the catalog number looking at text from various fields."""
         cases = [
@@ -239,7 +241,7 @@ class Helpers:
             except (IndexError, AttributeError):
                 return ""
 
-        ignored = set(map(str.casefold, exclude or []) or [None, ""])
+        ignored = set(map(str.casefold, exclude))
 
         def not_ignored(option: str) -> bool:
             return bool(option) and option.casefold() not in ignored
