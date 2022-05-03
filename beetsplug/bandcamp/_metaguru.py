@@ -211,6 +211,7 @@ class Metaguru(Helpers):
             self.disctitle,
             self.media.description + "\n" + self.comments,
             self.label,
+            self.track_names,
             artists,
         )
 

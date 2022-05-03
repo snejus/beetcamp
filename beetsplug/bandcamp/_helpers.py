@@ -61,6 +61,7 @@ _cat_pattern = _catalognum.template
 CATNUM_PAT = {
     "with_header": re.compile(r"(?:^|\s)cat[\w .]+?(?:number:?|:) ?(\w[^\n,]+)", re.I),
     "start_end": re.compile(fr"((^|\n){_cat_pattern}|{_cat_pattern}(\n|$))", re.VERBOSE),
+    "delimited": re.compile(fr"(?:^|[\[(]){_cat_pattern}(?:[])]|$)", re.VERBOSE),
     "anywhere": re.compile(_cat_pattern, re.VERBOSE),
 }
 
@@ -221,8 +222,8 @@ class Helpers:
         return tracks
 
     @staticmethod
-    def parse_catalognum(album, disctitle, description, label, exclude=[]):
-        # type: (str, str, str, str, List[str]) -> str
+    def parse_catalognum(album, disctitle, description, label, tracks, exclude=[]):
+        # type: (str, str, str, str, List[str], List[str]) -> str
         """Try getting the catalog number looking at text from various fields."""
         cases = [
             (CATNUM_PAT["with_header"], description),
@@ -246,10 +247,15 @@ class Helpers:
         def not_ignored(option: str) -> bool:
             return bool(option) and option.casefold() not in ignored
 
+        catnum = ""
         try:
-            return next(filter(not_ignored, it.starmap(find, cases)))
+            catnum = next(filter(not_ignored, it.starmap(find, cases)))
         except StopIteration:
-            return ""
+            for match in CATNUM_PAT["delimited"].finditer("\n".join(tracks)):
+                maybe_catnum = match.group(1)
+                if all(maybe_catnum in x for x in tracks):
+                    catnum = maybe_catnum
+        return catnum
 
     @staticmethod
     def get_duration(source: JSONDict) -> int:
@@ -272,7 +278,7 @@ class Helpers:
             ('"', ""),  # double quote anywhere in the string
             # spaces around dash in remixer names within parens
             (r"(\([^)]+) - ([^(]+\))", r"\1-\2"),
-            (r"[\[(][A-Z]+[0-9]+[\])]", ""),
+            (r"\[[A-Z]+[0-9]+\]", ""),
             # uppercase EP and LP, and remove surrounding parens / brackets
             (r"(\S*(\b(?i:[EL]P)\b)\S*)", lambda x: x.expand(r"\2").upper()),
         ]

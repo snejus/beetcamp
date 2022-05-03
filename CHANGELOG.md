@@ -58,8 +58,16 @@
     label name, some use the list of artists, and others a variation of **Various Artists** - 
     we cannot reliably tell. `label` is used instead.
 
-* catalognum: do not match if preceded by **]** character
+* catalognum: 
+  - do not match if preceded by **]** character
+  - parse track titles for catalogue numbers
+
 * album: clean up underscore when it's used as a delimiter
+
+### Fixed
+
+* title: some track titles which contain something in parentheses would have that part
+  wrongly removed. This is now fixed.
 
 ## [0.14.0] 2022-04-18
 
