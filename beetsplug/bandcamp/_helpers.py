@@ -280,7 +280,7 @@ class Helpers:
             name = re.sub(pat, repl, name).strip()
         for arg in filter(op.truth, args):
             esc = re.escape(arg)
-            name = re.sub(fr"[^'\])\w]*(?i:{esc})[^'(\[\w]*", " ", name).strip()
+            name = re.sub(fr"([^'\])\w]|_)*(?i:{esc})([^'(\[\w]|_)*", " ", name).strip()
 
         rm = f"(Various Artists?|{label})" if label else "Various Artists?"
         name = re.sub(

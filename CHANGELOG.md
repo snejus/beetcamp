@@ -59,6 +59,7 @@
     we cannot reliably tell. `label` is used instead.
 
 * catalognum: do not match if preceded by **]** character
+* album: clean up underscore when it's used as a delimiter
 
 ## [0.14.0] 2022-04-18
 
