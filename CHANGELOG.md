@@ -66,6 +66,7 @@
 
 ### Fixed
 
+* album: simplified album name clean-up logic and thus fixed some edge cases
 * title: 
   - some track titles which contain something in parentheses would have that part wrongly
     removed. This is now fixed.
@@ -74,7 +75,7 @@
     previously: **Title (Extended**
     now: **Title (Extended)**
 
-* artist: featuring artists given in square brackets are now also parsed
+* artist: featuring artists given in square brackets are now parsed correctly
 
 ## [0.14.0] 2022-04-18
 

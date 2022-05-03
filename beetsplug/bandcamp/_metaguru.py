@@ -12,6 +12,7 @@ from unicodedata import normalize
 
 from beets import config as beets_config
 from beets.autotag.hooks import AlbumInfo, TrackInfo
+from ordered_set import OrderedSet as ordset  # type: ignore[import]
 from pkg_resources import get_distribution, parse_version
 from pycountry import countries, subdivisions
 
@@ -461,23 +462,16 @@ class Metaguru(Helpers):
         match = re.search(r"(?:^| )(['\"])(.+?)\1(?: |$)", album)
         if match:
             album = match.expand(r"\2")
-        album = self.clean_name(album, self.catalognum, remove_extra=True)
-        if (
-            album
-            and not re.search(r"\W | [EL]P", album)  # no delimiters
-            and album not in self.unique_artists  # and it isn't one of the artists
-        ):
-            return album
 
-        if " EP" in album or " LP" in album:
-            album = self.clean_ep_lp_name(album, self.unique_artists)
-        else:
-            album = self.clean_name(
-                album,
-                self.bandcamp_albumartist,
-                *self.unique_artists,
-                self.parsed_albumartist,
-            )
+        clean_album = self.clean_name(album, self.catalognum, remove_extra=True)
+
+        artists = ordset(
+            [self.bandcamp_albumartist, *self.track_artists, *self.unique_artists]
+        ) - {self.label}
+        clean_album = self.clean_name(clean_album, *artists, label=self.label)
+
+        if not clean_album.startswith("("):
+            album = clean_album
         return album or self.album_name_with_eplp or self.catalognum or self.album_name
 
     @property
@@ -500,13 +494,7 @@ class Metaguru(Helpers):
     @property
     def _common_album(self) -> JSONDict:
         common_data: JSONDict = dict(album=self.clean_album_name)
-        fields = [
-            "label",
-            "catalognum",
-            "albumtype",
-            "albumstatus",
-            "country",
-        ]
+        fields = ["label", "catalognum", "albumtype", "albumstatus", "country"]
         if NEW_BEETS:
             fields.extend(["genre", "style", "comments", "albumtypes"])
         common_data.update(self.get_fields(fields))

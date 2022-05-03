@@ -181,11 +181,11 @@ def test_clean_track_names(names, catalognum, expected):
         ("Artist Album EP", ["Artist"], "Album EP"),
         ("Artist EP", ["Artist"], ""),
         ("Album Artist EP", ["Artist"], "Album EP"),
-        ("CAT001 - Artist Album EP", ["Artist"], "Album EP"),
+        ("CAT001 - Artist Album EP", ["Artist"], "CAT001 Album EP"),
     ],
 )
 def test_clean_ep_lp_name(album, artists, expected):
-    assert Metaguru.clean_ep_lp_name(album, artists) == expected
+    assert Metaguru.clean_name(album, *artists) == expected
 
 
 @pytest.mark.parametrize(

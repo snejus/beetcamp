@@ -286,38 +286,26 @@ class Helpers:
             (r"(\([^)]+) - ([^(]+\))", r"\1-\2"),
             (r"\[[A-Z]+[0-9]+\]", ""),
             # uppercase EP and LP, and remove surrounding parens / brackets
-            (r"(\S*(\b(?i:[EL]P)\b)\S*)", lambda x: x.expand(r"\2").upper()),
+            (r"\S*(?i:(?:Double )?(\b[EL]P\b))\S*", lambda x: x.expand(r"\1").upper()),
         ]
         for pat, repl in replacements:
             name = re.sub(pat, repl, name).strip()
-        for arg in filter(op.truth, args):
-            esc = re.escape(arg)
-            name = re.sub(fr"([^'\])\w]|_)*(?i:{esc})([^'(\[\w]|_)*", " ", name).strip()
 
-        rm = f"(Various Artists?|{label})" if label else "Various Artists?"
-        name = re.sub(
-            fr"(?i:(\W\W+{rm}\W*|\W*{rm}(\W\W+|$)|(^\W*{rm}\W*$)))", " ", name
-        ).strip()
+        for arg in [re.escape(arg) for arg in filter(op.truth, args)] + [
+            r"Various Artists?\b(?! \w)"
+        ]:
+            name = re.sub(
+                fr"(^|[^'\])\w]|_|\b)+(?i:{arg})([^'(\[\w]|_|([0-9]+$))*", " ", name
+            ).strip()
+
+        if label and not re.search(fr"\w {label} \w|\w {label}$", name):
+            pat = fr"(\W\W+{label}\W*|\W*{label}(\W\W+|$)|(^\W*{label}\W*$))(VA)?\d*"
+            name = re.sub(pat, " ", name, re.I).strip()
+
         if remove_extra:
             # redundant information about 'remixes from xyz'
             name = PATTERNS["clean_incl"].sub("", name)
         return PATTERNS["clean_title"].sub("", name).strip(" -|/")
-
-    @staticmethod
-    def clean_ep_lp_name(album: str, artists: List[str]) -> str:
-        """Parse album name - which precedes 'LP' or 'EP' in the release title.
-        Attempt to remove artist names from the parsed string:
-        * If we're only left with 'EP', it means that the album name is made up of those
-          artists - in that case we keep them.
-        * Otherwise, we will end up cleaning a release title such as 'Artist Album EP',
-          where the artist is not clearly separated from the album name.
-        """
-        match = re.search(r".+[EL]P", re.sub(r".* [-|] | [\[(][^ ]*|[\])]", "", album))
-        if not match:
-            return ""
-        album_with_artists = match.group().strip()
-        clean_album = Helpers.clean_name(album_with_artists, *artists)
-        return album_with_artists if len(clean_album) == 2 else clean_album
 
     @staticmethod
     def clean_track_names(names: List[str], catalognum: str = "") -> List[str]:
