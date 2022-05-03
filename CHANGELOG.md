@@ -64,6 +64,11 @@
 
 * album: clean up underscore when it's used as a delimiter
 
+* albumtypes:
+  - `remix`: check for string **rmx** in album name
+  - `compilation`: even if a release is an **ep**, check whether it's also a compilation
+    and include it
+
 ### Fixed
 
 * album: simplified album name clean-up logic and thus fixed some edge cases

@@ -243,10 +243,8 @@ class Helpers:
             cases.append((pat, "\n".join((album, disctitle, description))))
 
         def find(pat: Pattern, string: str) -> str:
-            try:
-                return pat.search(string).groups()[0].strip()  # type: ignore
-            except (IndexError, AttributeError):
-                return ""
+            match = pat.search(string)
+            return match.group(1).strip() if match else ""
 
         ignored = set(map(str.casefold, exclude))
 

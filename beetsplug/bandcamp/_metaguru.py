@@ -288,10 +288,7 @@ class Metaguru(Helpers):
 
     @cached_property
     def track_names(self) -> List[str]:
-        raw_tracks = self.meta.get("tracks") or []
-        if raw_tracks:
-            return list(map(lambda x: x.split(". ", maxsplit=1)[1], raw_tracks))
-
+        raw_tracks = []
         for item in map(lambda x: x["item"], self.json_tracks):
             name = item["name"]
             artist = item.get("byArtist", {}).get("name")
@@ -403,15 +400,18 @@ class Metaguru(Helpers):
     @cached_property
     def albumtypes(self) -> str:
         albumtypes = {self.albumtype}
-        if self.albumtype == "compilation":
-            albumtypes.add("album")
+        if self.is_comp:
+            if self.albumtype == "ep":
+                albumtypes.add("compilation")
+            else:
+                albumtypes.add("album")
         if self.is_lp:
             albumtypes.add("lp")
         if len({t["main_title"] for t in self.tracks}) == 1:
             albumtypes.add("single")
-        for word in ["remix", "live", "soundtrack"]:
+        for word in ["remix", "rmx", "live", "soundtrack"]:
             if word in self.album_name.lower():
-                albumtypes.add(word)
+                albumtypes.add(word.replace("rmx", "remix"))
 
         return "; ".join(sorted(albumtypes))
 
