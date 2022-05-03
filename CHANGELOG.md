@@ -49,6 +49,7 @@
       }
     ]
     ```
+
 ### Updated
 
 * search: 
@@ -58,21 +59,24 @@
     label name, some use the list of artists, and others a variation of **Various Artists** - 
     we cannot reliably tell. `label` is used instead.
 
-* catalognum: 
+* `catalognum`: 
   - do not match if preceded by **]** character
   - parse track titles for catalogue numbers
 
-* album: clean up underscore when it's used as a delimiter
+* `album`: clean up underscore when it's used as a delimiter
 
-* albumtypes:
-  - `remix`: check for string **rmx** in album name
-  - `compilation`: even if a release is an **ep**, check whether it's also a compilation
+* `albumtype`: to determine whether a release is a compilation, check comments for string
+  **compilation**
+
+* `albumtypes`:
+  - **remix**: check for string **rmx** in album name
+  - **compilation**: even if a release is an **ep**, check whether it's also a compilation
     and include it
 
 ### Fixed
 
-* album: simplified album name clean-up logic and thus fixed some edge cases
-* title: 
+* `album`: simplified album name clean-up logic and thus fixed a couple of edge cases
+* `title`: 
   - some track titles which contain something in parentheses would have that part wrongly
     removed. This is now fixed.
   - minor fixes to do with featuring artists extraction from the title
@@ -80,7 +84,7 @@
     previously: **Title (Extended**
     now: **Title (Extended)**
 
-* artist: featuring artists given in square brackets are now parsed correctly
+* `artist`: featuring artists given in square brackets are now parsed correctly
 
 ## [0.14.0] 2022-04-18
 

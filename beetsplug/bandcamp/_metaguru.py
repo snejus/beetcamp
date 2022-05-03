@@ -322,7 +322,7 @@ class Metaguru(Helpers):
     def vinyl_disctitles(self) -> str:
         return " ".join([m.title for m in self.media_formats if m.name == "Vinyl"])
 
-    def search_albumtype(self, word: str) -> bool:
+    def _search_albumtype(self, word: str) -> bool:
         """Return whether the given word (ep or lp) matches the release albumtype.
         True when one of the following conditions is met:
         * if {word}[0-9] is found in the catalognum
@@ -347,12 +347,12 @@ class Metaguru(Helpers):
     @cached_property
     def is_lp(self) -> bool:
         """Return whether the release is an LP."""
-        return self.search_albumtype("lp")
+        return self._search_albumtype("lp")
 
     @cached_property
     def is_ep(self) -> bool:
         """Return whether the release is an EP."""
-        return self.search_albumtype("ep")
+        return self._search_albumtype("ep")
 
     def check_albumtype_in_descriptions(self) -> str:
         """Count 'lp', 'album' and 'ep' words in the release and media descriptions
@@ -375,9 +375,11 @@ class Metaguru(Helpers):
             return PATTERNS["split_artists"].split(artist.replace(" & ", ", "))[0]
 
         truly_unique = set(map(first_one, self.track_artists))
-        return bool(
-            re.search(r"compilation|best of|anniversary", self.album_name, re.I)
-        ) or (len(truly_unique) > 3 and len(self.tracks) > 4)
+        return (
+            bool(re.search(r"compilation|best of|anniversary", self.album_name, re.I))
+            or self._search_albumtype("compilation")
+            or (len(truly_unique) > 3 and len(self.tracks) > 4)
+        )
 
     @cached_property
     def albumtype(self) -> str:
