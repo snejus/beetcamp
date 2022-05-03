@@ -4,59 +4,73 @@
 #
 #Parse given bandcamp url and print the resulting json. By default,
 #it outputs an indented/prettified json string which is used by the tests.
-#Use (human) flag -h to include colors and to page it, or -u to update
-#the json data in ./tests/json. Ensure you have curl, and jq on your system.
+#Use (human) flag -h to include colors and to page it, -a to show all fields, 
+#or -u to update #the json data in ./tests/json. 
+#Ensure you have curl, jq and git on your system.
 #
 # Examples
 # · Save output to a file
 #    url2json https://hello.bandcamp.com/album/hi > ./tests/json/testcase.json
 #
-# · Open with jq and less
-#    url2json -h https://hello.bandcamp.com/album/hi
+# · Include all fields and open with jq and less
+#    url2json -a -h https://hello.bandcamp.com/album/hi
 #
-# · Update all json test data
+# · Update all json test cases
 #    url2json -u
 #
-JQARGS=(--sort-keys 'del(.comment, .sponsor, .albumRelease[0].offers)')
+
+ALL_FIELDS=0
+HUMAN=0
+UPDATE=0
 
 get_json () {
-  curl -sL "${1//[\"\']}" | grep dateModif | jq "${JQARGS[@]}"
-}
+  jqargs=(--sort-keys)
+  (( ALL_FIELDS )) || jqargs+=('del(.comment, .sponsor, .albumRelease[0].offers)')
 
-get_human_json () {
-  JQARGS+=(-C)
-  get_json "$1" | less -R
+  curl -sL "${1//[\"\']}" | grep dateModif | {
+    if (( HUMAN )); then
+      jq -C "${jqargs[@]}" | less -R
+    else
+      jq "${jqargs[@]}"
+    fi
+  }
 }
 
 update_test_jsons () {
-  for file in ./tests/json/{,issues/}*.json; do
-    [[ $file == *_expected* ]] && continue
-    cp "$file" "$file.old"
+  files=(./tests/json/{,issues/}*.json)
+  for file in "${files[@]}"; do
     url=$(jq -r '.["@id"]' "$file")
     printf '%-50s' "$file"
     get_json "$url" \
-      | jq --sort-keys 'del(
+      | jq 'del(
           (if .track then .track.itemListElement[].item else . end)
             | .additionalProperty[]
             | select(.name | test("mp3"))
         )' > "$file"
-    if diff -q "$file.old" "$file" &>/dev/null; then
+    if git diff --quiet "$file" &>/dev/null; then
       echo -e ' \e[1;32mNo changes\e[0m'
     else
       echo
-      diff --side-by-side --suppress-common-lines --color=always "$file.old" "$file"
+      git diff -U0 --color-words='[^ ]|[0-9]+' "$file"
     fi
-    rm "$file.old"
   done
+  git diff --compact-summary "${files[@]}"
 }
 
 if [[ -z "$1" ]]; then
   sed -n '2,$s/^#/ /p' "$0"
 else
-  case $1 in
-    -h) get_human_json "$2" ;;
-    -u) update_test_jsons ;;
-    --tracklist-for-tests) tracklist_for_tests "$2" ;;
-    *) get_json "$1" ;;
-  esac
+  for arg in "$@"; do
+    case $arg in
+      -a) ALL_FIELDS=1 ;;
+      -h) HUMAN=1 ;;
+      -u) UPDATE=1 ;;
+      *) url=$arg ;;
+    esac
+  done
+  if (( UPDATE )); then
+    update_test_jsons
+  else
+    get_json "$url"
+  fi
 fi

@@ -430,6 +430,17 @@
         "@type": "MusicEvent",
         "location": {
           "@type": "MusicVenue",
+          "address": "Cologne, Germany",
+          "name": "Odonien"
+        },
+        "name": "Dominik Eulberg",
+        "startDate": "22 May 2022 00:00:00 GMT",
+        "url": "https://www.songkick.com/concerts/40387440-dominik-eulberg-at-odonien?utm_source=1471&utm_medium=partner"
+      },
+      {
+        "@type": "MusicEvent",
+        "location": {
+          "@type": "MusicVenue",
           "address": "Memmingen, Germany",
           "name": "Ikarus Festival"
         },
