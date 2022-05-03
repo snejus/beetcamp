@@ -7,7 +7,6 @@ import sys
 from collections import Counter, defaultdict
 from datetime import date, datetime
 from functools import partial
-from html import unescape
 from typing import Any, Dict, Iterable, List, Optional, Set
 from unicodedata import normalize
 
@@ -68,12 +67,11 @@ class Metaguru(Helpers):
     @classmethod
     def from_html(cls, html: str, config: JSONDict = None) -> "Metaguru":
         try:
-            meta = json.loads(re.search(PATTERNS["meta"], html).group())  # type: ignore
-            meta["tracks"] = list(map(unescape, re.findall(r"^[0-9]+[.] .*", html, re.M)))
+            meta = re.search(PATTERNS["meta"], html).group()  # type: ignore[union-attr]
         except AttributeError as exc:
             raise AttributeError("Could not find release metadata JSON") from exc
-
-        return cls(meta, config)
+        else:
+            return cls(json.loads(meta), config)
 
     @cached_property
     def excluded_fields(self) -> Set[str]:

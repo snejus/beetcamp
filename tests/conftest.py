@@ -48,8 +48,7 @@ def bc_media_formats():
 
 @pytest.fixture
 def release(request):
-    """Read the json data and make it span a single line - same like it's found in htmls.
-    Prepend JSON data with a multiline track list.
+    """Read the json data and remove new line chars - same like it's found in htmls.
     Each of the JSON test cases has a corresponding 'expected' JSON output data file.
     """
     filename = request.param + ".json"
@@ -58,11 +57,9 @@ def release(request):
         input_folder = path.join(input_folder, "issues")
         filename = filename.replace("issues_", "")
 
-    with open(path.join(input_folder, filename), encoding="utf-8") as input_f:
-        input_json = re.sub(r"\n *", "", input_f.read())
-    with open(
-        path.join(input_folder, "expected", filename), encoding="utf-8"
-    ) as expected_f:
-        expected_output = json.load(expected_f)
+    with open(path.join(input_folder, filename), encoding="utf-8") as in_f:
+        input_json = re.sub(r"\n *", "", in_f.read())
+    with open(path.join(input_folder, "expected", filename), encoding="utf-8") as out_f:
+        expected_output = json.load(out_f)
 
     return input_json, expected_output
