@@ -1,3 +1,63 @@
+## [0.15.0] Unreleased
+
+### Added
+
+* search: you can now try searching from the command line: `beetcamp <query> [artist] [label]`.
+    If the `query` argument starts with `https://`, it will fetch the release information
+    like before. If not, it will return a JSON list with all search results found in
+    the first page (only showing the first 2 in the examples below). Searching for release
+    **black sands** by **bonobo**:
+
+    ```json
+    $ beetcamp 'black sands' bonobo | jq '.[:2]'
+    [
+      {
+        "url": "https://bonobomusic.bandcamp.com/album/black-sands",
+        "label": "bonobomusic",
+        "release": "Black Sands",
+        "artist": "Bonobo",
+        "similarity": 1
+      },
+      {
+        "url": "https://bonobomusic.bandcamp.com/album/black-sands-remixed",
+        "label": "bonobomusic",
+        "release": "Black Sands Remixed",
+        "artist": "Bonobo",
+        "similarity": 0.93
+      }
+    ]
+    ```
+
+    Searching for release **weapons 001**, using empty artist (won't be used in the
+    ranking) and looking for label **raise**:
+    ```json
+    $ beetcamp 'weapons 001' '' raise | jq '.[:2]'
+    [
+      {
+        "url": "https://raiserecords.bandcamp.com/album/weapons-001-various-artists",
+        "label": "raiserecords",
+        "release": "WEAPONS 001 - VARIOUS ARTISTS",
+        "artist": "Mac Declos, Lacchesi, Umbraid, Lisa, Absurd, Moth, Clinical Hates, Eastel",
+        "similarity": 0.799
+      },
+      {
+        "url": "https://raiserecords.bandcamp.com/album/weapons-002-tauceti",
+        "label": "raiserecords",
+        "release": "WEAPONS 002 - TAUCETI",
+        "artist": "TAUCETI, Darzack, Raär, Mac Declos",
+        "similarity": 0.785
+      }
+    ]
+    ```
+### Updated
+
+* search: 
+  * if `label` field is available, the plugin now takes it into account when it ranks
+    search results. 
+  * `albumartist` field is not used to rank **compilations** anymore since some labels use
+    label name, some use the list of artists, and others a variation of **Various Artists** - 
+    we cannot reliably tell. `label` is used instead.
+
 ## [0.14.0] 2022-04-18
 
 ### Added
