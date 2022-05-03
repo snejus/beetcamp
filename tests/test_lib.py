@@ -21,7 +21,7 @@ pytestmark = pytest.mark.lib
 
 BASE_DIR = "lib_tests"
 TEST_DIR = "dev"
-REFERENCE_DIR = "bf55f5d"
+REFERENCE_DIR = "a9f63a8"
 JSONS_DIR = "jsons"
 
 IGNORE_FIELDS = {
@@ -68,11 +68,11 @@ def _report():
                 " | ".join(
                     map(
                         lambda x: (f"{x[1]} x " if x[1] > 1 else "")
-                        + wrap(x[0], "b s red"),
+                        + wrap(re.sub(r"\\?\[", r"\\[", x[0]), "b s red"),
                         Counter(map(lambda x: x.old, all_old)).items(),
                     )
                 ),
-                wrap(new, "b green"),
+                wrap(re.sub(r"\\?\[", r"\\[", new), "b green"),
             )
         cols.append(border_panel(tab, title=field))
 

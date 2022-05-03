@@ -8,7 +8,7 @@ from string import Template
 from typing import Any, Callable, Dict, Iterable, List, NamedTuple, Pattern, Tuple, Union
 
 from beets.autotag.hooks import AlbumInfo
-from ordered_set import OrderedSet as ordset
+from ordered_set import OrderedSet as ordset  # type: ignore
 
 from .genres_lookup import GENRES
 
@@ -85,7 +85,9 @@ PATTERNS: Dict[str, Pattern] = {
         ),
     ],
     "remix_or_ft": re.compile(r" [\[(].*(?i:mix|edit|f(ea)?t([.]|uring)?).*"),
-    "ft": re.compile(r" *[( ]((?![^()]+?mix)f(ea)?t([. ]|uring)[^()]+)\)? *", re.I),
+    "ft": re.compile(
+        r" *((([\[(])| )f(ea)?t([. ]|uring)(?![^()]*mix)[^]\[()]+(?(3)[]\)])) *", re.I
+    ),
     "track_alt": re.compile(r"^([ABCDEFGHIJ]{1,3}[0-6])\W+", re.I + re.M),
     "vinyl_name": re.compile(r"[1-5](?= ?(xLP|LP|x))|single|double|triple", re.I),
 }
@@ -175,8 +177,10 @@ class Helpers:
         artists = ordset(Helpers.split_artists(parts))
 
         # remove remixer. We cannot use equality here since it is not reliable
-        # consider Hello, Bye = Nice day (Bye Lovely Day Mix). Bye != Bye Lovely Day,
-        # therefore we check whether Bye is contained in Bye Lovely Day instead
+        # consider
+        #           Hello, Bye - Nice day (Bye Lovely Day Mix)
+        # Bye != Bye Lovely Day, therefore we check whether 'Bye' is found in
+        # 'Bye Lovely Day' instead
         for artist in filter(lambda x: x in remixer, artists.copy()):
             artists.discard(artist)
             artist = ", ".join(artists)
@@ -188,8 +192,10 @@ class Helpers:
         for entity in "artist", "title":
             match = PATTERNS["ft"].search(track[entity])
             if match:
-                track[entity] = track[entity].replace(match.group(), " ").strip()
-                track["ft"] = match.expand(r"\1")
+                # replacing with a space in case it's found in the middle of the title
+                # if it's at the end, it gets stripped
+                track[entity] = track[entity].replace(match.group().rstrip(), "").strip()
+                track["ft"] = match.group(1).strip("([]) ")
 
         track["main_title"] = PATTERNS["remix_or_ft"].sub("", track["title"])
         return track

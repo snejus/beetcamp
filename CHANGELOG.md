@@ -66,8 +66,15 @@
 
 ### Fixed
 
-* title: some track titles which contain something in parentheses would have that part
-  wrongly removed. This is now fixed.
+* title: 
+  - some track titles which contain something in parentheses would have that part wrongly
+    removed. This is now fixed.
+  - minor fixes to do with featuring artists extraction from the title
+    For example, title: **Title (Extended ft. Some Artist)**
+    previously: **Title (Extended**
+    now: **Title (Extended)**
+
+* artist: featuring artists given in square brackets are now also parsed
 
 ## [0.14.0] 2022-04-18
 
