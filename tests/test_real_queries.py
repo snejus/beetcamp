@@ -41,18 +41,6 @@ def test_return_none_for_gibberish():
     assert not html
 
 
-def test_search():
-    query = "arangel"
-    search_type = "track"
-    artist = "matriark"
-    expect_to_find = "https://mega-tech.bandcamp.com/track/arangel"
-
-    plugin = BandcampPlugin()
-    result = plugin._search(query, search_type, artist, search_max=1)[0]
-
-    assert result["url"] == expect_to_find
-
-
 @pytest.mark.parametrize("release", ["ep"], indirect=["release"])
 def test_candidates(release):
     _, expected_albums = release
