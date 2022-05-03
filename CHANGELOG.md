@@ -58,6 +58,8 @@
     label name, some use the list of artists, and others a variation of **Various Artists** - 
     we cannot reliably tell. `label` is used instead.
 
+* catalognum: do not match if preceded by **]** character
+
 ## [0.14.0] 2022-04-18
 
 ### Added

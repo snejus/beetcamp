@@ -32,7 +32,7 @@ class MediaInfo(NamedTuple):
 
 
 _catalognum = Template(
-    r"""(?<![/@])(\b
+    r"""(?<![]/@])(\b
 (?!\W|VA[\d ]+|[EL]P\W|[^\n.]+[ ](?:[0-9]KG|20\d{2}|VA[ \d]+)|AT[ ]0|GC1|HF[.])
 (?!(?i:vol |mp3|christ|vinyl|disc|session|record|artist|the\ |maxi\ |rave\ ))
 (?![^.]+shirt)
