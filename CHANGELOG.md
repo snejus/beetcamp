@@ -63,8 +63,6 @@
   - do not match if preceded by **]** character
   - parse track titles for catalogue numbers
 
-* `album`: clean up underscore when it's used as a delimiter
-
 * `albumtype`: to determine whether a release is a compilation, check comments for string
   **compilation**
 

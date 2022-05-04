@@ -462,9 +462,9 @@ class Metaguru(Helpers):
 
         album = self.album_name
         # look for something in quotes
-        match = re.search(r"(?:^| )(['\"])(.+?)\1(?: |$)", album)
+        match = re.search(r"(?:^| )(['\"])(.+?)\1( VA[0-9]+)*(?: |$)", album)
         if match:
-            album = match.expand(r"\2")
+            album = match.expand(r"\2\3")
 
         clean_album = self.clean_name(album, self.catalognum, remove_extra=True)
 
