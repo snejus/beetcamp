@@ -292,6 +292,7 @@ class Helpers:
             (r"\[[A-Z]+[0-9]+\]", ""),
             # uppercase EP and LP, and remove surrounding parens / brackets
             (r"\S*(?i:(?:Double )?(\b[EL]P\b))\S*", lambda x: x.expand(r"\1").upper()),
+            (r"- Reworked", "(Reworked)")
         ]
         for pat, repl in replacements:
             name = re.sub(pat, repl, name).strip()
