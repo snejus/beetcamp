@@ -164,9 +164,14 @@ def test_parse_track_name(name, expected, beets_config):
             ["9 Artist - Title", "Artist - Title"],
         ),
         (
-            ["NYH244 04 Artist - Title", "NYH244 05 Artist - Title"],
+            ["NYH244 01 Artist - Title", "NYH244 02 Artist - Title"],
             "NYH244",
             ["Artist - Title", "Artist - Title"],
+        ),
+        (
+            ["1.0 Artist - Title [Some Album EP]", "2+2 Artist - Title [HELLO123]"],
+            "",
+            ["1.0 Artist - Title", "2+2 Artist - Title"],
         ),
     ],
 )

@@ -285,7 +285,7 @@ class Helpers:
         replacements: List[Tuple[str, Union[str, Callable]]] = [
             (r"  +", " "),  # multiple spaces
             (r"\( +", "("),  # rubbish that precedes opening parenthesis
-            (r" \)+|(?<=(?i:.mix|edit))\)+$", ")"),
+            (r" \)+|\)+$", ")"),
             ('"', ""),  # double quote anywhere in the string
             # spaces around dash in remixer names within parens
             (r"(\([^)]+) - ([^(]+\))", r"\1-\2"),
@@ -315,14 +315,14 @@ class Helpers:
     @staticmethod
     def clean_track_names(names: List[str], catalognum: str = "") -> List[str]:
         """Remove catalogue number and leading numerical index if they are found."""
-        if catalognum:
-            names = list(map(lambda x: Helpers.clean_name(x, catalognum), names))
-
-        len_tot = len(names)
-        if len_tot > 1 and sum(map(lambda x: int(x[0].isdigit()), names)) > len_tot / 2:
-            pat = re.compile(r"^\d+\W+")
-            names = list(map(lambda x: pat.sub("", x), names))
-        return names
+        ep_album_pat = re.compile(r" *\[.* EP\]+")
+        new_names = []
+        for idx, name in enumerate(names, 1):
+            name = ep_album_pat.sub("", name)
+            name = Helpers.clean_name(name, catalognum)
+            name = re.sub(fr"^0*{idx}(?!\W\d)\W+", "", name)
+            new_names.append(name)
+        return new_names
 
     @staticmethod
     def track_delimiter(names: List[str]) -> str:

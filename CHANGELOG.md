@@ -59,6 +59,9 @@
     label name, some use the list of artists, and others a variation of **Various Artists** - 
     we cannot reliably tell. `label` is used instead.
 
+* `album`: track titles are read to see whether they contain the album name. There are
+  cases where titles follow the following format: **Title ["Album Name" EP]'**
+
 * `catalognum`: 
   - do not match if preceded by **]** character
   - parse track titles for catalogue numbers

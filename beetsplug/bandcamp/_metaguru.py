@@ -263,7 +263,7 @@ class Metaguru(Helpers):
                 index=position,
                 track_id=item.get("@id"),
                 length=self.get_duration(item) or None,
-                **self.parse_track_name(self.clean_name(name), delim),
+                **self.parse_track_name(name, delim),
             )
             lyrics = item.get("recordingOf", {}).get("lyrics", {}).get("text")
             if lyrics:
@@ -462,9 +462,13 @@ class Metaguru(Helpers):
 
         album = self.album_name
         # look for something in quotes
-        match = re.search(r"(?:^| )(['\"])(.+?)\1( VA[0-9]+)*(?: |$)", album)
-        if match:
-            album = match.expand(r"\2\3")
+        quoted_candidates = [self.track_names[0]] if "EP" in self.track_names[0] else []
+        quoted_candidates.append(album)
+        for cand in quoted_candidates:
+            match = re.search(r"(['\"])([^'\"]+)\1( (VA[0-9]+|[EL]P))*([\] ]|$)", cand)
+            if match:
+                album = match.expand(r"\2\3")
+                break
 
         clean_album = self.clean_name(album, self.catalognum, remove_extra=True)
 
