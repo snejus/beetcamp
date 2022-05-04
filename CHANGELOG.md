@@ -86,6 +86,8 @@
     now: **Title (Extended)**
   - allow titles to start with an opening parentheses :exploding_head:
 
+* `albumartist`: remove **, more** from the end
+
 * `artist`: 
   - featuring artists given in square brackets are now parsed correctly
   - lower/uppercase differences in the artist name are now taken into account and are

@@ -315,9 +315,11 @@ class Metaguru(Helpers):
         if self.va:
             return self.va_name
 
+        aartist = self.original_albumartist
         if self.unique_artists:
-            return ", ".join(sorted(self.unique_artists))
-        return self.original_albumartist
+            aartist = ", ".join(sorted(self.unique_artists))
+
+        return aartist.replace(", more", "")
 
     @cached_property
     def vinyl_disctitles(self) -> str:
