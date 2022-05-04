@@ -74,7 +74,7 @@ rm_strings = [
     r"free download|free dl|free\)",
 ]
 PATTERNS: Dict[str, Pattern] = {
-    "split_artists": re.compile(r", | (?:[x+/-]|vs)[.]? "),
+    "split_artists": re.compile(r", | (?:[x+/-]|vs|and)[.]? "),
     "clean_title": re.compile(fr"(?i:[\[(*]?\b({'|'.join(rm_strings)})(\b\W*|$))"),
     "clean_incl": re.compile(r"(\(?incl|\((inc|tracks|.*remix( |es)))([^)]+\)|.*)", re.I),
     "meta": re.compile(r'.*"@id".*', re.M),
