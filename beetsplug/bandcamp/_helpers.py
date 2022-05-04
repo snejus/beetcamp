@@ -70,19 +70,20 @@ rm_strings = [
     r"^[EL]P( [0-9]+)?",
     r"^Vol(ume)?\W*\d",
     r"(digital )?album\)",
-    r"^va|va$|vinyl|compiled by .*",
+    r"^va|va$|vinyl(-only)?|compiled by .*",
     r"free download|free dl|free\)",
 ]
 PATTERNS: Dict[str, Pattern] = {
     "split_artists": re.compile(r", | (?:[x+/-]|vs)[.]? "),
-    "clean_title": re.compile(fr"(?i:[\[(]?\b({'|'.join(rm_strings)})(\b\W*|$))"),
+    "clean_title": re.compile(fr"(?i:[\[(*]?\b({'|'.join(rm_strings)})(\b\W*|$))"),
     "clean_incl": re.compile(r"(\(?incl|\((inc|tracks|.*remix( |es)))([^)]+\)|.*)", re.I),
     "meta": re.compile(r'.*"@id".*', re.M),
     "digital": [  # type: ignore
         re.compile(r"^(DIGI(TAL)? ?[\d.]+|Bonus\W{2,})\W*"),
         re.compile(
-            r"[^\w\)]+(bandcamp[^-]+|digi(tal)?)(\W*(\W+|only|bonus|exclusive)\W*$)", re.I
+            r"[^\w)]+(bandcamp[^-]+|digi(tal)?)(\W*(\W+|only|bonus|exclusive)\W*$)", re.I
         ),
+        re.compile(r"[^\w)]+(bandcamp exclusive )?bonus( track)?(\]|\W*$)", re.I),
     ],
     "remix_or_ft": re.compile(r" [\[(].*(?i:mix|edit|f(ea)?t([.]|uring)?).*"),
     "ft": re.compile(

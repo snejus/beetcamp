@@ -85,6 +85,7 @@
     previously: **Title (Extended**
     now: **Title (Extended)**
   - allow titles to start with an opening parentheses :exploding_head:
+  - remove variations of **Bonus track** and **vinyl-only** from the title
 
 * `albumartist`: remove **, more** from the end
 
