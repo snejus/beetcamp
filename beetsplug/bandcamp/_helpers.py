@@ -284,7 +284,7 @@ class Helpers:
         """
         replacements: List[Tuple[str, Union[str, Callable]]] = [
             (r"  +", " "),  # multiple spaces
-            (r"\( +|(- )?\(+", "("),  # rubbish that precedes opening parenthesis
+            (r"\( +", "("),  # rubbish that precedes opening parenthesis
             (r" \)+|(?<=(?i:.mix|edit))\)+$", ")"),
             ('"', ""),  # double quote anywhere in the string
             # spaces around dash in remixer names within parens

@@ -113,7 +113,7 @@ def test_urlify(title, expected):
             "Ellie Goulding- Eyed ( ROWDIBOÏ EDIT))",
             ("", "Ellie Goulding", "", "Eyed (ROWDIBOÏ EDIT)", "Eyed"),
         ),
-        ("Space Jam - (RZVX EDIT)", ("", "", "", "Space Jam (RZVX EDIT)", "Space Jam")),
+        ("Space Jam - (RZVX EDIT)", ("", "Space Jam", "", "(RZVX EDIT)", "(RZVX EDIT)")),
         ("¯\\_(ツ)_/¯", ("", "", "", "¯\\_(ツ)_/¯", "¯\\_(ツ)_/¯")),
         ("VIENNA (WARM UP MIX", ("", "", "", "VIENNA (WARM UP MIX", "VIENNA")),
         ("MOD-R - ARE YOU", ("", "MOD-R", "", "ARE YOU", "ARE YOU")),

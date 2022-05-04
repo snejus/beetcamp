@@ -81,6 +81,7 @@
     For example, title: **Title (Extended ft. Some Artist)**
     previously: **Title (Extended**
     now: **Title (Extended)**
+  - allow titles to start with an opening parentheses :exploding_head:
 
 * `artist`: featuring artists given in square brackets are now parsed correctly
 
