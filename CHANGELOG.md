@@ -86,7 +86,9 @@
     now: **Title (Extended)**
   - allow titles to start with an opening parentheses :exploding_head:
 
-* `artist`: featuring artists given in square brackets are now parsed correctly
+* `artist`: 
+  - featuring artists given in square brackets are now parsed correctly
+  - lower/uppercase differences in the artist name is now handled more appropriately
 
 * `catalognum`: in rare cases, if the track list was given in the comments, one of the
   track titles would get assumed for the catalognum and subsequently cleaned up. From now

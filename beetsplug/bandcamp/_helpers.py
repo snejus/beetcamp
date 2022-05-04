@@ -170,7 +170,8 @@ class Helpers:
         remixer = match.group() if match else ""
 
         # remove any duplicate artists keeping the order
-        artist = ", ".join(ordset(parts))
+        artists = ordset((next(orig) for _, orig in it.groupby(ordset(parts), str.lower)))
+        artist = ", ".join(artists)
         # remove remixer
         artist = artist.replace(remixer, "").strip(",")
         # split them taking into account other delimiters
