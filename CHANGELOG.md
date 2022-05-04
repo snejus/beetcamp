@@ -86,6 +86,11 @@
 
 * `artist`: featuring artists given in square brackets are now parsed correctly
 
+* `catalognum`: in rare cases, if the track list was given in the comments, one of the
+  track titles would get assumed for the catalognum and subsequently cleaned up. From now
+  on this will only apply if **all** track names include the match (usually delimited by
+  brackets at the end)
+
 ## [0.14.0] 2022-04-18
 
 ### Added

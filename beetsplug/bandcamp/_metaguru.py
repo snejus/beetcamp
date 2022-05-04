@@ -207,13 +207,14 @@ class Metaguru(Helpers):
         if not self._singleton or len(self.raw_artists) > 1:
             artists.extend(self.raw_artists)
             artists.extend(self.remixers)
+
         return self.parse_catalognum(
             self.meta["name"],
             self.disctitle,
             self.media.description + "\n" + self.comments,
-            self.label,
-            self.track_names,
-            artists,
+            self.label if not self._singleton else "",
+            tuple(self.track_names),
+            tuple(artists),
         )
 
     @cached_property

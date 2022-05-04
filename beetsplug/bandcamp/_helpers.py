@@ -32,7 +32,7 @@ class MediaInfo(NamedTuple):
 
 
 _catalognum = Template(
-    r"""(?<![]/@])(\b
+    r"""(?<![]/@-])(\b
 (?!\W|VA[\d ]+|[EL]P\W|[^\n.]+[ ](?:[0-9]KG|20\d{2}|VA[ \d]+)|AT[ ]0|GC1|HF[.])
 (?!(?i:vol |mp3|christ|vinyl|disc|session|record|artist|the\ |maxi\ |rave\ ))
 (?![^.]+shirt)
@@ -61,7 +61,7 @@ _cat_pattern = _catalognum.template
 CATNUM_PAT = {
     "with_header": re.compile(r"(?:^|\s)cat[\w .]+?(?:number:?|:) ?(\w[^\n,]+)", re.I),
     "start_end": re.compile(fr"((^|\n){_cat_pattern}|{_cat_pattern}(\n|$))", re.VERBOSE),
-    "delimited": re.compile(fr"(?:^|[\[(]){_cat_pattern}(?:[])]|$)", re.VERBOSE),
+    "delimited": re.compile(fr"(?:[\[(]){_cat_pattern}(?:[])]|$)", re.VERBOSE),
     "anywhere": re.compile(_cat_pattern, re.VERBOSE),
 }
 
@@ -228,15 +228,18 @@ class Helpers:
         return tracks
 
     @staticmethod
-    def parse_catalognum(album, disctitle, description, label, tracks, exclude=[]):
-        # type: (str, str, str, str, List[str], List[str]) -> str
+    @lru_cache(maxsize=None)
+    def parse_catalognum(album, disctitle, description, label, tracks, artists):
+        # type: (str, str, str, str, Tuple[str], Tuple[str]) -> str
         """Try getting the catalog number looking at text from various fields."""
+        tracks_str = "\n".join(tracks)
         cases = [
             (CATNUM_PAT["with_header"], description),
             (CATNUM_PAT["anywhere"], disctitle),
             (CATNUM_PAT["anywhere"], album),
             (CATNUM_PAT["start_end"], description),
             (CATNUM_PAT["anywhere"], description),
+            (CATNUM_PAT["delimited"], tracks_str),
         ]
         if label:
             pat = re.compile(_catalognum.substitute(label=re.escape(label)), re.VERBOSE)
@@ -246,20 +249,24 @@ class Helpers:
             match = pat.search(string)
             return match.group(1).strip() if match else ""
 
-        ignored = set(map(str.casefold, exclude))
+        ignored = set(map(str.lower, artists))
 
         def not_ignored(option: str) -> bool:
-            return bool(option) and option.casefold() not in ignored
+            """Suitable match if:
+            - is not empty
+            - is not one of the artists
+            - is not found in none of the track names except when it's in all of them
+            """
+            return (
+                bool(option)
+                and option.lower() not in ignored
+                and (option not in tracks_str or all(option in x for x in tracks))
+            )
 
-        catnum = ""
         try:
-            catnum = next(filter(not_ignored, it.starmap(find, cases)))
+            return next(filter(not_ignored, it.starmap(find, cases)))
         except StopIteration:
-            for match in CATNUM_PAT["delimited"].finditer("\n".join(tracks)):
-                maybe_catnum = match.group(1)
-                if all(maybe_catnum in x for x in tracks):
-                    catnum = maybe_catnum
-        return catnum
+            return ""
 
     @staticmethod
     def get_duration(source: JSONDict) -> int:
