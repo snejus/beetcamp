@@ -88,7 +88,10 @@
 
 * `artist`: 
   - featuring artists given in square brackets are now parsed correctly
-  - lower/uppercase differences in the artist name is now handled more appropriately
+  - lower/uppercase differences in the artist name are now taken into account and are
+    handled as the same artist
+  - when only one of the track artists in the release is not found, try splitting with
+    **-** to account for bad formatting
 
 * `catalognum`: in rare cases, if the track list was given in the comments, one of the
   track titles would get assumed for the catalognum and subsequently cleaned up. From now

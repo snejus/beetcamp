@@ -203,7 +203,8 @@ class Helpers:
 
     @staticmethod
     def adjust_artists(tracks: List[JSONDict], aartist: str) -> List[JSONDict]:
-        track_alts = set(filter(op.truth, (t["track_alt"] for t in tracks)))
+        track_alts = {t["track_alt"] for t in tracks if t["track_alt"]}
+        artists = [t["artist"] for t in tracks if t["artist"]]
         for t in tracks:
             # a single track_alt is missing -> check for a single letter, like 'A',
             # in the artist field
@@ -219,6 +220,15 @@ class Helpers:
                     t["artist"] = t["artist"].replace(match.group(), "", 1)
 
             if len(tracks) > 1 and not t["artist"]:
+                if len(artists) == len(tracks) - 1:
+                    # this is the only artist that didn't get parsed - relax the rule
+                    # and try splitting with '-'
+                    split = t["title"].split("-")
+                    if len(split) > 1:
+                        t["artist"] = split[0]
+                        t["title"] = split[1]
+                        continue
+
                 if t["track_alt"] and len(track_alts) == 1:
                     # one of the artists ended up as a track alt, like 'B2'
                     t.update(artist=t.get("track_alt"), track_alt=None)
