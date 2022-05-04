@@ -461,14 +461,15 @@ class Metaguru(Helpers):
             return self.parsed_album_name
 
         album = self.album_name
-        # look for something in quotes
-        quoted_candidates = [self.track_names[0]] if "EP" in self.track_names[0] else []
-        quoted_candidates.append(album)
-        for cand in quoted_candidates:
-            match = re.search(r"(['\"])([^'\"]+)\1( (VA[0-9]+|[EL]P))*([\] ]|$)", cand)
+        for title in self.track_names:
+            match = re.search(r"\[([^\]]+[EL]P)\]", title)
+            if match:
+                album = match.group(1)
+                break
+        else:
+            match = re.search(r"(['\"])([^'\"]+)\1( VA[0-9]+)*( |$)", album)
             if match:
                 album = match.expand(r"\2\3")
-                break
 
         clean_album = self.clean_name(album, self.catalognum, remove_extra=True)
 

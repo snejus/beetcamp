@@ -316,7 +316,7 @@ class Helpers:
     @staticmethod
     def clean_track_names(names: List[str], catalognum: str = "") -> List[str]:
         """Remove catalogue number and leading numerical index if they are found."""
-        ep_album_pat = re.compile(r" *\[.* EP\]+")
+        ep_album_pat = re.compile(r" *\[[^\]]+ [EL]P\]+")
         new_names = []
         for idx, name in enumerate(names, 1):
             name = ep_album_pat.sub("", name)
