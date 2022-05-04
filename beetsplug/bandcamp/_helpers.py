@@ -311,9 +311,10 @@ class Helpers:
         for arg in [re.escape(arg) for arg in filter(op.truth, args)] + [
             r"Various Artists?\b(?! \w)"
         ]:
-            name = re.sub(
-                fr"(^|[^'\])\w]|_|\b)+(?i:{arg})([^'(\[\w]|_|([0-9]+$))*", " ", name
-            ).strip()
+            if not re.search(fr"\w {arg} \w", name, re.I):
+                name = re.sub(
+                    fr"(^|[^'\])\w]|_|\b)+(?i:{arg})([^'(\[\w]|_|([0-9]+$))*", " ", name
+                ).strip()
 
         if label and not re.search(fr"\w {label} \w|\w {label}$", name):
             pat = fr"(\W\W+{label}\W*|\W*{label}(\W\W+|$)|(^\W*{label}\W*$))(VA)?\d*"
