@@ -30,7 +30,7 @@ from beets import __version__, library, plugins
 from beets.autotag.hooks import AlbumInfo, TrackInfo
 from beetsplug import fetchart  # type: ignore[attr-defined]
 
-from ._metaguru import DATA_SOURCE, Metaguru, urlify
+from ._metaguru import DATA_SOURCE, Metaguru
 
 JSONDict = Dict[str, Any]
 
@@ -53,6 +53,14 @@ ALBUM_URL_IN_TRACK = re.compile(r'<a id="buyAlbumLink" href="([^"]+)')
 USER_AGENT = f"beets/{__version__} +http://beets.radbox.org/"
 ALBUM_SEARCH = "album"
 TRACK_SEARCH = "track"
+RELEASE_PATTERN = re.compile(
+    r"""
+(?P<url>https://(?P<label>[^.]+)[^/]+/(album|track)/[\w-]+)[^>]+>
+\s*(?P<release>[^\n]+)
+.+?\ by\ (?P<artist>[^\n]+)
+""",
+    re.DOTALL + re.VERBOSE,
+)
 
 
 class BandcampRequestsHandler:
@@ -116,6 +124,12 @@ def _from_bandcamp(clue: str) -> bool:
     is what we are looking for in a valid url here.
     """
     return bool(re.match(r"http[^ ]+/(album|track)/", clue))
+
+
+def urlify(pretty_string: str) -> str:
+    """Transform a string into bandcamp url."""
+    name = pretty_string.lower().replace("'", "").replace(".", "")
+    return re.sub("--+", "-", re.sub(r"\W", "-", name, flags=re.ASCII)).strip("-")
 
 
 class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
@@ -278,12 +292,6 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         by similarity.
         When artist and/or label queries are given, we use the average similarity.
         """
-        pat = r"""
-(?P<url>https://(?P<label>[^.]+)[^/]+/(album|track)/[\w-]+)[^>]+>
-\s*(?P<release>[^\n]+)
-.+?\ by\ (?P<artist>[^\n]+)
-"""
-        pattern = re.compile(pat, re.DOTALL + re.VERBOSE)
 
         def to_ascii(string: str) -> str:
             """Lowercase and translate non-ascii chars to '?'."""
@@ -305,7 +313,7 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
 
         results: List[JSONDict] = []
         for block in html.split('class="heading"'):
-            match = pattern.search(block)
+            match = RELEASE_PATTERN.search(block)
             if match:
                 res = match.groupdict()
                 similarities = [get_similarity(release, res["release"])]

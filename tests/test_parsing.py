@@ -3,7 +3,8 @@ from datetime import date
 from operator import itemgetter
 
 import pytest
-from beetsplug.bandcamp._metaguru import Metaguru, urlify
+from beetsplug.bandcamp import urlify
+from beetsplug.bandcamp._metaguru import Metaguru
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table

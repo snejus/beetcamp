@@ -4,7 +4,7 @@ import json
 import operator as op
 import re
 import sys
-from collections import Counter, defaultdict
+from collections import Counter
 from datetime import date, datetime
 from functools import partial
 from typing import Any, Dict, Iterable, List, Optional, Set
@@ -17,6 +17,7 @@ from pkg_resources import get_distribution, parse_version
 from pycountry import countries, subdivisions
 
 from ._helpers import PATTERNS, Helpers, MediaInfo
+from ._tracks import Track, Tracks
 
 if sys.version_info.minor > 7:
     from functools import cached_property  # pylint: disable=ungrouped-imports
@@ -40,12 +41,6 @@ DIGI_MEDIA = "Digital Media"
 VA = "Various Artists"
 
 
-def urlify(pretty_string: str) -> str:
-    """Transform a string into bandcamp url."""
-    name = pretty_string.lower().replace("'", "").replace(".", "")
-    return re.sub("--+", "-", re.sub(r"\W", "-", name, flags=re.ASCII)).strip("-")
-
-
 class Metaguru(Helpers):
     _singleton = False
     va_name = VA
@@ -54,6 +49,7 @@ class Metaguru(Helpers):
     meta: JSONDict
     config: JSONDict
     media_formats: List[MediaInfo]
+    _tracks: Tracks
 
     def __init__(self, meta: JSONDict, config: Optional[JSONDict] = None) -> None:
         self.meta = meta
@@ -64,6 +60,7 @@ class Metaguru(Helpers):
             self.media = self.media_formats[0]
         self.config = config or {}
         self.va_name = beets_config["va_name"].as_str() or self.va_name
+        self._tracks = Tracks.from_json(meta)
 
     @classmethod
     def from_html(cls, html: str, config: JSONDict = None) -> "Metaguru":
@@ -152,10 +149,12 @@ class Metaguru(Helpers):
         """
         aartist = self.parsed_albumartist or self.original_albumartist
         if self.label == aartist:
-            aartist = self.parse_track_name(self.album_name).get("artist") or aartist
+            split = self.album_name.split(" - ")
+            if len(split) > 1:
+                aartist = split[0]
 
         aartists = Helpers.split_artists([aartist])
-        remixers_str = " ".join(self.remixers)
+        remixers_str = " ".join(self._tracks.raw_remixers)
 
         def not_remixer(x: str) -> bool:
             return not any(map(lambda y: y in remixers_str, {x, *x.split(" & ")}))
@@ -164,7 +163,7 @@ class Metaguru(Helpers):
         if (
             len(aartists) == 1
             or len(valid) == len(aartists)
-            and len(self.raw_artists) <= 4
+            and len(self._tracks.raw_artists) <= 4
         ):
             return aartist
         return ", ".join(valid)
@@ -203,17 +202,17 @@ class Metaguru(Helpers):
 
     @property
     def catalognum(self) -> str:
-        artists = [self.parsed_albumartist or self.original_albumartist]
-        if not self._singleton or len(self.raw_artists) > 1:
-            artists.extend(self.raw_artists)
-            artists.extend(self.remixers)
+        artists = ordset([self.parsed_albumartist or self.original_albumartist])
+        if not self._singleton or len(self._tracks.raw_artists) > 1:
+            artists.update(self._tracks.raw_artists)
+            artists.update(self._tracks.raw_remixers)
 
         return self.parse_catalognum(
             self.meta["name"],
             self.disctitle,
             self.media.description + "\n" + self.comments,
             self.label if not self._singleton else "",
-            tuple(self.track_names),
+            tuple(self._tracks.raw_names),
             tuple(artists),
         )
 
@@ -231,81 +230,14 @@ class Metaguru(Helpers):
             return WORLDWIDE
 
     @cached_property
-    def json_tracks(self) -> List[JSONDict]:
-        try:
-            return self.meta["track"]["itemListElement"]
-        except KeyError:
-            return [{"item": self.meta, "position": 1}]
-
-    @cached_property
-    def json_artists(self) -> List[str]:
-        artists = []
-        for item in map(lambda x: x["item"], self.json_tracks):
-            try:
-                artists.append(item["byArtist"]["name"])
-            except KeyError:
-                continue
-        return artists
-
-    @cached_property
-    def tracks(self) -> List[JSONDict]:
-        """Parse relevant details from the tracks' JSON."""
-        names = self.track_names
-        delim = self.track_delimiter(names)
-        names = self.clean_track_names(names, self.catalognum)
-        tracks = []
-        for item, position in map(op.itemgetter("item", "position"), self.json_tracks):
-            initial_name = names[position - 1]
-            name = self.clear_digi_only(initial_name)
-            track: JSONDict = defaultdict(
-                str,
-                digi_only=name != initial_name,
-                index=position,
-                track_id=item.get("@id"),
-                length=self.get_duration(item) or None,
-                **self.parse_track_name(name, delim),
-            )
-            lyrics = item.get("recordingOf", {}).get("lyrics", {}).get("text")
-            if lyrics:
-                track["lyrics"] = lyrics.replace("\r", "")
-            tracks.append(track)
-
-        return self.adjust_artists(tracks, self.bandcamp_albumartist)
-
-    @cached_property
-    def remixers(self) -> Set[str]:
-        titles = " ".join(self.track_names)
-        names = re.finditer(r"\( *([^)]+) (?i:(re)?mix|edit)\)", titles, re.I)
-        ft = re.finditer(r"[( ](f(ea)?t[.]? [^()]+)\)?", titles, re.I)
-        return set(map(lambda x: x.expand(r"\1"), it.chain(names, ft)))
-
-    @cached_property
-    def track_artists(self) -> List[str]:
-        return list(filter(op.truth, map(lambda x: x.get("artist") or "", self.tracks)))
+    def tracks(self) -> Tracks:
+        return self._tracks.parse(
+            self.bandcamp_albumartist, self.catalognum, self._singleton
+        )
 
     @cached_property
     def unique_artists(self) -> List[str]:
-        return self.split_artists(self.track_artists)
-
-    @cached_property
-    def track_names(self) -> List[str]:
-        raw_tracks = []
-        for item in map(lambda x: x["item"], self.json_tracks):
-            name = item["name"]
-            artist = item.get("byArtist", {}).get("name")
-            if not self._singleton and artist and artist != self.label:
-                name = artist + " - " + name
-            raw_tracks.append(name)
-
-        return raw_tracks
-
-    @cached_property
-    def raw_artists(self) -> List[str]:
-        def only_artist(name: str) -> str:
-            return re.sub(r" - .*", "", PATTERNS["track_alt"].sub("", name))
-
-        artists = list(map(only_artist, filter(lambda x: " - " in x, self.track_names)))
-        return self.split_artists(artists)
+        return self.split_artists(self._tracks.artists)
 
     @cached_property
     def albumartist(self) -> str:
@@ -344,8 +276,12 @@ class Metaguru(Helpers):
         )
 
     @cached_property
-    def is_single(self) -> bool:
-        return self._singleton or len(self.track_names) == 1
+    def is_single_album(self) -> bool:
+        return (
+            self._singleton
+            or len({t.main_title for t in self.tracks}) == 1
+            or len(self._tracks.raw_names) == 1
+        )
 
     @cached_property
     def is_lp(self) -> bool:
@@ -377,7 +313,7 @@ class Metaguru(Helpers):
         def first_one(artist: str) -> str:
             return PATTERNS["split_artists"].split(artist.replace(" & ", ", "))[0]
 
-        truly_unique = set(map(first_one, self.track_artists))
+        truly_unique = set(map(first_one, self.tracks.artists))
         return (
             bool(re.search(r"compilation|best of|anniversary", self.album_name, re.I))
             or self._search_albumtype("compilation")
@@ -386,7 +322,7 @@ class Metaguru(Helpers):
 
     @cached_property
     def albumtype(self) -> str:
-        if self.is_single:
+        if self._singleton:
             return "single"
         if self.is_ep:
             return "ep"
@@ -412,7 +348,7 @@ class Metaguru(Helpers):
                 albumtypes.add("album")
         if self.is_lp:
             albumtypes.add("lp")
-        if len({t["main_title"] for t in self.tracks}) == 1:
+        if self.is_single_album:
             albumtypes.add("single")
         for word in ["remix", "rmx", "live", "soundtrack"]:
             if word in self.album_name.lower():
@@ -463,11 +399,9 @@ class Metaguru(Helpers):
             return self.parsed_album_name
 
         album = self.album_name
-        for title in self.track_names:
-            match = re.search(r"\[([^\]]+[EL]P)\]", title)
-            if match:
-                album = match.group(1)
-                break
+        album_in_tracks = [t.album for t in self.tracks if t.album]
+        if album_in_tracks:
+            album = album_in_tracks[0]
         else:
             match = re.search(r"(['\"])([^'\"]+)\1( VA[0-9]+)*( |$)", album)
             if match:
@@ -475,9 +409,7 @@ class Metaguru(Helpers):
 
         clean_album = self.clean_name(album, self.catalognum, remove_extra=True)
 
-        artists = ordset(
-            [self.bandcamp_albumartist, *self.track_artists, *self.unique_artists]
-        ) - {self.label}
+        artists = ordset([self.bandcamp_albumartist, *self.unique_artists])
         clean_album = self.clean_name(clean_album, *artists, label=self.label)
 
         if not clean_album.startswith("("):
@@ -514,34 +446,22 @@ class Metaguru(Helpers):
 
         return common_data
 
-    def _trackinfo(self, track: JSONDict, **kwargs: Any) -> TrackInfo:
-        track.pop("digi_only", None)
-        track.pop("main_title", None)
-        ft = track.pop("ft", None)
-        if ft:
-            track["artist"] += f" {ft}"
+    def _trackinfo(self, track: Track, **kwargs: Any) -> TrackInfo:
+        data = track.info
+        data.update(**self._common, **kwargs)
         if not NEW_BEETS:
-            track.pop("lyrics", None)
-        track["track_alt"] = track["track_alt"] or None
-        if not track["artist"]:
-            track["artist"] = self.albumartist
-
-        data = dict(**track, **self._common, **kwargs)
-        if "index" in data:
-            data.update(medium_index=data["index"])
+            data.lyrics = None
         for field in set(data.keys()) & self.excluded_fields:
             data.pop(field)
 
-        return TrackInfo(**data)
+        return data
 
     @cached_property
     def singleton(self) -> TrackInfo:
         self._singleton = True
         self.media = self.media_formats[0]
-        track_dict = self.tracks[0]
-        if not track_dict["artist"]:
-            track_dict["artist"] = self.bandcamp_albumartist
-        track = self._trackinfo({**track_dict, "index": None})
+        track = list(self.tracks)[0]
+        track = self._trackinfo(track)
         if NEW_BEETS:
             track.update(self._common_album)
             track.pop("album", None)
@@ -552,17 +472,16 @@ class Metaguru(Helpers):
     def _album(self, media: MediaInfo) -> AlbumInfo:
         """Return album for the appropriate release format."""
         self.media = media
-        tracks: Iterable[JSONDict] = self.tracks
-        include_digi = self.config.get("include_digital_only_tracks")
-        if not include_digi and self.media.name != DIGI_MEDIA:
-            tracks = it.filterfalse(op.itemgetter("digi_only"), tracks)
+        # include_digi = self.config.get("include_digital_only_tracks")
+        tracks: Tracks = self.tracks
+        # if not include_digi and self.media.name != DIGI_MEDIA:
+        #     tracks = list(it.filterfalse(op.attrgetter("digi_only"), tracks))
 
-        tracks = list(map(op.methodcaller("copy"), tracks))
         get_trackinfo = partial(
             self._trackinfo,
             medium=1,
             disctitle=self.disctitle or None,
-            medium_total=len(tracks),
+            medium_total=len(self.tracks),
         )
         album_info = AlbumInfo(
             **self._common,
