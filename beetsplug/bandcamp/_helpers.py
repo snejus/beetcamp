@@ -49,9 +49,8 @@ _catalognum = Template(
     | (?i:$label[ ]?[A-Z]*\d+[A-Z]*)
 )
 ( # optionally followed by
-      [ ]?[A-Z]     # IBM001V
-    | [.][0-9]+     # ISMVA002.1
-    | -?[A-Z]+      # PLUS8024CD
+      (?<=\d\d)-?[A-Z]+  # IBM001CD (needs at least two digits before the letter)
+    | [.][0-9]+          # ISMVA002.1
 )?
 \b(?!["]))"""
 )
@@ -60,29 +59,30 @@ _cat_pattern = _catalognum.template
 CATNUM_PAT = {
     "with_header": re.compile(r"(?:^|\s)cat[\w .]+?(?:number:?|:) ?(\w[^\n,]+)", re.I),
     "start_end": re.compile(fr"((^|\n){_cat_pattern}|{_cat_pattern}(\n|$))", re.VERBOSE),
-    "delimited": re.compile(fr"(?:[\[(]){_cat_pattern}(?:[])]|$)", re.VERBOSE),
+    "delimited": re.compile(fr"(?:[\[(])(?!.*MIX){_cat_pattern}(?:[])]|$)", re.VERBOSE),
     "anywhere": re.compile(_cat_pattern, re.VERBOSE),
 }
 
 rm_strings = [
     "limited edition",
     r"^[EL]P( [0-9]+)?",
-    r"^Vol(ume)?\W*\d",
-    r"(digital )?album\)",
-    r"^va|va$|vinyl(-only)?|compiled by .*",
-    r"free download|free dl|free\)",
+    r"^Vol(ume)?\W*(?!.*\)$)\d+",
+    r"\((digital )?album\)",
+    r"^va|va$|vinyl(-only)?|compiled by.*",
+    r"free download|\([^()]*free(?!.*mix)[^()]*\)",
 ]
 PATTERNS: Dict[str, Pattern] = {
-    "split_artists": re.compile(r", | (?:[x+/-]|vs|and)[.]? "),
-    "clean_title": re.compile(fr"(?i:[\[(*]?\b({'|'.join(rm_strings)})(\b\W*|$))"),
-    # "clean_title": re.compile(fr"(?i:([\[(*]?)\b({'|'.join(rm_strings)})(\b(?(1)[])*])\W*|$))"),
+    "split_artists": re.compile(r", - |, | (?:[x+/-]|//|vs|and)[.]? "),
+    "clean_title": re.compile(
+        fr"(([\[(])|(^| ))\*?(?i:({'|'.join(rm_strings)}))(?(2)[])]|( |$))"
+    ),
     "clean_incl": re.compile(r"(\(?incl|\((inc|tracks|.*remix( |es)))([^)]+\)|.*)", re.I),
     "meta": re.compile(r'.*"@id".*', re.M),
     "remix_or_ft": re.compile(r" [\[(].*(?i:mix|edit|f(ea)?t([.]|uring)?).*"),
     "ft": re.compile(
         r" *((([\[(])| )f(ea)?t([. ]|uring)(?![^()]*mix)[^]\[()]+(?(3)[]\)])) *", re.I
     ),
-    "track_alt": re.compile(r"^([ABCDEFGHIJ]{1,3}[0-6])(?:\W+|$)", re.I + re.M),
+    "track_alt": re.compile(r"^([ABCDEFGHIJ]{1,3}[0-6])(?:[^\w(]|_)+", re.I + re.M),
     "vinyl_name": re.compile(r"[1-5](?= ?(xLP|LP|x))|single|double|triple", re.I),
 }
 
@@ -134,7 +134,6 @@ class Helpers:
             (CATNUM_PAT["anywhere"], album),
             (CATNUM_PAT["start_end"], description),
             (CATNUM_PAT["anywhere"], description),
-            (CATNUM_PAT["delimited"], tracks_str),
         ]
         if label:
             pat = re.compile(_catalognum.substitute(label=re.escape(label)), re.VERBOSE)
@@ -155,7 +154,7 @@ class Helpers:
             return (
                 bool(option)
                 and option.lower() not in ignored
-                and (option not in tracks_str or all(option in x for x in tracks))
+                and option not in tracks_str
             )
 
         try:
@@ -254,7 +253,9 @@ class Helpers:
             and not the other way around.
             """
             others = unique_genres - {genre}
-            others = others.union(map(lambda x: x.replace(" ", ""), others))
+            others = others.union(
+                map(lambda x: x.replace(" ", "").replace("-", ""), others)
+            )
             return any(map(lambda x: genre in x, others))
 
         return it.filterfalse(duplicate, genres)

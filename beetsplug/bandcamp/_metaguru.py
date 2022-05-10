@@ -134,20 +134,16 @@ class Metaguru(Helpers):
             return self.meta["publisher"]["@id"]
 
     @cached_property
-    def parsed_albumartist(self) -> str:
-        match = re.search(r"Artists?:([^\n]+)", self.all_media_comments)
-        return match.expand(r"\1").strip() if match else ""
-
-    @cached_property
     def original_albumartist(self) -> str:
-        return self.meta["byArtist"]["name"]
+        m = re.search(r"Artists?:([^\n]+)", self.all_media_comments)
+        return m.group(1).strip() if m else self.meta["byArtist"]["name"]
 
     @cached_property
     def bandcamp_albumartist(self) -> str:
         """Return the official release albumartist.
         It is correct in half of the cases. In others, we usually find the label name.
         """
-        aartist = self.parsed_albumartist or self.original_albumartist
+        aartist = self.original_albumartist
         if self.label == aartist:
             split = self.album_name.split(" - ")
             if len(split) > 1:
@@ -165,8 +161,10 @@ class Metaguru(Helpers):
             or len(valid) == len(aartists)
             and len(self._tracks.raw_artists) <= 4
         ):
-            return aartist
-        return ", ".join(valid)
+            ret = aartist
+        else:
+            ret = ", ".join(valid)
+        return ret
 
     @cached_property
     def image(self) -> str:
@@ -202,12 +200,13 @@ class Metaguru(Helpers):
 
     @property
     def catalognum(self) -> str:
-        artists = ordset([self.parsed_albumartist or self.original_albumartist])
+        cats = [t.catalognum for t in self._tracks if t.catalognum]
+        artists = ordset([self.original_albumartist])
         if not self._singleton or len(self._tracks.raw_artists) > 1:
             artists.update(self._tracks.raw_artists)
             artists.update(self._tracks.raw_remixers)
 
-        return self.parse_catalognum(
+        catnum = self.parse_catalognum(
             self.meta["name"],
             self.disctitle,
             self.media.description + "\n" + self.comments,
@@ -215,6 +214,9 @@ class Metaguru(Helpers):
             tuple(self._tracks.raw_names),
             tuple(artists),
         )
+        if len(cats) == len(self._tracks) and len(set(cats)) == 1:
+            return list(cats)[0]
+        return catnum
 
     @cached_property
     def country(self) -> str:
@@ -231,9 +233,8 @@ class Metaguru(Helpers):
 
     @cached_property
     def tracks(self) -> Tracks:
-        return self._tracks.parse(
-            self.bandcamp_albumartist, self.catalognum, self._singleton
-        )
+        self._tracks.adjust_artists(self.bandcamp_albumartist, self._singleton)
+        return self._tracks
 
     @cached_property
     def unique_artists(self) -> List[str]:
@@ -386,7 +387,7 @@ class Metaguru(Helpers):
         if genre_cfg["maximum"]:
             genres = it.islice(genres, genre_cfg["maximum"])
 
-        return ", ".join(sorted(genres)) or None
+        return ", ".join(sorted(genres)).strip() or None
 
     @cached_property
     def album_name_with_eplp(self) -> str:
@@ -399,7 +400,7 @@ class Metaguru(Helpers):
             return self.parsed_album_name
 
         album = self.album_name
-        album_in_tracks = [t.album for t in self.tracks if t.album]
+        album_in_tracks = [t.album for t in self._tracks if t.album]
         if album_in_tracks:
             album = album_in_tracks[0]
         else:
@@ -409,7 +410,9 @@ class Metaguru(Helpers):
 
         clean_album = self.clean_name(album, self.catalognum, remove_extra=True)
 
-        artists = ordset([self.bandcamp_albumartist, *self.unique_artists])
+        artists = ordset([self.bandcamp_albumartist, *self._tracks.raw_artists]) - {
+            self.label
+        }
         clean_album = self.clean_name(clean_album, *artists, label=self.label)
 
         if not clean_album.startswith("("):
@@ -449,6 +452,8 @@ class Metaguru(Helpers):
     def _trackinfo(self, track: Track, **kwargs: Any) -> TrackInfo:
         data = track.info
         data.update(**self._common, **kwargs)
+        if data["catalognum"] == self.catalognum:
+            data.pop("catalognum")
         if not NEW_BEETS:
             data.lyrics = None
         for field in set(data.keys()) & self.excluded_fields:

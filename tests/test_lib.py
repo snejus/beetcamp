@@ -4,18 +4,24 @@ the maintainer's beets library.
 """
 import json
 import os
-import re
 from collections import Counter, defaultdict, namedtuple
 from functools import partial
-from itertools import groupby
+from itertools import groupby, starmap
 from operator import truth
 
 import pytest
 from beetsplug.bandcamp import BandcampPlugin
 from beetsplug.bandcamp._metaguru import Metaguru
-from rich.columns import Columns
+from rich.console import Group
 from rich.traceback import install
-from rich_tables.utils import border_panel, make_console, make_difftext, new_table, wrap
+from rich_tables.utils import (
+    border_panel,
+    make_console,
+    make_difftext,
+    new_table,
+    simple_panel,
+    wrap
+)
 
 pytestmark = pytest.mark.lib
 
@@ -29,13 +35,13 @@ IGNORE_FIELDS = {
     "bandcamp_album_id",
     "art_url_id",
     "art_url",
-    "tracks",
     "comments",
     "length",
     "price",
     "mastering",
     "artwork",
     "city",
+    "disctitle",
 }
 
 target_dir = os.path.join(BASE_DIR, TEST_DIR)
@@ -50,45 +56,52 @@ testfiles = sorted(filter(lambda x: x.endswith("json"), os.listdir(JSONS_DIR)))
 
 Oldnew = namedtuple("Oldnew", ["old", "new", "diff"])
 oldnew = defaultdict(list)
+TRACK_FIELDS = ["track_alt", "artist", "title"]
+
+
+def album_table(**kwargs):
+    table = new_table(*TRACK_FIELDS, show_header=False, highlight=False)
+    return border_panel(table, **{**dict(expand=True), **kwargs})
+
+
+albums = defaultdict(album_table)
+fixed = defaultdict(lambda: album_table(border_style="green"))
+new_fails = defaultdict(lambda: album_table(border_style="red"))
+
 
 open = partial(open, encoding="utf-8")  # pylint: disable=redefined-builtin
+
+
+def _fmt_old(s: str, times: int) -> str:
+    return (f"{times} x " if times > 1 else "") + wrap(s, "b s red")
 
 
 @pytest.fixture(scope="session")
 def _report():
     yield
     cols = []
-    for field in set(oldnew.keys()) - {"comments", "genre"}:
-        field_diffs = sorted(oldnew[field], key=lambda x: x.new)
-        if not field_diffs:
+    for field in set(oldnew.keys()) - {"comments", "genre", "track_fields"}:
+        if field not in oldnew:
             continue
+        field_diffs = sorted(oldnew[field], key=lambda x: x.new)
         tab = new_table()
         for new, all_old in groupby(field_diffs, lambda x: x.new):
             tab.add_row(
-                " | ".join(
-                    map(
-                        lambda x: (f"{x[1]} x " if x[1] > 1 else "")
-                        + wrap(re.sub(r"\\?\[", r"\\[", x[0]), "b s red"),
-                        Counter(map(lambda x: x.old, all_old)).items(),
-                    )
-                ),
-                wrap(re.sub(r"\\?\[", r"\\[", new), "b green"),
+                " | ".join(starmap(_fmt_old, Counter(d.old for d in all_old).items())),
+                wrap(new, "b green"),
             )
-        cols.append(border_panel(tab, title=field))
+        cols.append(simple_panel(tab, title=f"{len(field_diffs)} [magenta]{field}[/]"))
 
+    if cols:
+        console.print("")
+        console.print(border_panel(Group(*cols)))
     console.print("")
-    console.print(Columns(cols, expand=True))
-
-    stats_table = new_table("field", "#", border_style="white")
-    for field, count in sorted(stats_map.items(), key=lambda x: x[1], reverse=True):
-        stats_table.add_row(field, str(count))
-    if stats_table.rows:
-        stats_table.add_row("total", str(len(testfiles)))
-        console.print(stats_table)
+    console.print(Group(*(t for t in albums.values() if t.renderable.rows)))
+    console.print("")
+    console.print(Group(*(t for t in fixed.values() if t.renderable.rows)))
+    console.print("")
+    console.print(Group(*(t for t in new_fails.values() if t.renderable.rows)))
     console.save_html("results.html")
-
-
-stats_map = defaultdict(lambda: 0)
 
 
 @pytest.fixture(scope="module")
@@ -96,64 +109,77 @@ def config():
     yield BandcampPlugin().config.flatten()
 
 
-def do_key(table, key: str, before, after) -> None:
-    before = re.sub(r"^\s|\s$", "", str(before or ""))
-    after = re.sub(r"^\s|\s$", "", str(after or ""))
+def do_key(table, key: str, before, after, cached_value=None, album=None):
+    if before == after and not cached_value:
+        return
 
-    if (before or after) and (before != after):
-        difftext = ""
-        stats_map[key] += 1
-        if key == "genre":
-            before_set, after_set = set(before.split(", ")), set(after.split(", "))
-            common, gone, added_new = (
-                before_set & after_set,
-                before_set - after_set,
-                after_set - before_set,
-            )
-            diffparts = list(map(partial(wrap, tag="b #111111"), sorted(common)))
-            if gone:
-                gone = list(map(partial(wrap, tag="b strike red"), gone))
-                diffparts.extend(gone)
-            if added_new:
-                added_new = list(map(partial(wrap, tag="b green"), added_new))
-                diffparts.extend(added_new)
-            if diffparts:
-                difftext = " | ".join(diffparts)
-        else:
-            difftext = make_difftext(before, after)
-        if difftext:
-            oldnew[key].append(Oldnew(before, after, difftext))
-            table.add_row(wrap(key, "b"), difftext)
+    key_fixed = False
+    if before == after:
+        key_fixed = True
+        before = cached_value
 
-
-def compare(old, new):
-    every_new = [new]
-    every_old = [old]
-    if "/album/" in new["data_url"]:
-        for entity in old, new:
-            entity["albumartist"] = entity.pop("artist", "")
-            if "tracks" in entity:
-                for track in entity["tracks"]:
-                    entity["disctitle"] = track.pop("disctitle", "")
-                    # track.pop("media")
-
-        every_new.extend(new.get("tracks") or [])
-        every_old.extend(old.get("tracks") or [])
-        desc = new.get("album")
-        _id = new.get("album_id")
+    parts = []
+    if key == "tracks":
+        for old_track, new_track in zip(before, after):
+            parts.append([make_difftext(a, b) for a, b in zip(old_track, new_track)])
     else:
-        desc = " - ".join([new.get("artist") or "", new.get("title") or ""])
-        _id = new.get("track_id")
+        difftext = make_difftext(str(before or ""), str(after or ""))
+        parts = [[wrap(key, "b"), difftext]]
+        oldnew[key].append(Oldnew(before, after, difftext))
 
-    table = new_table()
-    for new, old in zip(every_new, every_old):
-        for key in sorted(set(new.keys()).union(set(old.keys())) - IGNORE_FIELDS):
-            do_key(table, key, str(old.get(key, "")), str(new.get(key, "")))
+    if key_fixed:
+        fixed[album].renderable.add_rows(parts)
+        return None
 
-    if table.rows:
-        subtitle = wrap(_id + "-" + (new.get("media") or ""), "dim")
+    table.add_rows(parts)
+    if cached_value is None:
+        new_fails[album].renderable.add_rows(parts)
+    else:
+        albums[album].renderable.add_rows(parts)
+    return after
+
+
+def compare(old, new, cache) -> bool:
+    if "/album/" in new["data_url"]:
+        old["albumartist"] = old.pop("artist", "")
+        new["albumartist"] = new.pop("artist", "")
+        old["tracks"] = list(
+            map(lambda t: tuple([str(t.get(f, "")) for f in TRACK_FIELDS]), old["tracks"])
+        )
+        new["tracks"] = list(
+            map(lambda t: tuple([str(t.get(f, "")) for f in TRACK_FIELDS]), new["tracks"])
+        )
+        desc = f"{new.get('albumartist', '')} - {new.get('album', '')}"
+        _id = new["album_id"]
+    else:
+        desc, _id = f"{new['artist']} - {new['title']}", new["track_id"]
+
+    table = new_table(padding=0, collapse_padding=True)
+    all_fields = set(new).union(set(old))
+
+    compare_key = partial(do_key, table, album=desc)
+
+    fail = False
+    for key in sorted(all_fields - IGNORE_FIELDS):
+        values = old.get(key, ""), new.get(key, "")
+        if not any(values):
+            continue
+        cache_key = f"{_id}_{key}"
+        out = compare_key(
+            key, *values, cached_value=cache.get(cache_key, None), album=desc
+        )
+        cache.set(cache_key, out)
+        if out:
+            fail = True
+
+    albums[desc].title = desc
+    fixed[desc].title = desc
+    new_fails[desc].title = desc
+    if fail:
+        subtitle = wrap(f"{_id} - {new['media']}", "dim")
         console.print("")
         console.print(border_panel(table, title=wrap(desc, "b"), subtitle=subtitle))
+        new_fails[desc].title = desc
         return False
     return True
 
@@ -174,7 +200,7 @@ def guru(file, config):
 
 
 @pytest.mark.usefixtures("_report")
-def test_file(file, guru):
+def test_file(file, guru, cache, pytestconfig):
     IGNORE_FIELDS.update({"album_id", "media", "mediums", "disctitle"})
 
     target_file = os.path.join(target_dir, file)
@@ -198,7 +224,7 @@ def test_file(file, guru):
     except FileNotFoundError:
         old = {}
 
-    if not compare(old, new):
+    if not compare(old, new, cache):
         pytest.fail(pytrace=False)
 
 
