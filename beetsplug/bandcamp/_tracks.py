@@ -54,9 +54,11 @@ class Track:
     json_item: JSONDict
     track_id: str
     index: int
+    json_artist: str
+    _name: str
 
-    _name: str = ""
     _artist: str = ""
+    _title: str = ""
     ft: str = ""
     album: str = ""
     catalognum: str = ""
@@ -76,7 +78,7 @@ class Track:
         artist = artist or json.get("byArtist", {}).get("name", "")
         data = dict(
             json_item=json,
-            _artist=artist,
+            json_artist=artist,
             track_id=json["@id"],
             index=json["position"],
             catalognum=catalognum,
@@ -90,7 +92,7 @@ class Track:
             name = name.replace(label, "").strip(" -")
         for pat, repl in CLEAN_PATTERNS:
             name = pat.sub(repl, name)
-            data["_artist"] = pat.sub(repl, data["_artist"])
+            data["json_artist"] = pat.sub(repl, data["json_artist"])
         name = name.strip().lstrip("-")
         m = TRACK_ALT_PAT.search(name)
         if m:
@@ -114,11 +116,11 @@ class Track:
             name = name.replace(m.group(), "")
 
         data["_name"] = name
-        for field in "_name", "_artist":
+        for field in "_name", "json_artist":
             m = FT_PAT.search(data[field])
             if m:
                 data[field] = data[field].replace(m.group().rstrip(), "")
-                if m.groups()[-1].strip() not in data["_artist"]:
+                if m.groups()[-1].strip() not in data["json_artist"]:
                     data["ft"] = m.group().strip(" ([])")
                 break
         return data
@@ -147,8 +149,8 @@ class Track:
     @property
     def name(self) -> str:
         name = self.no_digi_name
-        if self._artist and " - " not in name:
-            name = f"{self._artist} - {name}"
+        if self.json_artist and " - " not in name:
+            name = f"{self.json_artist} - {name}"
         return name.strip()
 
     @cached_property
@@ -158,14 +160,23 @@ class Track:
 
     @property
     def title(self) -> str:
+        if self._title:
+            return self._title
+
         parts = self.name.split(" - ")
+        title = parts[-1]
         for idx, maybe in enumerate(reversed(parts)):
-            if maybe.strip(" -"):
-                return " - ".join(parts[-idx - 1 :])
-        return self.name
+            if not maybe.strip(" -"):
+                title = " - ".join(parts[-idx - 2 :])
+                break
+        self._title = title
+        return self._title
 
     @property
     def artist(self) -> str:
+        if self._artist:
+            return self._artist
+
         artiststr = self.name.removesuffix(self.title).strip(", -")
         artiststr = REMIXER_PAT.sub("", artiststr)
         if self.remixer:
@@ -178,11 +189,8 @@ class Track:
                 else:
                     artiststr = ", ".join(split)
 
-        return artiststr.strip(" -")
-
-    @artist.setter
-    def artist(self, val: str) -> None:
-        self._artist = val
+        self._artist = artiststr.strip(" -")
+        return self._artist
 
     @property
     def artists(self) -> List[str]:
@@ -281,32 +289,23 @@ class Tracks(list):
 
     def adjust_artists(self, aartist: str, single=bool) -> None:
         track_alts = {t.track_alt for t in self.tracks if t.track_alt}
-        artists = [t.artist for t in self.tracks if t.artist]
-        count = len(self)
+        artists = [t.artists for t in self.tracks if t.artists]
         for idx, t in enumerate(self):
             t.single = single
-            # if t.track_alt and len(track_alts) == 1:
-            #     # the only track that parsed a track alt - it's most likely a mistake
-            #     if t.artist:
-            #         # one title was confused for a track alt, like 'C4'
-            #         # this would have shifted the artist to become the title as well
-            #         # so let's reverse it all
-            #         t.title, t.artist = t.track_alt, t.title
-            #     else:
-            #         # one artist was confused for a track alt, like 'B2', - reverse this
-            #         t.artist = t.track_alt
-            #     t.track_alt = None
-
             if not t.artist:
-                if len(artists) == count - 1:
+                if t.track_alt and len(track_alts) == 1:
+                    # the only track that parsed a track alt - it's most likely a mistake
+                    # one artist was confused for a track alt, like 'B2', - reverse this
+                    t._artist, t.track_alt = t.track_alt, None
+                elif len(artists) == len(self) - 1:
                     # this is the only artist that didn't get parsed - relax the rule
                     # and try splitting with '-' without spaces
                     split = t.title.split("-")
                     if len(split) > 1:
-                        t.artist, t.title = split
+                        t._artist, t._title = split
                 if not t.artist:
                     # use the albumartist
-                    t.artist = aartist
+                    t._artist = aartist
 
     @staticmethod
     def track_delimiter(names: List[str]) -> str:
