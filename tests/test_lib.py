@@ -207,12 +207,12 @@ def test_file(file, guru, cache, pytestconfig):
     if "_track_" in file:
         new = guru.singleton
     else:
-        for album in guru.albums:
+        albums = guru.albums
+        new = albums[0]
+        for album in albums:
             if album.media == "Vinyl":
                 new = album
                 break
-        else:
-            new = guru.albums[0]
 
     new.catalognum = " / ".join(filter(truth, map(lambda x: x.catalognum, guru.albums)))
     with open(target_file, "w") as f:
