@@ -27,7 +27,7 @@ pytestmark = pytest.mark.lib
 
 BASE_DIR = "lib_tests"
 TEST_DIR = "dev"
-REFERENCE_DIR = "28a4f01"
+REFERENCE_DIR = "f98b968"
 JSONS_DIR = "jsons"
 
 IGNORE_FIELDS = {
@@ -125,7 +125,8 @@ def do_key(table, key: str, before, after, cached_value=None, album=None):
     else:
         difftext = make_difftext(str(before or ""), str(after or ""))
         parts = [[wrap(key, "b"), difftext]]
-        oldnew[key].append(Oldnew(before, after, difftext))
+        if not fixed:
+            oldnew[key].append(Oldnew(before, after, difftext))
 
     if key_fixed:
         fixed[album].renderable.add_rows(parts)

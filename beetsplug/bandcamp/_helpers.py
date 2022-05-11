@@ -43,6 +43,7 @@ _catalognum = Template(
     # substituted later, and we do not want to touch these two
     | [A-Z]{2,}[A-Z.$$-]*\d{2,} # HS11, USE202, HEY-101, LI$$INGLE025
     | [A-Z.]{2,}[ ]\d{1,3}  # OBS.CUR 9
+    | [A-z]+-[A-z]+[ ]?\d+  # o-ton 119
     | \w+[A-z]0\d+          # 1ØPILLS018, fa036
     | [a-z]+(cd|lp)\d+      # ostgutlp45
     | [A-z]+\d+-\d+         # P90-003
