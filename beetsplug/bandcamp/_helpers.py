@@ -124,10 +124,12 @@ class Helpers:
 
     @staticmethod
     @lru_cache(maxsize=None)
-    def parse_catalognum(album, disctitle, description, label, tracks, artists):
-        # type: (str, str, str, str, Tuple[str], Tuple[str]) -> str
+    def parse_catalognum(
+        album="", disctitle="", description="", label="", tracks=None, artists=None
+    ):
+        # type: (str, str, str, Tuple[str], Tuple[str]) -> str
         """Try getting the catalog number looking at text from various fields."""
-        tracks_str = "\n".join(tracks)
+        tracks_str = "\n".join(tracks or [])
         cases = [
             (CATNUM_PAT["with_header"], description),
             (CATNUM_PAT["anywhere"], disctitle),
@@ -143,7 +145,7 @@ class Helpers:
             match = pat.search(string)
             return match.group(1).strip() if match else ""
 
-        ignored = set(map(str.lower, artists))
+        ignored = set(map(str.lower, artists or []))
 
         def not_ignored(option: str) -> bool:
             """Suitable match if:

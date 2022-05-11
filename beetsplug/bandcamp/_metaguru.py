@@ -198,8 +198,9 @@ class Metaguru(Helpers):
     def mediums(self) -> int:
         return self.get_vinyl_count(self.disctitle) if self.media.name == "Vinyl" else 1
 
-    @property
-    def catalognum(self) -> str:
+    @cached_property
+    def general_catalognum(self) -> str:
+        """Find catalog number in the media-agnostic release metadata and cache it."""
         cats = [t.catalognum for t in self._tracks if t.catalognum]
         artists = ordset([self.original_albumartist])
         if not self._singleton or len(self._tracks.raw_artists) > 1:
@@ -207,16 +208,29 @@ class Metaguru(Helpers):
             artists.update(self._tracks.raw_remixers)
 
         catnum = self.parse_catalognum(
-            self.meta["name"],
-            self.disctitle,
-            self.media.description + "\n" + self.comments,
-            self.label if not self._singleton else "",
-            tuple(self._tracks.raw_names),
-            tuple(artists),
+            album=self.meta["name"],
+            description=self.comments,
+            label=self.label if not self._singleton else "",
+            tracks=tuple(self._tracks.raw_names),
+            artists=tuple(artists),
         )
         if len(cats) == len(self._tracks) and len(set(cats)) == 1:
             return list(cats)[0]
         return catnum
+
+    @property
+    def catalognum(self) -> str:
+        """Find catalog number in the media-specific release metadata or return
+        the cached media-agnostic one.
+        """
+        return (
+            self.parse_catalognum(
+                disctitle=self.disctitle,
+                description=self.media.description,
+                label=self.label if not self._singleton else "",
+            )
+            or self.general_catalognum
+        )
 
     @cached_property
     def country(self) -> str:
