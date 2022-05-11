@@ -25,12 +25,25 @@ DIGI_ONLY_PATTERNS = [
     _comp(r"[^\w)]+(bandcamp exclusive )?bonus( track)?(\]\W*|\W*$)", re.I),
 ]
 DELIMITER_PAT = _comp(r" ([^\w&()+/[\] ]) ")  # hi | bye; hi - bye
-REMIXER_PAT = _comp(r"\W*\( *([^)]+) (?i:(re)?mix|edit)\)", re.I)  # hi (Bye Remix)
-FT_PAT = _comp(
-    r" *(([\[(])| )f(ea)?t([. ]|uring)((?![^()]*(?:(?(2)mix|(?:mix|- .*))))[^]\[()]+)(?(2)[]\)]) *",
-    re.I,  # ft. Hello; (ft. Hello); [feat. Hello]; (bye ft. Hello)
-)
 ELP_ALBUM_PAT = _comp(r"[- ]*\[([^\]]+ [EL]P)\]+")  # Title [Some Album EP]
+FT_PAT = _comp(
+    r"""
+[ ]*                     # all preceding space
+((?P<br>[\[(])|\b)       # bracket or word boundary
+(ft|feat|featuring)[. ]  # one of the three ft variations
+(
+    # when it does not start with a bracket, do not allow " - " in it, otherwise
+    # we may match full track name
+    (?(br)|(?!.* - .*))
+    [^]\[()]+     # anything but brackets
+)
+(?<!mix)\b        # does not end with "mix"
+(?(br)[]\)])      # if it started with a bracket, it must end with a closing bracket
+[ ]*              # trailing space
+    """,
+    re.I | re.VERBOSE,  # ft. Hello; (ft. Hello); [feat. Hello]
+)
+REMIXER_PAT = _comp(r"\W*\( *([^)]+) (?i:(re)?mix|edit)\)", re.I)  # hi (Bye Remix)
 TRACK_ALT_PAT = PATTERNS["track_alt"]
 # fmt: off
 CLEAN_PATTERNS = [
@@ -86,6 +99,26 @@ class Track:
         return cls(**cls.parse_name(data, name, delim, label=label))
 
     @staticmethod
+    def find_featuring(data: JSONDict) -> JSONDict:
+        """Find the featuring artist in the track name.
+
+        If the found artist is contained within the remixer, do not do anything.
+        If the found artist is among the main artists, remove it from the name but
+        do not consider it as a featuring artist.
+        Otherwise, strip brackets and spaces and save it in the 'ft' field.
+        """
+        for field in "_name", "json_artist":
+            m = FT_PAT.search(data[field])
+            if m:
+                ft = m.groups()[-1].strip()
+                if ft not in data.get("remixer", "") or "":
+                    data[field] = data[field].replace(m.group().rstrip(), "")
+                    if ft not in data["json_artist"]:
+                        data["ft"] = m.group().strip(" ([])")
+                    break
+        return data
+
+    @staticmethod
     def parse_name(data: JSONDict, name: str, delim: str, label: str) -> JSONDict:
         name = name.replace(f" {delim} ", " - ")
         if name.endswith(label):
@@ -116,13 +149,7 @@ class Track:
             name = name.replace(m.group(), "")
 
         data["_name"] = name
-        for field in "_name", "json_artist":
-            m = FT_PAT.search(data[field])
-            if m:
-                data[field] = data[field].replace(m.group().rstrip(), "")
-                if m.groups()[-1].strip() not in data["json_artist"]:
-                    data["ft"] = m.group().strip(" ([])")
-                break
+        data = Track.find_featuring(data)
         return data
 
     @cached_property
@@ -181,13 +208,12 @@ class Track:
         artiststr = REMIXER_PAT.sub("", artiststr)
         if self.remixer:
             split = Helpers.split_artists([artiststr])
-            if len(split) > 1:
-                try:
-                    split.remove(self.remixer)
-                except ValueError:
-                    pass
-                else:
-                    artiststr = ", ".join(split)
+            try:
+                split.remove(self.remixer)
+            except ValueError:
+                pass
+            else:
+                artiststr = ", ".join(split)
 
         self._artist = artiststr.strip(" -")
         return self._artist
