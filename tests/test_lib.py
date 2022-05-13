@@ -27,7 +27,7 @@ pytestmark = pytest.mark.lib
 
 BASE_DIR = "lib_tests"
 TEST_DIR = "dev"
-REFERENCE_DIR = "ea32d0e"
+REFERENCE_DIR = "2ff3dc6"
 JSONS_DIR = "jsons"
 
 IGNORE_FIELDS = {
@@ -121,11 +121,13 @@ def do_key(table, key: str, before, after, cached_value=None, album=None):
     parts = []
     if key == "tracks":
         for old_track, new_track in zip(before, after):
-            parts.append([make_difftext(a, b) for a, b in zip(old_track, new_track)])
+            parts.append(
+                [make_difftext(str(a), str(b)) for a, b in zip(old_track, new_track)]
+            )
     else:
-        difftext = make_difftext(str(before or ""), str(after or ""))
+        difftext = make_difftext(str(before), str(after))
         parts = [[wrap(key, "b"), difftext]]
-        if not fixed:
+        if not key_fixed:
             oldnew[key].append(Oldnew(before, after, difftext))
 
     if key_fixed:
@@ -162,15 +164,15 @@ def compare(old, new, cache) -> bool:
 
     fail = False
     for key in sorted(all_fields - IGNORE_FIELDS):
-        values = old.get(key, ""), new.get(key, "")
-        if not any(values):
+        values = old.get(key), new.get(key)
+        if values[0] is None and values[1] is None:
             continue
         cache_key = f"{_id}_{key}"
         out = compare_key(
             key, *values, cached_value=cache.get(cache_key, None), album=desc
         )
         cache.set(cache_key, out)
-        if out:
+        if values[0] != values[1]:
             fail = True
 
     albums[desc].title = desc

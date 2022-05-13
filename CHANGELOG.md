@@ -56,13 +56,14 @@
     we cannot reliably tell. `label` is used instead.
 
 * `album`: track titles are read to see whether they contain the album name. There are
-  cases where titles follow the following format: **Title ["Album Name" EP]'**
+  cases where titles have the following format: **Title [Album Name EP]**
 
 * `catalognum`: 
   - do not match if preceded by **]** character
   - parse track titles for catalogue numbers
   - allow catalogue numbers like **o-ton 113**
-  - allow a pair of them, if split by ` / `
+  - allow a pair, if separated by a slash `/`
+  - removed a pattern responsible for a fair bit of false positives
 
 * `albumtype`: to determine whether a release is a compilation, check comments for string
   **compilation**

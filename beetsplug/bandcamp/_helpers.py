@@ -32,20 +32,17 @@ class MediaInfo(NamedTuple):
 
 _catalognum = Template(
     r"""(?<![]/@-])(\b
-(?!\W|VA[\d ]+|[EL]P\W|[^\n.]+[ ](?:[0-9]KG|20\d{2}|VA[ \d]+)|AT[ ]0|GC1|HF[.])
-(?!(?i:vol |mp3|christ|vinyl|disc|session|record|artist|the\ |maxi\ |rave\ ))
-(?![^.]+shirt)
+(?!\W|VA[\d ]+|[EL]P\W|[^\n.]+[ ](?:20\d{2}|VA[ \d]+)|(?i:vol|disc))
 (
       [A-Z .]+\d{3}         # HANDS D300
-    | [A-z ][ ]0\d{2,3}     # Persephonic Sirens 012
     | [A-Z-]{3,}\d+         # RIV4
     # dollar signs need escaping here since the $label below will be
     # substituted later, and we do not want to touch these two
     | [A-Z]{2,}[A-Z.$$-]*\d{2,} # HS11, USE202, HEY-101, LI$$INGLE025
-    | [A-Z.]{2,}[ ]\d{1,3}  # OBS.CUR 9
+    | (?<!\w\W)[A-Z.]{2,}[ ]\d{1,3}  # OBS.CUR 9
     | [A-z]+-[A-z]+[ ]?\d+  # o-ton 119
     | \w+[A-z]0\d+          # 1ØPILLS018, fa036
-    | [a-z]+(cd|lp)\d+      # ostgutlp45
+    | [a-z]+(cd|lp|:)\d+    # ostgutlp45, reni:7
     | [A-z]+\d+-\d+         # P90-003
     | (?i:$label[ ]?[A-Z]*\d+[A-Z]*)
 )
@@ -53,7 +50,7 @@ _catalognum = Template(
       (?<=\d\d)-?[A-Z]+  # IBM001CD (needs at least two digits before the letter)
     | [.][0-9]+          # ISMVA002.1
 )?
-\b(?!"))"""
+\b(?!["%]))"""
 )
 _cat_pattern = _catalognum.template
 
@@ -151,8 +148,7 @@ class Helpers:
         def not_ignored(option: str) -> bool:
             """Suitable match if:
             - is not empty
-            - is not one of the artists
-            - is not found in none of the track names except when it's in all of them
+            - is not in any of the track names
             """
             return (
                 bool(option)
