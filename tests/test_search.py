@@ -1,94 +1,64 @@
 """Tests for searching functionality."""
 import pytest
-from beets.library import Item
-from beetsplug.bandcamp import BandcampPlugin
-
-_p = pytest.param
+from beetsplug.bandcamp._search import parse_and_sort_results
 
 # simplified version of the search result HTML block
 HTML_ITEM = """
-<div class="heading">
-<a href="{}">
-     {}
+<div class="searchresult data-search">
+<a href="{url}">
+search_item_type="a">
+     {name}
      <span>some
      other stuff</span>
-  by {}
+  by {artist}
+  <div class="itemtype">
+  ALBUM
+  </div>
 </div>
 """
 
 
 def make_html_item(data):
-    return HTML_ITEM.format(data["url"], data["release"], data["artist"])
+    return HTML_ITEM.format(**data)
 
 
-def test_search_logic():
+@pytest.fixture
+def search_data():
+    return {
+        "name": "Release",
+        "url": "https://label.bandcamp.com/album/release",
+        "artist": "Artist",
+        "label": "label",
+        "type": "album",
+    }.copy()
+
+
+def test_search_logic(search_data):
     """Given a single matching release, the similarity should be 1."""
-    query, artist, label = "Release", "Artist", "label"
-    expected_result = {
-        "release": query,
-        "url": f"https://{label}.bandcamp.com/album/release",
-        "artist": artist,
-        "label": label,
-        "similarity": 1.0,
-    }
-    html = make_html_item(expected_result)
-    results = BandcampPlugin._parse_and_sort_results(html, query, artist, label)
-    assert results == [expected_result]
+    results = parse_and_sort_results(make_html_item(search_data), **search_data)
+    assert results == [{**search_data, "similarity": 1.0}]
 
 
-def test_search_prioritises_best_matches():
+def test_search_prioritises_best_matches(search_data):
     """Given two releases, the better match is found first in the output regardless
     of its position in the HTML.
     """
-    query, artist, label = "Specific Release", "Artist", "label"
     expected_result = {
-        "release": query,
-        "url": f"https://{label}.bandcamp.com/album/specific-release",
-        "artist": artist,
-        "label": label,
-        "similarity": 1.0,
+        **search_data,
+        "name": "Specific Release",
+        "url": "https://label.bandcamp.com/album/specific-release",
     }
     other_result = {
-        "release": "Release",
-        "url": f"https://{label}.bandcamp.com/album/release",
-        "artist": artist,
-        "label": label,
-        "similarity": 0.875,
+        **search_data,
+        "name": "Release",
+        "url": "https://label.bandcamp.com/album/release",
     }
 
+    expected_results = [
+        {**expected_result, "similarity": 0.955},
+        {**other_result, "similarity": 0.925},
+    ]
+
     html = make_html_item(other_result) + "\n" + make_html_item(expected_result)
-    expected_results = [expected_result, other_result]
-
-    results = BandcampPlugin._parse_and_sort_results(html, query, artist, label)
+    results = parse_and_sort_results(html, **{**search_data, "name": "Specific Release"})
     assert results == expected_results
-
-
-LABEL_URL = "https://label.bandcamp.com"
-ALBUM_URL = f"{LABEL_URL}/album/release"
-
-
-@pytest.mark.parametrize(
-    ("mb_albumid", "comments", "album", "expected_url"),
-    [
-        _p(ALBUM_URL, "", "a", ALBUM_URL, id="found in mb_albumid"),
-        _p("random_url", "", "a", "", id="invalid url"),
-        _p(
-            "random_url",
-            f"Visit {LABEL_URL}",
-            "Release",
-            ALBUM_URL,
-            id="label in comments",
-        ),
-        _p(
-            "random_url",
-            f"Visit {LABEL_URL}",
-            "ø ø ø",
-            "",
-            id="label in comments, album only invalid chars",
-        ),
-    ],
-)
-def test_find_url(mb_albumid, comments, album, expected_url):
-    """URLs in `mb_albumid` and `comments` fields must be found."""
-    item = Item(mb_albumid=mb_albumid, comments=comments)
-    assert BandcampPlugin()._find_url(item, album, "album") == expected_url

@@ -19,7 +19,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import logging
 import re
-from difflib import SequenceMatcher
+from functools import partial
 from html import unescape
 from operator import itemgetter, truth
 from typing import Any, Dict, Iterable, List, Optional, Sequence
@@ -31,6 +31,7 @@ from beets.autotag.hooks import AlbumInfo, TrackInfo
 from beetsplug import fetchart  # type: ignore[attr-defined]
 
 from ._metaguru import DATA_SOURCE, Metaguru
+from ._search import search_bandcamp
 
 JSONDict = Dict[str, Any]
 
@@ -48,19 +49,8 @@ DEFAULT_CONFIG: JSONDict = {
     "comments_separator": "\n---\n",
 }
 
-SEARCH_URL = "https://bandcamp.com/search?q={}"
 ALBUM_URL_IN_TRACK = re.compile(r'<a id="buyAlbumLink" href="([^"]+)')
 USER_AGENT = f"beets/{__version__} +http://beets.radbox.org/"
-ALBUM_SEARCH = "album"
-TRACK_SEARCH = "track"
-RELEASE_PATTERN = re.compile(
-    r"""
-(?P<url>https://(?P<label>[^.]+)[^/]+/(album|track)/[\w-]+)[^>]+>
-\s*(?P<release>[^\n]+)
-.+?\ by\ (?P<artist>[^\n]+)
-""",
-    re.DOTALL + re.VERBOSE,
-)
 
 
 class BandcampRequestsHandler:
@@ -206,19 +196,19 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         """
         label = ""
         if items and album == items[0].album and artist == items[0].albumartist:
-            first = items[0]
-            url = self._find_url(first, album, ALBUM_SEARCH)
+            label = items[0].label
+            url = self._find_url(items[0], album, "album")
             if url:
                 initial_guess = self.get_album_info(url)
                 if initial_guess:
                     yield from initial_guess
                     return
 
-            if first.comp:
-                label = first.label
-                artist = ""
+        if "various" in artist.lower():
+            artist = ""
 
-        results = map(itemgetter("url"), self._search(album, ALBUM_SEARCH, artist, label))
+        search = dict(query=album, artist=artist, label=label, search_type="a")
+        results = map(itemgetter("url"), self._search(search))
         for res in filter(truth, map(self.get_album_info, results)):
             yield from res
 
@@ -229,16 +219,17 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         a comment saying 'Visit <label-url>' - we look at this first by converting
         title into the format that Bandcamp use.
         """
-        url = self._find_url(item, title, TRACK_SEARCH)
-        initial_guess = self.get_track_info(url) if url else None
-        if initial_guess:
-            yield initial_guess
-            return
+        url = self._find_url(item, title, "track")
+        label = ""
+        if item and title == item.title and artist == item.artist:
+            label = item.label
+            initial_guess = self.get_track_info(url) if url else None
+            if initial_guess:
+                yield initial_guess
+                return
 
-        query = title or item.album
-        label = item.label
-
-        results = map(itemgetter("url"), self._search(query, TRACK_SEARCH, artist, label))
+        search = dict(query=title, artist=artist, label=label, search_type="t")
+        results = map(itemgetter("url"), self._search(search))
         yield from filter(truth, map(self.get_track_info, results))
 
     def album_for_id(self, album_id: str) -> Optional[AlbumInfo]:
@@ -285,91 +276,64 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         guru = self.guru(url)
         return self.handle(guru, "singleton", url) if guru else None
 
-    @staticmethod
-    def _parse_and_sort_results(html, release, artist, label):
-        # type: (str, str, str, str) -> List[JSONDict]
-        """Given the html string, find release URLs, artists and labels and sort them
-        by similarity.
-        When artist and/or label queries are given, we use the average similarity.
-        """
+    def _search(self, data: JSONDict) -> Iterable[JSONDict]:
+        """Return a list of track/album URLs of type search_type matching the query."""
+        msg = "Searching {}s for {} using {}"
+        self._info(msg, data["search_type"], data["query"], str(data))
+        results = search_bandcamp(**data, get=self._get)
+        return results[: self.config["search_max"].as_number()]
 
-        def to_ascii(string: str) -> str:
-            """Lowercase and translate non-ascii chars to '?'."""
-            return string.lower().encode("ascii", "replace").decode()
 
-        def get_similarity(a: str, b: str) -> float:
-            """Return the similarity between two strings normalized to [0, 1].
-            We take into account how well the result matches the query, e.g.
-                query: "foo"
-                result: "foo bar"
-            Similarity is then:
-                (2 * (len("foo") / len("foo")) + len("foo") / len("foo bar")) / 3
-            2/3 of the result is how much of the query is found in the result,
-            and 1/3 is a penalty for the non-matching part.
-            """
-            a, b = to_ascii(a), to_ascii(b)
-            match = SequenceMatcher(a=a, b=b).find_longest_match(0, len(a), 0, len(b))
-            return ((match.size / len(a)) * 2 + match.size / len(b)) / 3
+def get_opts() -> Any:
+    from optparse import Option, OptionParser
 
-        results: List[JSONDict] = []
-        for block in html.split('class="heading"'):
-            match = RELEASE_PATTERN.search(block)
-            if match:
-                res = match.groupdict()
-                similarities = [get_similarity(release, res["release"])]
-                if artist:
-                    similarities.append(get_similarity(artist, res["artist"]))
-                if label:
-                    similarities.append(get_similarity(label, res["label"]))
+    parser = OptionParser(
+        usage="beetcamp <bandcamp-url> | [-s QUERY] [-alt] [field:value, ...]",
+        description="""Get bandcamp release metadata from the <bandcamp-url>
+or perform bandcamp search using -s QUERY. Search type flags: -a for albums,
+-l for labels and artists, -t for tracks. By default, all types are searched.
+Search results can be ranked according to field:value pairs which influence
+the 'similarity' field in the output data. Any field found in the output
+can be specified this way.
+""",
+    )
+    search_type_opt = partial(Option, dest="search_type", action="store_const")
+    parser.add_options(
+        [
+            Option("-s", "--search", dest="query", help="Search for query"),
+            search_type_opt("-a", const="a", help="Search albums"),
+            search_type_opt("-l", const="b", help="Search labels and artists"),
+            search_type_opt("-t", const="t", help="Search tracks"),
+        ]
+    )
+    opts, args = parser.parse_args()
+    args.sort(key=lambda x: ":" in x)
+    for arg in args.copy():
+        if ":" in arg and "://" not in arg:
+            setattr(opts, *arg.split(":"))
+            args.remove(arg)
 
-                res["similarity"] = round(sum(similarities) / len(similarities), 3)
-                results.append(res)
-        return sorted(results, key=itemgetter("similarity"), reverse=True)
-
-    def _search(
-        self,
-        query: str,
-        search_type: str = ALBUM_SEARCH,
-        artist: str = "",
-        label: str = "",
-        search_max: int = 0,
-    ) -> Iterable[JSONDict]:
-        """Return an iterator for item URLs of type search_type matching the query.
-        Bandcamp search may be unpredictable, therefore the search results get sorted
-        regarding their similarity to what's being queried.
-        """
-        url = SEARCH_URL.format(query)
-        label = label.replace(" ", "")
-        if search_type:
-            url += f"&item_type={search_type[0]}"
-
-        msg = "Searching {}s for {}, URL: {}, artist: {}, label: {}"
-        self._info(msg, search_type, query, url, artist, label)
-        results = self._parse_and_sort_results(self._get(url), query, artist, label)
-
-        return results[: search_max or self.config["search_max"].as_number()]
+    return opts, args
 
 
 def main():
     import json
-    import sys
 
-    try:
-        url = sys.argv[1]
-    except IndexError as exc:
-        raise IndexError("bandcamp url is required") from exc
-    pl = BandcampPlugin()
-    if url.startswith("https://"):
-        result = pl.album_for_id(url) or pl.track_for_id(url)
-        if not result:
-            raise AssertionError("Failed to find a release under the given url")
+    opts, args = get_opts()
+    if opts.query:
+        result = search_bandcamp(**vars(opts))
     else:
-        kwargs = {}
-        if len(sys.argv) > 2:
-            kwargs["artist"] = sys.argv[2]
-            if len(sys.argv) > 3:
-                kwargs["label"] = sys.argv[3]
-        result = pl._search(url, search_max=20, **kwargs)
+        try:
+            arg = args[0]
+        except IndexError as exc:
+            raise IndexError("Bandcamp url or search query is required") from exc
+        if arg.startswith("http://") or arg.startswith("https://"):
+            pl = BandcampPlugin()
+            result = pl.album_for_id(arg) or pl.track_for_id(arg)
+            if not result:
+                raise AssertionError("Failed to find a release under the given url")
+        else:
+            raise AssertionError("Bandcamp release URL must start with http:// or https://")
 
     print(json.dumps(result))
 

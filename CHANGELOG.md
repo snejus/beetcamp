@@ -2,50 +2,46 @@
 
 ### Added
 
-* search: you can now try searching from the command line: `beetcamp <query> [artist] [label]`.
-    If the `query` argument starts with `https://`, it will fetch the release information
-    like before. If not, it will return a JSON list with all search results found in
-    the first page (only showing the first 2 in the examples below). Searching for release
-    **black sands** by **bonobo**:
+* search: you can now search from the command line: 
+  ```sh
+  beetcamp [-a ARTIST] [-l LABEL] [-t TYPE] <query>
+    $ beetcamp sands -a bonobo | jq '.[:2]'
+    beetcamp -s QUERY [-alt] [field:value, ...]
+  ```
+
+  Search is activated by using flag **-s** followed by the search query. It queries
+  bandcamp with the provided word and returns a JSON list with all search results from the
+  first page.
+
+  Flags **-a**, **-l** and **-t** are used to run **album**, **label/artist** or **track**
+  searches. Any of the output fields can be specified by **field:value** in order to take
+  them into account in the _similarity_ calculation.
+
+  Run `beetcamp -h` to see the details and the rest of the flags.
+  For example: searching for anything called **sands** by albumartist **bonobo**:
 
     ```json
-    $ beetcamp 'black sands' bonobo | jq '.[:2]'
+    $ beetcamp -s sands artist:bonobo | jq '.[:2]'
     [
       {
+        "type": "album",
+        "name": "Black Sands",
+        "artist": "Bonobo",
+        "date": "29 March 2010",
+        "tracks": "12",
         "url": "https://bonobomusic.bandcamp.com/album/black-sands",
         "label": "bonobomusic",
-        "release": "Black Sands",
-        "artist": "Bonobo",
-        "similarity": 1
+        "similarity": 0.909
       },
       {
-        "url": "https://bonobomusic.bandcamp.com/album/black-sands-remixed",
-        "label": "bonobomusic",
-        "release": "Black Sands Remixed",
-        "artist": "Bonobo",
-        "similarity": 0.93
-      }
-    ]
-    ```
-
-    Searching for release **weapons 001**, using empty artist (won't be used in the
-    ranking) and looking for label **raise**:
-    ```json
-    $ beetcamp 'weapons 001' '' raise | jq '.[:2]'
-    [
-      {
-        "url": "https://raiserecords.bandcamp.com/album/weapons-001-various-artists",
-        "label": "raiserecords",
-        "release": "WEAPONS 001 - VARIOUS ARTISTS",
-        "artist": "Mac Declos, Lacchesi, Umbraid, Lisa, Absurd, Moth, Clinical Hates, Eastel",
-        "similarity": 0.799
-      },
-      {
-        "url": "https://raiserecords.bandcamp.com/album/weapons-002-tauceti",
-        "label": "raiserecords",
-        "release": "WEAPONS 002 - TAUCETI",
-        "artist": "TAUCETI, Darzack, Raär, Mac Declos",
-        "similarity": 0.785
+        "type": "album",
+        "name": "SANDS",
+        "artist": "ATOMS",
+        "date": "06 May 2014",
+        "tracks": "10",
+        "url": "https://atomstheillest.bandcamp.com/album/sands",
+        "label": "atomstheillest",
+        "similarity": 0.589
       }
     ]
     ```
@@ -76,6 +72,10 @@
     and include it
 
 ### Fixed
+
+* search: fixed searching of singletons, where the plugin now actually performs search instead of 
+  immediately returning the currently selected singleton when option **E** was selected
+  during the import process
 
 * `album`: simplified album name clean-up logic and thus fixed a couple of edge cases
 * `title`: 
