@@ -32,18 +32,18 @@ class MediaInfo(NamedTuple):
 
 _catalognum = Template(
     r"""(?<![]/@-])(\b
-(?!\W|VA[\d ]+|[EL]P\W|[^\n.]+[ ](?:20\d{2}|VA[ \d]+)|(?i:vol|disc))
+(?!\W|LC[ ]|VA[\d ]+|[EL]P\W|[^\n.]+[ ](?:20\d{2}|VA[ \d]+)|(?i:vol|disc|number))
 (
-      [A-Z .]+\d{3}         # HANDS D300
-    | [A-Z-]{3,}\d+         # RIV4
+      [A-Z][A-Z .]+\d{3}         # HANDS D300, CC ATOM 101
+    | [A-Z-]{3,}\d+              # RIV4
     # dollar signs need escaping here since the $label below will be
     # substituted later, and we do not want to touch these two
-    | [A-Z]{2,}[A-Z.$$-]*\d{2,} # HS11, USE202, HEY-101, LI$$INGLE025
-    | (?<!\w\W)[A-Z.]{2,}[ ]\d{1,3}  # OBS.CUR 9
-    | [A-z]+-[A-z]+[ ]?\d+  # o-ton 119
-    | \w+[A-z]0\d+          # 1ØPILLS018, fa036
-    | [a-z]+(cd|lp|:)\d+    # ostgutlp45, reni:7
-    | [A-z]+\d+-\d+         # P90-003
+    | [A-Z]{2,}[A-Z.$$-]*\d{2,}  # HS11, USE202, HEY-101, LI$$INGLE025
+    | (?<!\w\W)[A-Z.]{2,}[ ]\d+  # OBS.CUR 9
+    | [A-z]+-[A-z]+[ ]?\d+       # o-ton 119
+    | \w+[A-z]0\d+               # 1ØPILLS018, fa036
+    | [a-z]+(cd|lp|:)\d+         # ostgutlp45, reni:7
+    | [A-z]+\d+-\d+              # P90-003
     | (?i:$label[ ]?[A-Z]*\d+[A-Z]*)
 )
 ( # optionally followed by
@@ -52,13 +52,13 @@ _catalognum = Template(
 )?
 \b(?!["%]))"""
 )
-_cat_pattern = _catalognum.template
+_cat_pat = _catalognum.template
 
 CATNUM_PAT = {
     "with_header": re.compile(r"(?:^|\s)cat[\w .]+?(?:number:?|:) ?(\w[^\n,]+)", re.I),
-    "start_end": re.compile(fr"((^|\n){_cat_pattern}|{_cat_pattern}(\n|$))", re.VERBOSE),
-    "delimited": re.compile(fr"(?:[\[(])(?!.*MIX){_cat_pattern}(?:[])]|$)", re.VERBOSE),
-    "anywhere": re.compile(fr"({_cat_pattern}([ ]/[ ]{_cat_pattern})?)", re.VERBOSE),
+    "start_end": re.compile(fr"((^|\n){_cat_pat}|{_cat_pat}(\n|$))", re.VERBOSE),
+    "delimited": re.compile(fr"(?:[\[(])(?!.*MIX){_cat_pat}(?:[])]|$)", re.VERBOSE),
+    "anywhere": re.compile(fr"(?<!,[ ])({_cat_pat}([ ]/[ ]{_cat_pat})?)", re.VERBOSE),
 }
 
 rm_strings = [
