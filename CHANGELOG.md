@@ -62,6 +62,7 @@
   - do not match if preceded by **]** character
   - parse track titles for catalogue numbers
   - allow catalogue numbers like **o-ton 113**
+  - allow a pair of them, if split by ` / `
 
 * `albumtype`: to determine whether a release is a compilation, check comments for string
   **compilation**

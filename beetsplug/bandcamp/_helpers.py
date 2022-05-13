@@ -53,7 +53,7 @@ _catalognum = Template(
       (?<=\d\d)-?[A-Z]+  # IBM001CD (needs at least two digits before the letter)
     | [.][0-9]+          # ISMVA002.1
 )?
-\b(?!["]))"""
+\b(?!"))"""
 )
 _cat_pattern = _catalognum.template
 
@@ -61,7 +61,7 @@ CATNUM_PAT = {
     "with_header": re.compile(r"(?:^|\s)cat[\w .]+?(?:number:?|:) ?(\w[^\n,]+)", re.I),
     "start_end": re.compile(fr"((^|\n){_cat_pattern}|{_cat_pattern}(\n|$))", re.VERBOSE),
     "delimited": re.compile(fr"(?:[\[(])(?!.*MIX){_cat_pattern}(?:[])]|$)", re.VERBOSE),
-    "anywhere": re.compile(_cat_pattern, re.VERBOSE),
+    "anywhere": re.compile(fr"({_cat_pattern}([ ]/[ ]{_cat_pattern})?)", re.VERBOSE),
 }
 
 rm_strings = [
