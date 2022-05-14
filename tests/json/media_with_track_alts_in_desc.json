@@ -408,17 +408,6 @@
         "@type": "MusicEvent",
         "location": {
           "@type": "MusicVenue",
-          "address": "Konstanz, Germany",
-          "name": "Bodenseestadion"
-        },
-        "name": "Dominik Eulberg",
-        "startDate": "13 May 2022 00:00:00 GMT",
-        "url": "https://www.songkick.com/festivals/2281729-campus-konstanz/id/39972767-campus-festival-konstanz-2022?utm_source=1471&utm_medium=partner"
-      },
-      {
-        "@type": "MusicEvent",
-        "location": {
-          "@type": "MusicVenue",
           "address": "Le Bourget, France",
           "name": "Musée de l'Air et de l'Espace"
         },
@@ -436,6 +425,17 @@
         "name": "Dominik Eulberg",
         "startDate": "22 May 2022 00:00:00 GMT",
         "url": "https://www.songkick.com/concerts/40387440-dominik-eulberg-at-odonien?utm_source=1471&utm_medium=partner"
+      },
+      {
+        "@type": "MusicEvent",
+        "location": {
+          "@type": "MusicVenue",
+          "address": "Offenbach, Germany",
+          "name": "MTW Club"
+        },
+        "name": "Dominik Eulberg",
+        "startDate": "26 May 2022 00:00:00 GMT",
+        "url": "https://www.songkick.com/concerts/40402946-dominik-eulberg-at-mtw-club?utm_source=1471&utm_medium=partner"
       },
       {
         "@type": "MusicEvent",
