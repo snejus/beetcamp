@@ -27,7 +27,7 @@ pytestmark = pytest.mark.lib
 
 BASE_DIR = "lib_tests"
 TEST_DIR = "dev"
-REFERENCE_DIR = "356d23d"
+REFERENCE_DIR = "e8e6b4b"
 JSONS_DIR = "jsons"
 
 IGNORE_FIELDS = {
@@ -125,7 +125,8 @@ def do_key(table, key: str, before, after, cached_value=None, album=None):
                 [make_difftext(str(a), str(b)) for a, b in zip(old_track, new_track)]
             )
     else:
-        difftext = make_difftext(str(before), str(after))
+        before, after = str(before), str(after)
+        difftext = make_difftext(before, after)
         parts = [[wrap(key, "b"), difftext]]
         if not key_fixed:
             oldnew[key].append(Oldnew(before, after, difftext))

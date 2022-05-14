@@ -228,6 +228,7 @@ class Metaguru(Helpers):
                 disctitle=self.disctitle,
                 description=self.media.description,
                 label=self.label if not self._singleton else "",
+                tracks=tuple(self._tracks.raw_names),
             )
             or self.general_catalognum
         )
@@ -453,7 +454,7 @@ class Metaguru(Helpers):
     @property
     def _common_album(self) -> JSONDict:
         common_data: JSONDict = dict(album=self.clean_album_name)
-        fields = ["label", "catalognum", "albumtype", "albumstatus", "country"]
+        fields = ["label", "catalognum", "albumtype", "country"]
         if NEW_BEETS:
             fields.extend(["genre", "style", "comments", "albumtypes"])
         common_data.update(self.get_fields(fields))
@@ -466,8 +467,10 @@ class Metaguru(Helpers):
     def _trackinfo(self, track: Track, **kwargs: Any) -> TrackInfo:
         data = track.info
         data.update(**self._common, **kwargs)
-        if data["catalognum"] == self.catalognum:
+        if not data["catalognum"] or data["catalognum"] == self.catalognum:
             data.pop("catalognum")
+        if not data["lyrics"]:
+            data.pop("lyrics", None)
         if not NEW_BEETS:
             data.lyrics = None
         for field in set(data.keys()) & self.excluded_fields:
@@ -484,7 +487,6 @@ class Metaguru(Helpers):
         if NEW_BEETS:
             track.update(self._common_album)
             track.pop("album", None)
-            track.pop("albumstatus", None)
         track.track_id = track.data_url
         return track
 
@@ -508,6 +510,7 @@ class Metaguru(Helpers):
             artist=self.albumartist,
             album_id=self.album_id,
             mediums=self.mediums,
+            albumstatus=self.albumstatus,
             tracks=list(map(get_trackinfo, tracks)),
         )
         for key, val in self.get_fields(["va"]).items():

@@ -59,8 +59,8 @@
   cases where titles have the following format: **Title [Album Name EP]**
 
 * `catalognum`: 
+  - search track titles
   - do not match if preceded by **]** character
-  - parse track titles for catalogue numbers
   - allow catalogue numbers like **o-ton 113**
   - allow a pair, if separated by a slash `/`
   - removed a pattern responsible for a fair bit of false positives
@@ -81,23 +81,18 @@
 
 * `album`: simplified album name clean-up logic and thus fixed a couple of edge cases
 * `title`: 
-  - some track titles which contain something in parentheses would have that part wrongly
-    removed. This is now fixed.
-  - minor fixes to do with featuring artists extraction from the title
-    For example, title: **Title (Extended ft. Some Artist)**
-    previously: **Title (Extended**
-    now: **Title (Extended)**
+  - track parsing has been refactored, therefore many of previously removed bits from the
+    title are now kept in place, such as bits in parentheses, double quotes (unless they
+    wrap the entire title) or non-alphanumeric characters at the end
   - allow titles to start with an opening parentheses :exploding_head:
-  - remove variations of **Bonus track** and **vinyl-only** from the title
 
 * `albumartist`: remove **, more** from the end
 
 * `artist`: 
   - featuring artists given in square brackets are now parsed correctly
-  - lower/uppercase differences in the artist name are now taken into account and are
-    handled as the same artist
-  - when only one of the track artists in the release is not found, try splitting with
-    **-** to account for bad formatting
+  - de-duplication now ignores the case
+  - when only one of the track artists in the release is missing, try splitting the name
+    with **-** (no spaces) to account for bad formatting
 
 * `catalognum`: in rare cases, if the track list was given in the comments, one of the
   track titles would get assumed for the catalognum and subsequently cleaned up. From now

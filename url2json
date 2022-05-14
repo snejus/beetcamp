@@ -31,7 +31,7 @@ get_json () {
     if (( HUMAN )); then
       jq -C "${jqargs[@]}" | less -R
     else
-      jq -cM "${jqargs[@]}"
+      jq "${jqargs[@]}"
     fi
   }
 }

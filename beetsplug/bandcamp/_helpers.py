@@ -99,25 +99,19 @@ class Helpers:
         """Split artists taking into account delimiters such as ',', '+', 'x', 'X' etc.
         Note: featuring artists are removed since they are not main artists.
         """
-        artists = list(map(lambda x: PATTERNS["ft"].sub("", x), artists))
-        split = map(PATTERNS["split_artists"].split, ordset(artists))
+        no_ft_artists = (PATTERNS["ft"].sub("", a) for a in artists)
+        split = map(PATTERNS["split_artists"].split, ordset(no_ft_artists))
         split_artists = ordset(map(str.strip, it.chain(*split))) - {""}
-        split_artists_list = list(split_artists)
 
-        for artist in split_artists_list:
-            subartists = artist.split(" X ")
-            if len(artists) == len(split_artists_list) or any(
-                map(lambda x: x in split_artists, subartists)
-            ):
-                split_artists.discard(artist)
-                split_artists.update(subartists)
-
-            # ' & ' may be part of single artist name, so we need to be careful here
-            # we check whether any of the split artists appears on their own
-            subartists = artist.split(" & ")
-            if len(subartists) > 1 and any(map(lambda x: x in split_artists, subartists)):
-                split_artists.discard(artist)
-                split_artists.update(subartists)
+        for artist in list(split_artists):
+            # ' & ' or ' X ' may be part of single artist name, so we need to be careful
+            # here. We check whether any of the split artists appears on their own and
+            # only split then
+            for char in "X&":
+                subartists = artist.split(f" {char} ")
+                if len(subartists) > 1 and any(s in split_artists for s in subartists):
+                    split_artists.discard(artist)
+                    split_artists.update(subartists)
         return list(split_artists)
 
     @staticmethod
@@ -127,7 +121,6 @@ class Helpers:
     ):
         # type: (str, str, str, Tuple[str], Tuple[str]) -> str
         """Try getting the catalog number looking at text from various fields."""
-        tracks_str = "\n".join(tracks or [])
         cases = [
             (CATNUM_PAT["with_header"], description),
             (CATNUM_PAT["anywhere"], disctitle),
@@ -139,25 +132,19 @@ class Helpers:
             pat = re.compile(_catalognum.substitute(label=re.escape(label)), re.VERBOSE)
             cases.append((pat, "\n".join((album, disctitle, description))))
 
+        tracks_str = " ".join([*(tracks or []), *(artists or [])]).lower()
+
         def find(pat: Pattern, string: str) -> str:
-            match = pat.search(string)
-            return match.group(1).strip() if match else ""
-
-        ignored = set(map(str.lower, artists or []))
-
-        def not_ignored(option: str) -> bool:
-            """Suitable match if:
-            - is not empty
-            - is not in any of the track names
-            """
-            return (
-                bool(option)
-                and option.lower() not in ignored
-                and option not in tracks_str
-            )
+            """Return the match if it is not found in any of the track names."""
+            m = pat.search(string)
+            if m:
+                catnum = m.group(1).strip()
+                if catnum.lower() not in tracks_str:
+                    return catnum
+            return ""
 
         try:
-            return next(filter(not_ignored, it.starmap(find, cases)))
+            return next(filter(op.truth, it.starmap(find, cases)))
         except StopIteration:
             return ""
 

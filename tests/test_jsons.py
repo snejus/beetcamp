@@ -40,6 +40,7 @@ def test_parse_single_track_release(release, beets_config):
         "edge_cases",
         "issues_18",
         "media_with_track_alts_in_desc",
+        "artist_catalognum",
     ],
     indirect=["release"],
 )

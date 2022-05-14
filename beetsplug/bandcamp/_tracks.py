@@ -2,13 +2,12 @@ import itertools as it
 import re
 import sys
 from collections import Counter
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from functools import reduce
 from typing import Iterator, List, Optional, Set, Tuple
 
 from beets.autotag import TrackInfo
 from ordered_set import OrderedSet as ordset  # type: ignore
-from rich import print
 
 from ._helpers import CATNUM_PAT, PATTERNS, Helpers, JSONDict
 
@@ -64,12 +63,12 @@ CLEAN_PATTERNS = [
 
 @dataclass
 class Track:
-    json_item: JSONDict
-    track_id: str
-    index: int
-    json_artist: str
-    _name: str
+    json_item: JSONDict = field(default_factory=dict)
+    track_id: str = ""
+    index: int = 0
+    json_artist: str = ""
 
+    _name: str = ""
     _artist: str = ""
     _title: str = ""
     ft: str = ""
@@ -96,23 +95,23 @@ class Track:
             index=json["position"],
             catalognum=catalognum,
         )
-        return cls(**cls.parse_name(data, name, delim, label=label))
+        return cls(**cls.parse_name(data, name, delim, label))
 
     @staticmethod
     def find_featuring(data: JSONDict) -> JSONDict:
-        """Find the featuring artist in the track name.
+        """Find featuring artist in the track name.
 
         If the found artist is contained within the remixer, do not do anything.
         If the found artist is among the main artists, remove it from the name but
         do not consider it as a featuring artist.
         Otherwise, strip brackets and spaces and save it in the 'ft' field.
         """
-        for field in "_name", "json_artist":
-            m = FT_PAT.search(data[field])
+        for _field in "_name", "json_artist":
+            m = FT_PAT.search(data[_field])
             if m:
                 ft = m.groups()[-1].strip()
                 if ft not in data.get("remixer", "") or "":
-                    data[field] = data[field].replace(m.group().rstrip(), "")
+                    data[_field] = data[_field].replace(m.group().rstrip(), "")
                     if ft not in data["json_artist"]:
                         data["ft"] = m.group().strip(" ([])")
                     break
@@ -125,19 +124,19 @@ class Track:
             name = name.replace(label, "").strip(" -")
         for pat, repl in CLEAN_PATTERNS:
             name = pat.sub(repl, name)
-            data["json_artist"] = pat.sub(repl, data["json_artist"])
+            data["json_artist"] = pat.sub(repl, data.get("json_artist", ""))
         name = name.strip().lstrip("-")
         m = TRACK_ALT_PAT.search(name)
         if m:
-            data["track_alt"] = m.group(1)
+            data["track_alt"] = m.group(1).upper()
             name = name.replace(m.group(), "")
 
-        if not data["catalognum"]:
+        if not data.get("catalognum"):
             m = CATNUM_PAT["delimited"].search(name)
             if m:
                 data["catalognum"] = m.group(1)
-                name = name.replace(m.group(), "")
-        name = re.sub(fr"^0*{data['index']}(?!\W\d)\W+", "", name)
+                name = name.replace(m.group(), "").strip()
+        name = re.sub(fr"^0*{data.get('index', 0)}(?!\W\d)\W+", "", name)
 
         m = REMIXER_PAT.search(name)
         if m:
@@ -153,11 +152,11 @@ class Track:
         return data
 
     @cached_property
-    def duration(self) -> int:
+    def duration(self) -> Optional[int]:
         try:
             h, m, s = map(int, re.findall(r"[0-9]+", self.json_item["duration"]))
         except KeyError:
-            return 0
+            return None
         else:
             return h * 3600 + m * 60 + s
 
@@ -183,7 +182,7 @@ class Track:
     @cached_property
     def digi_only(self) -> bool:
         """Return True if the track is digi-only."""
-        return self.name != self.no_digi_name
+        return self._name != self.no_digi_name
 
     @property
     def title(self) -> str:
