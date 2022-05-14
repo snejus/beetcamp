@@ -477,7 +477,7 @@ class Metaguru(Helpers):
         for field in set(data.keys()) & self.excluded_fields:
             data.pop(field)
 
-        return data
+        return TrackInfo(**data)
 
     @cached_property
     def singleton(self) -> TrackInfo:

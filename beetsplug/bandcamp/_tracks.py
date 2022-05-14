@@ -7,7 +7,6 @@ from dataclasses import dataclass, field
 from functools import reduce
 from typing import Iterator, List, Optional, Set, Tuple
 
-from beets.autotag import TrackInfo
 from ordered_set import OrderedSet as ordset  # type: ignore
 
 from ._helpers import CATNUM_PAT, PATTERNS, Helpers, JSONDict
@@ -228,8 +227,8 @@ class Track:
         return PATTERNS["remix_or_ft"].sub("", self.title)
 
     @property
-    def info(self) -> TrackInfo:
-        return TrackInfo(
+    def info(self) -> JSONDict:
+        return dict(
             index=self.index if not self.single else None,
             medium_index=self.index if not self.single else None,
             medium=None,
