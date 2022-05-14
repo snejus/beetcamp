@@ -3,7 +3,7 @@ import re
 from difflib import SequenceMatcher
 from html import unescape
 from operator import itemgetter
-from typing import Any, Callable, Dict, List, Literal
+from typing import Any, Callable, Dict, List
 
 import requests
 
@@ -88,7 +88,7 @@ def get_bandcamp_url(url: str) -> str:
 
 def search_bandcamp(
     query: str = "",
-    search_type: Literal["", "a", "b", "t"] = "",
+    search_type: str = "",
     get: Callable[[str], str] = get_bandcamp_url,
     **kwargs,
 ) -> List[JSONDict]:

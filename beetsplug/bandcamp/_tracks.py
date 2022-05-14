@@ -1,3 +1,4 @@
+"""Module with track parsing functionality."""
 import itertools as it
 import re
 import sys
@@ -110,7 +111,7 @@ class Track:
             m = FT_PAT.search(data[_field])
             if m:
                 ft = m.groups()[-1].strip()
-                if ft not in data.get("remixer", "") or "":
+                if ft not in data.get("remixer", ""):
                     data[_field] = data[_field].replace(m.group().rstrip(), "")
                     if ft not in data["json_artist"]:
                         data["ft"] = m.group().strip(" ([])")
@@ -315,7 +316,7 @@ class Tracks(list):
     def adjust_artists(self, aartist: str, single=bool) -> None:
         track_alts = {t.track_alt for t in self.tracks if t.track_alt}
         artists = [t.artists for t in self.tracks if t.artists]
-        for idx, t in enumerate(self):
+        for t in self:
             t.single = single
             if not t.artist:
                 if t.track_alt and len(track_alts) == 1:
