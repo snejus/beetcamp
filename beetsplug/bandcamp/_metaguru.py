@@ -468,11 +468,12 @@ class Metaguru(Helpers):
         data = track.info
         data.update(**self._common, **kwargs)
         if not data["catalognum"] or data["catalognum"] == self.catalognum:
-            data.pop("catalognum")
+            data.pop("catalognum", None)
         if not data["lyrics"]:
             data.pop("lyrics", None)
         if not NEW_BEETS:
-            data.lyrics = None
+            data.pop("catalognum", None)
+            data.pop("lyrics", None)
         for field in set(data.keys()) & self.excluded_fields:
             data.pop(field)
 
