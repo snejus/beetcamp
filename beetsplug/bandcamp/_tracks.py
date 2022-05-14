@@ -204,7 +204,7 @@ class Track:
         if self._artist:
             return self._artist
 
-        artiststr = self.name.removesuffix(self.title).strip(", -")
+        artiststr = self.name.replace(self.title, "").strip(", -")
         artiststr = REMIXER_PAT.sub("", artiststr)
         if self.remixer:
             split = Helpers.split_artists([artiststr])
