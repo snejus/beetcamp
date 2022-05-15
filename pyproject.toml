@@ -37,7 +37,6 @@ ordered-set = ">=4.0"
 [tool.poetry.dev-dependencies]
 dataclasses = { version = ">=0.7", python = "<3.7" }
 flake8 = ">=3.8.4"
-flake8-bandit = ">=2.0.0"
 mypy = ">=0.790"
 pylint = ">=2.7.4"
 pytest = ">=6.2"

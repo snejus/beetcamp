@@ -333,7 +333,9 @@ def main():
             if not result:
                 raise AssertionError("Failed to find a release under the given url")
         else:
-            raise AssertionError("Bandcamp release URL must start with http:// or https://")
+            raise AssertionError(
+                "Bandcamp release URL must start with http:// or https://"
+            )
 
     print(json.dumps(result))
 
