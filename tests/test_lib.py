@@ -195,9 +195,7 @@ def file(request):
 
 @pytest.fixture
 def guru(file, config):
-    meta_file = os.path.join(JSONS_DIR, file)
-
-    with open(meta_file) as f:
+    with open(os.path.join(JSONS_DIR, file)) as f:
         meta = f.read()
 
     return Metaguru.from_html(meta, config)

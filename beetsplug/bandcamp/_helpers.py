@@ -101,7 +101,7 @@ class Helpers:
         """
         no_ft_artists = (PATTERNS["ft"].sub("", a) for a in artists)
         split = map(PATTERNS["split_artists"].split, ordset(no_ft_artists))
-        split_artists = ordset(map(str.strip, it.chain(*split))) - {""}
+        split_artists = ordset(map(str.strip, it.chain(*split))) - {"", "more"}
 
         for artist in list(split_artists):
             # ' & ' or ' X ' may be part of single artist name, so we need to be careful

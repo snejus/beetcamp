@@ -150,7 +150,7 @@ class Metaguru(Helpers):
                 aartist = split[0]
 
         aartists = Helpers.split_artists([aartist])
-        remixers_str = " ".join(self._tracks.raw_remixers)
+        remixers_str = " ".join(self._tracks.other_artists)
 
         def not_remixer(x: str) -> bool:
             return not any(map(lambda y: y in remixers_str, {x, *x.split(" & ")}))
@@ -159,7 +159,7 @@ class Metaguru(Helpers):
         if (
             len(aartists) == 1
             or len(valid) == len(aartists)
-            and len(self._tracks.raw_artists) <= 4
+            and len(self._tracks.artists) <= 4
         ):
             ret = aartist
         else:
@@ -203,9 +203,9 @@ class Metaguru(Helpers):
         """Find catalog number in the media-agnostic release metadata and cache it."""
         cats = [t.catalognum for t in self._tracks if t.catalognum]
         artists = ordset([self.original_albumartist])
-        if not self._singleton or len(self._tracks.raw_artists) > 1:
-            artists.update(self._tracks.raw_artists)
-            artists.update(self._tracks.raw_remixers)
+        if not self._singleton or len(self._tracks.artists) > 1:
+            artists.update(self._tracks.artists)
+            artists.update(self._tracks.other_artists)
 
         catnum = self.parse_catalognum(
             album=self.meta["name"],
@@ -267,7 +267,7 @@ class Metaguru(Helpers):
         if self.unique_artists:
             aartist = ", ".join(sorted(self.unique_artists))
 
-        return aartist.replace(", more", "")
+        return aartist
 
     @cached_property
     def vinyl_disctitles(self) -> str:
@@ -425,7 +425,7 @@ class Metaguru(Helpers):
 
         clean_album = self.clean_name(album, self.catalognum, remove_extra=True)
 
-        artists = ordset([self.bandcamp_albumartist, *self._tracks.raw_artists]) - {
+        artists = ordset([self.bandcamp_albumartist, *self.tracks.artists]) - {
             self.label
         }
         clean_album = self.clean_name(clean_album, *artists, label=self.label)

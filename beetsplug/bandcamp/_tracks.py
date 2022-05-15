@@ -200,27 +200,22 @@ class Track:
 
     @property
     def artist(self) -> str:
+        """Take the full name, remove the title, remixers and return the resulting artist.
+        """
         if self._artist:
             return self._artist
 
-        artiststr = self.name[:self.name.rfind(self.title)].strip(", -")
-        artiststr = REMIXER_PAT.sub("", artiststr)
+        artist = self.name[: self.name.rfind(self.title)].strip(", -")
+        artist = REMIXER_PAT.sub("", artist)
         if self.remixer:
-            split = Helpers.split_artists([artiststr])
-            try:
-                split.remove(self.remixer)
-            except ValueError:
-                pass
-            else:
-                artiststr = ", ".join(split)
+            artist = artist.replace(self.remixer, "").strip(" ,")
 
-        self._artist = artiststr.strip(" -")
+        self._artist = artist.strip(" -")
         return self._artist
 
     @property
     def artists(self) -> List[str]:
-        # artists = ordset((next(orig) for _, orig in it.groupby(artists, str.lower)))
-        return Helpers.split_artists(self.artist.split(", "))
+        return Helpers.split_artists([self.artist])
 
     @cached_property
     def main_title(self) -> str:
@@ -294,20 +289,19 @@ class Tracks(list):
         return "", names
 
     @property
-    def artists(self) -> List[str]:
-        return list(ordset(it.chain(*(j.artists for j in self.tracks))))
+    def raw_artists(self) -> List[str]:
+        return list(ordset(j.artist for j in self.tracks))
 
     @cached_property
     def raw_names(self) -> List[str]:
         return [j.name for j in self.tracks]
 
     @property
-    def raw_artists(self) -> List[str]:
+    def artists(self) -> List[str]:
         return list(ordset(it.chain(*(j.artists for j in self.tracks))))
-        # return list(ordset(t.artist for t in self.tracks))
 
     @cached_property
-    def raw_remixers(self) -> Set[str]:
+    def other_artists(self) -> Set[str]:
         remixers = [j.remixer for j in self.tracks if j.remixer]
         ft = [j.ft for j in self.tracks if j.ft]
         return set(it.chain(remixers, ft))
