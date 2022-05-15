@@ -79,6 +79,8 @@
   immediately returning the currently selected singleton when option **E** was selected
   during the import process
 
+* album art fetching functionality has been broken for a while - it should now work fine
+
 * `album`: simplified album name clean-up logic and thus fixed a couple of edge cases
 
 * `albumartist`: remove **, more** from the end

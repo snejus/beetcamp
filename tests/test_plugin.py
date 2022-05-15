@@ -1,7 +1,11 @@
 """Tests for any logic found in the main plugin module."""
+import json
+from logging import getLogger
+
 import pytest
+from beets.autotag.hooks import AlbumInfo
 from beets.library import Item
-from beetsplug.bandcamp import BandcampPlugin, urlify
+from beetsplug.bandcamp import BandcampAlbumArt, BandcampPlugin, urlify
 
 LABEL_URL = "https://label.bandcamp.com"
 ALBUM_URL = f"{LABEL_URL}/album/release"
@@ -46,3 +50,17 @@ def test_find_url(mb_albumid, comments, album, expected_url):
 )
 def test_urlify(title, expected):
     assert urlify(title) == expected
+
+
+def test_coverart(monkeypatch, console, beets_config):
+    with open("tests/json/album.json", encoding="utf-8") as f:
+        text = "".join(f.read().splitlines())
+
+    img_url = json.loads(text)["image"]
+
+    monkeypatch.setattr(BandcampAlbumArt, "_get", lambda *args: text)
+
+    album = AlbumInfo([], mb_albumid="https://bandcamp.com/album/")
+    log = getLogger(__name__)
+    for cand in BandcampAlbumArt(log, beets_config).get(album, None, []):
+        assert cand.url == img_url

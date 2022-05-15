@@ -192,7 +192,6 @@ class Metaguru(Helpers):
 
     @cached_property
     def image(self) -> str:
-        # TODO: Need to test
         image = self.meta.get("image", "")
         return image[0] if isinstance(image, list) else image
 

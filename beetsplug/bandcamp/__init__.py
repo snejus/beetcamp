@@ -76,35 +76,6 @@ class BandcampRequestsHandler:
         return unescape(response.text)
 
 
-class BandcampAlbumArt(BandcampRequestsHandler, fetchart.RemoteArtSource):
-    NAME = "Bandcamp"
-
-    def get(self, album, plugin, paths):
-        # type: (AlbumInfo, plugins.BeetsPlugin, List) -> Iterable[fetchart.Candidate]  # noqa
-        """Return the url for the cover from the bandcamp album page.
-        This only returns cover art urls for bandcamp albums (by id).
-        """
-        # TODO: Make this configurable
-        if hasattr(album, "art_source") and album.art_source == DATA_SOURCE:
-            url = album.mb_albumid
-            if isinstance(url, six.string_types) and DATA_SOURCE in url:
-                html = self._get(url)
-                if html:
-                    try:
-                        yield self._candidate(
-                            url=self.guru(html).image,
-                            match=fetchart.Candidate.MATCH_EXACT,
-                        )
-                    except (KeyError, AttributeError, ValueError):
-                        self._info("Unexpected parsing error fetching album art")
-                else:
-                    self._info("Could not connect to the URL")
-            else:
-                self._info("Not fetching art for a non-bandcamp album")
-        else:
-            self._info("Art cover is already present")
-
-
 def _from_bandcamp(clue: str) -> bool:
     """Check if the clue is likely to be a bandcamp url.
     We could check whether 'bandcamp' is found in the url, however, we would be ignoring
@@ -114,6 +85,31 @@ def _from_bandcamp(clue: str) -> bool:
     is what we are looking for in a valid url here.
     """
     return bool(re.match(r"http[^ ]+/(album|track)/", clue))
+
+
+class BandcampAlbumArt(BandcampRequestsHandler, fetchart.RemoteArtSource):
+    NAME = "Bandcamp"
+
+    def get(self, album, plugin, paths):
+        # type: (AlbumInfo, plugins.BeetsPlugin, List) -> Iterable[fetchart.Candidate]  # noqa
+        """Return the url for the cover from the bandcamp album page.
+        This only returns cover art urls for bandcamp albums (by id).
+        """
+        url = album.mb_albumid
+        if not _from_bandcamp(url):
+            self._info("Not fetching art for a non-bandcamp album URL")
+        else:
+            html = self._get(url)
+            if not html:
+                self._info("Could not connect to the URL")
+            else:
+                try:
+                    yield self._candidate(
+                        url=Metaguru.from_html(html).image,
+                        match=fetchart.Candidate.MATCH_EXACT,
+                    )
+                except (KeyError, AttributeError, ValueError):
+                    self._info("Unexpected parsing error fetching album art")
 
 
 def urlify(pretty_string: str) -> str:
