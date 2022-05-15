@@ -80,13 +80,20 @@
   during the import process
 
 * `album`: simplified album name clean-up logic and thus fixed a couple of edge cases
+
+* `albumartist`: remove **, more** from the end
+
+* `catalognum`: in rare cases, if the track list was given in the comments, one of the
+  track titles would get assumed for the catalognum and subsequently cleaned up. From now
+  on this will only apply if **all** track names include the match (usually delimited by
+  brackets at the end)
+
 * `title`: 
   - track parsing has been refactored, therefore many of previously removed bits from the
     title are now kept in place, such as bits in parentheses, double quotes (unless they
     wrap the entire title) or non-alphanumeric characters at the end
   - allow titles to start with an opening parentheses :exploding_head:
-
-* `albumartist`: remove **, more** from the end
+  - when the title is found as **(Some Remix) Title**, it becomes **Title (Some Remix)**
 
 * `artist`: 
   - featuring artists given in square brackets are now parsed correctly
@@ -94,10 +101,8 @@
   - when only one of the track artists in the release is missing, try splitting the name
     with **-** (no spaces) to account for bad formatting
 
-* `catalognum`: in rare cases, if the track list was given in the comments, one of the
-  track titles would get assumed for the catalognum and subsequently cleaned up. From now
-  on this will only apply if **all** track names include the match (usually delimited by
-  brackets at the end)
+* `track_alt`: track alts with numbers above 6 (like **A7**) and letters **A** and **B**
+  on their own are now extracted successfully
 
 ## [0.14.0] 2022-04-18
 

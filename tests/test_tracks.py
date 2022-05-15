@@ -92,6 +92,12 @@ def print_result(case, expected, result):
             ("", "Artist", "", "Title (some - remix)", "Title"),
         ),
         ("Artist - Title - -", ("", "Artist", "", "Title - -", "Title - -")),
+        ("A8 - Artist - Title", ("A8", "Artist", "", "Title", "Title")),
+        ("A40 - Artist - Title", ("", "A40 - Artist", "", "Title", "Title")),
+        ("A8_Title", ("A8", "", "", "Title", "Title")),
+        ("A Title", ("", "", "", "A Title", "A Title")),
+        ("A. Title", ("A", "", "", "Title", "Title")),
+        ("BB. Title", ("BB", "", "", "Title", "Title")),
     ],
 )
 def test_parse_track_name(name, expected, json_track, json_meta):

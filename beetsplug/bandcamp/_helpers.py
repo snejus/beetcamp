@@ -69,7 +69,9 @@ PATTERNS: Dict[str, Pattern] = {
     "ft": _comp(
         r" *((([\[(])| )f(ea)?t([. ]|uring)(?![^()]*mix)[^]\[()]+(?(3)[]\)])) *", re.I
     ),
-    "track_alt": _comp(r"^([ABCDEFGHIJ]{1,3}[0-6])(?:[^\w(]|_)+", re.I + re.M),
+    "track_alt": _comp(
+        r"^([A-J]{1,3}[12]?[0-9]|[AB]+(?=\W{2,}))(?:(?!-\w)[^\w(]|_)+", re.I + re.M
+    ),
     "vinyl_name": _comp(r"[1-5](?= ?(xLP|LP|x))|single|double|triple", re.I),
     "clean_incl": _comp(r"(\(?incl|\((inc|tracks|.*remix( |es)))([^)]+\)|.*)", re.I),
     "tidy_eplp": _comp(r"\S*(?:Double )?(\b[EL]P\b)\S*", re.I),
