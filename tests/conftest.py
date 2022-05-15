@@ -6,6 +6,12 @@ from os import path
 
 import pytest
 from beetsplug.bandcamp import DEFAULT_CONFIG
+from rich.console import Console
+
+
+@pytest.fixture(scope="session")
+def console():
+    return Console(force_terminal=True, force_interactive=True)
 
 
 @pytest.fixture
@@ -14,36 +20,41 @@ def beets_config():
 
 
 @pytest.fixture
-def media_format():
+def digital_format():
     return {
         "@id": "https://bandcamp.com/album/hello",
-        "musicReleaseFormat": "CDFormat",
-        "item_type": "p",
-        "description": "description",
-        "name": "name",
+        "musicReleaseFormat": "DigitalFormat",
+        "description": "Includes high-quality download...",
+        "name": "Album",
+        "additionalProperty": [
+            {"name": "some_id", "value": "some_value"},
+            {"name": "item_type", "value": "a"},
+        ],
     }
 
 
 @pytest.fixture
-def bc_media_formats():
-    return [
-        {
-            "@id": "https://bandcamp.com/album/hello",
-            "name": "Vinyl",
-            "musicReleaseFormat": "VinylFormat",
-            "description": "hello",
-            "additionalProperty": [
-                {"name": "some_id", "value": "some_value"},
-                {"name": "item_type", "value": "a"},
-            ],
-        },
-        {
-            "@id": "https://bandcamp.com/album/bye",
-            "name": "Vinyl Bundle",
-            "musicReleaseFormat": "VinylFormat",
-            "additionalProperty": [{"name": "item_type", "value": "b"}],
-        },
-    ]
+def vinyl_format():
+    return {
+        "@id": "https://bandcamp.com/album/hello",
+        "musicReleaseFormat": "VinylFormat",
+        "description": "Vinyl description",
+        "name": "Disctitle",
+        "additionalProperty": [
+            {"name": "some_id", "value": "some_value"},
+            {"name": "item_type", "value": "p"},
+        ],
+    }
+
+
+@pytest.fixture
+def bundle_format():
+    return {
+        "@id": "https://bandcamp.com/album/bye",
+        "name": "Vinyl Bundle",
+        "musicReleaseFormat": "VinylFormat",
+        "additionalProperty": [{"name": "item_type", "value": "b"}],
+    }
 
 
 @pytest.fixture
@@ -52,15 +63,20 @@ def json_track():
 
 
 @pytest.fixture
-def json_meta(media_format, json_track):
+def json_meta(digital_format, vinyl_format, json_track):
     return {
         "@id": "album_id",
         "name": "Album",
         "description": "Description",
-        "publisher": {"name": "Label", "genre": "bandcamp.com/tag/folk"},
+        "publisher": {
+            "@id": "label_url",
+            "name": "Label",
+            "genre": "bandcamp.com/tag/folk",
+        },
         "byArtist": {"name": "Albumartist"},
-        "albumRelease": [media_format],
+        "albumRelease": [digital_format, vinyl_format],
         "track": {"itemListElement": [json_track]},
+        "keywords": ["London", "house"],
     }
 
 

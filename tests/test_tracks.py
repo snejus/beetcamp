@@ -3,16 +3,14 @@ from operator import attrgetter
 
 import pytest
 from beetsplug.bandcamp._tracks import Track, Tracks
-from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
 
 pytestmark = pytest.mark.parsing
-console = Console(force_terminal=True, force_interactive=True)
 
 
-def print_result(case, expected, result):
+def print_result(console, case, expected, result):
     table = Table("result", *expected.keys(), show_header=True, border_style="black")
     expectedrow = []
     resultrow = []
@@ -100,7 +98,7 @@ def print_result(case, expected, result):
         ("BB. Title", ("BB", "", "", "Title", "Title")),
     ],
 )
-def test_parse_track_name(name, expected, json_track, json_meta):
+def test_parse_track_name(name, expected, json_track, json_meta, console):
     json_track["item"].update(name=name)
     json_meta.update(track={"itemListElement": [json_track]})
 
@@ -112,7 +110,7 @@ def test_parse_track_name(name, expected, json_track, json_meta):
     tracks = Tracks.from_json(json_meta)
     result_track = list(tracks)[0]
     result = dict(zip(fields, attrgetter(*fields)(result_track)))
-    assert result == expected, print_result(name, expected, result)
+    assert result == expected, print_result(console, name, expected, result)
 
 
 @pytest.mark.parametrize(

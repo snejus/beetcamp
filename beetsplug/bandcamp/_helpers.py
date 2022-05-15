@@ -4,7 +4,7 @@ import operator as op
 import re
 from functools import lru_cache, partial
 from string import Template
-from typing import Any, Callable, Dict, Iterable, List, NamedTuple, Pattern, Tuple, Union
+from typing import Any, Dict, Iterable, List, NamedTuple, Pattern, Tuple
 
 from beets.autotag.hooks import AlbumInfo
 from ordered_set import OrderedSet as ordset  # type: ignore

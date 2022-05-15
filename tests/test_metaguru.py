@@ -1,4 +1,5 @@
 """Module the Metaguru class functionality."""
+from copy import deepcopy
 from datetime import date
 
 import pytest
@@ -58,3 +59,18 @@ def test_parse_country(name, expected, json_meta):
 def test_handles_missing_publish_date(date, expected, json_meta):
     json_meta.update(datePublished=date)
     assert Metaguru(json_meta).release_date == expected
+
+
+def test_digi_only_option(console, json_track, json_meta, beets_config):
+    beets_config["include_digital_only_tracks"] = False
+    digi_only_track = deepcopy(json_track)
+    digi_only_track["item"]["name"] = "Artist - Di Title (Digital)"
+    digi_only_track["position"] = 2
+    json_meta["track"]["itemListElement"].append(digi_only_track)
+
+    guru = Metaguru(json_meta, beets_config)
+    media_to_album = {a.media: a for a in guru.albums}
+
+    assert len(media_to_album["Digital Media"].tracks) == 2
+    assert len(media_to_album["Vinyl"].tracks) == 1
+    assert "Digital" not in media_to_album["Vinyl"].tracks[0].title

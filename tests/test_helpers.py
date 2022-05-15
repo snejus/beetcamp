@@ -130,13 +130,13 @@ def test_mediums_count(name, expected):
     assert Helpers.get_vinyl_count(name) == expected
 
 
-def test_unpack_props(bc_media_formats):
-    result = Helpers.unpack_props(bc_media_formats[0])
+def test_unpack_props(vinyl_format):
+    result = Helpers.unpack_props(vinyl_format)
     assert {"some_id", "item_type"} < set(result)
 
 
-def test_bundles_get_excluded(bc_media_formats):
-    result = Helpers.get_media_formats(bc_media_formats)
+def test_bundles_get_excluded(bundle_format, vinyl_format):
+    result = Helpers.get_media_formats([bundle_format, vinyl_format])
     assert len(result) == 1
     assert result[0].name == "Vinyl"
 

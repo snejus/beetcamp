@@ -507,10 +507,11 @@ class Metaguru(Helpers):
     def _album(self, media: MediaInfo) -> AlbumInfo:
         """Return album for the appropriate release format."""
         self.media = media
-        # include_digi = self.config.get("include_digital_only_tracks")
-        tracks: Tracks = self.tracks
-        # if not include_digi and self.media.name != DIGI_MEDIA:
-        #     tracks = list(it.filterfalse(op.attrgetter("digi_only"), tracks))
+        include_digi = self.config.get("include_digital_only_tracks")
+
+        tracks = list(self.tracks)
+        if not include_digi and self.media.name != DIGI_MEDIA:
+            tracks = [t for t in self.tracks if not t.digi_only]
 
         get_trackinfo = partial(
             self._trackinfo,
