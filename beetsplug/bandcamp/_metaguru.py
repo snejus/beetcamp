@@ -97,19 +97,43 @@ class Metaguru(Helpers):
         )
 
     @cached_property
-    def original_album_name(self) -> str:
-        return self.meta["name"]
-
+    def official_album_name(self) -> str:
+        """Check description for the album name header and return whatever follows it
+        if found.
+        """
+        m = re.search(r"(Title: ?|Album(:|/Single) )([^\n]+)", self.all_media_comments)
+        if m:
+            return m.group(3).strip()
+        return ""
+        
     @cached_property
     def parsed_album_name(self) -> str:
-        match = re.search(
-            r"(Title: ?|Album(:|/Single) )([^\n:]+)(\n|$)", self.all_media_comments
-        )
-        return match.expand(r"\3").strip() if match else ""
+        """
+        Search for the album name in the following order and return the first match:
+        1. See whether all track names contain {album name} EP or LP
+        2. EP or LP is in the release name, deduce the album name from there
+        3. Check whether the release name has it wrapped in quotes
+        """
+        album_in_tracks = {t.album for t in self._tracks if t.album}
+        if len(album_in_tracks) == 1:
+            return list(album_in_tracks)[0]
+
+        album = self.album_name
+        for pat, text in [
+            (r"(((&|#?\b(?!Double|VA|Various)(\w|[^\w| -])+) )+[EL]P)", album),
+            (r"((['\"])([^'\"]+)\2( VA[0-9]+)*)( |$)", album),
+        ]:
+            m = re.search(pat, text)
+            if m:
+                album = m.group(1).strip()
+                if album[0] in "'\"" and album[-1] in "'\"":
+                    return album.strip("\"'")
+                return album
+        return ""
 
     @cached_property
     def album_name(self) -> str:
-        return self.parsed_album_name or self.original_album_name
+        return self.meta["name"]
 
     @cached_property
     def label(self) -> str:
@@ -287,7 +311,7 @@ class Metaguru(Helpers):
         name_pat = re.compile(fr"\b(this|{re.escape(self.clean_album_name)})\b", re.I)
         return bool(
             catnum_pat.search(self.catalognum)
-            or word_pat.search(self.original_album_name + " " + self.vinyl_disctitles)
+            or word_pat.search(self.album_name + " " + self.vinyl_disctitles)
             or any(map(lambda s: word_pat.search(s) and name_pat.search(s), sentences))
         )
 
@@ -405,34 +429,23 @@ class Metaguru(Helpers):
         return ", ".join(sorted(genres)).strip() or None
 
     @cached_property
-    def album_name_with_eplp(self) -> str:
-        match = re.search(r"[:-] ?([A-Z][\w ]+ ((?!an )[EL]P))", self.all_media_comments)
-        return match.expand(r"\1") if match else ""
+    def eplp_album_comments(self) -> str:
+        m = re.search(r"[:-] ?([A-Z][\w ]+ ((?!an )[EL]P))", self.all_media_comments)
+        return m.group(1) if m else ""
 
     @cached_property
     def clean_album_name(self) -> str:
-        if self.parsed_album_name:
-            return self.parsed_album_name
+        if self.official_album_name:
+            return self.official_album_name
 
-        album = self.album_name
-        album_in_tracks = [t.album for t in self._tracks if t.album]
-        if album_in_tracks:
-            album = album_in_tracks[0]
-        else:
-            match = re.search(r"(['\"])([^'\"]+)\1( VA[0-9]+)*( |$)", album)
-            if match:
-                album = match.expand(r"\2\3")
+        album = self.parsed_album_name or self.album_name
+        artists = [*self.tracks.raw_artists, *self.tracks.artists]
+        artists.sort(key=len, reverse=True)
+        album = self.clean_album(album, self.catalognum, *artists, label=self.label)
 
-        clean_album = self.clean_name(album, self.catalognum, remove_extra=True)
-
-        artists = ordset([self.bandcamp_albumartist, *self.tracks.artists]) - {
-            self.label
-        }
-        clean_album = self.clean_name(clean_album, *artists, label=self.label)
-
-        if not clean_album.startswith("("):
-            album = clean_album
-        return album or self.album_name_with_eplp or self.catalognum or self.album_name
+        if album.startswith("("):
+            album = self.album_name
+        return album or self.eplp_album_comments or self.catalognum or self.album_name
 
     @property
     def _common(self) -> JSONDict:

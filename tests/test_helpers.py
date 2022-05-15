@@ -65,6 +65,7 @@ def test_parse_catalognum(album, disctitle, description, label, expected):
         ("Album - Various Artists", [], "Album"),
         ("Various Artists - Album", [], "Album"),
         ("Various Artists Album", [], "Various Artists Album"),
+        ("Label Various Artists Album", [], "Label Various Artists Album"),
         ("Album EP", [], "Album EP"),
         ("Album [EP]", [], "Album EP"),
         ("Album (EP)", [], "Album EP"),
@@ -86,7 +87,7 @@ def test_parse_catalognum(album, disctitle, description, label, expected):
         ("Drepa Mann [Vinyl]", [], "Drepa Mann"),
         ("Drepa Mann  [Vinyl]", [], "Drepa Mann"),
         ("The Castle [BLCKLPS009] Incl. Remix", ["BLCKLPS009"], "The Castle"),
-        ("The Castle [BLCKLPS009] Incl. Remix", [], "The Castle"),
+        ("The Castle [BLCKLPS009] Incl. Remix", [], "The Castle [BLCKLPS009]"),
         ('Anetha - "Ophiuchus EP"', ["Anetha"], "Ophiuchus EP"),
         ("Album (FREE DL)", [], "Album"),
         (
@@ -111,7 +112,7 @@ def test_parse_catalognum(album, disctitle, description, label, expected):
     ],
 )
 def test_clean_name(name, extras, expected):
-    assert Helpers.clean_name(name, *extras, remove_extra=True) == expected
+    assert Helpers.clean_album(name, *extras) == expected
 
 
 @pytest.mark.parametrize(

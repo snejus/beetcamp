@@ -61,6 +61,19 @@ CATNUM_PAT = {
     "anywhere": re.compile(fr"(?<!,[ ])({_cat_pat}([ ]/[ ]{_cat_pat})?)", re.VERBOSE),
 }
 
+_comp = re.compile
+PATTERNS: Dict[str, Pattern] = {
+    "split_artists": _comp(r", - |, | (?:[x+/-]|//|vs|and)[.]? "),
+    "meta": _comp(r'.*"@id".*', re.M),
+    "remix_or_ft": _comp(r" [\[(].*(?i:mix|edit|f(ea)?t([.]|uring)?).*"),
+    "ft": _comp(
+        r" *((([\[(])| )f(ea)?t([. ]|uring)(?![^()]*mix)[^]\[()]+(?(3)[]\)])) *", re.I
+    ),
+    "track_alt": _comp(r"^([ABCDEFGHIJ]{1,3}[0-6])(?:[^\w(]|_)+", re.I + re.M),
+    "vinyl_name": _comp(r"[1-5](?= ?(xLP|LP|x))|single|double|triple", re.I),
+    "clean_incl": _comp(r"(\(?incl|\((inc|tracks|.*remix( |es)))([^)]+\)|.*)", re.I),
+    "tidy_eplp": _comp(r"\S*(?:Double )?(\b[EL]P\b)\S*", re.I),
+}
 rm_strings = [
     "limited edition",
     r"^[EL]P( [0-9]+)?",
@@ -69,20 +82,19 @@ rm_strings = [
     r"^va|va$|vinyl(-only)?|compiled by.*",
     r"free download|\([^()]*free(?!.*mix)[^()]*\)",
 ]
-PATTERNS: Dict[str, Pattern] = {
-    "split_artists": re.compile(r", - |, | (?:[x+/-]|//|vs|and)[.]? "),
-    "clean_title": re.compile(
-        fr"(([\[(])|(^| ))\*?(?i:({'|'.join(rm_strings)}))(?(2)[])]|( |$))"
-    ),
-    "clean_incl": re.compile(r"(\(?incl|\((inc|tracks|.*remix( |es)))([^)]+\)|.*)", re.I),
-    "meta": re.compile(r'.*"@id".*', re.M),
-    "remix_or_ft": re.compile(r" [\[(].*(?i:mix|edit|f(ea)?t([.]|uring)?).*"),
-    "ft": re.compile(
-        r" *((([\[(])| )f(ea)?t([. ]|uring)(?![^()]*mix)[^]\[()]+(?(3)[]\)])) *", re.I
-    ),
-    "track_alt": re.compile(r"^([ABCDEFGHIJ]{1,3}[0-6])(?:[^\w(]|_)+", re.I + re.M),
-    "vinyl_name": re.compile(r"[1-5](?= ?(xLP|LP|x))|single|double|triple", re.I),
-}
+
+# fmt: off
+CLEAN_PATTERNS = [
+    (_comp(r" -(\S)"), r" - \1"),                   # hi -bye      -> hi - bye
+    (_comp(r"(\S)- "), r"\1 - "),                   # hi- bye      -> hi - bye
+    (_comp(r"  +"), " "),                           # hi  bye      -> hi bye
+    (_comp(r"(- )?\( *"), "("),                     # hi - ( bye)  -> hi (bye)
+    (_comp(r" \)+|\)+$"), ")"),                     # hi (bye ))   -> hi (bye)
+    (_comp(r'(^|- )"([^"]+)"( \(|$)'), r"\1\2\3"),  # "bye" -> bye; hi - "bye" -> hi - bye
+    (_comp(r"- Reworked"), "(Reworked)"),           # bye - Reworked -> bye (Reworked)
+    (_comp(fr"(([\[(])|(^| ))\*?({'|'.join(rm_strings)})(?(2)[])]|( |$))", re.I), ""),
+]
+# fmt: on
 
 
 class Helpers:
@@ -149,26 +161,16 @@ class Helpers:
             return ""
 
     @staticmethod
-    def clean_name(name, *args, label="", remove_extra=False):
-        # type: (str, str, str, bool) -> str
-        """Return clean album name / track title.
-        If `remove_extra`, remove info from within the parentheses (usually remix info).
-        """
-        replacements: List[Tuple[str, Union[str, Callable]]] = [
-            (r"  +", " "),  # multiple spaces
-            (r"\( +", "("),  # rubbish that precedes opening parenthesis
-            (r" \)+|\)+$", ")"),
-            ('"', ""),  # double quote anywhere in the string
-            # spaces around dash in remixer names within parens
-            (r"(\([^)]+) - ([^(]+\))", r"\1-\2"),
-            (r"\[[A-Z]+[0-9]+\]", ""),
-            # uppercase EP and LP, and remove surrounding parens / brackets
-            (r"\S*(?i:(?:Double )?(\b[EL]P\b))\S*", lambda x: x.expand(r"\1").upper()),
-            (r"- Reworked", "(Reworked)"),
-        ]
-        for pat, repl in replacements:
-            name = re.sub(pat, repl, name).strip()
+    def clean_name(name: str) -> str:
+        for pat, repl in CLEAN_PATTERNS:
+            name = pat.sub(repl, name).strip()
+        return name
 
+    @staticmethod
+    def clean_album(name: str, *args: str, label: str = "") -> str:
+        """Return clean album name.
+        Catalogue number and artists to be removed are given as args.
+        """
         for arg in [re.escape(arg) for arg in filter(op.truth, args)] + [
             r"Various Artists?\b(?! \w)"
         ]:
@@ -178,13 +180,19 @@ class Helpers:
                 ).strip()
 
         if label and not re.search(fr"\w {label} \w|\w {label}$", name):
-            pat = fr"(\W\W+{label}\W*|\W*{label}(\W\W+|$)|(^\W*{label}\W*$))(VA)?\d*"
-            name = re.sub(pat, " ", name, re.I).strip()
+            lpat = fr"(\W\W+{label}\W*|\W*{label}(\W\W+|$)|(^\W*{label}\W*$))(VA)?\d*"
+            name = re.sub(lpat, " ", name, re.I).strip()
 
-        if remove_extra:
-            # redundant information about 'remixes from xyz'
-            name = PATTERNS["clean_incl"].sub("", name)
-        return PATTERNS["clean_title"].sub("", name).strip(" -|/")
+        name = Helpers.clean_name(name)
+        replacements = [
+            # uppercase EP and LP, and remove surrounding parens / brackets
+            (PATTERNS["tidy_eplp"], lambda x: x.group(1).upper()),
+            (PATTERNS["clean_incl"], ""),
+        ]
+        for pat, repl in replacements:
+            name = pat.sub(repl, name).strip()
+
+        return name.strip(" /-")
 
     @staticmethod
     def get_genre(keywords: Iterable[str], config: JSONDict) -> Iterable[str]:

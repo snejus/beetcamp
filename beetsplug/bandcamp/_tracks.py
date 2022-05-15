@@ -42,23 +42,12 @@ FT_PAT = _comp(
     """,
     re.I | re.VERBOSE,  # ft. Hello; (ft. Hello); [feat. Hello]
 )
-REMIXER_PAT = _comp(r"\W*\( *([^)]+) (?i:(re)?mix|edit)\)", re.I)  # hi (Bye Remix)
+REMIXER_PAT = _comp(r" *[\[(] *([^])]+) ((re)?mix|edit|bootleg[^])]+)[])]", re.I)
 TRACK_ALT_PAT = PATTERNS["track_alt"]
-# fmt: off
-CLEAN_PATTERNS = [
-    (_comp(r" -(\S)"), r" - \1"),                    # hi -bye    -> hi - bye
-    (_comp(r"(\S)- "), r"\1 - "),                    # hi- bye    -> hi - bye
-    (_comp(r"  +"), " "),                            # hi  bye    -> hi bye
-    (_comp(r"\( +"), "("),                           # hi ( bye)  -> hi (bye)
-    (_comp(r" \)+|\)+$"), ")"),                      # hi (bye )) -> hi (bye)
-    (_comp(r'(^|- )"([^"]+)"( \(|$)'), r"\1\2\3"),  # "bye" -> bye; hi - "bye" -> hi - bye
-    (_comp(r"([\[(][^(-]+) - ([^\]()]+[])])"), r"\1-\2"),  # (b - hi edit) -> (b-hi edit)
-    (_comp(r"- Reworked"), "(Reworked)"),            # bye - Reworked -> bye (Reworked)
-    (PATTERNS["clean_title"], ""),
-    #     # Title - Some Remix -> Title (Some Remix)
-    #     name = Track.BAD_REMIX_PAT.sub("(\\1)", name)
-]
-# fmt: on
+# CLEAN_PATTERNS = [
+#     # Title - Some Remix -> Title (Some Remix)
+#     name = Track.BAD_REMIX_PAT.sub("(\\1)", name)
+# ]
 
 
 @dataclass
@@ -69,12 +58,11 @@ class Track:
     json_artist: str = ""
 
     _name: str = ""
-    _artist: str = ""
-    _title: str = ""
     ft: str = ""
     album: str = ""
     catalognum: str = ""
     remixer: str = ""
+    full_remixer: str = ""
 
     single: Optional[bool] = None
     track_alt: Optional[str] = None
@@ -122,10 +110,9 @@ class Track:
         name = name.replace(f" {delim} ", " - ")
         if name.endswith(label):
             name = name.replace(label, "").strip(" -")
-        for pat, repl in CLEAN_PATTERNS:
-            name = pat.sub(repl, name)
-            data["json_artist"] = pat.sub(repl, data.get("json_artist", ""))
-        name = name.strip().lstrip("-")
+        name = Helpers.clean_name(name).strip().lstrip("-")
+        data["json_artist"] = Helpers.clean_name(data["json_artist"])
+
         m = TRACK_ALT_PAT.search(name)
         if m:
             data["track_alt"] = m.group(1).upper()
@@ -140,11 +127,12 @@ class Track:
 
         m = REMIXER_PAT.search(name)
         if m:
-            data["remixer"] = m.group(1)
+            data.update(remixer=m.group(1), full_remixer=m.group().strip())
+            name = name.replace(m.group(), "")
 
         m = ELP_ALBUM_PAT.search(name)
         if m:
-            data["album"] = m.group(1)
+            data["album"] = m.group(1).replace('"', "")
             name = name.replace(m.group(), "")
 
         data["_name"] = name
@@ -172,7 +160,12 @@ class Track:
         """Return the track title which is clear from digi-only artifacts."""
         return reduce(lambda a, b: b.sub("", a), DIGI_ONLY_PATTERNS, self._name)
 
-    @property
+    @cached_property
+    def digi_only(self) -> bool:
+        """Return True if the track is digi-only."""
+        return self._name != self.no_digi_name
+
+    @cached_property
     def name(self) -> str:
         name = self.no_digi_name
         if self.json_artist and " - " not in name:
@@ -180,46 +173,40 @@ class Track:
         return name.strip()
 
     @cached_property
-    def digi_only(self) -> bool:
-        """Return True if the track is digi-only."""
-        return self._name != self.no_digi_name
-
-    @property
-    def title(self) -> str:
-        if self._title:
-            return self._title
-
+    def main_title(self) -> str:
+        """Split the track name, deduce the title and return it.
+        The extra complexity here is to ensure that it does not cut off a title
+        that ends with ' - -', like in '(DJ) NICK JERSEY - 202memo - - -'.
+        """
         parts = self.name.split(" - ")
-        title = parts[-1]
+        main_title = parts[-1]
         for idx, maybe in enumerate(reversed(parts)):
             if not maybe.strip(" -"):
-                title = " - ".join(parts[-idx - 2 :])
+                main_title = " - ".join(parts[-idx - 2 :])
                 break
-        self._title = title
-        return self._title
+        return main_title
 
-    @property
+    @cached_property
+    def title(self) -> str:
+        """Return the main title with the full remixer part appended to it."""
+        if self.remixer:
+            return self.main_title + " " + self.full_remixer
+        return self.main_title
+
+    @cached_property
     def artist(self) -> str:
-        """Take the full name, remove the title, remixers and return the resulting artist.
+        """Take the name, remove the title, ensure it does not duplicate any remixers
+        and return the resulting artist.
         """
-        if self._artist:
-            return self._artist
-
-        artist = self.name[: self.name.rfind(self.title)].strip(", -")
+        artist = self.name[: self.name.rfind(self.main_title)].strip(", -")
         artist = REMIXER_PAT.sub("", artist)
         if self.remixer:
             artist = artist.replace(self.remixer, "").strip(" ,")
-
-        self._artist = artist.strip(" -")
-        return self._artist
+        return artist.strip(" -")
 
     @property
     def artists(self) -> List[str]:
         return Helpers.split_artists([self.artist])
-
-    @cached_property
-    def main_title(self) -> str:
-        return PATTERNS["remix_or_ft"].sub("", self.title)
 
     @property
     def info(self) -> JSONDict:
@@ -288,7 +275,7 @@ class Tracks(list):
                     return m.group(1), list(map(" ".join, names_tokens))
         return "", names
 
-    @property
+    @cached_property
     def raw_artists(self) -> List[str]:
         return list(ordset(j.artist for j in self.tracks))
 
@@ -315,16 +302,16 @@ class Tracks(list):
                 if t.track_alt and len(track_alts) == 1:
                     # the only track that parsed a track alt - it's most likely a mistake
                     # one artist was confused for a track alt, like 'B2', - reverse this
-                    t._artist, t.track_alt = t.track_alt, None
+                    t.artist, t.track_alt = t.track_alt, None
                 elif len(artists) == len(self) - 1:
                     # this is the only artist that didn't get parsed - relax the rule
                     # and try splitting with '-' without spaces
                     split = t.title.split("-")
                     if len(split) > 1:
-                        t._artist, t._title = split
+                        t.artist, t.title = split
                 if not t.artist:
                     # use the albumartist
-                    t._artist = aartist
+                    t.artist = aartist
 
     @staticmethod
     def track_delimiter(names: List[str]) -> str:

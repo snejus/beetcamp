@@ -65,9 +65,12 @@ def print_result(case, expected, result):
             "Ellie Goulding- Eyed ( ROWDIBOÏ EDIT))",
             ("", "Ellie Goulding", "", "Eyed (ROWDIBOÏ EDIT)", "Eyed"),
         ),
-        ("Space Jam - (RZVX EDIT)", ("", "Space Jam", "", "(RZVX EDIT)", "(RZVX EDIT)")),
+        ("Space Jam - (RZVX EDIT)", ("", "", "", "Space Jam (RZVX EDIT)", "Space Jam")),
         ("¯\\_(ツ)_/¯", ("", "", "", "¯\\_(ツ)_/¯", "¯\\_(ツ)_/¯")),
-        ("VIENNA (WARM UP MIX", ("", "", "", "VIENNA (WARM UP MIX", "VIENNA")),
+        (
+            "VIENNA (WARM UP MIX",
+            ("", "", "", "VIENNA (WARM UP MIX", "VIENNA (WARM UP MIX"),
+        ),
         ("MOD-R - ARE YOU", ("", "MOD-R", "", "ARE YOU", "ARE YOU")),
         ("K - The Lightning", ("", "K", "", "The Lightning", "The Lightning")),
         ("MEAN-E - PLANETARY", ("", "MEAN-E", "", "PLANETARY", "PLANETARY")),
@@ -79,8 +82,16 @@ def print_result(case, expected, result):
         ("Artist - Title [ONE001]", ("", "Artist", "", "Title", "Title")),
         ("Artist + Other - Title", ("", "Artist + Other", "", "Title", "Title")),
         ("Artist (feat. Other) - Title", ("", "Artist", "feat. Other", "Title", "Title")),
-        ("Artist (some remix) - Title", ("", "Artist", "", "Title", "Title")),
+        (
+            "Artist (some remix) - Title",
+            ("", "Artist", "", "Title (some remix)", "Title"),
+        ),
         ("Artist - Title feat.Other", ("", "Artist", "feat.Other", "Title", "Title")),
+        (
+            "Artist - Title (some - remix)",
+            ("", "Artist", "", "Title (some - remix)", "Title"),
+        ),
+        ("Artist - Title - -", ("", "Artist", "", "Title - -", "Title - -")),
     ],
 )
 def test_parse_track_name(name, expected, json_track, json_meta):
