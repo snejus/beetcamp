@@ -20,9 +20,9 @@ _p = pytest.param
         _p("stuff", "sick vinyl", "creds", "stuff\nsick vinyl\ncreds", id="all"),
     ],
 )
-def test_comments(descr, disctitle, creds, expected, json_meta, media_format):
-    media_format["description"] = disctitle
-    json_meta.update(description=descr, albumRelease=[media_format], creditText=creds)
+def test_comments(descr, disctitle, creds, expected, json_meta, vinyl_format):
+    vinyl_format["description"] = disctitle
+    json_meta.update(description=descr, albumRelease=[vinyl_format], creditText=creds)
     config = {"comments_separator": "\n"}
     assert Metaguru(json_meta, config).comments == expected
 

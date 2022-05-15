@@ -327,15 +327,13 @@ def main():
             arg = args[0]
         except IndexError as exc:
             raise IndexError("Bandcamp url or search query is required") from exc
-        if arg.startswith("http://") or arg.startswith("https://"):
+        if arg.startswith("https://"):
             pl = BandcampPlugin()
             result = pl.album_for_id(arg) or pl.track_for_id(arg)
             if not result:
                 raise AssertionError("Failed to find a release under the given url")
         else:
-            raise AssertionError(
-                "Bandcamp release URL must start with http:// or https://"
-            )
+            raise AssertionError("Bandcamp release URL must start with https://")
 
     print(json.dumps(result))
 
