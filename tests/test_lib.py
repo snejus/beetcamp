@@ -101,7 +101,6 @@ def _report():
     console.print(Group(*(t for t in fixed.values() if t.renderable.rows)))
     console.print("")
     console.print(Group(*(t for t in new_fails.values() if t.renderable.rows)))
-    console.save_html("results.html")
 
 
 @pytest.fixture(scope="module")

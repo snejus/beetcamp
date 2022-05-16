@@ -2,23 +2,22 @@
 
 ### Added
 
-* search: you can now search from the command line: 
-  ```sh
-  beetcamp [-a ARTIST] [-l LABEL] [-t TYPE] <query>
-    $ beetcamp sands -a bonobo | jq '.[:2]'
+* search: 
+  - you can now search from the command line: 
+    ```sh
     beetcamp -s QUERY [-alt] [field:value, ...]
-  ```
+    ```
 
-  Search is activated by using flag **-s** followed by the search query. It queries
-  bandcamp with the provided word and returns a JSON list with all search results from the
-  first page.
+  - Search is activated by using flag **-s** followed by the search query. It queries
+    bandcamp with the provided word and returns a JSON list with all search results from
+    the first page.
 
-  Flags **-a**, **-l** and **-t** are used to run **album**, **label/artist** or **track**
-  searches. Any of the output fields can be specified by **field:value** in order to take
-  them into account in the _similarity_ calculation.
+  - Flags **-a**, **-l** and **-t** are used to run **album**, **label/artist** or
+    **track** searches. Any of the output fields can be specified by **field:value** in
+    order to take them into account in the _similarity_ calculation.
 
-  Run `beetcamp -h` to see the details and the rest of the flags.
-  For example: searching for anything called **sands** by albumartist **bonobo**:
+  - Run `beetcamp -h` to see the details and the rest of the flags. For example: searching
+    for anything called **sands** by albumartist **bonobo**:
 
     ```json
     $ beetcamp -s sands artist:bonobo | jq '.[:2]'
@@ -49,9 +48,9 @@
 ### Updated
 
 * search: 
-  * if `label` field is available, the plugin now takes it into account when it ranks
+  - if `label` field is available, the plugin now takes it into account when it ranks
     search results. 
-  * `albumartist` field is not used to rank **compilations** anymore since some labels use
+  - `albumartist` field is not used to rank **compilations** anymore since some labels use
     label name, some use the list of artists, and others a variation of **Various Artists** - 
     we cannot reliably tell. `label` is used instead.
 
@@ -65,8 +64,11 @@
   - allow a pair, if separated by a slash `/`
   - removed a pattern responsible for a fair bit of false positives
 
-* `albumtype`: to determine whether a release is a compilation, check comments for string
-  **compilation**
+* `albumtype`: 
+  - to determine whether a release is a compilation, check comments for string
+    **compilation**
+  - check if all track titles are remixes; if so - include **remix** albumtype into
+    `albumtypes`
 
 * `albumtypes`:
   - **remix**: check for string **rmx** in album name
