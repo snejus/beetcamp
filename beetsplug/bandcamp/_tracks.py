@@ -178,7 +178,9 @@ class Track:
         The extra complexity here is to ensure that it does not cut off a title
         that ends with ' - -', like in '(DJ) NICK JERSEY - 202memo - - -'.
         """
-        parts = self.name.split(" - ")
+        parts = re.split(r" - (?![^\[(]+[])])", self.name)
+        if len(parts) == 1:
+            parts = self.name.split(" - ")
         main_title = parts[-1]
         for idx, maybe in enumerate(reversed(parts)):
             if not maybe.strip(" -"):
