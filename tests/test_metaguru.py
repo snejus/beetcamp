@@ -61,7 +61,7 @@ def test_handles_missing_publish_date(date, expected, json_meta):
     assert Metaguru(json_meta).release_date == expected
 
 
-def test_digi_only_option(console, json_track, json_meta, beets_config):
+def test_digi_only_option(json_track, json_meta, beets_config):
     beets_config["include_digital_only_tracks"] = False
     digi_only_track = deepcopy(json_track)
     digi_only_track["item"]["name"] = "Artist - Di Title (Digital)"

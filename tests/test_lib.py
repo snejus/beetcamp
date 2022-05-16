@@ -27,7 +27,7 @@ pytestmark = pytest.mark.lib
 
 BASE_DIR = "lib_tests"
 TEST_DIR = "dev"
-REFERENCE_DIR = "472b9f8"
+REFERENCE_DIR = "acb453d"
 JSONS_DIR = "jsons"
 
 IGNORE_FIELDS = {
@@ -108,9 +108,9 @@ def config():
     yield BandcampPlugin().config.flatten()
 
 
-def do_key(table, key: str, before, after, cached_value=None, album=None):
+def do_key(table, key: str, before, after, cached_value=None, album_name=None):
     if before == after and not cached_value:
-        return
+        return None
 
     key_fixed = False
     if before == after:
@@ -131,26 +131,26 @@ def do_key(table, key: str, before, after, cached_value=None, album=None):
             oldnew[key].append(Oldnew(before, after, difftext))
 
     if key_fixed:
-        fixed[album].renderable.add_rows(parts)
+        fixed[album_name].renderable.add_rows(parts)
         return None
 
     table.add_rows(parts)
     if cached_value is None:
-        new_fails[album].renderable.add_rows(parts)
+        new_fails[album_name].renderable.add_rows(parts)
     else:
-        albums[album].renderable.add_rows(parts)
+        albums[album_name].renderable.add_rows(parts)
     return after
 
 
 def compare(old, new, cache) -> bool:
     if "/album/" in new["data_url"]:
-        old["albumartist"] = old.pop("artist", "")
-        new["albumartist"] = new.pop("artist", "")
-        old["tracks"] = list(
-            map(lambda t: tuple([str(t.get(f, "")) for f in TRACK_FIELDS]), old["tracks"])
+        old.update(
+            albumartist=old.pop("artist", ""),
+            tracks=[tuple(t.get(f, "") for f in TRACK_FIELDS) for t in old["tracks"]],
         )
-        new["tracks"] = list(
-            map(lambda t: tuple([str(t.get(f, "")) for f in TRACK_FIELDS]), new["tracks"])
+        new.update(
+            albumartist=new.pop("artist", ""),
+            tracks=[tuple(t.get(f, "") for f in TRACK_FIELDS) for t in new["tracks"]],
         )
         desc = f"{new.get('albumartist', '')} - {new.get('album', '')}"
         _id = new["album_id"]
@@ -169,7 +169,7 @@ def compare(old, new, cache) -> bool:
             continue
         cache_key = f"{_id}_{key}"
         out = compare_key(
-            key, *values, cached_value=cache.get(cache_key, None), album=desc
+            key, *values, cached_value=cache.get(cache_key, None), album_name=desc
         )
         cache.set(cache_key, out)
         if values[0] != values[1]:
@@ -201,7 +201,7 @@ def guru(file, config):
 
 
 @pytest.mark.usefixtures("_report")
-def test_file(file, guru, cache, pytestconfig):
+def test_file(file, guru, cache):
     IGNORE_FIELDS.update({"album_id", "media", "mediums", "disctitle"})
 
     target_file = os.path.join(target_dir, file)
@@ -230,7 +230,7 @@ def test_file(file, guru, cache, pytestconfig):
 
 
 @pytest.mark.usefixtures("_report")
-def test_media(file, guru):
+def test_media(file, guru, cache):
     if "_track_" in file:
         entities = [guru.singleton]
     else:
@@ -248,7 +248,7 @@ def test_media(file, guru):
                 old = json.load(f)
         except FileNotFoundError:
             old = {}
-        same = compare(old, new)
+        same = compare(old, new, cache)
 
     if not same:
         pytest.fail(pytrace=False)

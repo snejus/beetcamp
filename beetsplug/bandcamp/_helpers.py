@@ -48,7 +48,7 @@ _catalognum = Template(
 )
 ( # optionally followed by
       (?<=\d\d)-?[A-Z]+  # IBM001CD (needs at least two digits before the letter)
-    | [.][0-9]+          # ISMVA002.1
+    | [.]\d+             # ISMVA002.1
 )?
 \b(?!["%]))"""
 )
@@ -70,7 +70,7 @@ PATTERNS: Dict[str, Pattern] = {
         r" *((([\[(])| )f(ea)?t([. ]|uring)(?![^()]*mix)[^]\[()]+(?(3)[]\)])) *", re.I
     ),
     "track_alt": _comp(
-        r"^([A-J]{1,3}[12]?[0-9]|[AB]+(?=\W{2,}))(?:(?!-\w)[^\w(]|_)+", re.I + re.M
+        r"^([A-J]{1,3}[12]?\d|[AB]+(?=\W{2,}))(?:(?!-\w)[^\w(]|_)+", re.I + re.M
     ),
     "vinyl_name": _comp(r"[1-5](?= ?(xLP|LP|x))|single|double|triple", re.I),
     "clean_incl": _comp(r"(\(?incl|\((inc|tracks|.*remix( |es)))([^)]+\)|.*)", re.I),
@@ -78,7 +78,7 @@ PATTERNS: Dict[str, Pattern] = {
 }
 rm_strings = [
     "limited edition",
-    r"^[EL]P( [0-9]+)?",
+    r"^[EL]P( \d+)?",
     r"^Vol(ume)?\W*(?!.*\)$)\d+",
     r"\((digital )?album\)",
     r"^va|va$|vinyl(-only)?|compiled by.*",
@@ -178,7 +178,7 @@ class Helpers:
         ]:
             if not re.search(fr"\w {arg} \w", name, re.I):
                 name = re.sub(
-                    fr"(^|[^'\])\w]|_|\b)+(?i:{arg})([^'(\[\w]|_|([0-9]+$))*", " ", name
+                    fr"(^|[^'\])\w]|_|\b)+(?i:{arg})([^'(\[\w]|_|(\d+$))*", " ", name
                 ).strip()
 
         if label and not re.search(fr"\w {label} \w|\w {label}$", name):

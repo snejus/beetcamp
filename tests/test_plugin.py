@@ -51,7 +51,7 @@ def test_urlify(title, expected):
     assert urlify(title) == expected
 
 
-def test_coverart(monkeypatch, console, beets_config):
+def test_coverart(monkeypatch, beets_config):
     with open("tests/json/album.json", encoding="utf-8") as f:
         text = "".join(f.read().splitlines())
 

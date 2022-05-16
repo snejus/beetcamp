@@ -22,7 +22,7 @@ from ._tracks import Track, Tracks
 if sys.version_info.minor > 7:
     from functools import cached_property  # pylint: disable=ungrouped-imports
 else:
-    from cached_property import cached_property  # type: ignore
+    from cached_property import cached_property  # type: ignore # pylint: disable=import-error # noqa
 
 NEW_BEETS = get_distribution("beets").parsed_version >= parse_version("1.5.0")
 
@@ -121,7 +121,7 @@ class Metaguru(Helpers):
         album = self.album_name
         for pat, text in [
             (r"(((&|#?\b(?!Double|VA|Various)(\w|[^\w| -])+) )+[EL]P)", album),
-            (r"((['\"])([^'\"]+)\2( VA[0-9]+)*)( |$)", album),
+            (r"((['\"])([^'\"]+)\2( VA\d+)*)( |$)", album),
         ]:
             m = re.search(pat, text)
             if m:
@@ -204,7 +204,7 @@ class Metaguru(Helpers):
         """
         rel = self.meta.get("datePublished")
         if rel:
-            return datetime.strptime(re.sub(r" [0-9]{2}:.+", "", rel), "%d %b %Y").date()
+            return datetime.strptime(re.sub(r" \d{2}:.+", "", rel), "%d %b %Y").date()
         return rel
 
     @cached_property
@@ -306,7 +306,7 @@ class Metaguru(Helpers):
         """
         sentences = re.split(r"[.]\s+|\n", self.all_media_comments)
         word_pat = re.compile(fr"\b{word}\b", re.I)
-        catnum_pat = re.compile(fr"{word}[0-9]", re.I)
+        catnum_pat = re.compile(fr"{word}\d", re.I)
         name_pat = re.compile(fr"\b(this|{re.escape(self.clean_album_name)})\b", re.I)
         return bool(
             catnum_pat.search(self.catalognum)

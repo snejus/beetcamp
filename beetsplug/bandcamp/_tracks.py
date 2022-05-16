@@ -14,7 +14,7 @@ from ._helpers import CATNUM_PAT, PATTERNS, Helpers, JSONDict
 if sys.version_info.minor > 7:
     from functools import cached_property  # pylint: disable=ungrouped-imports
 else:
-    from cached_property import cached_property  # type: ignore
+    from cached_property import cached_property  # type: ignore # pylint: disable=import-error # noqa
 
 _comp = re.compile
 
@@ -40,14 +40,10 @@ FT_PAT = _comp(
 (?(br)[]\)])      # if it started with a bracket, it must end with a closing bracket
 [ ]*              # trailing space
     """,
-    re.I | re.VERBOSE,  # ft. Hello; (ft. Hello); [feat. Hello]
+    re.I | re.VERBOSE,
 )
 REMIXER_PAT = _comp(r" *[\[(] *([^])]+) ((re)?mix|edit|bootleg[^])]+)[])]", re.I)
 TRACK_ALT_PAT = PATTERNS["track_alt"]
-# CLEAN_PATTERNS = [
-#     # Title - Some Remix -> Title (Some Remix)
-#     name = Track.BAD_REMIX_PAT.sub("(\\1)", name)
-# ]
 
 
 @dataclass

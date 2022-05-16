@@ -19,13 +19,11 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import logging
 import re
-from functools import partial
 from html import unescape
 from operator import itemgetter, truth
 from typing import Any, Dict, Iterable, List, Optional, Sequence
 
 import requests
-import six
 from beets import __version__, library, plugins
 from beets.autotag.hooks import AlbumInfo, TrackInfo
 from beetsplug import fetchart  # type: ignore[attr-defined]
@@ -289,14 +287,15 @@ def get_args() -> Any:
 or perform bandcamp search with <query>. Anything that does not start with https://
 will be assumed to be a query.
 
-Search type flags: -a for albums, -l for labels and artists, -t for tracks. 
+Search type flags: -a for albums, -l for labels and artists, -t for tracks.
 By default, all types are searched.
 """,
         formatter_class=RawDescriptionHelpFormatter,
     )
 
     class UrlOrQueryAction(Action):
-        def __call__(self, parser, namespace, val, option_string):
+        def __call__(self, parser, namespace, values, option_string=None):
+            val = values
             if val:
                 if val.startswith("https://"):
                     target = "release_url"
@@ -311,18 +310,18 @@ By default, all types are searched.
         action=UrlOrQueryAction,
         nargs="?",
         help="Release URL, starting with https://",
-    ),
+    )
     exclusive.add_argument(
         "query", action=UrlOrQueryAction, default="", nargs="?", help="Search query"
-    ),
+    )
 
     s_group = parser.add_argument_group("Search")
     common = dict(dest="search_type", action="store_const")
-    s_group.add_argument("-a", "--album", const="a", help="Search albums", **common),
+    s_group.add_argument("-a", "--album", const="a", help="Search albums", **common)
     s_group.add_argument(
         "-l", "--label", const="b", help="Search labels and artists", **common
-    ),
-    s_group.add_argument("-t", "--track", const="t", help="Search tracks", **common),
+    )
+    s_group.add_argument("-t", "--track", const="t", help="Search tracks", **common)
 
     return parser.parse_args(namespace=Namespace(search_type=""))
 
