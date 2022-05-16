@@ -23,7 +23,7 @@ DIGI_ONLY_PATTERNS = [
     _comp(r"[^\w)]+(bandcamp[^-]+|digi(tal)?)(\W*(\W+|only|bonus|exclusive)\W*$)", re.I),
     _comp(r"[^\w)]+(bandcamp exclusive )?bonus( track)?(\]\W*|\W*$)", re.I),
 ]
-DELIMITER_PAT = _comp(r" ([^\w&()+/[\] ]) ")  # hi | bye; hi - bye
+DELIMITER_PAT = _comp(r" ([^\w&()+/[\] ]) ")
 ELP_ALBUM_PAT = _comp(r"[- ]*\[([^\]]+ [EL]P)\]+")  # Title [Some Album EP]
 FT_PAT = _comp(
     r"""
@@ -138,7 +138,7 @@ class Track:
     @cached_property
     def duration(self) -> Optional[int]:
         try:
-            h, m, s = map(int, re.findall(r"[0-9]+", self.json_item["duration"]))
+            h, m, s = map(int, re.findall(r"\d+", self.json_item["duration"]))
         except KeyError:
             return None
         else:
