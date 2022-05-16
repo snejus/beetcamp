@@ -3,7 +3,6 @@ import json
 from logging import getLogger
 
 import pytest
-from beets.autotag.hooks import AlbumInfo
 from beets.library import Item
 from beetsplug.bandcamp import BandcampAlbumArt, BandcampPlugin, urlify
 
@@ -60,7 +59,7 @@ def test_coverart(monkeypatch, console, beets_config):
 
     monkeypatch.setattr(BandcampAlbumArt, "_get", lambda *args: text)
 
-    album = AlbumInfo([], mb_albumid="https://bandcamp.com/album/")
+    album = Item(mb_albumid="https://bandcamp.com/album/")
     log = getLogger(__name__)
     for cand in BandcampAlbumArt(log, beets_config).get(album, None, []):
         assert cand.url == img_url
