@@ -280,56 +280,64 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         return results[: self.config["search_max"].as_number()]
 
 
-def get_opts() -> Any:
-    from optparse import Option, OptionParser
+def get_args() -> Any:
+    from argparse import Action, ArgumentParser, Namespace, RawDescriptionHelpFormatter
 
-    parser = OptionParser(
-        usage="beetcamp <bandcamp-url> | [-s QUERY] [-alt] [field:value, ...]",
-        description="""Get bandcamp release metadata from the <bandcamp-url>
-or perform bandcamp search using -s QUERY. Search type flags: -a for albums,
--l for labels and artists, -t for tracks. By default, all types are searched.
-Search results can be ranked according to field:value pairs which influence
-the 'similarity' field in the output data. Any field found in the output
-can be specified this way.
+    parser = ArgumentParser(
+        # usage="beetcamp <bandcamp-url> | [-s QUERY] [-alt] [field:value, ...]",
+        description="""Get bandcamp release metadata given <release-url>
+or perform bandcamp search with <query>. Anything that does not start with https://
+will be assumed to be a query.
+
+Search type flags: -a for albums, -l for labels and artists, -t for tracks. 
+By default, all types are searched.
 """,
+        formatter_class=RawDescriptionHelpFormatter,
     )
-    search_type_opt = partial(Option, dest="search_type", action="store_const")
-    parser.add_options(
-        [
-            Option("-s", "--search", dest="query", help="Search for query"),
-            search_type_opt("-a", const="a", help="Search albums"),
-            search_type_opt("-l", const="b", help="Search labels and artists"),
-            search_type_opt("-t", const="t", help="Search tracks"),
-        ]
-    )
-    opts, args = parser.parse_args()
-    args.sort(key=lambda x: ":" in x)
-    for arg in args.copy():
-        if ":" in arg and "://" not in arg:
-            setattr(opts, *arg.split(":"))
-            args.remove(arg)
 
-    return opts, args
+    class UrlOrQueryAction(Action):
+        def __call__(self, parser, namespace, val, option_string):
+            if val:
+                if val.startswith("https://"):
+                    target = "release_url"
+                else:
+                    target = "query"
+                    del namespace.release_url
+                setattr(namespace, target, val)
+
+    exclusive = parser.add_mutually_exclusive_group()
+    exclusive.add_argument(
+        "release_url",
+        action=UrlOrQueryAction,
+        nargs="?",
+        help="Release URL, starting with https://",
+    ),
+    exclusive.add_argument(
+        "query", action=UrlOrQueryAction, default="", nargs="?", help="Search query"
+    ),
+
+    s_group = parser.add_argument_group("Search")
+    common = dict(dest="search_type", action="store_const")
+    s_group.add_argument("-a", "--album", const="a", help="Search albums", **common),
+    s_group.add_argument(
+        "-l", "--label", const="b", help="Search labels and artists", **common
+    ),
+    s_group.add_argument("-t", "--track", const="t", help="Search tracks", **common),
+
+    return parser.parse_args(namespace=Namespace(search_type=""))
 
 
 def main():
     import json
 
-    opts, args = get_opts()
-    if opts.query:
-        result = search_bandcamp(**vars(opts))
+    args = get_args()
+    if args.query:
+        result = search_bandcamp(**vars(args))
     else:
-        try:
-            arg = args[0]
-        except IndexError as exc:
-            raise IndexError("Bandcamp url or search query is required") from exc
-        if arg.startswith("https://"):
-            pl = BandcampPlugin()
-            result = pl.album_for_id(arg) or pl.track_for_id(arg)
-            if not result:
-                raise AssertionError("Failed to find a release under the given url")
-        else:
-            raise AssertionError("Bandcamp release URL must start with https://")
+        pl = BandcampPlugin()
+        result = pl.album_for_id(args.release_url) or pl.track_for_id(args.release_url)
+        if not result:
+            raise AssertionError("Failed to find a release under the given url")
 
     print(json.dumps(result))
 

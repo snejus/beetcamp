@@ -5,42 +5,40 @@
 * search: 
   - you can now search from the command line: 
     ```sh
-    beetcamp -s QUERY [-alt] [field:value, ...]
+    beetcamp [ [-alt] QUERY | RELEASE-URL ]
     ```
 
-  - Search is activated by using flag **-s** followed by the search query. It queries
-    bandcamp with the provided word and returns a JSON list with all search results from
-    the first page.
+  - Search is activated with an argument that does not start with **https://**. It queries
+    bandcamp with the provided QUERY and returns a JSON list with all search results from
+    the first page, sorted by relevancy.
 
-  - Flags **-a**, **-l** and **-t** are used to run **album**, **label/artist** or
-    **track** searches. Any of the output fields can be specified by **field:value** in
-    order to take them into account in the _similarity_ calculation.
+  - Flags **-a**, **-l** and **-t** can be used to search for **album**, **label/artist** or
+    **track** specifically. 
 
-  - Run `beetcamp -h` to see the details and the rest of the flags. For example: searching
-    for anything called **sands** by albumartist **bonobo**:
+  - Run `beetcamp -h` to see more details. Example: searching for anything called **black sands**:
 
     ```json
-    $ beetcamp -s sands artist:bonobo | jq '.[:2]'
+    $ beetcamp 'black sands' | jq '.[:2]'
     [
       {
         "type": "album",
         "name": "Black Sands",
         "artist": "Bonobo",
-        "date": "29 March 2010",
+        "date": "2010 March 29",
         "tracks": "12",
         "url": "https://bonobomusic.bandcamp.com/album/black-sands",
         "label": "bonobomusic",
-        "similarity": 0.909
+        "similarity": 1
       },
       {
         "type": "album",
-        "name": "SANDS",
-        "artist": "ATOMS",
-        "date": "06 May 2014",
-        "tracks": "10",
-        "url": "https://atomstheillest.bandcamp.com/album/sands",
-        "label": "atomstheillest",
-        "similarity": 0.589
+        "name": "Black Sands",
+        "artist": "Appalachian Terror Unit",
+        "date": "2011 August 01",
+        "tracks": "4",
+        "url": "https://appalachianterrorunit.bandcamp.com/album/black-sands",
+        "label": "appalachianterrorunit",
+        "similarity": 1
       }
     ]
     ```
