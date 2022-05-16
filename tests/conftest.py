@@ -6,6 +6,12 @@ from os import path
 
 import pytest
 from beetsplug.bandcamp import DEFAULT_CONFIG
+from rich.console import Console
+
+
+@pytest.fixture(scope="session")
+def console():
+    return Console(force_terminal=True, force_interactive=True)
 
 
 @pytest.fixture
@@ -14,42 +20,69 @@ def beets_config():
 
 
 @pytest.fixture
-def media_format():
+def digital_format():
     return {
         "@id": "https://bandcamp.com/album/hello",
-        "musicReleaseFormat": "CDFormat",
-        "item_type": "p",
-        "description": "description",
-        "name": "name",
+        "musicReleaseFormat": "DigitalFormat",
+        "description": "Includes high-quality download...",
+        "name": "Album",
+        "additionalProperty": [
+            {"name": "some_id", "value": "some_value"},
+            {"name": "item_type", "value": "a"},
+        ],
     }
 
 
 @pytest.fixture
-def bc_media_formats():
-    return [
-        {
-            "@id": "https://bandcamp.com/album/hello",
-            "name": "Vinyl",
-            "musicReleaseFormat": "VinylFormat",
-            "description": "hello",
-            "additionalProperty": [
-                {"name": "some_id", "value": "some_value"},
-                {"name": "item_type", "value": "a"},
-            ],
+def vinyl_format():
+    return {
+        "@id": "https://bandcamp.com/album/hello",
+        "musicReleaseFormat": "VinylFormat",
+        "description": "Vinyl description",
+        "name": "Disctitle",
+        "additionalProperty": [
+            {"name": "some_id", "value": "some_value"},
+            {"name": "item_type", "value": "p"},
+        ],
+    }
+
+
+@pytest.fixture
+def bundle_format():
+    return {
+        "@id": "https://bandcamp.com/album/bye",
+        "name": "Vinyl Bundle",
+        "musicReleaseFormat": "VinylFormat",
+        "additionalProperty": [{"name": "item_type", "value": "b"}],
+    }
+
+
+@pytest.fixture
+def json_track():
+    return {"item": {"@id": "track_url", "name": "Artist - Title"}, "position": 1}
+
+
+@pytest.fixture
+def json_meta(digital_format, vinyl_format, json_track):
+    return {
+        "@id": "album_id",
+        "name": "Album",
+        "description": "Description",
+        "publisher": {
+            "@id": "label_url",
+            "name": "Label",
+            "genre": "bandcamp.com/tag/folk",
         },
-        {
-            "@id": "https://bandcamp.com/album/bye",
-            "name": "Vinyl Bundle",
-            "musicReleaseFormat": "VinylFormat",
-            "additionalProperty": [{"name": "item_type", "value": "b"}],
-        },
-    ]
+        "byArtist": {"name": "Albumartist"},
+        "albumRelease": [digital_format, vinyl_format],
+        "track": {"itemListElement": [json_track]},
+        "keywords": ["London", "house"],
+    }
 
 
 @pytest.fixture
 def release(request):
-    """Read the json data and make it span a single line - same like it's found in htmls.
-    Prepend JSON data with a multiline track list.
+    """Read the json data and remove new line chars - same like it's found in htmls.
     Each of the JSON test cases has a corresponding 'expected' JSON output data file.
     """
     filename = request.param + ".json"
@@ -58,11 +91,9 @@ def release(request):
         input_folder = path.join(input_folder, "issues")
         filename = filename.replace("issues_", "")
 
-    with open(path.join(input_folder, filename), encoding="utf-8") as input_f:
-        input_json = re.sub(r"\n *", "", input_f.read())
-    with open(
-        path.join(input_folder, "expected", filename), encoding="utf-8"
-    ) as expected_f:
-        expected_output = json.load(expected_f)
+    with open(path.join(input_folder, filename), encoding="utf-8") as in_f:
+        input_json = re.sub(r"\n *", "", in_f.read())
+    with open(path.join(input_folder, "expected", filename), encoding="utf-8") as out_f:
+        expected_output = json.load(out_f)
 
     return input_json, expected_output

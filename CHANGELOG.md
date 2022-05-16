@@ -1,3 +1,111 @@
+## [0.15.0] 2022-05-16
+
+### Added
+
+* search: 
+  - you can now search from the command line: 
+    ```sh
+    beetcamp [ [-alt] QUERY | RELEASE-URL ]
+    ```
+
+  - Search is activated with an argument that does not start with **https://**. It queries
+    bandcamp with the provided QUERY and returns a JSON list with all search results from
+    the first page, sorted by relevancy.
+
+  - Flags **-a**, **-l** and **-t** can be used to search for **album**, **label/artist** or
+    **track** specifically. 
+
+  - Run `beetcamp -h` to see more details. Example: searching for anything called **black sands**:
+
+    ```json
+    $ beetcamp 'black sands' | jq '.[:2]'
+    [
+      {
+        "type": "album",
+        "name": "Black Sands",
+        "artist": "Bonobo",
+        "date": "2010 March 29",
+        "tracks": "12",
+        "url": "https://bonobomusic.bandcamp.com/album/black-sands",
+        "label": "bonobomusic",
+        "similarity": 1
+      },
+      {
+        "type": "album",
+        "name": "Black Sands",
+        "artist": "Appalachian Terror Unit",
+        "date": "2011 August 01",
+        "tracks": "4",
+        "url": "https://appalachianterrorunit.bandcamp.com/album/black-sands",
+        "label": "appalachianterrorunit",
+        "similarity": 1
+      }
+    ]
+    ```
+
+### Updated
+
+* search: 
+  - if `label` field is available, the plugin now takes it into account when it ranks
+    search results. 
+  - `albumartist` field is not used to rank **compilations** anymore since some labels use
+    label name, some use the list of artists, and others a variation of **Various Artists** - 
+    we cannot reliably tell. `label` is used instead.
+
+* `album`: track titles are read to see whether they contain the album name. There are
+  cases where titles have the following format: **Title [Album Name EP]**
+
+* `catalognum`: 
+  - search track titles
+  - do not match if preceded by **]** character
+  - allow catalogue numbers like **o-ton 113**
+  - allow a pair, if separated by a slash `/`
+  - removed a pattern responsible for a fair bit of false positives
+
+* `albumtype`: 
+  - to determine whether a release is a compilation, check comments for string
+    **compilation**
+  - check if all track titles are remixes; if so - include **remix** albumtype into
+    `albumtypes`
+
+* `albumtypes`:
+  - **remix**: check for string **rmx** in album name
+  - **compilation**: even if a release is an **ep**, check whether it's also a compilation
+    and include it
+
+### Fixed
+
+* search: fixed searching of singletons, where the plugin now actually performs search instead of 
+  immediately returning the currently selected singleton when option **E** was selected
+  during the import process
+
+* album art fetching functionality has been broken for a while - it should now work fine
+
+* `album`: simplified album name clean-up logic and thus fixed a couple of edge cases
+
+* `albumartist`: remove **, more** from the end
+
+* `catalognum`: in rare cases, if the track list was given in the comments, one of the
+  track titles would get assumed for the catalognum and subsequently cleaned up. From now
+  on this will only apply if **all** track names include the match (usually delimited by
+  brackets at the end)
+
+* `title`: 
+  - track parsing has been refactored, therefore many of previously removed bits from the
+    title are now kept in place, such as bits in parentheses, double quotes (unless they
+    wrap the entire title) or non-alphanumeric characters at the end
+  - allow titles to start with an opening parentheses :exploding_head:
+  - when the title is found as **(Some Remix) Title**, it becomes **Title (Some Remix)**
+
+* `artist`: 
+  - featuring artists given in square brackets are now parsed correctly
+  - de-duplication now ignores the case
+  - when only one of the track artists in the release is missing, try splitting the name
+    with **-** (no spaces) to account for bad formatting
+
+* `track_alt`: track alts with numbers above 6 (like **A7**) and letters **A** and **B**
+  on their own are now extracted successfully
+
 ## [0.14.0] 2022-04-18
 
 ### Added

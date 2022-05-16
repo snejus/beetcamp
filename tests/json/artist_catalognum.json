@@ -1,0 +1,373 @@
+{
+  "@context": "https://schema.org",
+  "@id": "https://blvckplvgue.bandcamp.com/album/process-404-cybernetic-punk-unit",
+  "@type": "MusicAlbum",
+  "additionalProperty": [
+    {
+      "@type": "PropertyValue",
+      "name": "art_id",
+      "value": 3875452654
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "featured_track_num",
+      "value": 1
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "license_name",
+      "value": "all_rights_reserved"
+    }
+  ],
+  "albumRelease": [
+    {
+      "@id": "https://blvckplvgue.bandcamp.com/album/process-404-cybernetic-punk-unit",
+      "@type": [
+        "MusicRelease",
+        "Product"
+      ],
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "item_id",
+          "value": 163716644
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "item_type",
+          "value": "a"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "selling_band_id",
+          "value": 2754639698
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_name",
+          "value": "Digital"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "art_id",
+          "value": 3875452654
+        }
+      ],
+      "description": "Includes high-quality download in MP3, FLAC and more. Paying supporters also get unlimited streaming via the free Bandcamp app.",
+      "image": [
+        "https://f4.bcbits.com/img/a3875452654_10.jpg"
+      ],
+      "musicReleaseFormat": "DigitalFormat",
+      "name": "PROCESS 404 'Cybernetic Punk Unit'"
+    },
+    {
+      "@id": "https://blvckplvgue.bandcamp.com/album/process-404-cybernetic-punk-unit#b45635451",
+      "@type": [
+        "MusicRelease",
+        "Product"
+      ],
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "item_id",
+          "value": 45635451
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "item_type",
+          "value": "b"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "selling_band_id",
+          "value": 2754639698
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_name",
+          "value": "Digital"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "art_id",
+          "value": 3294538263
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "is_bfd",
+          "value": true
+        }
+      ],
+      "image": [
+        "https://f4.bcbits.com/img/a3294538263_10.jpg"
+      ],
+      "musicReleaseFormat": "DigitalFormat",
+      "name": "full digital discography (25 releases)",
+      "offers": {
+        "@type": "Offer",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "bundle_size",
+            "value": 25
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "discount",
+            "value": 0.4
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "max_price",
+            "value": 1000
+          }
+        ],
+        "availability": "OnlineOnly",
+        "price": 79.08,
+        "priceCurrency": "EUR",
+        "priceSpecification": {
+          "minPrice": 79.08
+        },
+        "url": "https://blvckplvgue.bandcamp.com/album/process-404-cybernetic-punk-unit#b45635451-buy"
+      }
+    },
+    {
+      "@id": "https://blvckplvgue.bandcamp.com/track/metallic-dominance",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://blvckplvgue.bandcamp.com/track/cybernetic-punk-unit",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://blvckplvgue.bandcamp.com/track/megacity-corporation",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://blvckplvgue.bandcamp.com/track/social-overdose",
+      "@type": "MusicRelease"
+    }
+  ],
+  "albumReleaseType": "AlbumRelease",
+  "byArtist": {
+    "@type": "MusicGroup",
+    "name": "Process 404"
+  },
+  "copyrightNotice": "All Rights Reserved",
+  "creditText": "Mastering: Axel Picodot",
+  "dateModified": "18 Aug 2021 13:17:29 GMT",
+  "datePublished": "12 Jun 2020 00:00:00 GMT",
+  "description": "Future as always been a fantasy\r\n\r\nBlack/Plague wants to take you to the future. This distant fantasy that continues to inspire so many artists. Will technology bring us progress, or even more chaos?\r\nAntoine aka Process 404 wants you to take part. This near future where technology creates a constant conflict in our daily life. By combining elements and sonority of cyberpunk culture with Electronic, Process 404 seek to prove his vision of the future and why so many people call Techno « the sound of tomorrow». You can expect 4/4 tracks loaded with dystopian sounds and robotics ammo.",
+  "image": "https://f4.bcbits.com/img/a3875452654_10.jpg",
+  "keywords": [
+    "Electronic",
+    "acid",
+    "industrial",
+    "techno",
+    "Paris"
+  ],
+  "name": "PROCESS 404 'Cybernetic Punk Unit'",
+  "numTracks": 4,
+  "publisher": {
+    "@id": "https://blvckplvgue.bandcamp.com",
+    "@type": "MusicGroup",
+    "additionalProperty": [
+      {
+        "@type": "PropertyValue",
+        "name": "band_id",
+        "value": 2754639698
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "currency",
+        "value": "EUR"
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "has_any_downloads",
+        "value": true
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "has_policies",
+        "value": true
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_height",
+        "value": 1080
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_id",
+        "value": 12129458
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_width",
+        "value": 1080
+      }
+    ],
+    "description": "Techno label based in Paris, France. \n\nWhen cold icy techno meets the heat torrent dancers. \n\nManaged by Ruben Hassid and Axel Picodot.",
+    "foundingLocation": {
+      "@type": "Place",
+      "name": "Paris, France"
+    },
+    "genre": "https://bandcamp.com/tag/electronic",
+    "image": "https://f4.bcbits.com/img/0012129458_10.jpg",
+    "mainEntityOfPage": [
+      {
+        "@type": "WebPage",
+        "name": "linktr.ee",
+        "url": "https://linktr.ee/blackplaguemusic"
+      },
+      {
+        "@type": "WebPage",
+        "name": "SoundCloud",
+        "url": "https://soundcloud.com/blackplaguerec"
+      },
+      {
+        "@type": "WebPage",
+        "name": "Instagram",
+        "url": "https://www.instagram.com/blackplaguemusic/"
+      }
+    ],
+    "name": "Black/Plague",
+    "subjectOf": [
+      {
+        "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "m"
+          }
+        ],
+        "name": "Tracks",
+        "url": "https://blvckplvgue.bandcamp.com/music"
+      },
+      {
+        "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "p"
+          }
+        ],
+        "name": "Merch",
+        "url": "https://blvckplvgue.bandcamp.com/merch"
+      },
+      {
+        "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "c"
+          }
+        ],
+        "name": "Us",
+        "url": "https://blvckplvgue.bandcamp.com/community"
+      }
+    ]
+  },
+  "track": {
+    "@type": "ItemList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://blvckplvgue.bandcamp.com/track/metallic-dominance",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 1255250367
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H06M33S",
+          "name": "Metallic Dominance"
+        },
+        "position": 1
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://blvckplvgue.bandcamp.com/track/cybernetic-punk-unit",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 3964428983
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H08M34S",
+          "name": "Cybernetic Punk Unit"
+        },
+        "position": 2
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://blvckplvgue.bandcamp.com/track/megacity-corporation",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 2926327708
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H07M16S",
+          "name": "Megacity Corporation"
+        },
+        "position": 3
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://blvckplvgue.bandcamp.com/track/social-overdose",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 2451214870
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H04M23S",
+          "name": "Social Overdose"
+        },
+        "position": 4
+      }
+    ],
+    "numberOfItems": 4
+  }
+}

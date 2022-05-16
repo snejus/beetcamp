@@ -61,7 +61,7 @@
       "name": "ISMVA003.3"
     },
     {
-      "@id": "https://ismusberlin.bandcamp.com/album/ismva0033#b46557684",
+      "@id": "https://ismusberlin.bandcamp.com/album/ismva0033#b47050382",
       "@type": [
         "MusicRelease",
         "Product"
@@ -70,7 +70,7 @@
         {
           "@type": "PropertyValue",
           "name": "item_id",
-          "value": 46557684
+          "value": 47050382
         },
         {
           "@type": "PropertyValue",
@@ -90,7 +90,7 @@
         {
           "@type": "PropertyValue",
           "name": "art_id",
-          "value": 2648094664
+          "value": 726966362
         },
         {
           "@type": "PropertyValue",
@@ -99,17 +99,17 @@
         }
       ],
       "image": [
-        "https://f4.bcbits.com/img/a2648094664_10.jpg"
+        "https://f4.bcbits.com/img/a0726966362_10.jpg"
       ],
       "musicReleaseFormat": "DigitalFormat",
-      "name": "full digital discography (20 releases)",
+      "name": "full digital discography (21 releases)",
       "offers": {
         "@type": "Offer",
         "additionalProperty": [
           {
             "@type": "PropertyValue",
             "name": "bundle_size",
-            "value": 20
+            "value": 21
           },
           {
             "@type": "PropertyValue",
@@ -123,12 +123,12 @@
           }
         ],
         "availability": "OnlineOnly",
-        "price": 28.6,
+        "price": 31.85,
         "priceCurrency": "EUR",
         "priceSpecification": {
-          "minPrice": 28.6
+          "minPrice": 31.85
         },
-        "url": "https://ismusberlin.bandcamp.com/album/ismva0033#b46557684-buy"
+        "url": "https://ismusberlin.bandcamp.com/album/ismva0033#b47050382-buy"
       }
     },
     {

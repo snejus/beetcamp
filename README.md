@@ -7,7 +7,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/snejus/beetcamp/badge.svg?branch=master)](https://coveralls.io/github/snejus/beetcamp?branch=master)
 [ ![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fsnejus%2Fbeetcamp&count_bg=%23842424&title_bg=%23846060&icon=postwoman.svg&icon_color=%23CF4D4D&title=hits&edge_flat=true)](https://hits.seeyoufarm.com)
 
-Plug-in for [beets] to use Bandcamp as an autotagger source. It mostly focuses on
+Bandcamp autotagger plugin for [beets]. It mostly focuses on
 
 - Staying up-to-date with information Bandcamp provide in the JSON metadata
 - Parsing **all possible** (if relevant) metadata from various places
@@ -48,6 +48,37 @@ Navigate to your `beets` virtual environment and install the plug-in with
 ```bash
    pip install beetcamp
 ```
+
+# CLI
+The plugin exposes some of its functionality through a command-line application `beetcamp`:
+
+```xml
+usage: beetcamp [-h] [-a] [-l] [-t] [release_url | query]
+
+Get bandcamp release metadata from the given <release-url> or perform 
+bandcamp search with <query>. Anything that does not start with https:// 
+will be assumed to be a query. Search type flags: -a for albums, -l for 
+labels and artists, -t for tracks. By default, all types are searched.
+
+positional arguments:
+  release_url  Release URL, starting with https:// OR
+  query        Search query
+
+options:
+  -h, --help   show this help message and exit
+  -a, --album  Search albums
+  -l, --label  Search labels and artists
+  -t, --track  Search tracks
+```
+
+* Use `beetcamp <bandcamp-release-url>` to return release metadata in JSON format.
+* Use `beetcamp [-alt] <query>` to search albums, labels and tracks on Bandcamp and return
+  results in JSON. You can get the general idea of the kind of data the search returns below (the
+  output is prettified with [rich] externally)
+
+![image](images/search.png)
+
+[rich]: https://github.com/Textualize/rich
 
 # Configuration
 

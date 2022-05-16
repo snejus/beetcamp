@@ -61,7 +61,7 @@
       "name": "NYH244 Less Weird Parallel Universe  - Nearly 20 Years of Erikoisdance"
     },
     {
-      "@id": "https://newyorkhaunted.bandcamp.com/album/nyh244-less-weird-parallel-universe-nearly-20-years-of-erikoisdance#b46566361",
+      "@id": "https://newyorkhaunted.bandcamp.com/album/nyh244-less-weird-parallel-universe-nearly-20-years-of-erikoisdance#b46992444",
       "@type": [
         "MusicRelease",
         "Product"
@@ -70,7 +70,7 @@
         {
           "@type": "PropertyValue",
           "name": "item_id",
-          "value": 46566361
+          "value": 46992444
         },
         {
           "@type": "PropertyValue",
@@ -90,7 +90,7 @@
         {
           "@type": "PropertyValue",
           "name": "art_id",
-          "value": 1905434533
+          "value": 819216448
         },
         {
           "@type": "PropertyValue",
@@ -99,17 +99,17 @@
         }
       ],
       "image": [
-        "https://f4.bcbits.com/img/a1905434533_10.jpg"
+        "https://f4.bcbits.com/img/a0819216448_10.jpg"
       ],
       "musicReleaseFormat": "DigitalFormat",
-      "name": "full digital discography (311 releases)",
+      "name": "full digital discography (312 releases)",
       "offers": {
         "@type": "Offer",
         "additionalProperty": [
           {
             "@type": "PropertyValue",
             "name": "bundle_size",
-            "value": 311
+            "value": 312
           },
           {
             "@type": "PropertyValue",
@@ -123,12 +123,12 @@
           }
         ],
         "availability": "OnlineOnly",
-        "price": 124.6,
+        "price": 124.9,
         "priceCurrency": "EUR",
         "priceSpecification": {
-          "minPrice": 124.6
+          "minPrice": 124.9
         },
-        "url": "https://newyorkhaunted.bandcamp.com/album/nyh244-less-weird-parallel-universe-nearly-20-years-of-erikoisdance#b46566361-buy"
+        "url": "https://newyorkhaunted.bandcamp.com/album/nyh244-less-weird-parallel-universe-nearly-20-years-of-erikoisdance#b46992444-buy"
       }
     },
     {
