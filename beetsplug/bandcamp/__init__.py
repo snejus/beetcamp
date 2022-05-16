@@ -279,18 +279,16 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
 
 
 def get_args() -> Any:
-    from argparse import Action, ArgumentParser, Namespace, RawDescriptionHelpFormatter
+    from argparse import Action, ArgumentParser, Namespace
 
     parser = ArgumentParser(
-        # usage="beetcamp <bandcamp-url> | [-s QUERY] [-alt] [field:value, ...]",
-        description="""Get bandcamp release metadata given <release-url>
+        description="""Get bandcamp release metadata from the given <release-url>
 or perform bandcamp search with <query>. Anything that does not start with https://
 will be assumed to be a query.
 
 Search type flags: -a for albums, -l for labels and artists, -t for tracks.
 By default, all types are searched.
-""",
-        formatter_class=RawDescriptionHelpFormatter,
+"""
     )
 
     class UrlOrQueryAction(Action):
@@ -309,21 +307,25 @@ By default, all types are searched.
         "release_url",
         action=UrlOrQueryAction,
         nargs="?",
-        help="Release URL, starting with https://",
+        help="Release URL, starting with https:// OR",
     )
     exclusive.add_argument(
         "query", action=UrlOrQueryAction, default="", nargs="?", help="Search query"
     )
 
-    s_group = parser.add_argument_group("Search")
     common = dict(dest="search_type", action="store_const")
-    s_group.add_argument("-a", "--album", const="a", help="Search albums", **common)
-    s_group.add_argument(
+    parser.add_argument("-a", "--album", const="a", help="Search albums", **common)
+    parser.add_argument(
         "-l", "--label", const="b", help="Search labels and artists", **common
     )
-    s_group.add_argument("-t", "--track", const="t", help="Search tracks", **common)
+    parser.add_argument("-t", "--track", const="t", help="Search tracks", **common)
 
-    return parser.parse_args(namespace=Namespace(search_type=""))
+    args = parser.parse_args(namespace=Namespace(search_type=""))
+    if not any(vars(args).values()):
+        parser.print_help()
+        parser.exit()
+
+    return args
 
 
 def main():
