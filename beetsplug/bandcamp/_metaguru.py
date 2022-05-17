@@ -228,6 +228,7 @@ class Metaguru(Helpers):
                 disctitle=self.disctitle,
                 description=self.media.description,
                 label=self.label if not self._singleton else "",
+                tracks=tuple(self._tracks.raw_names),
             )
             or self.general_catalognum
         )
@@ -484,7 +485,6 @@ class Metaguru(Helpers):
         if NEW_BEETS:
             track.update(self._common_album)
             track.pop("album", None)
-            track.pop("albumstatus", None)
         track.track_id = track.data_url
         return track
 

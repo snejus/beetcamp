@@ -47,6 +47,24 @@ def bc_media_formats():
 
 
 @pytest.fixture
+def json_track():
+    return {"item": {"@id": "track_url", "name": "Artist - Title"}, "position": 1}
+
+
+@pytest.fixture
+def json_meta(media_format, json_track):
+    return {
+        "@id": "album_id",
+        "name": "Album",
+        "description": "Description",
+        "publisher": {"name": "Label", "genre": "bandcamp.com/tag/folk"},
+        "byArtist": {"name": "Albumartist"},
+        "albumRelease": [media_format],
+        "track": {"itemListElement": [json_track]},
+    }
+
+
+@pytest.fixture
 def release(request):
     """Read the json data and remove new line chars - same like it's found in htmls.
     Each of the JSON test cases has a corresponding 'expected' JSON output data file.

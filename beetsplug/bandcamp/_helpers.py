@@ -127,7 +127,6 @@ class Helpers:
     ):
         # type: (str, str, str, Tuple[str], Tuple[str]) -> str
         """Try getting the catalog number looking at text from various fields."""
-        tracks_str = "\n".join(tracks or [])
         cases = [
             (CATNUM_PAT["with_header"], description),
             (CATNUM_PAT["anywhere"], disctitle),
@@ -139,25 +138,19 @@ class Helpers:
             pat = re.compile(_catalognum.substitute(label=re.escape(label)), re.VERBOSE)
             cases.append((pat, "\n".join((album, disctitle, description))))
 
+        tracks_str = " ".join([*(tracks or []), *(artists or [])]).lower()
+
         def find(pat: Pattern, string: str) -> str:
-            match = pat.search(string)
-            return match.group(1).strip() if match else ""
-
-        ignored = set(map(str.lower, artists or []))
-
-        def not_ignored(option: str) -> bool:
-            """Suitable match if:
-            - is not empty
-            - is not in any of the track names
-            """
-            return (
-                bool(option)
-                and option.lower() not in ignored
-                and option not in tracks_str
-            )
+            """Return the match if it is not found in any of the track names."""
+            m = pat.search(string)
+            if m:
+                catnum = m.group(1).strip()
+                if catnum.lower() not in tracks_str:
+                    return catnum
+            return ""
 
         try:
-            return next(filter(not_ignored, it.starmap(find, cases)))
+            return next(filter(op.truth, it.starmap(find, cases)))
         except StopIteration:
             return ""
 

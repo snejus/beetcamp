@@ -64,12 +64,12 @@ CLEAN_PATTERNS = [
 
 @dataclass
 class Track:
-    json_item: JSONDict
-    track_id: str
-    index: int
-    json_artist: str
-    _name: str
+    json_item: JSONDict = field(default_factory=dict)
+    track_id: str = ""
+    index: int = 0
+    json_artist: str = ""
 
+    _name: str = ""
     _artist: str = ""
     _title: str = ""
     ft: str = ""
@@ -96,11 +96,11 @@ class Track:
             index=json["position"],
             catalognum=catalognum,
         )
-        return cls(**cls.parse_name(data, name, delim, label=label))
+        return cls(**cls.parse_name(data, name, delim, label))
 
     @staticmethod
     def find_featuring(data: JSONDict) -> JSONDict:
-        """Find the featuring artist in the track name.
+        """Find featuring artist in the track name.
 
         If the found artist is contained within the remixer, do not do anything.
         If the found artist is among the main artists, remove it from the name but
