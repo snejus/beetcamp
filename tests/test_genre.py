@@ -76,7 +76,7 @@ def mode_result(keywords, keyword_type, modes_spec, mode):
     return keywords if modes_spec[mode][keyword_type] else []
 
 
-def test_genre(keywords, mode, mode_result, beets_config):
+def test_genre(keywords, mode, mode_result, json_meta, beets_config):
     config = beets_config["genre"]
     config["mode"] = mode
     assert list(Metaguru.get_genre(keywords, config)) == mode_result
