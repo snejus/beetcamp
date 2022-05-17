@@ -28,6 +28,7 @@ class MediaInfo(NamedTuple):
     name: str
     title: str
     description: str
+    price: float
 
 
 _catalognum = Template(
@@ -303,6 +304,7 @@ class Helpers:
                     FORMAT_TO_MEDIA[_format.get("musicReleaseFormat") or "DigitalFormat"],
                     _format["name"],
                     _format.get("description") or "",
+                    float(_format.get("offers", {}).get("price") or 0) or 0,
                 )
             )
         return formats

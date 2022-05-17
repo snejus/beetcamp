@@ -44,7 +44,7 @@ VA = "Various Artists"
 class Metaguru(Helpers):
     _singleton = False
     va_name = VA
-    media = MediaInfo("", "", "", "")
+    media = MediaInfo("", "", "", "", 0)
 
     meta: JSONDict
     config: JSONDict
@@ -232,6 +232,19 @@ class Metaguru(Helpers):
             )
             or self.general_catalognum
         )
+
+    @cached_property
+    def city(self) -> Optional[str]:
+        try:
+            split = self.meta["publisher"]["foundingLocation"]["name"].rpartition(", ")[
+                :-1
+            ]
+        except KeyError:
+            return None
+        else:
+            if len(split) > 1:
+                return split[0]
+        return None
 
     @cached_property
     def country(self) -> str:
@@ -434,6 +447,11 @@ class Metaguru(Helpers):
             album = clean_album
         return album or self.album_name_with_eplp or self.catalognum or self.album_name
 
+    @cached_property
+    def price(self) -> float:
+        media = next(filter(lambda x: x.name == "Digital Media", self.media_formats))
+        return media.price
+
     @property
     def _common(self) -> JSONDict:
         return dict(
@@ -454,9 +472,21 @@ class Metaguru(Helpers):
     @property
     def _common_album(self) -> JSONDict:
         common_data: JSONDict = dict(album=self.clean_album_name)
-        fields = ["label", "catalognum", "albumtype", "albumstatus", "country"]
+        fields = [
+            "label",
+            "catalognum",
+            "albumtype",
+            "albumstatus",
+            "country",
+            "price",
+            "city",
+        ]
         if NEW_BEETS:
             fields.extend(["genre", "style", "comments", "albumtypes"])
+            for field, field_pattern in self.config["field_patterns"].items():
+                match = re.search(field_pattern["pat"], self.all_media_comments)
+                if match:
+                    common_data[field] = match.expand(field_pattern["replace"])
         common_data.update(self.get_fields(fields))
         reldate = self.release_date
         if reldate:
