@@ -182,7 +182,7 @@ class Helpers:
                     fr"(^|[^'\])\w]|_|\b)+(?i:{arg})([^'(\[\w]|_|(\d+$))*", " ", name
                 ).strip()
 
-        if label and not re.search(fr"\w {label} \w|\w {label}$", name):
+        if label and not re.search(fr"\({label}|\w {label} \w|\w {label}$", name):
             lpat = fr"(\W\W+{label}\W*|\W*{label}(\W\W+|$)|(^\W*{label}\W*$))(VA)?\d*"
             name = re.sub(lpat, " ", name, re.I).strip()
 

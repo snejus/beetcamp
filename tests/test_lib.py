@@ -27,7 +27,7 @@ pytestmark = pytest.mark.lib
 
 BASE_DIR = "lib_tests"
 TEST_DIR = "dev"
-REFERENCE_DIR = "acb453d"
+REFERENCE_DIR = "v0.15.0"
 JSONS_DIR = "jsons"
 
 IGNORE_FIELDS = {
@@ -160,7 +160,7 @@ def compare(old, new, cache) -> bool:
     table = new_table(padding=0, collapse_padding=True)
     all_fields = set(new).union(set(old))
 
-    compare_key = partial(do_key, table, album=desc)
+    compare_key = partial(do_key, table, album_name=desc)
 
     fail = False
     for key in sorted(all_fields - IGNORE_FIELDS):
@@ -168,9 +168,7 @@ def compare(old, new, cache) -> bool:
         if values[0] is None and values[1] is None:
             continue
         cache_key = f"{_id}_{key}"
-        out = compare_key(
-            key, *values, cached_value=cache.get(cache_key, None), album_name=desc
-        )
+        out = compare_key(key, *values, cached_value=cache.get(cache_key, None))
         cache.set(cache_key, out)
         if values[0] != values[1]:
             fail = True

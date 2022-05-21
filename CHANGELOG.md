@@ -1,3 +1,11 @@
+## [0.16.0] Unreleased
+
+### Fixed
+
+* album: When album name contains **Album (Label something)**, the Label is kept in place
+  since it immediately follows an opening parenthesis.
+
+
 ## [0.15.0] 2022-05-16
 
 ### Added
