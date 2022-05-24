@@ -198,8 +198,10 @@ class Helpers:
         return name.strip(" /-")
 
     @staticmethod
-    def get_genre(keywords: Iterable[str], config: JSONDict) -> Iterable[str]:
+    def get_genre(keywords: Iterable[str], config: JSONDict, label: str) -> Iterable[str]:
         """Return a comma-delimited list of valid genres, using MB genres for reference.
+
+        Initially, exclude keywords that are label names (unless they are valid MB genres)
 
         Verify each keyword's (potential genre) validity w.r.t. the configured `mode`:
           * classical: valid only if the _entire keyword_ matches a MB genre in the list
@@ -216,20 +218,23 @@ class Helpers:
             >>> get_genre(['house', 'garage house', 'glitch'], "classical")
             'garage house, glitch'
         """
-        # use a list to keep the initial order
-        genres: List[str] = []
+        unique_genres = ordset()
         valid_mb_genre = partial(op.contains, GENRES)
+        label_name = label.lower().replace(" ", "")
+
+        def is_label_name(kw: str) -> bool:
+            return kw.replace(" ", "") == label_name and not valid_mb_genre(kw)
 
         def is_included(kw: str) -> bool:
             return any(map(lambda x: re.search(x, kw), config["always_include"]))
 
         def valid_for_mode(kw: str) -> bool:
             if config["mode"] == "classical":
-                return kw in GENRES
+                return valid_mb_genre(kw)
 
             words = map(str.strip, kw.split(" "))
             if config["mode"] == "progressive":
-                return kw in GENRES or all(map(valid_mb_genre, words))
+                return valid_mb_genre(kw) or all(map(valid_mb_genre, words))
 
             return valid_mb_genre(kw) or valid_mb_genre(list(words)[-1])
 
@@ -238,10 +243,8 @@ class Helpers:
         for kw in it.chain(*map(split_kw, keywords)):
             # remove full stops and hashes and ensure the expected form of 'and'
             kw = re.sub("[.#]", "", str(kw)).replace("&", "and")
-            if kw not in genres and (is_included(kw) or valid_for_mode(kw)):
-                genres.append(kw)
-
-        unique_genres = set(genres)
+            if not is_label_name(kw) and (is_included(kw) or valid_for_mode(kw)):
+                unique_genres.add(kw)
 
         def duplicate(genre: str) -> bool:
             """Return True if genre is contained within another genre or if,
@@ -255,7 +258,7 @@ class Helpers:
             )
             return any(map(lambda x: genre in x, others))
 
-        return it.filterfalse(duplicate, genres)
+        return it.filterfalse(duplicate, unique_genres)
 
     @staticmethod
     def unpack_props(obj: JSONDict) -> JSONDict:

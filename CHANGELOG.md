@@ -1,5 +1,9 @@
 ## [0.16.0] Unreleased
 
+### Updated
+
+* genre: exclude label name, unless it maps to a valid MusicBrainz genre
+
 ### Fixed
 
 * album: When album name contains **Album (Label something)**, the Label is kept in place

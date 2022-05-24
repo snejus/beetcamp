@@ -435,7 +435,7 @@ class Metaguru(Helpers):
             kws = filter(exclude_style, kws)
 
         genre_cfg = self.config["genre"]
-        genres = self.get_genre(kws, genre_cfg)
+        genres = self.get_genre(kws, genre_cfg, self.label)
         if genre_cfg["capitalize"]:
             genres = map(str.capitalize, genres)
         if genre_cfg["maximum"]:
