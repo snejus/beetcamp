@@ -305,6 +305,10 @@ class Tracks(list):
                     # this is the only artist that didn't get parsed - relax the rule
                     # and try splitting with '-' without spaces
                     split = t.title.split("-")
+                    if not len(split) > 1:
+                        # attempt to split by another ' ? ' where '?' may be some utf-8
+                        # alternative of a dash
+                        split = [s for s in DELIMITER_PAT.split(t.title) if len(s) > 1]
                     if len(split) > 1:
                         t.artist, t.title = split
                 if not t.artist:
