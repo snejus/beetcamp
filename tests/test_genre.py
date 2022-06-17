@@ -79,7 +79,7 @@ def mode_result(keywords, keyword_type, modes_spec, mode):
 def test_genre(keywords, mode, mode_result, beets_config):
     config = beets_config["genre"]
     config["mode"] = mode
-    assert list(Metaguru.get_genre(keywords, config)) == mode_result
+    assert list(Metaguru.get_genre(keywords, config, "")) == mode_result
 
 
 @pytest.mark.parametrize(
