@@ -28,7 +28,7 @@ class MediaInfo(NamedTuple):
     name: str
     title: str
     description: str
-    price: float
+    # price: float
 
 
 _catalognum = Template(
@@ -56,7 +56,7 @@ _catalognum = Template(
 _cat_pat = _catalognum.template
 
 CATNUM_PAT = {
-    "with_header": re.compile(r"(?:^|\s)cat[\w .]+?(?:number:?|:) ?(\w[^\n,]+)", re.I),
+    "with_header": re.compile(r"(?:^|\s)cat[\w .]+?(?:number\b:?|:) ?(\w[^\n,]+)", re.I),
     "start_end": re.compile(fr"((^|\n){_cat_pat}|{_cat_pat}(\n|$))", re.VERBOSE),
     "delimited": re.compile(fr"(?:[\[(])(?!.*MIX){_cat_pat}(?:[])]|$)", re.VERBOSE),
     "anywhere": re.compile(fr"(?<!,[ ])({_cat_pat}([ ]/[ ]{_cat_pat})?)", re.VERBOSE),
@@ -311,7 +311,7 @@ class Helpers:
                     FORMAT_TO_MEDIA[_format.get("musicReleaseFormat") or "DigitalFormat"],
                     _format["name"],
                     _format.get("description") or "",
-                    float(_format.get("offers", {}).get("price") or 0) or 0,
+                    # float(_format.get("offers", {}).get("price") or 0) or 0,
                 )
             )
         return formats
