@@ -110,11 +110,17 @@ def albuminfos(request, release):
     'beets' would expect to see - the 'AlbumInfo' object.
     """
 
-    def _albuminfo(album):
-        if not album:
+    def _trackinfo(track_dict):
+        for key in list(track_dict.keys()):
+            if track_dict[key] is None:
+                track_dict.pop(key)
+        return TrackInfo(**track_dict)
+
+    def _albuminfo(album_dict):
+        if not album_dict:
             return None
-        tracks = album.pop("tracks", [])
-        return AlbumInfo(**album, tracks=list(map(lambda x: TrackInfo(**x), tracks)))
+        tracks = album_dict.pop("tracks", [])
+        return AlbumInfo(**album_dict, tracks=list(map(_trackinfo, tracks)))
 
     return release[0], list(map(_albuminfo, release[1]))
 
