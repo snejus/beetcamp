@@ -20,14 +20,14 @@ from rich_tables.utils import (
     make_difftext,
     new_table,
     simple_panel,
-    wrap
+    wrap,
 )
 
 pytestmark = pytest.mark.lib
 
 BASE_DIR = "lib_tests"
 TEST_DIR = "dev"
-REFERENCE_DIR = "b4e0308"
+REFERENCE_DIR = "8793483"
 JSONS_DIR = "jsons"
 
 IGNORE_FIELDS = {
@@ -146,11 +146,15 @@ def compare(old, new, cache) -> bool:
     if "/album/" in new["data_url"]:
         old.update(
             albumartist=old.pop("artist", ""),
-            tracks=[tuple(t.get(f, "") for f in TRACK_FIELDS) for t in old["tracks"]],
+            tracks=[
+                tuple(t.get(f, "") for f in TRACK_FIELDS) for t in old.get("tracks", [])
+            ],
         )
         new.update(
             albumartist=new.pop("artist", ""),
-            tracks=[tuple(t.get(f, "") for f in TRACK_FIELDS) for t in new["tracks"]],
+            tracks=[
+                tuple(t.get(f, "") for f in TRACK_FIELDS) for t in new.get("tracks", [])
+            ],
         )
         desc = f"{new.get('albumartist', '')} - {new.get('album', '')}"
         _id = new["album_id"]
