@@ -97,6 +97,8 @@ def print_result(console, case, expected, result):
         ("A. Title", ("A", "", "", "Title", "Title")),
         ("BB. Title", ("BB", "", "", "Title", "Title")),
         ("Artist - ;) (Original Mix)", ("", "Artist", "", ";) (Original Mix)", ";)")),
+        ("Artist - Title - Label", ("", "Artist", "", "Title", "Title")),
+        ("Title - Label", ("", "", "", "Title", "Title")),
     ],
 )
 def test_parse_track_name(name, expected, json_track, json_meta, console):

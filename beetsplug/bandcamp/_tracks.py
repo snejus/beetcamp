@@ -104,6 +104,9 @@ class Track:
     @staticmethod
     def parse_name(data: JSONDict, name: str, delim: str, label: str) -> JSONDict:
         name = name.replace(f" {delim} ", " - ")
+
+        # remove label from the end of the track name
+        # see https://gutterfunkuk.bandcamp.com/album/gutterfunk-all-subject-to-vibes-various-artists-lp  # noqa
         if name.endswith(label):
             name = name.replace(label, "").strip(" -")
         name = Helpers.clean_name(name).strip().lstrip("-")
