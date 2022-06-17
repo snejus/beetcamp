@@ -25,7 +25,7 @@ from typing import Any, Dict, Iterable, List, Optional, Sequence, Union
 
 import requests
 from beets import IncludeLazyConfig, __version__, config, library, plugins
-from beets.autotag.hooks import AlbumInfo, AttrDict, TrackInfo
+from beets.autotag.hooks import AlbumInfo, TrackInfo
 
 from beetsplug import fetchart  # type: ignore[attr-defined]
 
@@ -256,7 +256,7 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         return None
 
     def handle_guru(self, attr, url, html=None):
-        # type: (str, str, Optional[str]) -> Optional[Union[AttrDict, List[AttrDict]]]
+        # type: (str, str, Optional[str]) -> Optional[Union[TrackInfo, List[AlbumInfo]]]
         try:
             return getattr(self.guru(url, html=html), attr)
         except (KeyError, ValueError, AttributeError, IndexError):
