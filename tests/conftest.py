@@ -5,6 +5,7 @@ from copy import deepcopy
 from os import path
 
 import pytest
+from beets.autotag.hooks import AlbumInfo, TrackInfo
 from beetsplug.bandcamp import DEFAULT_CONFIG
 from rich.console import Console
 
@@ -82,9 +83,13 @@ def json_meta(digital_format, vinyl_format, json_track):
 
 @pytest.fixture
 def release(request):
-    """Read the json data and remove new line chars - same like it's found in htmls.
-    Each of the JSON test cases has a corresponding 'expected' JSON output data file.
+    """Find the requested testing fixture and get:
+    1. Input JSON data and return it as a single-line string (same like in htmls).
+    2. Expected output JSON data (found in the 'expected' folder) as a dictionary.
     """
+    if not request.param:
+        return "gibberish", [None]
+
     filename = request.param + ".json"
     input_folder = path.join("tests", "json")
     if filename.startswith("issues"):
@@ -97,3 +102,35 @@ def release(request):
         expected_output = json.load(out_f)
 
     return input_json, expected_output
+
+
+@pytest.fixture
+def albuminfos(request, release):
+    """Convert each of the album versions (different media) to the format that
+    'beets' would expect to see - the 'AlbumInfo' object.
+    """
+
+    def _albuminfo(album):
+        if not album:
+            return None
+        tracks = album.pop("tracks", [])
+        return AlbumInfo(**album, tracks=list(map(lambda x: TrackInfo(**x), tracks)))
+
+    return release[0], list(map(_albuminfo, release[1]))
+
+
+@pytest.fixture
+def album_for_media(request, albuminfos, preferred_media=None):
+    """Pick the album that matches the 'preferred_media'
+    If none of the albums match the 'preferred_media', pick the first one in the list.
+    If there are no albums, just pass the input through.
+    """
+    html, albums = albuminfos
+    album = albums[0]
+    if album:
+        try:
+            album = next(filter(lambda x: x.media == preferred_media, albums))
+        except StopIteration:
+            album = albums[0]
+
+    return html, album

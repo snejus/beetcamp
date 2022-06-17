@@ -1,4 +1,4 @@
-## [0.16.0] Unreleased
+## [0.15.1] Unreleased
 
 ### Updated
 
@@ -6,8 +6,10 @@
 
 ### Fixed
 
+* During import, _albums_ can now again be obtained by their IDs. This functionality has
+  been broken since `v0.14.0`.
+
 * `album`: When album name contains **Album (Label something)**, the Label is kept in place
-  since it immediately follows an opening parenthesis.
 
 * `title`: handle an edge case where one of the track names contains a utf-8 equivalent of a dash
 
