@@ -2,6 +2,7 @@
 import json
 import re
 from copy import deepcopy
+from operator import itemgetter
 from os import path
 
 import pytest
@@ -100,43 +101,44 @@ def release(request):
         input_json = re.sub(r"\n *", "", in_f.read())
     with open(path.join(input_folder, "expected", filename), encoding="utf-8") as out_f:
         expected_output = json.load(out_f)
+    if isinstance(expected_output, dict):
+        expected_output = [expected_output]
 
     return input_json, expected_output
 
 
 @pytest.fixture
 def albuminfos(release):
-    """Convert each of the album versions (different media) to the format that
-    'beets' would expect to see - the 'AlbumInfo' object.
+    """Return each album and track as 'AlbumInfo' and 'TrackInfo' objects.
+
+    Objects in beets>=1.5.0 have additional fields, therefore for compatibility ensure
+    that only available fields are being used.
     """
+    t_fields = list(TrackInfo(None, None).__dict__)
+    a_fields = list(AlbumInfo(None, None, None, None, None).__dict__)
 
-    def _trackinfo(track_dict):
-        for key in list(track_dict.keys()):
-            if track_dict[key] is None:
-                track_dict.pop(key)
-        return TrackInfo(**track_dict)
+    def _trackinfo(track):
+        return TrackInfo(**dict(zip(t_fields, itemgetter(*t_fields)(track))))
 
-    def _albuminfo(album_dict):
-        if not album_dict:
+    def _albuminfo(album):
+        if not album:
             return None
-        tracks = album_dict.pop("tracks", [])
-        return AlbumInfo(**album_dict, tracks=list(map(_trackinfo, tracks)))
+        if album.get("album"):
+            albuminfo = AlbumInfo(**dict(zip(a_fields, itemgetter(*a_fields)(album))))
+            albuminfo.tracks = list(map(_trackinfo, album["tracks"]))
+        else:
+            albuminfo = _trackinfo(album)
+        return albuminfo
 
-    return release[0], list(map(_albuminfo, release[1]))
+    return list(map(_albuminfo, release[1]))
 
 
 @pytest.fixture
-def album_for_media(albuminfos, preferred_media=None):
-    """Pick the album that matches the 'preferred_media'
-    If none of the albums match the 'preferred_media', pick the first one in the list.
-    If there are no albums, just pass the input through.
+def album_for_media(albuminfos, preferred_media):
+    """Pick the album that matches the requested 'preferred_media'.
+    If none of the albums match the 'preferred_media', pick the first one from the list.
     """
-    html, albums = albuminfos
-    album = albums[0]
-    if album:
-        try:
-            album = next(filter(lambda x: x.media == preferred_media, albums))
-        except StopIteration:
-            album = albums[0]
-
-    return html, album
+    try:
+        return next(filter(lambda x: x and x.media == preferred_media, albuminfos))
+    except StopIteration:
+        return albuminfos[0]
