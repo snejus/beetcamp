@@ -4,7 +4,7 @@ import operator as op
 import re
 from functools import lru_cache, partial
 from string import Template
-from typing import Any, Dict, Iterable, List, NamedTuple, Pattern, Tuple
+from typing import Any, Callable, Dict, Iterable, List, NamedTuple, Pattern, Tuple, Union
 
 from beets.autotag.hooks import AlbumInfo
 from ordered_set import OrderedSet as ordset  # type: ignore
@@ -187,7 +187,7 @@ class Helpers:
             name = re.sub(lpat, " ", name, re.I).strip()
 
         name = Helpers.clean_name(name)
-        replacements = [
+        replacements: List[Tuple[Pattern, Union[Callable, str]]] = [
             # uppercase EP and LP, and remove surrounding parens / brackets
             (PATTERNS["tidy_eplp"], lambda x: x.group(1).upper()),
             (PATTERNS["clean_incl"], ""),
