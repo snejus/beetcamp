@@ -4,7 +4,7 @@ import operator as op
 import re
 from functools import lru_cache, partial
 from string import Template
-from typing import Any, Callable, Dict, Iterable, List, NamedTuple, Pattern, Tuple, Union
+from typing import Any, Dict, Iterable, List, NamedTuple, Pattern, Tuple
 
 from beets.autotag.hooks import AlbumInfo
 from ordered_set import OrderedSet as ordset  # type: ignore
@@ -55,11 +55,13 @@ _catalognum = Template(
 _cat_pat = _catalognum.template
 
 CATNUM_PAT = {
-    "with_header": re.compile(r"(?:^|\s)cat[\w .]+?(?:number\b:?|:) ?(\w[^\n,]+)", re.I),
-    "start_end": re.compile(fr"((^|\n){_cat_pat}|{_cat_pat}(\n|$))", re.VERBOSE),
+    "with_header": re.compile(
+        r"(?:^|\s)cat[\w .]+?(?:number\b:?|:) ?(\w[^\n,]+)", re.I
+    ),
+    "start_end": re.compile(rf"((^|\n){_cat_pat}|{_cat_pat}(\n|$))", re.VERBOSE),
     # enclosed by parens or square brackets, but not ending with MIX
-    "delimited": re.compile(fr"(?:[\[(])(?!.*MIX){_cat_pat}(?:[])]|$)", re.VERBOSE),
-    "anywhere": re.compile(fr"(?<!,[ ])({_cat_pat}([ ]/[ ]{_cat_pat})?)", re.VERBOSE),
+    "delimited": re.compile(rf"(?:[\[(])(?!.*MIX){_cat_pat}(?:[])]|$)", re.VERBOSE),
+    "anywhere": re.compile(rf"(?<!,[ ])({_cat_pat}([ ]/[ ]{_cat_pat})?)", re.VERBOSE),
 }
 
 _comp = re.compile
@@ -74,7 +76,7 @@ PATTERNS: Dict[str, Pattern] = {
         r"^([A-J]{1,3}[12]?\d|[AB]+(?=\W{2,}))(?:(?!-\w)[^\w(]|_)+", re.I + re.M
     ),
     "vinyl_name": _comp(r"[1-5](?= ?(xLP|LP|x))|single|double|triple", re.I),
-    "clean_incl": _comp(r"(\(?incl|\((inc|tracks|.*remix( |es)))([^)]+\)|.*)", re.I),
+    "clean_incl": _comp(r" *(\(?incl|\((inc|tracks|.*remix( |es)))([^)]+\)|.*)", re.I),
     "tidy_eplp": _comp(r"\S*(?:Double )?(\b[EL]P\b)\S*", re.I),
 }
 rm_strings = [
@@ -174,31 +176,29 @@ class Helpers:
         """Return clean album name.
         Catalogue number and artists to be removed are given as args.
         """
+        # remove 'incl. remixes from ...' and similar
+        name = PATTERNS["clean_incl"].sub("", name)
+
         for arg in [re.escape(arg) for arg in filter(op.truth, args)] + [
             r"Various Artists?\b(?! \w)"
         ]:
-            if not re.search(fr"\w {arg} \w", name, re.I):
+            if not re.search(rf"\w {arg} \w", name, re.I):
                 name = re.sub(
-                    fr"(^|[^'\])\w]|_|\b)+(?i:{arg})([^'(\[\w]|_|(\d+$))*", " ", name
+                    rf"(^|[^'\])\w]|_|\b)+(?i:{arg})([^'(\[\w]|_|(\d+$))*", " ", name
                 ).strip()
 
-        if label and not re.search(fr"\({label}|\w {label} \w|\w {label}$", name):
-            lpat = fr"(\W\W+{label}\W*|\W*{label}(\W\W+|$)|(^\W*{label}\W*$))(VA)?\d*"
+        if label and not re.search(rf"\({label}|\w {label} \w|\w {label}$", name):
+            lpat = rf"(\W\W+{label}\W*|\W*{label}(\W\W+|$)|(^\W*{label}\W*$))(VA)?\d*"
             name = re.sub(lpat, " ", name, re.I).strip()
 
         name = Helpers.clean_name(name)
-        replacements: List[Tuple[Pattern, Union[Callable, str]]] = [
-            # uppercase EP and LP, and remove surrounding parens / brackets
-            (PATTERNS["tidy_eplp"], lambda x: x.group(1).upper()),
-            (PATTERNS["clean_incl"], ""),
-        ]
-        for pat, repl in replacements:
-            name = pat.sub(repl, name).strip()
-
-        return name.strip(" /-")
+        # uppercase EP and LP, and remove surrounding parens / brackets
+        name = PATTERNS["tidy_eplp"].sub(lambda x: x.group(1).upper(), name)
+        return name.strip(" /")
 
     @staticmethod
-    def get_genre(keywords: Iterable[str], config: JSONDict, label: str) -> Iterable[str]:
+    def get_genre(keywords, config, label):
+        # type: (Iterable[str], JSONDict, str) -> Iterable[str]
         """Return a comma-delimited list of valid genres, using MB genres for reference.
 
         Initially, exclude keywords that are label names (unless they are valid MB genres)
@@ -308,7 +308,9 @@ class Helpers:
             formats.append(
                 MediaInfo(
                     _format["@id"],
-                    FORMAT_TO_MEDIA[_format.get("musicReleaseFormat") or "DigitalFormat"],
+                    FORMAT_TO_MEDIA[
+                        _format.get("musicReleaseFormat") or "DigitalFormat"
+                    ],
                     _format["name"],
                     _format.get("description") or "",
                 )
@@ -323,7 +325,7 @@ class Helpers:
         @lru_cache(maxsize=None)
         def get_medium_total(medium: int) -> int:
             starts = {1: "AB", 2: "CD", 3: "EF", 4: "GH", 5: "IJ"}[medium]
-            return len(re.findall(fr"^[{starts}]", "\n".join(track_alts), re.M))
+            return len(re.findall(rf"^[{starts}]", "\n".join(track_alts), re.M))
 
         medium = 1
         medium_index = 1

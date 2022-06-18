@@ -30,7 +30,7 @@ from beets.autotag.hooks import AlbumInfo, TrackInfo
 
 from beetsplug import fetchart  # type: ignore[attr-defined]
 
-from ._metaguru import DATA_SOURCE, Metaguru
+from ._metaguru import Metaguru
 from ._search import search_bandcamp
 
 JSONDict = Dict[str, Any]
@@ -130,6 +130,10 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         self.register_listener("pluginload", self.loaded)
         self._gurucache = {}
 
+    @property
+    def data_source(self) -> str:
+        return "bandcamp"
+
     def guru(self, url: str, html: Optional[str] = None) -> Optional[Metaguru]:
         """Return cached guru. If there isn't one, fetch the url if html isn't
         already given, initialise guru and add it to the cache. This way they
@@ -148,8 +152,8 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         # TODO: This is ugly, but i didn't find another way to extend fetchart
         # without declaring a new plugin.
         if self.config["art"]:
-            fetchart.ART_SOURCES[DATA_SOURCE] = BandcampAlbumArt
-            fetchart.SOURCE_NAMES[BandcampAlbumArt] = DATA_SOURCE
+            fetchart.ART_SOURCES[self.data_source] = BandcampAlbumArt
+            fetchart.SOURCE_NAMES[BandcampAlbumArt] = self.data_source
             bandcamp_fetchart = BandcampAlbumArt(self._log, self.config)
 
             for plugin in plugins.find_plugins():
@@ -239,10 +243,9 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         albums = self.get_album_info(album_id)
         if not albums:
             return None
-        elif len(albums) == 1:
-            return albums[0]
-        else:
-            # return the preferred media
+
+        if len(albums) > 1:
+            # get the preferred media
             preferred = self.beets_config["match"]["preferred"]["media"].get()
             pref_to_idx = dict(zip(preferred, range(len(preferred))))
             albums = sorted(albums, key=lambda x: pref_to_idx.get(x.media, 100))
@@ -292,7 +295,7 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
 
 
 def get_args(args: List[str]) -> Any:
-    from argparse import Action, ArgumentParser, Namespace
+    from argparse import Action, ArgumentParser
 
     parser = ArgumentParser(
         description="""Get bandcamp release metadata from the given <release-url>

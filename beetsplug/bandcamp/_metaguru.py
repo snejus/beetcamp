@@ -304,9 +304,9 @@ class Metaguru(Helpers):
         sentences are read from release and media descriptions.
         """
         sentences = re.split(r"[.]\s+|\n", self.all_media_comments)
-        word_pat = re.compile(fr"\b{word}\b", re.I)
-        catnum_pat = re.compile(fr"{word}\d", re.I)
-        name_pat = re.compile(fr"\b(this|{re.escape(self.clean_album_name)})\b", re.I)
+        word_pat = re.compile(rf"\b{word}\b", re.I)
+        catnum_pat = re.compile(rf"{word}\d", re.I)
+        name_pat = re.compile(rf"\b(this|{re.escape(self.clean_album_name)})\b", re.I)
         return bool(
             catnum_pat.search(self.catalognum)
             or word_pat.search(self.album_name + " " + self.vinyl_disctitles)

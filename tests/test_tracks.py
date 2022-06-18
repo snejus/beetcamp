@@ -134,13 +134,7 @@ def test_parse_track_name(name, expected, json_track, json_meta, console):
     ],
 )
 def test_parse_catalognum_from_track_name(
-    name,
-    initial_catalognum,
-    expected_title,
-    expected_catalognum,
-    json_track,
-    json_meta,
-    console,
+    name, initial_catalognum, expected_title, expected_catalognum, json_track
 ):
     json_track = {
         **json_track["item"],

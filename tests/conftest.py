@@ -105,7 +105,7 @@ def release(request):
 
 
 @pytest.fixture
-def albuminfos(request, release):
+def albuminfos(release):
     """Convert each of the album versions (different media) to the format that
     'beets' would expect to see - the 'AlbumInfo' object.
     """
@@ -126,7 +126,7 @@ def albuminfos(request, release):
 
 
 @pytest.fixture
-def album_for_media(request, albuminfos, preferred_media=None):
+def album_for_media(albuminfos, preferred_media=None):
     """Pick the album that matches the 'preferred_media'
     If none of the albums match the 'preferred_media', pick the first one in the list.
     If there are no albums, just pass the input through.

@@ -20,7 +20,9 @@ _comp = re.compile
 
 DIGI_ONLY_PATTERNS = [
     _comp(r"^(DIGI(TAL)? ?[\d.]+|Bonus\W{2,})\W*"),
-    _comp(r"[^\w)]+(bandcamp[^-]+|digi(tal)?)(\W*(\W+|only|bonus|exclusive)\W*$)", re.I),
+    _comp(
+        r"[^\w)]+(bandcamp[^-]+|digi(tal)?)(\W*(\W+|only|bonus|exclusive)\W*$)", re.I
+    ),
     _comp(r"[^\w)]+(bandcamp exclusive )?bonus( track)?(\]\W*|\W*$)", re.I),
 ]
 DELIMITER_PAT = _comp(r" ([^\w&()+/[\] ]) ")
@@ -125,7 +127,7 @@ class Track:
             if m:
                 data["catalognum"] = m.group(1)
                 name = name.replace(m.group(), "").strip()
-        name = re.sub(fr"^0*{data.get('index', 0)}(?!\W\d)\W+", "", name)
+        name = re.sub(rf"^0*{data.get('index', 0)}(?!\W\d)\W+", "", name)
 
         m = REMIXER_PAT.search(name)
         if m:

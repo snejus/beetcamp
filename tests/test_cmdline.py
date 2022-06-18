@@ -1,3 +1,4 @@
+"""Module for command line functionality tests."""
 import pytest
 from beetsplug.bandcamp import get_args
 

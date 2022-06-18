@@ -102,7 +102,7 @@ def test_album_for_id(monkeypatch, album_for_media, preferred_media, expected_me
 
 @pytest.mark.usefixtures("release")
 @pytest.mark.parametrize(["release"], [["album"]], indirect=["release"])
-def test_candidates(monkeypatch, albuminfos, beets_config):
+def test_candidates(monkeypatch, albuminfos):
     html, expected_albums = albuminfos
     first = expected_albums[0]
 

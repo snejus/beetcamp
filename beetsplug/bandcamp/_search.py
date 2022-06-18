@@ -15,7 +15,7 @@ def _f(field: str) -> str:
     """Return pattern matching a string that does not start with '<' or space
     until the end of the line.
     """
-    return fr"(?P<{field}>[^ <][^\n]+)"
+    return rf"(?P<{field}>[^ <][^\n]+)"
 
 
 RELEASE_PATTERNS = [
