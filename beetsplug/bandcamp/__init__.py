@@ -19,6 +19,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import logging
 import re
+from functools import partial
 from html import unescape
 from operator import itemgetter, truth
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Union
@@ -290,7 +291,7 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         return results[: self.config["search_max"].as_number()]
 
 
-def get_args() -> Any:
+def get_args(args: List[str]) -> Any:
     from argparse import Action, ArgumentParser, Namespace
 
     parser = ArgumentParser(
@@ -325,25 +326,23 @@ By default, all types are searched.
         "query", action=UrlOrQueryAction, default="", nargs="?", help="Search query"
     )
 
-    common = dict(dest="search_type", action="store_const")
-    parser.add_argument("-a", "--album", const="a", help="Search albums", **common)
-    parser.add_argument(
-        "-l", "--label", const="b", help="Search labels and artists", **common
+    store_const = partial(
+        parser.add_argument, dest="search_type", action="store_const", default=""
     )
-    parser.add_argument("-t", "--track", const="t", help="Search tracks", **common)
-
-    args = parser.parse_args(namespace=Namespace(search_type=""))
-    if not any(vars(args).values()):
+    store_const("-a", "--album", const="a", help="Search albums")
+    store_const("-l", "--label", const="b", help="Search labels and artists")
+    store_const("-t", "--track", const="t", help="Search tracks")
+    if not args:
         parser.print_help()
         parser.exit()
-
-    return args
+    return parser.parse_args(args=args)
 
 
 def main():
     import json
+    import sys
 
-    args = get_args()
+    args = get_args(sys.argv[1:])
     if args.query:
         result = search_bandcamp(**vars(args))
     else:
