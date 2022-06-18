@@ -7,6 +7,9 @@
 
 * `album`: when album name contains **Album (Label something)**, the Label is kept in place
 
+* `albumartist`: remove catalogue number from the album artist when it's enclosed in
+  brackets
+
 * `catalognum`: handle an edge case where several words from the description get assumed
   for the catalog number when **cat** and **numbers** are both found in the same line.
 

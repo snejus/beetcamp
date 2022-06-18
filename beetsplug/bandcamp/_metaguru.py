@@ -166,7 +166,7 @@ class Metaguru(Helpers):
         """
         aartist = self.original_albumartist
         if self.label == aartist:
-            split = self.album_name.split(" - ")
+            split = self.clean_album(self.album_name, self.catalognum).split(" - ")
             if len(split) > 1:
                 aartist = split[0]
 
