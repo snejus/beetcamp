@@ -1,6 +1,6 @@
 """End to end tests aimed at catching html updates on bandcamp side."""
 import pytest
-from beets.autotag.hooks import AlbumInfo, TrackInfo
+from beets.autotag.hooks import TrackInfo
 from beets.library import Item
 from beetsplug.bandcamp import BandcampPlugin
 
@@ -39,20 +39,6 @@ def test_return_none_for_gibberish():
     html = plugin._get(url)
 
     assert not html
-
-
-@pytest.mark.parametrize("release", ["ep"], indirect=["release"])
-def test_candidates(release):
-    _, expected_albums = release
-    expected_album = AlbumInfo(**expected_albums[0])
-    expected_album.tracks = list(map(lambda x: TrackInfo(**x), expected_album.tracks))
-
-    plugin = BandcampPlugin()
-
-    albums = plugin.candidates([], expected_album.artist, expected_album.album, False)
-
-    assert albums
-    check_album(next(albums), expected_album)
 
 
 @pytest.mark.parametrize("release", ["single_track_release"], indirect=["release"])
