@@ -58,7 +58,10 @@ def print_result(console, case, expected, result):
             "Lacchesi - UNREALNUMBERS - MK4 (Lacchesi Remix)",
             ("", "UNREALNUMBERS", "", "MK4 (Lacchesi Remix)", "MK4"),
         ),
-        ("UNREALNUMBERS -Karaburan", ("", "UNREALNUMBERS", "", "Karaburan", "Karaburan")),
+        (
+            "UNREALNUMBERS -Karaburan",
+            ("", "UNREALNUMBERS", "", "Karaburan", "Karaburan"),
+        ),
         (
             "Ellie Goulding- Eyed ( ROWDIBOÏ EDIT))",
             ("", "Ellie Goulding", "", "Eyed (ROWDIBOÏ EDIT)", "Eyed"),
@@ -73,13 +76,19 @@ def print_result(console, case, expected, result):
         ("K - The Lightning", ("", "K", "", "The Lightning", "The Lightning")),
         ("MEAN-E - PLANETARY", ("", "MEAN-E", "", "PLANETARY", "PLANETARY")),
         ("f-theme", ("", "", "", "f-theme", "f-theme")),
-        ("Mr. Free - The 4th Room", ("", "Mr. Free", "", "The 4th Room", "The 4th Room")),
+        (
+            "Mr. Free - The 4th Room",
+            ("", "Mr. Free", "", "The 4th Room", "The 4th Room"),
+        ),
         ("O)))Bow 1", ("", "", "", "O)))Bow 1", "O)))Bow 1")),
         ("H.E.L.L.O.", ("", "", "", "H.E.L.L.O.", "H.E.L.L.O.")),
         ("Erik Burka - Pigeon [MNRM003]", ("", "Erik Burka", "", "Pigeon", "Pigeon")),
         ("Artist - Title [ONE001]", ("", "Artist", "", "Title", "Title")),
         ("Artist + Other - Title", ("", "Artist + Other", "", "Title", "Title")),
-        ("Artist (feat. Other) - Title", ("", "Artist", "feat. Other", "Title", "Title")),
+        (
+            "Artist (feat. Other) - Title",
+            ("", "Artist", "feat. Other", "Title", "Title"),
+        ),
         (
             "Artist (some remix) - Title",
             ("", "Artist", "", "Title (some remix)", "Title"),
@@ -114,6 +123,34 @@ def test_parse_track_name(name, expected, json_track, json_meta, console):
     result_track = list(tracks)[0]
     result = dict(zip(fields, attrgetter(*fields)(result_track)))
     assert result == expected, print_result(console, name, expected, result)
+
+
+@pytest.mark.parametrize(
+    ("name", "initial_catalognum", "expected_title", "expected_catalognum"),
+    [
+        ("Artist - Title CAT001", "", "Title CAT001", ""),
+        ("Artist - Title [CAT001]", "INIT001", "Title [CAT001]", "INIT001"),
+        ("Artist - Title [CAT001]", "", "Title", "CAT001"),
+    ],
+)
+def test_parse_catalognum_from_track_name(
+    name,
+    initial_catalognum,
+    expected_title,
+    expected_catalognum,
+    json_track,
+    json_meta,
+    console,
+):
+    json_track = {
+        **json_track["item"],
+        "position": json_track["position"],
+        "name": name,
+    }
+
+    track = Track.from_json(json_track, name, "-", initial_catalognum, "Label")
+    assert track.title == expected_title, print(track)
+    assert track.catalognum == expected_catalognum, print(track)
 
 
 @pytest.mark.parametrize(

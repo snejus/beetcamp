@@ -118,6 +118,9 @@ class Track:
             name = name.replace(m.group(), "")
 
         if not data.get("catalognum"):
+            # check whether track name contains the catalog number within parens
+            # or square brackets
+            # see https://objection999x.bandcamp.com/album/eruption-va-obj012
             m = CATNUM_PAT["delimited"].search(name)
             if m:
                 data["catalognum"] = m.group(1)

@@ -483,6 +483,8 @@ class Metaguru(Helpers):
     def _trackinfo(self, track: Track, **kwargs: Any) -> TrackInfo:
         data = track.info
         data.update(**self._common, **kwargs)
+        # if track-level catalognum is not found or if it is the same as album's, then
+        # remove it. Otherwise, keep it attached to the track
         if not data["catalognum"] or data["catalognum"] == self.catalognum:
             data.pop("catalognum", None)
         if not data["lyrics"]:
