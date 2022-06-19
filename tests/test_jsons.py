@@ -23,7 +23,7 @@ def check(actual, expected) -> None:
 def test_parse_single_track_release(release, beets_config):
     html, expected = release
     actual = Metaguru.from_html(html, beets_config).singleton
-    check(actual, expected)
+    check(actual, expected[0])
 
 
 @pytest.mark.parametrize(
