@@ -2,9 +2,11 @@
 import json
 import re
 from copy import deepcopy
+from operator import itemgetter
 from os import path
 
 import pytest
+from beets.autotag.hooks import AlbumInfo, TrackInfo
 from beetsplug.bandcamp import DEFAULT_CONFIG
 from rich.console import Console
 
@@ -82,9 +84,13 @@ def json_meta(digital_format, vinyl_format, json_track):
 
 @pytest.fixture
 def release(request):
-    """Read the json data and remove new line chars - same like it's found in htmls.
-    Each of the JSON test cases has a corresponding 'expected' JSON output data file.
+    """Find the requested testing fixture and get:
+    1. Input JSON data and return it as a single-line string (same like in htmls).
+    2. Expected output JSON data (found in the 'expected' folder) as a dictionary.
     """
+    if not request.param:
+        return "gibberish", [None]
+
     filename = request.param + ".json"
     input_folder = path.join("tests", "json")
     if filename.startswith("issues"):
@@ -95,5 +101,44 @@ def release(request):
         input_json = re.sub(r"\n *", "", in_f.read())
     with open(path.join(input_folder, "expected", filename), encoding="utf-8") as out_f:
         expected_output = json.load(out_f)
+    if isinstance(expected_output, dict):
+        expected_output = [expected_output]
 
     return input_json, expected_output
+
+
+@pytest.fixture
+def albuminfos(release):
+    """Return each album and track as 'AlbumInfo' and 'TrackInfo' objects.
+
+    Objects in beets>=1.5.0 have additional fields, therefore for compatibility ensure
+    that only available fields are being used.
+    """
+    t_fields = list(TrackInfo(None, None).__dict__ or TrackInfo())
+    a_fields = list(AlbumInfo(None, None, None, None, None).__dict__ or AlbumInfo([]))
+
+    def _trackinfo(track):
+        return TrackInfo(**dict(zip(t_fields, itemgetter(*t_fields)(track))))
+
+    def _albuminfo(album):
+        if not album:
+            return None
+        if album.get("album"):
+            albuminfo = AlbumInfo(**dict(zip(a_fields, itemgetter(*a_fields)(album))))
+            albuminfo.tracks = list(map(_trackinfo, album["tracks"]))
+        else:
+            albuminfo = _trackinfo(album)
+        return albuminfo
+
+    return list(map(_albuminfo, release[1]))
+
+
+@pytest.fixture
+def album_for_media(albuminfos, preferred_media):
+    """Pick the album that matches the requested 'preferred_media'.
+    If none of the albums match the 'preferred_media', pick the first one from the list.
+    """
+    try:
+        return next(filter(lambda x: x and x.media == preferred_media, albuminfos))
+    except StopIteration:
+        return albuminfos[0]

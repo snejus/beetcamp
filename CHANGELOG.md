@@ -1,4 +1,32 @@
+## [0.15.1] 2022-06-19
+
+[0.15.1]: https://github.com/snejus/beetcamp/releases/tag/0.15.1
+
+### Deprecations
+
+* Python 3.6 support will end with the next non-patch version update.
+
+### Fixed
+
+* During import, _albums_ can now again be obtained by their IDs. This functionality has
+  been broken since `v0.14.0`.
+
+* `album`: when album name contains **Album (Label something)**, the Label is kept in place
+
+* `albumartist`: remove catalogue number from the album artist when it's enclosed in
+  brackets
+
+* `catalognum`: handle an edge case where several words from the description get assumed
+  for the catalog number when **cat** and **numbers** are both found in the same line.
+
+* `genre`: exclude label name, unless it maps to a valid MusicBrainz genre
+
+* `title`: handle an edge case where one of the track names contains a utf-8 equivalent of a dash
+
+
 ## [0.15.0] 2022-05-16
+
+[0.15.0]: https://github.com/snejus/beetcamp/releases/tag/0.15.0
 
 ### Added
 

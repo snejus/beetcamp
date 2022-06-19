@@ -60,5 +60,7 @@ def test_search_prioritises_best_matches(search_data):
     ]
 
     html = make_html_item(other_result) + "\n" + make_html_item(expected_result)
-    results = parse_and_sort_results(html, **{**search_data, "name": "Specific Release"})
+    results = parse_and_sort_results(
+        html, **{**search_data, "name": "Specific Release"}
+    )
     assert results == expected_results

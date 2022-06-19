@@ -20,7 +20,9 @@ _comp = re.compile
 
 DIGI_ONLY_PATTERNS = [
     _comp(r"^(DIGI(TAL)? ?[\d.]+|Bonus\W{2,})\W*"),
-    _comp(r"[^\w)]+(bandcamp[^-]+|digi(tal)?)(\W*(\W+|only|bonus|exclusive)\W*$)", re.I),
+    _comp(
+        r"[^\w)]+(bandcamp[^-]+|digi(tal)?)(\W*(\W+|only|bonus|exclusive)\W*$)", re.I
+    ),
     _comp(r"[^\w)]+(bandcamp exclusive )?bonus( track)?(\]\W*|\W*$)", re.I),
 ]
 DELIMITER_PAT = _comp(r" ([^\w&()+/[\] ]) ")
@@ -104,6 +106,9 @@ class Track:
     @staticmethod
     def parse_name(data: JSONDict, name: str, delim: str, label: str) -> JSONDict:
         name = name.replace(f" {delim} ", " - ")
+
+        # remove label from the end of the track name
+        # see https://gutterfunkuk.bandcamp.com/album/gutterfunk-all-subject-to-vibes-various-artists-lp  # noqa
         if name.endswith(label):
             name = name.replace(label, "").strip(" -")
         name = Helpers.clean_name(name).strip().lstrip("-")
@@ -115,11 +120,14 @@ class Track:
             name = name.replace(m.group(), "")
 
         if not data.get("catalognum"):
+            # check whether track name contains the catalog number within parens
+            # or square brackets
+            # see https://objection999x.bandcamp.com/album/eruption-va-obj012
             m = CATNUM_PAT["delimited"].search(name)
             if m:
                 data["catalognum"] = m.group(1)
                 name = name.replace(m.group(), "").strip()
-        name = re.sub(fr"^0*{data.get('index', 0)}(?!\W\d)\W+", "", name)
+        name = re.sub(rf"^0*{data.get('index', 0)}(?!\W\d)\W+", "", name)
 
         m = REMIXER_PAT.search(name)
         if m:
@@ -305,6 +313,10 @@ class Tracks(list):
                     # this is the only artist that didn't get parsed - relax the rule
                     # and try splitting with '-' without spaces
                     split = t.title.split("-")
+                    if not len(split) > 1:
+                        # attempt to split by another ' ? ' where '?' may be some utf-8
+                        # alternative of a dash
+                        split = [s for s in DELIMITER_PAT.split(t.title) if len(s) > 1]
                     if len(split) > 1:
                         t.artist, t.title = split
                 if not t.artist:

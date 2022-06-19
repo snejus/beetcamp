@@ -31,6 +31,13 @@
   "image": "https://f4.bcbits.com/img/a0919724444_10.jpg",
   "inAlbum": {
     "@type": "MusicAlbum",
+    "additionalProperty": [
+      {
+        "@type": "PropertyValue",
+        "name": "duration",
+        "value": 421.078
+      }
+    ],
     "albumRelease": [
       {
         "@id": "https://mega-tech.bandcamp.com/track/arangel",

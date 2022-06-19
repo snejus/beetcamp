@@ -212,83 +212,6 @@
       }
     },
     {
-      "@id": "https://dominikeulberg.bandcamp.com/album/mannigfaltig#p974145596",
-      "@type": [
-        "MusicRelease",
-        "Product"
-      ],
-      "additionalProperty": [
-        {
-          "@type": "PropertyValue",
-          "name": "item_id",
-          "value": 974145596
-        },
-        {
-          "@type": "PropertyValue",
-          "name": "item_type",
-          "value": "p"
-        },
-        {
-          "@type": "PropertyValue",
-          "name": "selling_band_id",
-          "value": 233016894
-        },
-        {
-          "@type": "PropertyValue",
-          "name": "type_name",
-          "value": "Other Vinyl"
-        },
-        {
-          "@type": "PropertyValue",
-          "name": "image_ids",
-          "value": [
-            17154151,
-            17154152,
-            17154153,
-            17154154,
-            17154156
-          ]
-        },
-        {
-          "@type": "PropertyValue",
-          "name": "is_music_merch",
-          "value": true
-        },
-        {
-          "@type": "PropertyValue",
-          "name": "type_id",
-          "value": 18
-        }
-      ],
-      "description": "How can you fulfil the desire to have something tangible that you can hold in your hand, when music is now primarily digital? Dominik Eulberg has come up with a very special solution in the form of the Mannigfaltig album memo game. It’s a deck of 24 beautifully designed cards, consisting of the 12 pairs of animals featured on the album. Each game comes with a digital download code for the full album, making it a great gift or addition to your own collection. All cards include information about the animal and their importance to the environment, in both English and German, making it a great educational tool. The set comes in a sturdy box with a linen-paper cover from an old Westerwald factory and follows the previous game 'Fliegende Edelsteine'.\n\nExternal dimensions: 84 x 134 x 35 mm\n\nWeight: 145 g\n\nUm dem zeitgenössischen Dilemma vom Anspruch nach digitaler Verfügbarkeit und dennoch haptischem Erlebnis entgegenzuwirken, haben wir uns etwas ganz Besonders überlegt. Das Album Mannigfaltig gibt es auch als hochwertiges Memo Game inklusive Downloadcode! So werden alle Bedürfnisse befriedigt: Man hat die Musik in digitaler Form und zusätzlich etwas Tolles zum Sammeln oder Verschenken. Gleichzeitig ist es ein wunderbares Sensibilisierungs-Spiel. Die zwölf tierischen Protagonisten sind in einem Memo Game mit 24 Karten verewigt. Erst wenn man die Pärchen findet, ergeben Fragmente von Erläuterungstexten auf den Spielkarten einen Sinn und erörtern dieses Lebewesen. Das Spiel kommt in einer massive Stülpschachtel mit robustem Leinenpapierüberzug aus einer alten Manufaktur im Westerwald, deren Qualität ihr vielleicht schon von dem Vogelquartett „Fliegende Edelsteine“ kennt.  \n\nAußenmaß: 84 x 134 x 35 mm \n\nGewicht: 145 g",
-      "image": [
-        "https://f4.bcbits.com/img/0017154151_10.jpg",
-        "https://f4.bcbits.com/img/0017154152_10.jpg",
-        "https://f4.bcbits.com/img/0017154153_10.jpg",
-        "https://f4.bcbits.com/img/0017154154_10.jpg",
-        "https://f4.bcbits.com/img/0017154156_10.jpg"
-      ],
-      "musicReleaseFormat": "VinylFormat",
-      "name": "Memo Game with album download card",
-      "offers": {
-        "@type": "Offer",
-        "additionalProperty": [
-          {
-            "@type": "PropertyValue",
-            "name": "includes_digital_download",
-            "value": true
-          }
-        ],
-        "availability": "InStock",
-        "price": 18,
-        "priceCurrency": "EUR",
-        "priceSpecification": {
-          "minPrice": 18
-        },
-        "url": "https://dominikeulberg.bandcamp.com/album/mannigfaltig#p974145596-buy"
-      }
-    },
-    {
       "@id": "https://dominikeulberg.bandcamp.com/track/eintagsfliege",
       "@type": "MusicRelease"
     },
@@ -408,56 +331,23 @@
         "@type": "MusicEvent",
         "location": {
           "@type": "MusicVenue",
-          "address": "Le Bourget, France",
-          "name": "Musée de l'Air et de l'Espace"
-        },
-        "name": "Dominik Eulberg",
-        "startDate": "14 May 2022 00:00:00 GMT",
-        "url": "https://www.songkick.com/festivals/3302769-cercle/id/40229492-cercle-festival-2022?utm_source=1471&utm_medium=partner"
-      },
-      {
-        "@type": "MusicEvent",
-        "location": {
-          "@type": "MusicVenue",
-          "address": "Cologne, Germany",
-          "name": "Odonien"
-        },
-        "name": "Dominik Eulberg",
-        "startDate": "22 May 2022 00:00:00 GMT",
-        "url": "https://www.songkick.com/concerts/40387440-dominik-eulberg-at-odonien?utm_source=1471&utm_medium=partner"
-      },
-      {
-        "@type": "MusicEvent",
-        "location": {
-          "@type": "MusicVenue",
-          "address": "Offenbach, Germany",
-          "name": "MTW Club"
-        },
-        "name": "Dominik Eulberg",
-        "startDate": "26 May 2022 00:00:00 GMT",
-        "url": "https://www.songkick.com/concerts/40402946-dominik-eulberg-at-mtw-club?utm_source=1471&utm_medium=partner"
-      },
-      {
-        "@type": "MusicEvent",
-        "location": {
-          "@type": "MusicVenue",
-          "address": "Memmingen, Germany",
-          "name": "Ikarus Festival"
-        },
-        "name": "Dominik Eulberg",
-        "startDate": "02 Jun 2022 00:00:00 GMT",
-        "url": "https://www.songkick.com/festivals/1319688-ikarus/id/39548080-ikarus-festival-2022?utm_source=1471&utm_medium=partner"
-      },
-      {
-        "@type": "MusicEvent",
-        "location": {
-          "@type": "MusicVenue",
           "address": "Bonn, Germany",
           "name": "Freizeitpark Rheinaue"
         },
         "name": "Dominik Eulberg",
         "startDate": "01 Jul 2022 00:00:00 GMT",
         "url": "https://www.songkick.com/festivals/1005553-panama-open-air/id/39405828-panama-open-air-2022?utm_source=1471&utm_medium=partner"
+      },
+      {
+        "@type": "MusicEvent",
+        "location": {
+          "@type": "MusicVenue",
+          "address": "Vitry-sur-Seine, France",
+          "name": "Le kilowatt"
+        },
+        "name": "Dominik Eulberg",
+        "startDate": "15 Jul 2022 00:00:00 GMT",
+        "url": "https://www.songkick.com/festivals/2365164-rituel-days/id/40312330-rituel-days-2022?utm_source=1471&utm_medium=partner"
       }
     ],
     "foundingLocation": {

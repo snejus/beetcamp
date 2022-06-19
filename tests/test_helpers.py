@@ -109,10 +109,11 @@ def test_parse_catalognum(album, disctitle, description, label, expected):
         ("Album VA 03", [], "Album VA 03"),
         # remove (weird chars too) regardless of its position if explicitly excluded
         ("Album †INVI VA006†", ["INVI VA006"], "Album"),
+        ("Album (Label Refix)", [], "Album (Label Refix)"),
     ],
 )
 def test_clean_name(name, extras, expected):
-    assert Helpers.clean_album(name, *extras) == expected
+    assert Helpers.clean_album(name, *extras, label="Label") == expected
 
 
 @pytest.mark.parametrize(

@@ -54,7 +54,8 @@ def test_parse_country(name, expected, json_meta):
 
 
 @pytest.mark.parametrize(
-    ("date", "expected"), [("08 Dec 2020 00:00:00 GMT", date(2020, 12, 8)), (None, None)]
+    ("date", "expected"),
+    [("08 Dec 2020 00:00:00 GMT", date(2020, 12, 8)), (None, None)],
 )
 def test_handles_missing_publish_date(date, expected, json_meta):
     json_meta.update(datePublished=date)

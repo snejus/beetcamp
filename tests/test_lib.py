@@ -20,14 +20,14 @@ from rich_tables.utils import (
     make_difftext,
     new_table,
     simple_panel,
-    wrap
+    wrap,
 )
 
 pytestmark = pytest.mark.lib
 
 BASE_DIR = "lib_tests"
 TEST_DIR = "dev"
-REFERENCE_DIR = "acb453d"
+REFERENCE_DIR = "97295a4"
 JSONS_DIR = "jsons"
 
 IGNORE_FIELDS = {
@@ -146,11 +146,15 @@ def compare(old, new, cache) -> bool:
     if "/album/" in new["data_url"]:
         old.update(
             albumartist=old.pop("artist", ""),
-            tracks=[tuple(t.get(f, "") for f in TRACK_FIELDS) for t in old["tracks"]],
+            tracks=[
+                tuple(t.get(f, "") for f in TRACK_FIELDS) for t in old.get("tracks", [])
+            ],
         )
         new.update(
             albumartist=new.pop("artist", ""),
-            tracks=[tuple(t.get(f, "") for f in TRACK_FIELDS) for t in new["tracks"]],
+            tracks=[
+                tuple(t.get(f, "") for f in TRACK_FIELDS) for t in new.get("tracks", [])
+            ],
         )
         desc = f"{new.get('albumartist', '')} - {new.get('album', '')}"
         _id = new["album_id"]
@@ -160,7 +164,7 @@ def compare(old, new, cache) -> bool:
     table = new_table(padding=0, collapse_padding=True)
     all_fields = set(new).union(set(old))
 
-    compare_key = partial(do_key, table, album=desc)
+    compare_key = partial(do_key, table, album_name=desc)
 
     fail = False
     for key in sorted(all_fields - IGNORE_FIELDS):
@@ -168,9 +172,7 @@ def compare(old, new, cache) -> bool:
         if values[0] is None and values[1] is None:
             continue
         cache_key = f"{_id}_{key}"
-        out = compare_key(
-            key, *values, cached_value=cache.get(cache_key, None), album_name=desc
-        )
+        out = compare_key(key, *values, cached_value=cache.get(cache_key, None))
         cache.set(cache_key, out)
         if values[0] != values[1]:
             fail = True

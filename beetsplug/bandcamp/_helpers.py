@@ -55,10 +55,13 @@ _catalognum = Template(
 _cat_pat = _catalognum.template
 
 CATNUM_PAT = {
-    "with_header": re.compile(r"(?:^|\s)cat[\w .]+?(?:number:?|:) ?(\w[^\n,]+)", re.I),
-    "start_end": re.compile(fr"((^|\n){_cat_pat}|{_cat_pat}(\n|$))", re.VERBOSE),
-    "delimited": re.compile(fr"(?:[\[(])(?!.*MIX){_cat_pat}(?:[])]|$)", re.VERBOSE),
-    "anywhere": re.compile(fr"(?<!,[ ])({_cat_pat}([ ]/[ ]{_cat_pat})?)", re.VERBOSE),
+    "with_header": re.compile(
+        r"(?:^|\s)cat[\w .]+?(?:number\b:?|:) ?(\w[^\n,]+)", re.I
+    ),
+    "start_end": re.compile(rf"((^|\n){_cat_pat}|{_cat_pat}(\n|$))", re.VERBOSE),
+    # enclosed by parens or square brackets, but not ending with MIX
+    "delimited": re.compile(rf"(?:[\[(])(?!.*MIX){_cat_pat}(?:[])]|$)", re.VERBOSE),
+    "anywhere": re.compile(rf"(?<!,[ ])({_cat_pat}([ ]/[ ]{_cat_pat})?)", re.VERBOSE),
 }
 
 _comp = re.compile
@@ -73,7 +76,7 @@ PATTERNS: Dict[str, Pattern] = {
         r"^([A-J]{1,3}[12]?\d|[AB]+(?=\W{2,}))(?:(?!-\w)[^\w(]|_)+", re.I + re.M
     ),
     "vinyl_name": _comp(r"[1-5](?= ?(xLP|LP|x))|single|double|triple", re.I),
-    "clean_incl": _comp(r"(\(?incl|\((inc|tracks|.*remix( |es)))([^)]+\)|.*)", re.I),
+    "clean_incl": _comp(r" *(\(?incl|\((inc|tracks|.*remix( |es)))([^)]+\)|.*)", re.I),
     "tidy_eplp": _comp(r"\S*(?:Double )?(\b[EL]P\b)\S*", re.I),
 }
 rm_strings = [
@@ -173,32 +176,32 @@ class Helpers:
         """Return clean album name.
         Catalogue number and artists to be removed are given as args.
         """
+        # remove 'incl. remixes from ...' and similar
+        name = PATTERNS["clean_incl"].sub("", name)
+
         for arg in [re.escape(arg) for arg in filter(op.truth, args)] + [
             r"Various Artists?\b(?! \w)"
         ]:
-            if not re.search(fr"\w {arg} \w", name, re.I):
+            if not re.search(rf"\w {arg} \w", name, re.I):
                 name = re.sub(
-                    fr"(^|[^'\])\w]|_|\b)+(?i:{arg})([^'(\[\w]|_|(\d+$))*", " ", name
+                    rf"(^|[^'\])\w]|_|\b)+(?i:{arg})([^'(\[\w]|_|(\d+$))*", " ", name
                 ).strip()
 
-        if label and not re.search(fr"\w {label} \w|\w {label}$", name):
-            lpat = fr"(\W\W+{label}\W*|\W*{label}(\W\W+|$)|(^\W*{label}\W*$))(VA)?\d*"
+        if label and not re.search(rf"\({label}|\w {label} \w|\w {label}$", name):
+            lpat = rf"(\W\W+{label}\W*|\W*{label}(\W\W+|$)|(^\W*{label}\W*$))(VA)?\d*"
             name = re.sub(lpat, " ", name, re.I).strip()
 
         name = Helpers.clean_name(name)
-        replacements = [
-            # uppercase EP and LP, and remove surrounding parens / brackets
-            (PATTERNS["tidy_eplp"], lambda x: x.group(1).upper()),
-            (PATTERNS["clean_incl"], ""),
-        ]
-        for pat, repl in replacements:
-            name = pat.sub(repl, name).strip()
-
-        return name.strip(" /-")
+        # uppercase EP and LP, and remove surrounding parens / brackets
+        name = PATTERNS["tidy_eplp"].sub(lambda x: x.group(1).upper(), name)
+        return name.strip(" /")
 
     @staticmethod
-    def get_genre(keywords: Iterable[str], config: JSONDict) -> Iterable[str]:
+    def get_genre(keywords, config, label):
+        # type: (Iterable[str], JSONDict, str) -> Iterable[str]
         """Return a comma-delimited list of valid genres, using MB genres for reference.
+
+        Initially, exclude keywords that are label names (unless they are valid MB genres)
 
         Verify each keyword's (potential genre) validity w.r.t. the configured `mode`:
           * classical: valid only if the _entire keyword_ matches a MB genre in the list
@@ -215,20 +218,23 @@ class Helpers:
             >>> get_genre(['house', 'garage house', 'glitch'], "classical")
             'garage house, glitch'
         """
-        # use a list to keep the initial order
-        genres: List[str] = []
+        unique_genres = ordset()
         valid_mb_genre = partial(op.contains, GENRES)
+        label_name = label.lower().replace(" ", "")
+
+        def is_label_name(kw: str) -> bool:
+            return kw.replace(" ", "") == label_name and not valid_mb_genre(kw)
 
         def is_included(kw: str) -> bool:
             return any(map(lambda x: re.search(x, kw), config["always_include"]))
 
         def valid_for_mode(kw: str) -> bool:
             if config["mode"] == "classical":
-                return kw in GENRES
+                return valid_mb_genre(kw)
 
             words = map(str.strip, kw.split(" "))
             if config["mode"] == "progressive":
-                return kw in GENRES or all(map(valid_mb_genre, words))
+                return valid_mb_genre(kw) or all(map(valid_mb_genre, words))
 
             return valid_mb_genre(kw) or valid_mb_genre(list(words)[-1])
 
@@ -237,10 +243,8 @@ class Helpers:
         for kw in it.chain(*map(split_kw, keywords)):
             # remove full stops and hashes and ensure the expected form of 'and'
             kw = re.sub("[.#]", "", str(kw)).replace("&", "and")
-            if kw not in genres and (is_included(kw) or valid_for_mode(kw)):
-                genres.append(kw)
-
-        unique_genres = set(genres)
+            if not is_label_name(kw) and (is_included(kw) or valid_for_mode(kw)):
+                unique_genres.add(kw)
 
         def duplicate(genre: str) -> bool:
             """Return True if genre is contained within another genre or if,
@@ -254,7 +258,7 @@ class Helpers:
             )
             return any(map(lambda x: genre in x, others))
 
-        return it.filterfalse(duplicate, genres)
+        return it.filterfalse(duplicate, unique_genres)
 
     @staticmethod
     def unpack_props(obj: JSONDict) -> JSONDict:
@@ -304,7 +308,9 @@ class Helpers:
             formats.append(
                 MediaInfo(
                     _format["@id"],
-                    FORMAT_TO_MEDIA[_format.get("musicReleaseFormat") or "DigitalFormat"],
+                    FORMAT_TO_MEDIA[
+                        _format.get("musicReleaseFormat") or "DigitalFormat"
+                    ],
                     _format["name"],
                     _format.get("description") or "",
                 )
@@ -319,7 +325,7 @@ class Helpers:
         @lru_cache(maxsize=None)
         def get_medium_total(medium: int) -> int:
             starts = {1: "AB", 2: "CD", 3: "EF", 4: "GH", 5: "IJ"}[medium]
-            return len(re.findall(fr"^[{starts}]", "\n".join(track_alts), re.M))
+            return len(re.findall(rf"^[{starts}]", "\n".join(track_alts), re.M))
 
         medium = 1
         medium_index = 1

@@ -91,10 +91,7 @@ class Metaguru(Helpers):
 
     @cached_property
     def all_media_comments(self) -> str:
-        return (
-            "\n".join(map(op.attrgetter("description"), self.media_formats))
-            + self.comments
-        )
+        return "\n".join([*[m.description for m in self.media_formats], self.comments])
 
     @cached_property
     def official_album_name(self) -> str:
@@ -169,7 +166,7 @@ class Metaguru(Helpers):
         """
         aartist = self.original_albumartist
         if self.label == aartist:
-            split = self.album_name.split(" - ")
+            split = self.clean_album(self.album_name, self.catalognum).split(" - ")
             if len(split) > 1:
                 aartist = split[0]
 
@@ -259,7 +256,9 @@ class Metaguru(Helpers):
     @cached_property
     def country(self) -> str:
         try:
-            loc = self.meta["publisher"]["foundingLocation"]["name"].rpartition(", ")[-1]
+            loc = self.meta["publisher"]["foundingLocation"]["name"].rpartition(", ")[
+                -1
+            ]
             name = normalize("NFKD", loc).encode("ascii", "ignore").decode()
             return (
                 COUNTRY_OVERRIDES.get(name)
@@ -305,9 +304,9 @@ class Metaguru(Helpers):
         sentences are read from release and media descriptions.
         """
         sentences = re.split(r"[.]\s+|\n", self.all_media_comments)
-        word_pat = re.compile(fr"\b{word}\b", re.I)
-        catnum_pat = re.compile(fr"{word}\d", re.I)
-        name_pat = re.compile(fr"\b(this|{re.escape(self.clean_album_name)})\b", re.I)
+        word_pat = re.compile(rf"\b{word}\b", re.I)
+        catnum_pat = re.compile(rf"{word}\d", re.I)
+        name_pat = re.compile(rf"\b(this|{re.escape(self.clean_album_name)})\b", re.I)
         return bool(
             catnum_pat.search(self.catalognum)
             or word_pat.search(self.album_name + " " + self.vinyl_disctitles)
@@ -392,7 +391,9 @@ class Metaguru(Helpers):
         for word in ["remix", "rmx", "edits", "live", "soundtrack"]:
             if word in self.album_name.lower():
                 albumtypes.add(word.replace("rmx", "remix").replace("edits", "remix"))
-        rmxers = [t.remixer for t in self.tracks if t.remixer and t.remixer != "Original"]
+        rmxers = [
+            t.remixer for t in self.tracks if t.remixer and t.remixer != "Original"
+        ]
         if len(rmxers) == len(self.tracks):
             albumtypes.add("remix")
 
@@ -422,7 +423,7 @@ class Metaguru(Helpers):
             kws = filter(exclude_style, kws)
 
         genre_cfg = self.config["genre"]
-        genres = self.get_genre(kws, genre_cfg)
+        genres = self.get_genre(kws, genre_cfg, self.label)
         if genre_cfg["capitalize"]:
             genres = map(str.capitalize, genres)
         if genre_cfg["maximum"]:
@@ -482,6 +483,8 @@ class Metaguru(Helpers):
     def _trackinfo(self, track: Track, **kwargs: Any) -> TrackInfo:
         data = track.info
         data.update(**self._common, **kwargs)
+        # if track-level catalognum is not found or if it is the same as album's, then
+        # remove it. Otherwise, keep it attached to the track
         if not data["catalognum"] or data["catalognum"] == self.catalognum:
             data.pop("catalognum", None)
         if not data["lyrics"]:

@@ -19,16 +19,18 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import logging
 import re
+from functools import partial
 from html import unescape
 from operator import itemgetter, truth
-from typing import Any, Dict, Iterable, List, Optional, Sequence
+from typing import Any, Dict, Iterable, List, Optional, Sequence, Union
 
 import requests
-from beets import __version__, library, plugins
+from beets import IncludeLazyConfig, __version__, config, library, plugins
 from beets.autotag.hooks import AlbumInfo, TrackInfo
+
 from beetsplug import fetchart  # type: ignore[attr-defined]
 
-from ._metaguru import DATA_SOURCE, Metaguru
+from ._metaguru import Metaguru
 from ._search import search_bandcamp
 
 JSONDict = Dict[str, Any]
@@ -118,13 +120,19 @@ def urlify(pretty_string: str) -> str:
 
 class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
     _gurucache: Dict[str, Metaguru]
+    beets_config: IncludeLazyConfig
 
     def __init__(self) -> None:
         super().__init__()
+        self.beets_config = config
         self.config.add(DEFAULT_CONFIG.copy())
 
         self.register_listener("pluginload", self.loaded)
         self._gurucache = {}
+
+    @property
+    def data_source(self) -> str:
+        return "bandcamp"
 
     def guru(self, url: str, html: Optional[str] = None) -> Optional[Metaguru]:
         """Return cached guru. If there isn't one, fetch the url if html isn't
@@ -144,8 +152,8 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         # TODO: This is ugly, but i didn't find another way to extend fetchart
         # without declaring a new plugin.
         if self.config["art"]:
-            fetchart.ART_SOURCES[DATA_SOURCE] = BandcampAlbumArt
-            fetchart.SOURCE_NAMES[BandcampAlbumArt] = DATA_SOURCE
+            fetchart.ART_SOURCES[self.data_source] = BandcampAlbumArt
+            fetchart.SOURCE_NAMES[BandcampAlbumArt] = self.data_source
             bandcamp_fetchart = BandcampAlbumArt(self._log, self.config)
 
             for plugin in plugins.find_plugins():
@@ -204,7 +212,7 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         search = dict(query=album, artist=artist, label=label, search_type="a")
         results = map(itemgetter("url"), self._search(search))
         for res in filter(truth, map(self.get_album_info, results)):
-            yield from res
+            yield from res or [None]
 
     def item_candidates(self, item, artist, title):
         # type: (library.Item, str, str) -> Iterable[TrackInfo]
@@ -228,11 +236,20 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
 
     def album_for_id(self, album_id: str) -> Optional[AlbumInfo]:
         """Fetch an album by its bandcamp ID."""
-        if _from_bandcamp(album_id):
-            return self.get_album_info(album_id)
+        if not _from_bandcamp(album_id):
+            self._info("Not a bandcamp URL, skipping")
+            return None
 
-        self._info("Not a bandcamp URL, skipping")
-        return None
+        albums = self.get_album_info(album_id)
+        if not albums:
+            return None
+
+        if len(albums) > 1:
+            # get the preferred media
+            preferred = self.beets_config["match"]["preferred"]["media"].get()
+            pref_to_idx = dict(zip(preferred, range(len(preferred))))
+            albums = sorted(albums, key=lambda x: pref_to_idx.get(x.media, 100))
+        return albums[0]
 
     def track_for_id(self, track_id: str) -> Optional[TrackInfo]:
         """Fetch a track by its bandcamp ID."""
@@ -242,17 +259,18 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         self._info("Not a bandcamp URL, skipping")
         return None
 
-    def handle(self, guru: Metaguru, attr: str, _id: str) -> Any:
+    def handle_guru(self, attr, url, html=None):
+        # type: (str, str, Optional[str]) -> Optional[Union[TrackInfo, List[AlbumInfo]]]
         try:
-            return getattr(guru, attr)
+            return getattr(self.guru(url, html=html), attr)
         except (KeyError, ValueError, AttributeError, IndexError):
-            self._info("Failed obtaining {}", _id)
+            self._info("Failed obtaining {}", url)
         except Exception:  # pylint: disable=broad-except
-            url = "https://github.com/snejus/beetcamp/issues/new"
-            self._exc("Unexpected error obtaining {}, please report at {}", _id, url)
+            i_url = "https://github.com/snejus/beetcamp/issues/new"
+            self._exc("Unexpected error obtaining {}, please report at {}", url, i_url)
         return None
 
-    def get_album_info(self, url: str) -> Iterable[AlbumInfo]:
+    def get_album_info(self, url: str) -> Optional[List[AlbumInfo]]:
         """Return an AlbumInfo object for a bandcamp album page.
         If track url is given by mistake, find and fetch the album url instead.
         """
@@ -261,14 +279,12 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
             match = ALBUM_URL_IN_TRACK.search(html)
             if match:
                 url = re.sub(r"/track/.*", match.expand(r"\1"), url)
-                html = self._get(url)
-        guru = self.guru(url, html=html)
-        return self.handle(guru, "albums", url) if guru else None
+                return self.handle_guru("albums", url)
+        return self.handle_guru("albums", url, html)
 
     def get_track_info(self, url: str) -> Optional[TrackInfo]:
         """Returns a TrackInfo object for a bandcamp track page."""
-        guru = self.guru(url)
-        return self.handle(guru, "singleton", url) if guru else None
+        return self.handle_guru("singleton", url)
 
     def _search(self, data: JSONDict) -> Iterable[JSONDict]:
         """Return a list of track/album URLs of type search_type matching the query."""
@@ -278,8 +294,8 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         return results[: self.config["search_max"].as_number()]
 
 
-def get_args() -> Any:
-    from argparse import Action, ArgumentParser, Namespace
+def get_args(args: List[str]) -> Any:
+    from argparse import Action, ArgumentParser
 
     parser = ArgumentParser(
         description="""Get bandcamp release metadata from the given <release-url>
@@ -313,25 +329,23 @@ By default, all types are searched.
         "query", action=UrlOrQueryAction, default="", nargs="?", help="Search query"
     )
 
-    common = dict(dest="search_type", action="store_const")
-    parser.add_argument("-a", "--album", const="a", help="Search albums", **common)
-    parser.add_argument(
-        "-l", "--label", const="b", help="Search labels and artists", **common
+    store_const = partial(
+        parser.add_argument, dest="search_type", action="store_const", default=""
     )
-    parser.add_argument("-t", "--track", const="t", help="Search tracks", **common)
-
-    args = parser.parse_args(namespace=Namespace(search_type=""))
-    if not any(vars(args).values()):
+    store_const("-a", "--album", const="a", help="Search albums")
+    store_const("-l", "--label", const="b", help="Search labels and artists")
+    store_const("-t", "--track", const="t", help="Search tracks")
+    if not args:
         parser.print_help()
         parser.exit()
-
-    return args
+    return parser.parse_args(args=args)
 
 
 def main():
     import json
+    import sys
 
-    args = get_args()
+    args = get_args(sys.argv[1:])
     if args.query:
         result = search_bandcamp(**vars(args))
     else:
