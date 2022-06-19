@@ -114,8 +114,8 @@ def albuminfos(release):
     Objects in beets>=1.5.0 have additional fields, therefore for compatibility ensure
     that only available fields are being used.
     """
-    t_fields = list(TrackInfo(None, None).__dict__)
-    a_fields = list(AlbumInfo(None, None, None, None, None).__dict__)
+    t_fields = list(TrackInfo(None, None).__dict__ or TrackInfo())
+    a_fields = list(AlbumInfo(None, None, None, None, None).__dict__ or AlbumInfo([]))
 
     def _trackinfo(track):
         return TrackInfo(**dict(zip(t_fields, itemgetter(*t_fields)(track))))
