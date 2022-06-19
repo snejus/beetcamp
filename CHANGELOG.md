@@ -1,4 +1,10 @@
-## [0.15.1] Unreleased
+## [0.15.1] 2022-06-19
+
+[0.15.1]: https://github.com/snejus/beetcamp/releases/tag/0.15.1
+
+### Deprecations
+
+* Python 3.6 support will end with the next non-patch version update.
 
 ### Fixed
 
@@ -19,6 +25,8 @@
 
 
 ## [0.15.0] 2022-05-16
+
+[0.15.0]: https://github.com/snejus/beetcamp/releases/tag/0.15.0
 
 ### Added
 

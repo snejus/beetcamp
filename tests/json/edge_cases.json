@@ -61,7 +61,7 @@
       "name": "NYH244 Less Weird Parallel Universe  - Nearly 20 Years of Erikoisdance"
     },
     {
-      "@id": "https://newyorkhaunted.bandcamp.com/album/nyh244-less-weird-parallel-universe-nearly-20-years-of-erikoisdance#b46992444",
+      "@id": "https://newyorkhaunted.bandcamp.com/album/nyh244-less-weird-parallel-universe-nearly-20-years-of-erikoisdance#b47825740",
       "@type": [
         "MusicRelease",
         "Product"
@@ -70,7 +70,7 @@
         {
           "@type": "PropertyValue",
           "name": "item_id",
-          "value": 46992444
+          "value": 47825740
         },
         {
           "@type": "PropertyValue",
@@ -90,7 +90,7 @@
         {
           "@type": "PropertyValue",
           "name": "art_id",
-          "value": 819216448
+          "value": 2595027127
         },
         {
           "@type": "PropertyValue",
@@ -99,17 +99,17 @@
         }
       ],
       "image": [
-        "https://f4.bcbits.com/img/a0819216448_10.jpg"
+        "https://f4.bcbits.com/img/a2595027127_10.jpg"
       ],
       "musicReleaseFormat": "DigitalFormat",
-      "name": "full digital discography (312 releases)",
+      "name": "full digital discography (316 releases)",
       "offers": {
         "@type": "Offer",
         "additionalProperty": [
           {
             "@type": "PropertyValue",
             "name": "bundle_size",
-            "value": 312
+            "value": 316
           },
           {
             "@type": "PropertyValue",
@@ -123,12 +123,12 @@
           }
         ],
         "availability": "OnlineOnly",
-        "price": 124.9,
+        "price": 126.2,
         "priceCurrency": "EUR",
         "priceSpecification": {
-          "minPrice": 124.9
+          "minPrice": 126.2
         },
-        "url": "https://newyorkhaunted.bandcamp.com/album/nyh244-less-weird-parallel-universe-nearly-20-years-of-erikoisdance#b46992444-buy"
+        "url": "https://newyorkhaunted.bandcamp.com/album/nyh244-less-weird-parallel-universe-nearly-20-years-of-erikoisdance#b47825740-buy"
       }
     },
     {
@@ -270,7 +270,7 @@
         "value": 590
       }
     ],
-    "description": "NYH is the label of Dutch producer Drvg Cvltvre. Experimental house and techno. \n\nimagery created by @youtubeartifact\na bot by @dontsave, kandinsky.io and Dream by Wombo.",
+    "description": "NYH is the label of Dutch producer Drvg Cvltvre. Experimental house and techno. \n\nimagery created by @youtubeartifact\na bot by @dontsave, kandinsky.io - Dream by Wombo and Midjourney",
     "foundingLocation": {
       "@type": "Place",
       "name": "Tilburg, Netherlands"

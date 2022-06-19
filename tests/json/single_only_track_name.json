@@ -25,12 +25,19 @@
     "name": "GUTKEIN"
   },
   "copyrightNotice": "All Rights Reserved",
-  "dateModified": "09 Nov 2021 05:15:25 GMT",
+  "dateModified": "04 Jun 2022 22:59:39 GMT",
   "datePublished": "10 Jan 2021 00:00:00 GMT",
   "duration": "P00H05M55S",
   "image": "https://f4.bcbits.com/img/a1255022292_10.jpg",
   "inAlbum": {
     "@type": "MusicAlbum",
+    "additionalProperty": [
+      {
+        "@type": "PropertyValue",
+        "name": "duration",
+        "value": 355.064
+      }
+    ],
     "albumRelease": [
       {
         "@id": "https://gutkeinforu.bandcamp.com/track/oenera",
@@ -82,7 +89,7 @@
           ],
           "availability": "OnlineOnly",
           "price": 1,
-          "priceCurrency": "USD",
+          "priceCurrency": "EUR",
           "priceSpecification": {
             "minPrice": 1
           },
@@ -98,8 +105,7 @@
     "Electronic",
     "keta techno",
     "meta",
-    "trance",
-    "Russia"
+    "trance"
   ],
   "name": "oenera",
   "publisher": {
@@ -114,7 +120,7 @@
       {
         "@type": "PropertyValue",
         "name": "currency",
-        "value": "USD"
+        "value": "EUR"
       },
       {
         "@type": "PropertyValue",
@@ -129,7 +135,7 @@
       {
         "@type": "PropertyValue",
         "name": "image_id",
-        "value": 23849457
+        "value": 28878095
       },
       {
         "@type": "PropertyValue",
@@ -138,12 +144,8 @@
       }
     ],
     "description": "support a tiny acquarium on the tip of a K-hall ~)",
-    "foundingLocation": {
-      "@type": "Place",
-      "name": "Russia"
-    },
     "genre": "https://bandcamp.com/tag/electronic",
-    "image": "https://f4.bcbits.com/img/0023849457_10.jpg",
+    "image": "https://f4.bcbits.com/img/0028878095_10.jpg",
     "mainEntityOfPage": [
       {
         "@type": "WebPage",
