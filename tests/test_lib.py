@@ -27,7 +27,7 @@ pytestmark = pytest.mark.lib
 
 BASE_DIR = "lib_tests"
 TEST_DIR = "dev"
-REFERENCE_DIR = "v0.15.1"
+REFERENCE_DIR = "1e788d6"
 JSONS_DIR = "jsons"
 
 IGNORE_FIELDS = {
@@ -42,6 +42,7 @@ IGNORE_FIELDS = {
     "artwork",
     "city",
     "disctitle",
+    "times_bought",
 }
 
 target_dir = os.path.join(BASE_DIR, TEST_DIR)

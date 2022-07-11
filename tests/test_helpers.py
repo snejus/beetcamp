@@ -90,6 +90,7 @@ def test_parse_catalognum(album, disctitle, description, label, expected):
         ("The Castle [BLCKLPS009] Incl. Remix", [], "The Castle [BLCKLPS009]"),
         ('Anetha - "Ophiuchus EP"', ["Anetha"], "Ophiuchus EP"),
         ("Album (FREE DL)", [], "Album"),
+        ("Album (Single)", [], "Album"),
         (
             "Dax J - EDLX.051 Illusions Of Power",
             ["EDLX.051", "Dax J"],

@@ -4,6 +4,7 @@
 
 * `album`:
   - remove brackets if the entire album name is wrapped in them
+  - remove **(Single)**
   - do not remove **label** from the front if it is not followed by a space
 
 
