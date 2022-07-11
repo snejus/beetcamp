@@ -1,3 +1,14 @@
+## [0.16.0] Unreleased
+
+### Updated
+
+* `album`:
+  - remove brackets if the entire album name is wrapped in them
+  - do not remove **label** from the front if it is not followed by a space
+
+
+[0.16.0]: https://github.com/snejus/beetcamp/releases/tag/0.16.0
+
 ## [0.15.1] 2022-06-19
 
 [0.15.1]: https://github.com/snejus/beetcamp/releases/tag/0.15.1
@@ -37,7 +48,7 @@
     ```
 
   - Search is activated with an argument that does not start with **https://**. It queries
-    bandcamp with the provided QUERY and returns a JSON list with all search results from
+    Bandcamp with the provided QUERY and returns a JSON list with all search results from
     the first page, sorted by relevancy.
 
   - Flags **-a**, **-l** and **-t** can be used to search for **album**, **label/artist** or

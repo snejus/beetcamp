@@ -176,8 +176,8 @@ class Helpers:
         """Return clean album name.
         Catalogue number and artists to be removed are given as args.
         """
-        # remove 'incl. remixes from ...' and similar
         name = PATTERNS["clean_incl"].sub("", name)
+        name = re.sub(r"^\[(.*)\]$", r"\1", name)
 
         for arg in [re.escape(arg) for arg in filter(op.truth, args)] + [
             r"Various Artists?\b(?! \w)"
@@ -187,7 +187,8 @@ class Helpers:
                     rf"(^|[^'\])\w]|_|\b)+(?i:{arg})([^'(\[\w]|_|(\d+$))*", " ", name
                 ).strip()
 
-        if label and not re.search(rf"\({label}|\w {label} \w|\w {label}$", name):
+        label_allow_pat = r"^{0}[^ ]|\({0}|\w {0} \w|\w {0}$".format(label)
+        if label and not re.search(label_allow_pat, name):
             lpat = rf"(\W\W+{label}\W*|\W*{label}(\W\W+|$)|(^\W*{label}\W*$))(VA)?\d*"
             name = re.sub(lpat, " ", name, re.I).strip()
 

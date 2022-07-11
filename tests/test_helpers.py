@@ -109,7 +109,11 @@ def test_parse_catalognum(album, disctitle, description, label, expected):
         ("Album VA 03", [], "Album VA 03"),
         # remove (weird chars too) regardless of its position if explicitly excluded
         ("Album †INVI VA006†", ["INVI VA006"], "Album"),
+        # keep label name
         ("Album (Label Refix)", [], "Album (Label Refix)"),
+        ("Label-Album", [], "Label-Album"),
+        # and remove brackets
+        ("[Label: Album]", [], "Label: Album"),
     ],
 )
 def test_clean_name(name, extras, expected):
