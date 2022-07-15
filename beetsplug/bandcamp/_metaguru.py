@@ -116,17 +116,15 @@ class Metaguru(Helpers):
             return list(album_in_tracks)[0]
 
         album = self.album_name
-        for pat, text in [
-            (r"(((&|#?\b(?!Double|VA|Various)(\w|[^\w| -])+) )+[EL]P)", album),
-            (r"((['\"])([^'\"]+)\2( VA\d+)*)( |$)", album),
+        for pat in [
+            r"(((&|#?\b(?!Double|VA|Various)(\w|[^\w| -])+) )+[EL]P)",
+            r"((['\"])([^'\"]+)\2( VA\d+)*)( |$)",
         ]:
-            m = re.search(pat, text)
+            m = re.search(pat, album)
             if m:
                 album = m.group(1).strip()
-                if album[0] in "'\"" and album[-1] in "'\"":
-                    return album.strip("\"'")
-                return album
-        return ""
+                return re.sub(r"^['\"](.+)['\"]$", r"\1", album)
+        return album
 
     @cached_property
     def album_name(self) -> str:
@@ -157,7 +155,8 @@ class Metaguru(Helpers):
     @cached_property
     def original_albumartist(self) -> str:
         m = re.search(r"Artists?:([^\n]+)", self.all_media_comments)
-        return m.group(1).strip() if m else self.meta["byArtist"]["name"]
+        aartist = m.group(1).strip() if m else self.meta["byArtist"]["name"]
+        return re.sub(r" +// +", ", ", aartist)
 
     @cached_property
     def bandcamp_albumartist(self) -> str:
@@ -171,21 +170,19 @@ class Metaguru(Helpers):
                 aartist = split[0]
 
         aartists = Helpers.split_artists([aartist])
-        remixers_str = " ".join(self._tracks.other_artists)
+        if len(aartists) == 1:
+            return aartist
+
+        remixers_str = " ".join(self._tracks.other_artists).lower()
 
         def not_remixer(x: str) -> bool:
-            return not any(map(lambda y: y in remixers_str, {x, *x.split(" & ")}))
+            splits = {x, *x.split(" & ")}
+            return not any(map(lambda y: y.lower() in remixers_str, splits))
 
         valid = list(filter(not_remixer, aartists))
-        if (
-            len(aartists) == 1
-            or len(valid) == len(aartists)
-            and len(self._tracks.artists) <= 4
-        ):
-            ret = aartist
-        else:
-            ret = ", ".join(valid)
-        return ret
+        if len(valid) == len(aartists) and len(self._tracks.artists) <= 4:
+            return aartist
+        return ", ".join(valid)
 
     @cached_property
     def image(self) -> str:
@@ -284,6 +281,9 @@ class Metaguru(Helpers):
         """
         if self.va:
             return self.va_name
+
+        if len(self._tracks) == 1:
+            return self.tracks.first.artist
 
         aartist = self.original_albumartist
         if self.unique_artists:
@@ -501,8 +501,7 @@ class Metaguru(Helpers):
     def singleton(self) -> TrackInfo:
         self._singleton = True
         self.media = self.media_formats[0]
-        track = list(self.tracks)[0]
-        track = self._trackinfo(track)
+        track = self._trackinfo(self.tracks.first)
         if NEW_BEETS:
             track.update(self._common_album)
             track.pop("album", None)

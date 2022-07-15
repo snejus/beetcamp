@@ -262,6 +262,10 @@ class Tracks(list):
             ]
         )
 
+    @cached_property
+    def first(self) -> Track:
+        return self.tracks[0]
+
     @staticmethod
     def common_catalognum(names: List[str], delim: str) -> Tuple[str, List[str]]:
         """Split each track name into words, find the list of words that are common
@@ -330,7 +334,7 @@ class Tracks(list):
         or some UTF-8 equivalent of a dash.
 
         This checks every track for the first character (see the regex for exclusions)
-        that splits it. The character that splits the most and at least half of 
+        that splits it. The character that splits the most and at least half of
         the tracks is the character we need.
 
         If no such character is found, or if we have just one track, return a dash '-'.
