@@ -29,69 +29,72 @@ def parse_title(source: str, title: str) -> JSONDict:
     data: JSONDict = {}
     if title.startswith("DETECT"):
         data["album"] = "DETECT"
-        pat = fr"\[{index_pat}\] - {title_pat}"
+        pat = rf"\[{index_pat}\] - {title_pat}"
     elif title.startswith("Morph"):
         data["album"] = "Morph"
-        pat = fr"{index_pat} {artist_pat}"
+        pat = rf"{index_pat} {artist_pat}"
     elif "DISSENTIENT" in source:
         data["album"] = source
-        pat = fr"{index_pat}[ .-]+(?P<title>{artist_pat}.*)$"
+        pat = rf"{index_pat}[ .-]+(?P<title>{artist_pat}.*)$"
     elif title.startswith("Ismcast"):
         data["album"] = "Ismcast"
-        pat = fr"{index_pat} - (?P<title>{artist_pat}.*)$"
+        pat = rf"{index_pat} - (?P<title>{artist_pat}.*)$"
     elif title.startswith("DUSKCAST"):
         data["album"] = "DUSKCAST"
-        pat = fr"{index_pat} [|] {artist_pat}"
+        pat = rf"{index_pat} [|] {artist_pat}"
     elif title.startswith("Axxidcast"):
         data["album"] = "Axxidcast"
         pat = r"w/ (?P<artist>[^-]+) - .* (?P<index>[0-9.]+)$"
     elif title.startswith("CRUDE"):
         data["album"] = "CRUDE MIX Series"
         data["label"] = "CRUDE"
-        pat = fr"CRUDE MIX\D+{index_pat} - {artist_pat}(_+(?P<title>[^_]+))?$"
+        pat = rf"CRUDE MIX\D+{index_pat} - {artist_pat}(_+(?P<title>[^_]+))?$"
     elif "SlamRadio" in title:
         data["album"] = "SlamRadio"
-        pat = fr"- {index_pat} - {artist_pat}$"
+        pat = rf"- {index_pat} - {artist_pat}$"
     elif title.startswith("HER "):
         data["album"] = "HER Transmission"
-        pat = fr"{index_pat}: {artist_pat}$"
+        pat = rf"{index_pat}: {artist_pat}$"
     elif title.startswith("BunkerBauer"):
         data["album"] = "BunkerBauer Podcast"
-        pat = fr"Podcast {index_pat} {artist_pat}$"
+        pat = rf"Podcast {index_pat} {artist_pat}$"
     elif title.startswith("HRA PODCAST"):
         data["album"] = "HRA PODCAST"
-        pat = fr"PODCAST {index_pat} // {artist_pat}$"
+        pat = rf"PODCAST {index_pat} // {artist_pat}$"
     elif title.startswith("Voight-Kampff Podcast"):
         data["album"] = "Voight-Kampff Podcast"
-        pat = fr"(?P<title>Episode {index_pat}) // {artist_pat}$"
+        pat = rf"(?P<title>Episode {index_pat}) // {artist_pat}$"
     elif title.startswith("Reclaim Your"):
         data["album"] = "Reclaim Your City"
-        pat = fr"City {index_pat} [|] {artist_pat}$"
+        pat = rf"City {index_pat} [|] {artist_pat}$"
     elif "Boiler Room" in title:
         data["album"] = "Boiler Room"
-        pat = fr"{artist_pat} [|] Boiler Room x {title_pat}$"
+        pat = rf"{artist_pat} [|] Boiler Room x {title_pat}$"
     elif title.startswith("STRECK PO"):
         data["label"], data["album"] = "STRECK", "STRECK PODCAST"
-        pat = fr"{index_pat} [|] {artist_pat}"
+        pat = rf"{index_pat} [|] {artist_pat}"
     elif title.startswith("Hard Dance"):
         data["album"] = "Hard Dance"
-        pat = fr"{index_pat} [:] {artist_pat}"
+        pat = rf"{index_pat} [:] {artist_pat}"
     elif "SLIT " in title:
         data["album"] = "SLIT"
-        pat = fr"{artist_pat} [|] SLIT - {title_pat}$"
+        pat = rf"{artist_pat} [|] SLIT - {title_pat}$"
     elif "FOLD Invites" in title:
         data["label"], data["album"], data["title"] = "FOLD", "FOLD Invites", title
-        pat = fr"Invites {artist_pat}$"
+        pat = rf"Invites {artist_pat}$"
     elif "IN•FER•NAL" in title:
         data["label"], data["album"] = "IN•FER•NAL", "IN•FER•NAL PODCAST"
         data["title"] = title.rsplit(" - ", 1)[0]
-        pat = fr"PODCAST #{index_pat} - {artist_pat}$"
+        pat = rf"PODCAST #{index_pat} - {artist_pat}$"
     elif "PUPPY MIX" in title:
         data["label"], data["album"] = "PUPPY", "PUPPY MIX"
         pat = rf".PUPPY MIX {index_pat}. \* {artist_pat}$"
     elif title.startswith("DEADCAST"):
         data["album"] = "DEADCAST"
         pat = rf"DEADCAST{index_pat} x {artist_pat}( [\[](?P<label>[^]]+)[]])?$"
+    elif title.startswith("Digital Tsunami"):
+        data["label"] = data["album"] = "Digital Tsunami"
+        pat = rf"Digital Tsunami {index_pat} - {artist_pat}"
     elif re.match(r"Hardcore \d+", title):
         data["album"], data["title"] = "Hardcore", title
         pat = rf"Hardcore {index_pat}"
@@ -107,7 +110,7 @@ def parse_title(source: str, title: str) -> JSONDict:
             data["album"] = ""
         pat = "aaaaaa"
     else:
-        pat = fr"{artist_pat} - {title_pat}"
+        pat = rf"{artist_pat} - {title_pat}"
     if pat:
         match = re.search(pat, title)
         if match:
@@ -119,9 +122,11 @@ def parse_title(source: str, title: str) -> JSONDict:
     if not artist:
         data["artist"] = source
     else:
-        data["artist"] = (
-            (data.get("artist") or "").replace(" live", "").replace(" (liveset)", "")
-        )
+        m = re.search(r" [^ ]*live[^ ]*", artist, re.I)
+        if m:
+            data["title"] = data["artist"]
+            data["artist"] = data["artist"].replace(m.group(0), "")
+            data["live"] = True
         if data["artist"] == data.get("title") or "":
             data.pop("title", None)
 
@@ -165,7 +170,9 @@ def get_soundcloud_track(data: JSONDict, config: JSONDict) -> TrackInfo:
     artwork_url = (data.get("artwork_url") or "").replace("-large", "-t500x500")
     if artwork_url:
         track["artwork_url"] = artwork_url
-    visual_url = (userdata.get("visuals") or {}).get("visuals", [{}])[0].get("visual_url")
+    visual_url = (
+        (userdata.get("visuals") or {}).get("visuals", [{}])[0].get("visual_url")
+    )
     if visual_url:
         track["visual_url"] = visual_url
 
@@ -177,7 +184,7 @@ def get_soundcloud_track(data: JSONDict, config: JSONDict) -> TrackInfo:
     if track.length > 2000:
         track.albumtype = "broadcast"
         albumtypes = {"dj-mix", "broadcast"}
-    if "live" in (track.get("title") or ""):
+    if track.pop("live", None):
         albumtypes.add("live")
     track.albumtypes = "; ".join(sorted(albumtypes))
     if "album" in track:
