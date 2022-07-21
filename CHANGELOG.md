@@ -7,7 +7,9 @@
   - remove **(Single)**
   - do not remove **label** from the front if it is not followed by a space
 
-* `artist`: keep the original artist separator in releases with a single track
+* `artist`: 
+  - keep the original artist separator in releases with a single track
+  - replace ` // ` separator with `, ` in all cases
 
 
 [0.16.0]: https://github.com/snejus/beetcamp/releases/tag/0.16.0
