@@ -95,6 +95,10 @@ def parse_title(source: str, title: str) -> JSONDict:
     elif title.startswith("Digital Tsunami"):
         data["label"] = data["album"] = "Digital Tsunami"
         pat = rf"Digital Tsunami {index_pat} - {artist_pat}"
+    elif title.startswith("ANGELSCAST"):
+        data["label"] = "angels gun club"
+        data["album"] = "ANGELSCAST"
+        pat = rf"ANGELSCAST {index_pat} - {artist_pat}"
     elif re.match(r"Hardcore \d+", title):
         data["album"], data["title"] = "Hardcore", title
         pat = rf"Hardcore {index_pat}"
