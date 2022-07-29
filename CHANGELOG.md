@@ -1,5 +1,9 @@
 ## [0.16.0] Unreleased
 
+### Removed
+
+* Dropped support for `python 3.6`.
+
 ### Updated
 
 * `album`:

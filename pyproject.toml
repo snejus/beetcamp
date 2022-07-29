@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "beetcamp"
-version = "0.16.0-alpha.0"
+version = "0.16.0-alpha.1"
 description = "Bandcamp autotagger source for beets (http://beets.io)."
 authors = ["Šarūnas Nejus <snejus@pm.me>"]
 readme = "README.md"
@@ -25,7 +25,7 @@ Changelog = "https://github.com/snejus/beetcamp/blob/master/CHANGELOG.md"
 "Bug Tracker" = "https://github.com/snejus/beetcamp/issues"
 
 [tool.poetry.dependencies]
-python = ">=3.6.2, <4"
+python = ">=3.7, <4"
 
 requests = ">=2.27"
 cached-property = { version = ">=1.5.2", python = "<3.8" }
