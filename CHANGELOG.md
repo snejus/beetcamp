@@ -4,6 +4,11 @@
 
 * Dropped support for `python 3.6`.
 
+### Added
+
+* CLI search: index search results and add flag `-o, --open=INDEX` to open the given
+  result in the browser
+
 ### Updated
 
 * `album`:

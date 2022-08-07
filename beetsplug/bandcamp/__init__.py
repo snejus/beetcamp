@@ -335,6 +335,14 @@ By default, all types are searched.
     store_const("-a", "--album", const="a", help="Search albums")
     store_const("-l", "--label", const="b", help="Search labels and artists")
     store_const("-t", "--track", const="t", help="Search tracks")
+    parser.add_argument(
+        "-o",
+        "--open",
+        action="store",
+        dest="index",
+        type=int,
+        help="Open search result indexed by INDEX",
+    )
     if not args:
         parser.print_help()
         parser.exit()
@@ -346,8 +354,11 @@ def main():
     import sys
 
     args = get_args(sys.argv[1:])
-    if args.query:
-        result = search_bandcamp(**vars(args))
+
+    search_vars = vars(args)
+    index = search_vars.pop("index", None)
+    if search_vars.get("query"):
+        result = search_bandcamp(**search_vars)
     else:
         pl = BandcampPlugin()
         result = pl.album_for_id(args.release_url) or pl.track_for_id(args.release_url)
@@ -355,6 +366,16 @@ def main():
             raise AssertionError("Failed to find a release under the given url")
 
     print(json.dumps(result))
+    if index:
+        try:
+            url = result[index - 1]["url"]
+        except IndexError as e:
+            raise Exception("Specified index could not be found") from e
+
+        import webbrowser
+
+        print(f"Opening search result number {index}: {url}")
+        webbrowser.open()
 
 
 if __name__ == "__main__":
