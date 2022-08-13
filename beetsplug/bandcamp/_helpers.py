@@ -7,7 +7,7 @@ from string import Template
 from typing import Any, Dict, Iterable, List, NamedTuple, Pattern, Tuple
 
 from beets.autotag.hooks import AlbumInfo
-from ordered_set import OrderedSet as ordset  # type: ignore
+from ordered_set import OrderedSet as ordset
 
 from .genres_lookup import GENRES
 
@@ -128,8 +128,8 @@ class Helpers:
             for char in "X&":
                 subartists = artist.split(f" {char} ")
                 if len(subartists) > 1 and any(s in split_artists for s in subartists):
-                    split_artists.discard(artist)
-                    split_artists.update(subartists)
+                    split_artists.discard(artist)  # type: ignore[attr-defined]
+                    split_artists.update(subartists)  # type: ignore[attr-defined]
         return list(split_artists)
 
     @staticmethod
@@ -220,7 +220,6 @@ class Helpers:
             >>> get_genre(['house', 'garage house', 'glitch'], "classical")
             'garage house, glitch'
         """
-        unique_genres = ordset()
         valid_mb_genre = partial(op.contains, GENRES)
         label_name = label.lower().replace(" ", "")
 
@@ -228,7 +227,7 @@ class Helpers:
             return kw.replace(" ", "") == label_name and not valid_mb_genre(kw)
 
         def is_included(kw: str) -> bool:
-            return any(map(lambda x: re.search(x, kw), config["always_include"]))
+            return any(re.search(x, kw) for x in config["always_include"])
 
         def valid_for_mode(kw: str) -> bool:
             if config["mode"] == "classical":
@@ -240,6 +239,7 @@ class Helpers:
 
             return valid_mb_genre(kw) or valid_mb_genre(list(words)[-1])
 
+        unique_genres: ordset[str] = ordset()
         # expand badly delimited keywords
         split_kw = partial(re.split, r"[.] | #| - ")
         for kw in it.chain(*map(split_kw, keywords)):
@@ -255,10 +255,8 @@ class Helpers:
             and not the other way around.
             """
             others = unique_genres - {genre}
-            others = others.union(
-                map(lambda x: x.replace(" ", "").replace("-", ""), others)
-            )
-            return any(map(lambda x: genre in x, others))
+            others = others.union(x.replace(" ", "").replace("-", "") for x in others)  # type: ignore[attr-defined] # noqa
+            return any(genre in x for x in others)
 
         return it.filterfalse(duplicate, unique_genres)
 

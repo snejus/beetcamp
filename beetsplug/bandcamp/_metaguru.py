@@ -13,8 +13,7 @@ from unicodedata import normalize
 from beets import __version__ as beets_version
 from beets import config as beets_config
 from beets.autotag.hooks import AlbumInfo, TrackInfo
-from ordered_set import OrderedSet as ordset  # type: ignore[import]
-from pkg_resources import get_distribution, parse_version
+from ordered_set import OrderedSet as ordset
 from pycountry import countries, subdivisions
 
 from ._helpers import PATTERNS, Helpers, MediaInfo
@@ -179,7 +178,7 @@ class Metaguru(Helpers):
 
         def not_remixer(x: str) -> bool:
             splits = {x, *x.split(" & ")}
-            return not any(map(lambda y: y.lower() in remixers_str, splits))
+            return not any(y.lower() in remixers_str for y in splits)
 
         valid = list(filter(not_remixer, aartists))
         if len(valid) == len(aartists) and len(self._tracks.artists) <= 4:
@@ -312,7 +311,7 @@ class Metaguru(Helpers):
         return bool(
             catnum_pat.search(self.catalognum)
             or word_pat.search(self.album_name + " " + self.vinyl_disctitles)
-            or any(map(lambda s: word_pat.search(s) and name_pat.search(s), sentences))
+            or any(word_pat.search(s) and name_pat.search(s) for s in sentences)
         )
 
     @cached_property
@@ -339,7 +338,7 @@ class Metaguru(Helpers):
         """
         matches = re.findall(r"\b(album|ep|lp)\b", self.all_media_comments.lower())
         if matches:
-            counts = Counter(map(lambda x: x.replace("lp", "album"), matches))
+            counts = Counter(x.replace("lp", "album") for x in matches)
             # if equal, we assume it's an EP since it's more likely that an EP is
             # referred to as an "album" rather than the other way around
             if counts["ep"] >= counts["album"]:
@@ -458,12 +457,12 @@ class Metaguru(Helpers):
 
     @property
     def _common(self) -> JSONDict:
-        return dict(
-            data_source=DATA_SOURCE,
-            media=self.media.name,
-            data_url=self.album_id,
-            artist_id=self.artist_id,
-        )
+        return {
+            "data_source": DATA_SOURCE,
+            "media": self.media.name,
+            "data_url": self.album_id,
+            "artist_id": self.artist_id,
+        }
 
     def get_fields(self, fields: Iterable[str], src: object = None) -> JSONDict:
         """Return a mapping between unexcluded fields and their values."""
@@ -475,7 +474,7 @@ class Metaguru(Helpers):
 
     @property
     def _common_album(self) -> JSONDict:
-        common_data: JSONDict = dict(album=self.clean_album_name)
+        common_data: JSONDict = {"album": self.clean_album_name}
         fields = ["label", "catalognum", "albumtype", "country"]
         if NEW_BEETS:
             fields.extend(["genre", "style", "comments", "albumtypes"])

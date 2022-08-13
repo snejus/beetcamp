@@ -209,7 +209,7 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         if "various" in artist.lower():
             artist = ""
 
-        search = dict(query=album, artist=artist, label=label, search_type="a")
+        search = {"query": album, "artist": artist, "label": label, "search_type": "a"}
         results = map(itemgetter("url"), self._search(search))
         for res in filter(truth, map(self.get_album_info, results)):
             yield from res or [None]
@@ -230,7 +230,7 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
                 yield initial_guess
                 return
 
-        search = dict(query=title, artist=artist, label=label, search_type="t")
+        search = {"query": title, "artist": artist, "label": label, "search_type": "t"}
         results = map(itemgetter("url"), self._search(search))
         yield from filter(truth, map(self.get_track_info, results))
 

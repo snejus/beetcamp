@@ -1,5 +1,6 @@
 """Module with track parsing functionality."""
 import itertools as it
+import operator as op
 import re
 import sys
 from collections import Counter
@@ -7,7 +8,7 @@ from dataclasses import dataclass, field
 from functools import reduce
 from typing import Iterator, List, Optional, Set, Tuple
 
-from ordered_set import OrderedSet as ordset  # type: ignore
+from ordered_set import OrderedSet as ordset
 
 from ._helpers import CATNUM_PAT, PATTERNS, Helpers, JSONDict
 
@@ -74,13 +75,13 @@ class Track:
         except KeyError:
             artist = ""
         artist = artist or json.get("byArtist", {}).get("name", "")
-        data = dict(
-            json_item=json,
-            json_artist=artist,
-            track_id=json["@id"],
-            index=json["position"],
-            catalognum=catalognum,
-        )
+        data = {
+            "json_item": json,
+            "json_artist": artist,
+            "track_id": json["@id"],
+            "index": json["position"],
+            "catalognum": catalognum,
+        }
         return cls(**cls.parse_name(data, name, delim, label))
 
     @staticmethod
@@ -216,18 +217,18 @@ class Track:
 
     @property
     def info(self) -> JSONDict:
-        return dict(
-            index=self.index if not self.single else None,
-            medium_index=self.index if not self.single else None,
-            medium=None,
-            track_id=self.track_id,
-            artist=self.artist + (f" {self.ft}" if self.ft else ""),
-            title=self.title,
-            length=self.duration,
-            track_alt=self.track_alt,
-            lyrics=self.lyrics,
-            catalognum=self.catalognum or None,
-        )
+        return {
+            "index": self.index if not self.single else None,
+            "medium_index": self.index if not self.single else None,
+            "medium": None,
+            "track_id": self.track_id,
+            "artist": self.artist + (f" {self.ft}" if self.ft else ""),
+            "title": self.title,
+            "length": self.duration,
+            "track_alt": self.track_alt,
+            "lyrics": self.lyrics,
+            "catalognum": self.catalognum or None,
+        }
 
 
 @dataclass
@@ -275,9 +276,9 @@ class Tracks(list):
         Return the catalog number and the new list of names.
         """
         names_tokens = list(map(str.split, names))
-        common_words = ordset.intersection(*names_tokens) - {delim}
+        common_words = reduce(op.and_, [ordset(x) for x in names_tokens]) - {delim}
         if common_words:
-            for word in set([common_words[0], common_words[-1]]):
+            for word in {common_words[0], common_words[-1]}:  # type: ignore[index]
                 m = CATNUM_PAT["anywhere"].search(word)
                 if m:
                     for tokens in names_tokens:
