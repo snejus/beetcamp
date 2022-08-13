@@ -26,7 +26,7 @@ RELEASE_PATTERNS = [
     re.compile(r"\n\s+by " + _f("artist")),
     re.compile(r"\n\s+released " + _f("date")),
     re.compile(r"\n\s+(?P<tracks>\d+) tracks"),
-    re.compile(r"(?P<url>https://(?P<label>(?!bandcamp)[^.]+)[.](?!bcbits)[\w/.-]+)"),
+    re.compile(r"(?P<url>https://(?:bandcamp\.)?(?P<label>(?!bandcamp|com)[^.]+)[.](?!bcbits)[\w/.-]+)"),
 ]
 
 
