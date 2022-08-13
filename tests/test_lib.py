@@ -27,7 +27,7 @@ pytestmark = pytest.mark.lib
 
 BASE_DIR = "lib_tests"
 TEST_DIR = "dev"
-REFERENCE_DIR = "66da3b8"
+REFERENCE_DIR = "07ea618"
 JSONS_DIR = "jsons"
 
 IGNORE_FIELDS = {
@@ -219,8 +219,12 @@ def test_file(file, guru, cache):
                 break
 
     new.catalognum = " / ".join(filter(truth, map(lambda x: x.catalognum, guru.albums)))
-    with open(target_file, "w") as f:
-        json.dump(new, f, indent=2)
+    with open(target_file) as f:
+        contents = json.load(f)
+
+    if new != contents:
+        with open(target_file, "w") as f:
+            json.dump(new, f, indent=2)
 
     try:
         with open(os.path.join(compare_against, file)) as f:
