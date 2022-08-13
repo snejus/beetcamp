@@ -196,7 +196,7 @@ class Metaguru(Helpers):
 
         If the field is not found, return None.
         """
-        rel = self.meta.get("datePublished")
+        rel = self.meta.get("datePublished") or self.meta.get("dateModified")
         if rel:
             return datetime.strptime(re.sub(r" \d{2}:.+", "", rel), "%d %b %Y").date()
         return rel

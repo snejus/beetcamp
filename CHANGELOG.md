@@ -1,5 +1,7 @@
 ## [0.16.0] Unreleased
 
+[0.16.0]: https://github.com/snejus/beetcamp/releases/tag/0.16.0
+
 ### Removed
 
 * Dropped support for `python 3.6`.
@@ -20,8 +22,8 @@
   - keep the original artist separator in releases with a single track
   - replace ` // ` separator with `, ` in all cases
 
+* `release_date`: in rare cases when it is not found, use the _last modified_ date
 
-[0.16.0]: https://github.com/snejus/beetcamp/releases/tag/0.16.0
 
 ## [0.15.1] 2022-06-19
 
