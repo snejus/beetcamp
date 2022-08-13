@@ -10,6 +10,7 @@ from functools import partial
 from typing import Any, Dict, Iterable, List, Optional, Set
 from unicodedata import normalize
 
+from beets import __version__ as beets_version
 from beets import config as beets_config
 from beets.autotag.hooks import AlbumInfo, TrackInfo
 from ordered_set import OrderedSet as ordset  # type: ignore[import]
@@ -24,7 +25,7 @@ if sys.version_info.minor > 7:
 else:
     from cached_property import cached_property  # type: ignore # pylint: disable=import-error # noqa
 
-NEW_BEETS = get_distribution("beets").parsed_version >= parse_version("1.5.0")
+NEW_BEETS = beets_version.split(".")[1] >= 4
 
 JSONDict = Dict[str, Any]
 
