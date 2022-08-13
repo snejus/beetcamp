@@ -17,6 +17,8 @@
   - remove brackets if the entire album name is wrapped in them
   - remove **(Single)**
   - do not remove **label** from the front if it is not followed by a space
+  - fix some false positives found in the comments when the album name is followed by
+    **EP** or **LP**
 
 * `artist`: 
   - keep the original artist separator in releases with a single track

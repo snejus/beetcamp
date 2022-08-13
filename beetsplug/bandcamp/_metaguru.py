@@ -107,9 +107,10 @@ class Metaguru(Helpers):
     def parsed_album_name(self) -> str:
         """
         Search for the album name in the following order and return the first match:
-        1. See whether all track names contain {album name} EP or LP
-        2. EP or LP is in the release name, deduce the album name from there
-        3. Check whether the release name has it wrapped in quotes
+        1. Album name is found in *all* track names
+        2. When 'EP' or 'LP' is in the release name, album name is what precedes it.
+        3. If some words are enclosed in quotes in the release name, it is assumed
+           to be the album name. Remove the quotes in such case.
         """
         album_in_tracks = {t.album for t in self._tracks if t.album}
         if len(album_in_tracks) == 1:
@@ -433,8 +434,12 @@ class Metaguru(Helpers):
 
     @cached_property
     def eplp_album_comments(self) -> str:
-        m = re.search(r"[:-] ?([A-Z][\w ]+ ((?!an )[EL]P))", self.all_media_comments)
-        return m.group(1) if m else ""
+        """Parse comments looking for an indication of an album in the following format
+        (Capital-case Album Name) (EP or LP)
+        and return the matching album name if found.
+        """
+        m = re.search(r"((?!The|This)\b[A-Z][^ \n]+\b )+[EL]P", self.all_media_comments)
+        return m.group() if m else ""
 
     @cached_property
     def clean_album_name(self) -> str:
