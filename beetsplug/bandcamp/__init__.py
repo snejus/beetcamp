@@ -365,7 +365,6 @@ def main():
         if not result:
             raise AssertionError("Failed to find a release under the given url")
 
-    print(json.dumps(result))
     if index:
         try:
             url = result[index - 1]["url"]
@@ -375,7 +374,9 @@ def main():
         import webbrowser
 
         print(f"Opening search result number {index}: {url}")
-        webbrowser.open()
+        webbrowser.open(url)
+    else:
+        print(json.dumps(result))
 
 
 if __name__ == "__main__":
