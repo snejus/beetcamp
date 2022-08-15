@@ -36,7 +36,7 @@ def search_data():
 def test_search_logic(search_data):
     """Given a single matching release, the similarity should be 1."""
     results = parse_and_sort_results(make_html_item(search_data), **search_data)
-    assert results == [{**search_data, "similarity": 1.0}]
+    assert results == [{**search_data, "similarity": 1.0, "index": 1}]
 
 
 def test_search_prioritises_best_matches(search_data):
@@ -47,17 +47,18 @@ def test_search_prioritises_best_matches(search_data):
         **search_data,
         "name": "Specific Release",
         "url": "https://label.bandcamp.com/album/specific-release",
+        "index": 1,
+        "similarity": 0.955,
     }
     other_result = {
         **search_data,
         "name": "Release",
         "url": "https://label.bandcamp.com/album/release",
+        "index": 2,
+        "similarity": 0.925,
     }
 
-    expected_results = [
-        {**expected_result, "similarity": 0.955},
-        {**other_result, "similarity": 0.925},
-    ]
+    expected_results = [expected_result, other_result]
 
     html = make_html_item(other_result) + "\n" + make_html_item(expected_result)
     results = parse_and_sort_results(
