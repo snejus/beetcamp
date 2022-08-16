@@ -24,7 +24,7 @@ if sys.version_info.minor > 7:
 else:
     from cached_property import cached_property  # type: ignore # pylint: disable=import-error # noqa
 
-NEW_BEETS = int(beets_version.split(".")[1]) >= 4
+NEW_BEETS = int(beets_version.split(".")[1]) > 4
 
 JSONDict = Dict[str, Any]
 
