@@ -278,7 +278,7 @@ class Tracks(list):
         names_tokens = list(map(str.split, names))
         common_words = reduce(op.and_, [ordset(x) for x in names_tokens]) - {delim}
         if common_words:
-            for word in {common_words[0], common_words[-1]}:  # type: ignore[index]
+            for word in common_words[0], common_words[-1]:  # type: ignore[index]
                 m = CATNUM_PAT["anywhere"].search(word)
                 if m:
                     for tokens in names_tokens:

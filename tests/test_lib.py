@@ -7,7 +7,6 @@ import os
 from collections import Counter, defaultdict, namedtuple
 from functools import partial
 from itertools import groupby, starmap
-from operator import truth
 
 import pytest
 from beetsplug.bandcamp import BandcampPlugin
@@ -62,7 +61,7 @@ TRACK_FIELDS = ["track_alt", "artist", "title"]
 
 def album_table(**kwargs):
     table = new_table(*TRACK_FIELDS, show_header=False, highlight=False)
-    return border_panel(table, **{**dict(expand=True), **kwargs})
+    return border_panel(table, **{"expand": True, **kwargs})
 
 
 albums = defaultdict(album_table)
@@ -218,7 +217,7 @@ def test_file(file, guru, cache):
                 new = album
                 break
 
-    new.catalognum = " / ".join(filter(truth, map(lambda x: x.catalognum, guru.albums)))
+    new.catalognum = " / ".join(x.catalognum for x in guru.albums if x.catalognum)
     try:
         with open(target_file) as f:
             contents = json.load(f)
