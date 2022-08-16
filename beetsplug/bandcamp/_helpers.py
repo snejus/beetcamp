@@ -105,6 +105,13 @@ CLEAN_PATTERNS = [
 
 class Helpers:
     @staticmethod
+    def get_label(meta: JSONDict) -> str:
+        try:
+            return meta["albumRelease"][0]["recordLabel"]["name"]
+        except (KeyError, IndexError):
+            return meta["publisher"]["name"]
+
+    @staticmethod
     def get_vinyl_count(name: str) -> int:
         conv = {"single": 1, "double": 2, "triple": 3}
         for match in PATTERNS["vinyl_name"].finditer(name):

@@ -137,10 +137,7 @@ class Metaguru(Helpers):
         if match:
             return match.expand(r"\1").strip(" '\"")
 
-        try:
-            return self.meta["albumRelease"][0]["recordLabel"]["name"]
-        except (KeyError, IndexError):
-            return self.meta["publisher"]["name"]
+        return self.get_label(self.meta)
 
     @cached_property
     def album_id(self) -> str:
@@ -268,7 +265,7 @@ class Metaguru(Helpers):
 
     @cached_property
     def tracks(self) -> Tracks:
-        self._tracks.adjust_artists(self.bandcamp_albumartist, self._singleton)
+        self._tracks.adjust_artists(self.bandcamp_albumartist)
         return self._tracks
 
     @cached_property
