@@ -104,12 +104,14 @@ class BandcampAlbumArt(BandcampRequestsHandler, fetchart.RemoteArtSource):
                 self._info("Could not connect to the URL")
             else:
                 try:
-                    yield self._candidate(
-                        url=Metaguru.from_html(html).image,
-                        match=fetchart.Candidate.MATCH_EXACT,
-                    )
+                    image_url = Metaguru.from_html(html).image
                 except (KeyError, AttributeError, ValueError):
                     self._info("Unexpected parsing error fetching album art")
+                else:
+                    if image_url:
+                        yield self._candidate(
+                            url=image_url, match=fetchart.Candidate.MATCH_EXACT
+                        )
 
 
 def urlify(pretty_string: str) -> str:

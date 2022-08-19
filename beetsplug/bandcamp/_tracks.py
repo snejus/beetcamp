@@ -244,10 +244,10 @@ class Tracks(list):
     def from_json(cls, meta: JSONDict) -> "Tracks":
         try:
             tracks = [{**t, **t["item"]} for t in meta["track"]["itemListElement"]]
-        except KeyError:
+        except (TypeError, KeyError):
             tracks = [meta]
 
-        names = [i["name"] for i in tracks]
+        names = [i.get("name", "") for i in tracks]
         delim = cls.track_delimiter(names)
         catalognum, names = cls.common_catalognum(names, delim)
         return cls(
