@@ -133,10 +133,10 @@
           }
         ],
         "availability": "InStock",
-        "price": 95,
+        "price": 105,
         "priceCurrency": "DKK",
         "priceSpecification": {
-          "minPrice": 95
+          "minPrice": 105
         },
         "url": "https://reececox.bandcamp.com/album/emotion-1-kul-r-008#p1985399228-buy"
       }
@@ -196,6 +196,11 @@
       {
         "@type": "PropertyValue",
         "name": "has_any_downloads",
+        "value": true
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "has_download_codes",
         "value": true
       },
       {

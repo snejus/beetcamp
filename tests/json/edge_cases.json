@@ -61,7 +61,7 @@
       "name": "NYH244 Less Weird Parallel Universe  - Nearly 20 Years of Erikoisdance"
     },
     {
-      "@id": "https://newyorkhaunted.bandcamp.com/album/nyh244-less-weird-parallel-universe-nearly-20-years-of-erikoisdance#b47825740",
+      "@id": "https://newyorkhaunted.bandcamp.com/album/nyh244-less-weird-parallel-universe-nearly-20-years-of-erikoisdance#b48624883",
       "@type": [
         "MusicRelease",
         "Product"
@@ -70,7 +70,7 @@
         {
           "@type": "PropertyValue",
           "name": "item_id",
-          "value": 47825740
+          "value": 48624883
         },
         {
           "@type": "PropertyValue",
@@ -90,7 +90,7 @@
         {
           "@type": "PropertyValue",
           "name": "art_id",
-          "value": 2595027127
+          "value": 3698826985
         },
         {
           "@type": "PropertyValue",
@@ -99,22 +99,22 @@
         }
       ],
       "image": [
-        "https://f4.bcbits.com/img/a2595027127_10.jpg"
+        "https://f4.bcbits.com/img/a3698826985_10.jpg"
       ],
       "musicReleaseFormat": "DigitalFormat",
-      "name": "full digital discography (316 releases)",
+      "name": "full digital discography (323 releases)",
       "offers": {
         "@type": "Offer",
         "additionalProperty": [
           {
             "@type": "PropertyValue",
             "name": "bundle_size",
-            "value": 316
+            "value": 323
           },
           {
             "@type": "PropertyValue",
             "name": "discount",
-            "value": 0.9
+            "value": 0.5
           },
           {
             "@type": "PropertyValue",
@@ -123,12 +123,12 @@
           }
         ],
         "availability": "OnlineOnly",
-        "price": 126.2,
+        "price": 642.54,
         "priceCurrency": "EUR",
         "priceSpecification": {
-          "minPrice": 126.2
+          "minPrice": 642.54
         },
-        "url": "https://newyorkhaunted.bandcamp.com/album/nyh244-less-weird-parallel-universe-nearly-20-years-of-erikoisdance#b47825740-buy"
+        "url": "https://newyorkhaunted.bandcamp.com/album/nyh244-less-weird-parallel-universe-nearly-20-years-of-erikoisdance#b48624883-buy"
       }
     },
     {

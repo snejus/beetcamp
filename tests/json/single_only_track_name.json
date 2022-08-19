@@ -31,13 +31,6 @@
   "image": "https://f4.bcbits.com/img/a1255022292_10.jpg",
   "inAlbum": {
     "@type": "MusicAlbum",
-    "additionalProperty": [
-      {
-        "@type": "PropertyValue",
-        "name": "duration",
-        "value": 355.064
-      }
-    ],
     "albumRelease": [
       {
         "@id": "https://gutkeinforu.bandcamp.com/track/oenera",
@@ -105,6 +98,7 @@
     "Electronic",
     "keta techno",
     "meta",
+    "techno",
     "trance"
   ],
   "name": "oenera",
@@ -130,22 +124,22 @@
       {
         "@type": "PropertyValue",
         "name": "image_height",
-        "value": 711
+        "value": 583
       },
       {
         "@type": "PropertyValue",
         "name": "image_id",
-        "value": 28878095
+        "value": 29531619
       },
       {
         "@type": "PropertyValue",
         "name": "image_width",
-        "value": 749
+        "value": 583
       }
     ],
     "description": "support a tiny acquarium on the tip of a K-hall ~)",
     "genre": "https://bandcamp.com/tag/electronic",
-    "image": "https://f4.bcbits.com/img/0028878095_10.jpg",
+    "image": "https://f4.bcbits.com/img/0029531619_10.jpg",
     "mainEntityOfPage": [
       {
         "@type": "WebPage",
