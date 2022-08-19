@@ -1,6 +1,10 @@
-## [0.16.0] Unreleased
+## [0.16.0] 2022-08-19
 
 [0.16.0]: https://github.com/snejus/beetcamp/releases/tag/0.16.0
+
+### Fixed
+
+* (#34) Handle URLs like `https://bandcamp.materiacollective.com`, thanks @Serene-Arc
 
 ### Removed
 
