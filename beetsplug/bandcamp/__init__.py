@@ -129,7 +129,8 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         self.beets_config = config
         self.config.add(DEFAULT_CONFIG.copy())
 
-        self.register_listener("pluginload", self.loaded)
+        if self.config["art"]:
+            self.register_listener("pluginload", self.loaded)
         self._gurucache = {}
 
     @property
@@ -151,17 +152,14 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
 
     def loaded(self) -> None:
         """Add our own artsource to the fetchart plugin."""
-        # TODO: This is ugly, but i didn't find another way to extend fetchart
-        # without declaring a new plugin.
-        if self.config["art"]:
-            fetchart.ART_SOURCES[self.data_source] = BandcampAlbumArt
-            fetchart.SOURCE_NAMES[BandcampAlbumArt] = self.data_source
-            bandcamp_fetchart = BandcampAlbumArt(self._log, self.config)
-
-            for plugin in plugins.find_plugins():
-                if isinstance(plugin, fetchart.FetchArtPlugin):
-                    plugin.sources = [bandcamp_fetchart, *plugin.sources]
-                    break
+        for plugin in plugins.find_plugins():
+            if isinstance(plugin, fetchart.FetchArtPlugin):
+                fetchart.ART_SOURCES[self.data_source] = BandcampAlbumArt
+                fetchart.SOURCE_NAMES[BandcampAlbumArt] = self.data_source
+                fetchart.SOURCES_ALL.append(self.data_source)
+                bandcamp_fetchart = BandcampAlbumArt(self._log, self.config)
+                plugin.sources = [bandcamp_fetchart, *plugin.sources]
+                break
 
     def _find_url(self, item: library.Item, name: str, _type: str) -> str:
         """If the item has previously been imported, `mb_albumid` (or `mb_trackid`

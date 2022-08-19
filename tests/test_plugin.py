@@ -139,6 +139,10 @@ def test_singleton_candidates(plugin, albuminfos):
         assert vars(actual) == vars(expected)
 
 
+def test_bandcamp_plugin_name():
+    assert BandcampPlugin().data_source == "bandcamp"
+
+
 @pytest.fixture
 def bandcamp_item():
     return Item(mb_albumid="https://bandcamp.com/album/")
