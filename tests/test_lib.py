@@ -43,6 +43,7 @@ IGNORE_FIELDS = {
     "disctitle",
     "times_bought",
 }
+DO_NOT_COMPARE = set()
 
 target_dir = os.path.join(BASE_DIR, TEST_DIR)
 compare_against = os.path.join(BASE_DIR, REFERENCE_DIR)
@@ -162,12 +163,16 @@ def compare(old, new, cache) -> bool:
         desc, _id = f"{new['artist']} - {new['title']}", new["track_id"]
 
     table = new_table(padding=0, collapse_padding=True)
+    for key in IGNORE_FIELDS:
+        new.pop(key, None)
+        old.pop(key, None)
+
     all_fields = set(new).union(set(old))
 
     compare_key = partial(do_key, table, album_name=desc)
 
     fail = False
-    for key in sorted(all_fields - IGNORE_FIELDS):
+    for key in sorted(all_fields - DO_NOT_COMPARE):
         values = old.get(key), new.get(key)
         if values[0] is None and values[1] is None:
             continue
@@ -204,7 +209,7 @@ def guru(file, config):
 
 @pytest.mark.usefixtures("_report")
 def test_file(file, guru, cache):
-    IGNORE_FIELDS.update({"album_id", "media", "mediums", "disctitle"})
+    DO_NOT_COMPARE.update({"album_id", "media", "mediums", "disctitle"})
 
     target_file = os.path.join(target_dir, file)
     if "_track_" in file:
@@ -223,11 +228,11 @@ def test_file(file, guru, cache):
             contents = json.load(f)
     except FileNotFoundError:
         with open(target_file, "w") as f:
-            json.dump(new, f, indent=2)
+            json.dump(new, f, indent=2, sort_keys=True)
     else:
         if new != contents:
             with open(target_file, "w") as f:
-                json.dump(new, f, indent=2)
+                json.dump(new, f, indent=2, sort_keys=True)
 
     try:
         with open(os.path.join(compare_against, file)) as f:
@@ -251,7 +256,7 @@ def test_media(file, guru, cache):
         file = (new.get("album_id") or new.track_id).replace("/", "_") + ".json"
         target_file = os.path.join(target_dir, file)
         with open(target_file, "w") as f:
-            json.dump(new, f, indent=2)
+            json.dump(new, f, indent=2, sort_keys=True)
 
         try:
             with open(os.path.join(compare_against, file)) as f:
