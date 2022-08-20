@@ -1,6 +1,13 @@
 ## [0.17.0] Unreleased
 
-[0.16.0]: https://github.com/snejus/beetcamp/releases/tag/0.17.0
+[0.17.0]: https://github.com/snejus/beetcamp/releases/tag/0.17.0
+
+### Fixed
+
+* `title`:
+  - Address a long-standing issue with track names of the form **Title - Some Mix** where we
+    would parse **Title** as the artist and **Some Mix** as the title. Such name now gets
+    replaced by **Title (Some Mix)** which is then attributed correctly.
 
 ### Updated
 

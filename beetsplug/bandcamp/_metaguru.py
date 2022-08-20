@@ -389,10 +389,7 @@ class Metaguru(Helpers):
         for word in ["remix", "rmx", "edits", "live", "soundtrack"]:
             if word in self.album_name.lower():
                 albumtypes.add(word.replace("rmx", "remix").replace("edits", "remix"))
-        rmxers = [
-            t.remixer for t in self.tracks if t.remixer and t.remixer != "Original"
-        ]
-        if len(rmxers) == len(self.tracks):
+        if len(self.tracks.remixers) == len(self.tracks):
             albumtypes.add("remix")
 
         return "; ".join(sorted(albumtypes))

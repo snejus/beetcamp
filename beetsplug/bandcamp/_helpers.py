@@ -89,18 +89,19 @@ rm_strings = [
     r"free download|\([^()]*free(?!.*mix)[^()]*\)",
 ]
 
-_remix_pat = r"(?P<remix>(?P<remixer>[^])]+) ((re)?mix|edit|bootleg[^])]+))"
+_remix_pat = r"(?P<remix>((?P<remixer>[^])]+) )?\b((re)?mix|edit|bootleg)\b[^])]*)"
 # fmt: off
 CLEAN_PATTERNS = [
-    (_comp(r" -(\S)"), r" - \1"),                   # hi -bye         -> hi - bye
-    (_comp(r"(\S)- "), r"\1 - "),                   # hi- bye         -> hi - bye
-    (_comp(r"  +"), " "),                           # hi  bye         -> hi bye
-    (_comp(r"(- )?\( *"), "("),                     # hi - ( bye)     -> hi (bye)
-    (_comp(r" \)+|\)+$"), ")"),                     # hi (bye ))      -> hi (bye)
-    (_comp(r"- Reworked"), "(Reworked)"),           # bye - Reworked  -> bye (Reworked)
-    (_comp(rf"(\({_remix_pat})$", re.I), r"\1)"),   # bye - (Some Mix -> bye - (Some Mix)
-    (_comp(r'(^|- )"([^"]+)"( \(|$)'), r"\1\2\3"),  # "bye" -> bye; hi - "bye" -> hi - bye
     (_comp(fr"(([\[(])|(^| ))\*?({'|'.join(rm_strings)})(?(2)[])]|( |$))", re.I), ""),
+    (_comp(r" -(\S)"), r" - \1"),                   # hi -bye          -> hi - bye
+    (_comp(r"(\S)- "), r"\1 - "),                   # hi- bye          -> hi - bye
+    (_comp(r"  +"), " "),                           # hi  bye          -> hi bye
+    (_comp(r"(- )?\( *"), "("),                     # hi - ( bye)      -> hi (bye)
+    (_comp(r" \)+|\)+$"), ")"),                     # hi (bye ))       -> hi (bye)
+    (_comp(r"- Reworked"), "(Reworked)"),           # bye - Reworked   -> bye (Reworked)
+    (_comp(rf"(\({_remix_pat})$", re.I), r"\1)"),   # bye - (Some Mix  -> bye - (Some Mix)
+    (_comp(rf"- *({_remix_pat})$", re.I), r"(\1)"),  # bye - Some Mix   -> bye (Some Mix)
+    (_comp(r'(^|- )"([^"]+)"( \(|$)'), r"\1\2\3"),  # "bye" -> bye; hi - "bye" -> hi - bye
 ]
 # fmt: on
 

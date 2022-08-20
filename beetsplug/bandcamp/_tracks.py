@@ -10,7 +10,7 @@ from typing import Iterator, List, Optional, Set, Tuple
 
 from ordered_set import OrderedSet as ordset
 
-from ._helpers import CATNUM_PAT, PATTERNS, Helpers, JSONDict
+from ._helpers import CATNUM_PAT, PATTERNS, Helpers, JSONDict, _remix_pat
 
 if sys.version_info.minor > 7:
     from functools import cached_property  # pylint: disable=ungrouped-imports
@@ -45,8 +45,27 @@ FT_PAT = _comp(
     """,
     re.I | re.VERBOSE,
 )
-REMIXER_PAT = _comp(r" *[\[(] *([^])]+) ((re)?mix|edit|bootleg[^])]+)[])]", re.I)
 TRACK_ALT_PAT = PATTERNS["track_alt"]
+
+
+@dataclass
+class Remix:
+    PATTERN = re.compile(rf" *[\[(] *{_remix_pat}[])]", re.I)
+
+    delimited: str
+    remixer: str
+    remix: str
+    by_other_artist: bool
+
+    @classmethod
+    def from_name(cls, name: str) -> Optional["Remix"]:
+        m = cls.PATTERN.search(name)
+        if m:
+            remix = m.groupdict()
+            remix["delimited"] = m.group().strip()
+            remix["remixer"] = remix["remixer"] or ""
+            return cls(**remix, by_other_artist="Original" in remix["remix"])
+        return None
 
 
 @dataclass
@@ -60,9 +79,9 @@ class Track:
     ft: str = ""
     album: str = ""
     catalognum: str = ""
-    remixer: str = ""
-    full_remixer: str = ""
+    remix: Optional[Remix] = None
 
+    digi_only: bool = False
     track_alt: Optional[str] = None
 
     @classmethod
@@ -82,6 +101,11 @@ class Track:
             "catalognum": catalognum,
         }
         return cls(**cls.parse_name(data, name, delim, label))
+
+    @staticmethod
+    def no_digi_name(name: str) -> str:
+        """Return the track title which is clear from digi-only artifacts."""
+        return reduce(lambda a, b: b.sub("", a), DIGI_ONLY_PATTERNS, name)
 
     @staticmethod
     def find_featuring(data: JSONDict) -> JSONDict:
@@ -111,8 +135,13 @@ class Track:
         # see https://gutterfunkuk.bandcamp.com/album/gutterfunk-all-subject-to-vibes-various-artists-lp  # noqa
         if name.endswith(label):
             name = name.replace(label, "").strip(" -")
-        name = Helpers.clean_name(name).strip().lstrip("-")
         data["json_artist"] = Helpers.clean_name(data["json_artist"])
+
+        digi_only_name = Track.no_digi_name(name)
+        data["digi_only"] = digi_only_name != name
+        name = digi_only_name
+
+        name = Helpers.clean_name(name).strip().lstrip("-")
 
         m = TRACK_ALT_PAT.search(name)
         if m:
@@ -129,10 +158,10 @@ class Track:
                 name = name.replace(m.group(), "").strip()
         name = re.sub(rf"^0*{data.get('index', 0)}(?!\W\d)\W+", "", name)
 
-        m = REMIXER_PAT.search(name)
-        if m:
-            data.update(remixer=m.group(1), full_remixer=m.group().strip())
-            name = name.replace(m.group(), "")
+        remix = Remix.from_name(name)
+        if remix:
+            data.update(remix=remix)
+            name = name.replace(remix.delimited, "").rstrip()
 
         m = ELP_ALBUM_PAT.search(name)
         if m:
@@ -160,18 +189,8 @@ class Track:
             return ""
 
     @cached_property
-    def no_digi_name(self) -> str:
-        """Return the track title which is clear from digi-only artifacts."""
-        return reduce(lambda a, b: b.sub("", a), DIGI_ONLY_PATTERNS, self._name)
-
-    @cached_property
-    def digi_only(self) -> bool:
-        """Return True if the track is digi-only."""
-        return self._name != self.no_digi_name
-
-    @cached_property
     def name(self) -> str:
-        name = self.no_digi_name
+        name = self._name
         if self.json_artist and " - " not in name:
             name = f"{self.json_artist} - {name}"
         return name.strip()
@@ -195,8 +214,8 @@ class Track:
     @cached_property
     def title(self) -> str:
         """Return the main title with the full remixer part appended to it."""
-        if self.remixer:
-            return self.main_title + " " + self.full_remixer
+        if self.remix:
+            return f"{self.main_title} {self.remix.delimited}"
         return self.main_title
 
     @cached_property
@@ -205,9 +224,9 @@ class Track:
         and return the resulting artist.
         """
         artist = self.name[: self.name.rfind(self.main_title)].strip(", -")
-        artist = REMIXER_PAT.sub("", artist)
-        if self.remixer:
-            artist = artist.replace(self.remixer, "").strip(" ,")
+        artist = Remix.PATTERN.sub("", artist)
+        if self.remix:
+            artist = artist.replace(self.remix.remixer, "").strip(" ,")
         return artist.strip(" -")
 
     @property
@@ -292,11 +311,18 @@ class Tracks(list):
     def artists(self) -> List[str]:
         return list(ordset(it.chain(*(j.artists for j in self.tracks))))
 
+    @property
+    def remixers(self) -> List[str]:
+        return [
+            t.remix.remixer
+            for t in self.tracks
+            if t.remix and not t.remix.by_other_artist
+        ]
+
     @cached_property
     def other_artists(self) -> Set[str]:
-        remixers = [j.remixer for j in self.tracks if j.remixer]
         ft = [j.ft for j in self.tracks if j.ft]
-        return set(it.chain(remixers, ft))
+        return set(it.chain(self.remixers, ft))
 
     def adjust_artists(self, aartist: str) -> None:
         """Handle some track artist edge cases
