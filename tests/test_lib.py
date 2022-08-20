@@ -26,7 +26,7 @@ pytestmark = pytest.mark.lib
 
 BASE_DIR = "lib_tests"
 TEST_DIR = "dev"
-REFERENCE_DIR = "804fb3c"
+REFERENCE_DIR = "99099d5"
 JSONS_DIR = "jsons"
 
 IGNORE_FIELDS = {
@@ -120,10 +120,18 @@ def do_key(table, key: str, before, after, cached_value=None, album_name=None):
 
     parts = []
     if key == "tracks":
-        for old_track, new_track in zip(before, after):
-            parts.append(
-                [make_difftext(str(a), str(b)) for a, b in zip(old_track, new_track)]
-            )
+        for old_track, new_track in [
+            (dict(zip(TRACK_FIELDS, a)), dict(zip(TRACK_FIELDS, b)))
+            for a, b in zip(before, after)
+        ]:
+            diffs = []
+            for field in TRACK_FIELDS:
+                old_val, new_val = old_track[field], new_track[field]
+                diff = make_difftext(str(old_val), str(new_val))
+                diffs.append(diff)
+                if old_val != new_val:
+                    oldnew[field].append(Oldnew(old_val, new_val, str(diff)))
+            parts.append(diffs)
     else:
         before, after = str(before), str(after)
         difftext = make_difftext(before, after)
