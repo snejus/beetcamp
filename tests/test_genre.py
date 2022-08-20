@@ -33,12 +33,12 @@ def test_genre_variations(keywords, expected, json_meta, beets_config):
     assert Metaguru(json_meta, beets_config).genre == expected
 
 
-TEST_KEYWORDS = dict(
-    single_word_valid_kw=["house"],
-    double_word_valid_kw=["tech house"],
-    double_word_valid_separately=["techno house"],
-    only_last_word_valid=["crazy techno"],
-)
+TEST_KEYWORDS = {
+    "single_word_valid_kw": ["house"],
+    "double_word_valid_kw": ["tech house"],
+    "double_word_valid_separately": ["techno house"],
+    "only_last_word_valid": ["crazy techno"],
+}
 
 
 @pytest.fixture(params=TEST_KEYWORDS.keys())
@@ -53,12 +53,12 @@ def keywords(keyword_type):
 
 @pytest.fixture(scope="module")
 def modes_spec():
-    base_spec = dict(
-        single_word_valid_kw=True,
-        double_word_valid_kw=True,
-        double_word_valid_separately=False,
-        only_last_word_valid=False,
-    )
+    base_spec = {
+        "single_word_valid_kw": True,
+        "double_word_valid_kw": True,
+        "double_word_valid_separately": False,
+        "only_last_word_valid": False,
+    }
     modes = {}
     modes["classical"] = base_spec
     modes["progressive"] = {**base_spec, "double_word_valid_separately": True}

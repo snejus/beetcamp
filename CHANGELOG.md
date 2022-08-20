@@ -1,3 +1,36 @@
+## [0.16.0] 2022-08-19
+
+[0.16.0]: https://github.com/snejus/beetcamp/releases/tag/0.16.0
+
+### Fixed
+
+* (#34) Handle URLs like `https://bandcamp.materiacollective.com`, thanks @Serene-Arc
+
+### Removed
+
+* Dropped support for `python 3.6`.
+
+### Added
+
+* CLI search: index search results and add flag `-o, --open=INDEX` to open the given
+  result in the browser
+
+### Updated
+
+* `album`:
+  - remove brackets if the entire album name is wrapped in them
+  - remove **(Single)**
+  - do not remove **label** from the front if it is not followed by a space
+  - fix some false positives found in the comments when the album name is followed by
+    **EP** or **LP**
+
+* `artist`: 
+  - keep the original artist separator in releases with a single track
+  - replace ` // ` separator with `, ` in all cases
+
+* `release_date`: in rare cases when it is not found, use the _last modified_ date
+
+
 ## [0.15.1] 2022-06-19
 
 [0.15.1]: https://github.com/snejus/beetcamp/releases/tag/0.15.1
@@ -37,7 +70,7 @@
     ```
 
   - Search is activated with an argument that does not start with **https://**. It queries
-    bandcamp with the provided QUERY and returns a JSON list with all search results from
+    Bandcamp with the provided QUERY and returns a JSON list with all search results from
     the first page, sorted by relevancy.
 
   - Flags **-a**, **-l** and **-t** can be used to search for **album**, **label/artist** or

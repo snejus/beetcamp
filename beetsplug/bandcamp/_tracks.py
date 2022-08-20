@@ -1,5 +1,6 @@
 """Module with track parsing functionality."""
 import itertools as it
+import operator as op
 import re
 import sys
 from collections import Counter
@@ -7,7 +8,7 @@ from dataclasses import dataclass, field
 from functools import reduce
 from typing import Iterator, List, Optional, Set, Tuple
 
-from ordered_set import OrderedSet as ordset  # type: ignore
+from ordered_set import OrderedSet as ordset
 
 from ._helpers import CATNUM_PAT, PATTERNS, Helpers, JSONDict
 
@@ -52,7 +53,7 @@ TRACK_ALT_PAT = PATTERNS["track_alt"]
 class Track:
     json_item: JSONDict = field(default_factory=dict)
     track_id: str = ""
-    index: int = 0
+    index: Optional[int] = None
     json_artist: str = ""
 
     _name: str = ""
@@ -62,7 +63,6 @@ class Track:
     remixer: str = ""
     full_remixer: str = ""
 
-    single: Optional[bool] = None
     track_alt: Optional[str] = None
 
     @classmethod
@@ -74,13 +74,13 @@ class Track:
         except KeyError:
             artist = ""
         artist = artist or json.get("byArtist", {}).get("name", "")
-        data = dict(
-            json_item=json,
-            json_artist=artist,
-            track_id=json["@id"],
-            index=json["position"],
-            catalognum=catalognum,
-        )
+        data = {
+            "json_item": json,
+            "json_artist": artist,
+            "track_id": json["@id"],
+            "index": json.get("position"),
+            "catalognum": catalognum,
+        }
         return cls(**cls.parse_name(data, name, delim, label))
 
     @staticmethod
@@ -216,18 +216,18 @@ class Track:
 
     @property
     def info(self) -> JSONDict:
-        return dict(
-            index=self.index if not self.single else None,
-            medium_index=self.index if not self.single else None,
-            medium=None,
-            track_id=self.track_id,
-            artist=self.artist + (f" {self.ft}" if self.ft else ""),
-            title=self.title,
-            length=self.duration,
-            track_alt=self.track_alt,
-            lyrics=self.lyrics,
-            catalognum=self.catalognum or None,
-        )
+        return {
+            "index": self.index,
+            "medium_index": self.index,
+            "medium": None,
+            "track_id": self.track_id,
+            "artist": self.artist + (f" {self.ft}" if self.ft else ""),
+            "title": self.title,
+            "length": self.duration,
+            "track_alt": self.track_alt,
+            "lyrics": self.lyrics,
+            "catalognum": self.catalognum or None,
+        }
 
 
 @dataclass
@@ -243,24 +243,23 @@ class Tracks(list):
     @classmethod
     def from_json(cls, meta: JSONDict) -> "Tracks":
         try:
-            tracks = meta["track"]["itemListElement"]
-        except KeyError:
-            tracks = [{"item": meta, "position": 1}]
-        for track in tracks:
-            track.update(**track["item"])
-        try:
-            label = meta["albumRelease"][0]["recordLabel"]["name"]
-        except (KeyError, IndexError):
-            label = meta["publisher"]["name"]
-        names = [i["name"] for i in tracks]
+            tracks = [{**t, **t["item"]} for t in meta["track"]["itemListElement"]]
+        except (TypeError, KeyError):
+            tracks = [meta]
+
+        names = [i.get("name", "") for i in tracks]
         delim = cls.track_delimiter(names)
         catalognum, names = cls.common_catalognum(names, delim)
         return cls(
             [
-                Track.from_json(t, n, delim, catalognum, label)
+                Track.from_json(t, n, delim, catalognum, Helpers.get_label(meta))
                 for n, t in zip(names, tracks)
             ]
         )
+
+    @cached_property
+    def first(self) -> Track:
+        return self.tracks[0]
 
     @staticmethod
     def common_catalognum(names: List[str], delim: str) -> Tuple[str, List[str]]:
@@ -271,9 +270,9 @@ class Tracks(list):
         Return the catalog number and the new list of names.
         """
         names_tokens = list(map(str.split, names))
-        common_words = ordset.intersection(*names_tokens) - {delim}
+        common_words = reduce(op.and_, [ordset(x) for x in names_tokens]) - {delim}
         if common_words:
-            for word in set([common_words[0], common_words[-1]]):
+            for word in common_words[0], common_words[-1]:  # type: ignore[index]
                 m = CATNUM_PAT["anywhere"].search(word)
                 if m:
                     for tokens in names_tokens:
@@ -299,47 +298,51 @@ class Tracks(list):
         ft = [j.ft for j in self.tracks if j.ft]
         return set(it.chain(remixers, ft))
 
-    def adjust_artists(self, aartist: str, single=bool) -> None:
+    def adjust_artists(self, aartist: str) -> None:
+        """Handle some track artist edge cases
+        * When artist name is mistaken for the track_alt
+        * When artist and title are delimited by '-' without spaces
+        * When artist and title are delimited by a UTF-8 dash equivalent
+        * Defaulting to the album artist
+        """
         track_alts = {t.track_alt for t in self.tracks if t.track_alt}
         artists = [t.artists for t in self.tracks if t.artists]
-        for t in self:
-            t.single = single
+
+        for t in [track for track in self.tracks if not track.artist]:
+            if t.track_alt and len(track_alts) == 1:  # only one track_alt
+                # the only track that parsed a track alt - it's most likely a mistake
+                # one artist was confused for a track alt, like 'B2', - reverse this
+                t.artist, t.track_alt = t.track_alt, None
+            elif len(artists) == len(self) - 1:  # only 1 missing artist
+                # this is the only artist that didn't get parsed - relax the rule
+                # and try splitting with '-' without spaces
+                split = t.title.split("-")
+                if len(split) == 1:
+                    # attempt to split by another ' ? ' where '?' may be some utf-8
+                    # alternative of a dash
+                    split = [s for s in DELIMITER_PAT.split(t.title) if len(s) > 1]
+                if len(split) > 1:
+                    t.artist, t.title = split
             if not t.artist:
-                if t.track_alt and len(track_alts) == 1:
-                    # the only track that parsed a track alt - it's most likely a mistake
-                    # one artist was confused for a track alt, like 'B2', - reverse this
-                    t.artist, t.track_alt = t.track_alt, None
-                elif len(artists) == len(self) - 1:
-                    # this is the only artist that didn't get parsed - relax the rule
-                    # and try splitting with '-' without spaces
-                    split = t.title.split("-")
-                    if not len(split) > 1:
-                        # attempt to split by another ' ? ' where '?' may be some utf-8
-                        # alternative of a dash
-                        split = [s for s in DELIMITER_PAT.split(t.title) if len(s) > 1]
-                    if len(split) > 1:
-                        t.artist, t.title = split
-                if not t.artist:
-                    # use the albumartist
-                    t.artist = aartist
+                # use the albumartist
+                t.artist = aartist
 
     @staticmethod
     def track_delimiter(names: List[str]) -> str:
         """Return the track parts delimiter that is in effect in the current release.
-        In some (unusual) situations track parts are delimited by a pipe character
-        instead of dash.
+        In some (rare) situations track parts are delimited by a pipe character
+        or some UTF-8 equivalent of a dash.
 
-        This checks every track looking for the first character (see the regex for
-        exclusions) that splits it. The character that split the most and
-        at least half of the tracklist is the character we need.
+        This checks every track for the first character (see the regex for exclusions)
+        that splits it. The character that splits the most and at least half of
+        the tracks is the character we need.
+
+        If no such character is found, or if we have just one track, return a dash '-'.
         """
 
         def get_delim(string: str) -> str:
             match = DELIMITER_PAT.search(string)
             return match.group(1) if match else "-"
 
-        most_common = Counter(map(get_delim, names)).most_common(1)
-        if not most_common:
-            return ""
-        delim, count = most_common.pop()
+        delim, count = Counter(map(get_delim, names)).most_common(1).pop()
         return delim if (len(names) == 1 or count > len(names) / 2) else "-"

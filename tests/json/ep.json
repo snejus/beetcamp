@@ -123,12 +123,83 @@
           }
         ],
         "availability": "InStock",
-        "price": 10,
+        "price": 12,
         "priceCurrency": "EUR",
         "priceSpecification": {
-          "minPrice": 10
+          "minPrice": 12
         },
         "url": "https://fallingapart.bandcamp.com/album/fa010-kickdown-vienna#p2928220301-buy"
+      }
+    },
+    {
+      "@id": "https://fallingapart.bandcamp.com/album/fa010-kickdown-vienna#b48188954",
+      "@type": [
+        "MusicRelease",
+        "Product"
+      ],
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "item_id",
+          "value": 48188954
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "item_type",
+          "value": "b"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "selling_band_id",
+          "value": 3963823236
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_name",
+          "value": "Digital"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "art_id",
+          "value": 351018297
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "is_bfd",
+          "value": true
+        }
+      ],
+      "image": [
+        "https://f4.bcbits.com/img/a0351018297_10.jpg"
+      ],
+      "musicReleaseFormat": "DigitalFormat",
+      "name": "full digital discography (17 releases)",
+      "offers": {
+        "@type": "Offer",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "bundle_size",
+            "value": 17
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "discount",
+            "value": 0.2
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "max_price",
+            "value": 1000
+          }
+        ],
+        "availability": "OnlineOnly",
+        "price": 155.2,
+        "priceCurrency": "EUR",
+        "priceSpecification": {
+          "minPrice": 155.2
+        },
+        "url": "https://fallingapart.bandcamp.com/album/fa010-kickdown-vienna#b48188954-buy"
       }
     },
     {
@@ -154,13 +225,15 @@
     "name": "jeånne, DJ DISRESPECT"
   },
   "copyrightNotice": "All Rights Reserved",
-  "dateModified": "14 Aug 2021 09:35:03 GMT",
+  "dateModified": "06 Jul 2022 21:18:27 GMT",
   "datePublished": "09 Oct 2020 00:00:00 GMT",
   "image": "https://f4.bcbits.com/img/a3742084072_10.jpg",
   "keywords": [
+    "Ambient",
     "Chicago",
     "Electronic",
     "Experimental",
+    "House",
     "Techno",
     "acid",
     "Frankfurt"

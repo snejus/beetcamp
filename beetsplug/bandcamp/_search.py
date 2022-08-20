@@ -26,7 +26,16 @@ RELEASE_PATTERNS = [
     re.compile(r"\n\s+by " + _f("artist")),
     re.compile(r"\n\s+released " + _f("date")),
     re.compile(r"\n\s+(?P<tracks>\d+) tracks"),
-    re.compile(r"(?P<url>https://(?:bandcamp\.)?(?P<label>(?!bandcamp|com)[^.]+)[.](?!bcbits)[\w/.-]+)"),
+    re.compile(
+        r"""
+(?P<url>
+    https://
+    (?:bandcamp[.])?
+    (?P<label>(?!bandcamp|com)[^.]+)
+    [.](?!bcbits)[\w/.-]+
+)""",
+        re.VERBOSE,
+    ),
 ]
 
 
@@ -77,7 +86,8 @@ def parse_and_sort_results(html: str, **kwargs: str) -> List[JSONDict]:
 
         res["similarity"] = round(sum(similarities) / len(similarities), 3)
         results.append(res)
-    return sorted(results, key=itemgetter("similarity"), reverse=True)
+    results = sorted(results, key=itemgetter("similarity"), reverse=True)
+    return [{"index": i + 1, **r} for i, r in enumerate(results)]
 
 
 def get_bandcamp_url(url: str) -> str:

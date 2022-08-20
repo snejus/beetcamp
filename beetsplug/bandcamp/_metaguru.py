@@ -10,10 +10,10 @@ from functools import partial
 from typing import Any, Dict, Iterable, List, Optional, Set
 from unicodedata import normalize
 
+from beets import __version__ as beets_version
 from beets import config as beets_config
 from beets.autotag.hooks import AlbumInfo, TrackInfo
-from ordered_set import OrderedSet as ordset  # type: ignore[import]
-from pkg_resources import get_distribution, parse_version
+from ordered_set import OrderedSet as ordset
 from pycountry import countries, subdivisions
 
 from ._helpers import PATTERNS, Helpers, MediaInfo
@@ -24,7 +24,7 @@ if sys.version_info.minor > 7:
 else:
     from cached_property import cached_property  # type: ignore # pylint: disable=import-error # noqa
 
-NEW_BEETS = get_distribution("beets").parsed_version >= parse_version("1.5.0")
+NEW_BEETS = int(beets_version.split(".")[1]) > 4
 
 JSONDict = Dict[str, Any]
 
@@ -107,26 +107,25 @@ class Metaguru(Helpers):
     def parsed_album_name(self) -> str:
         """
         Search for the album name in the following order and return the first match:
-        1. See whether all track names contain {album name} EP or LP
-        2. EP or LP is in the release name, deduce the album name from there
-        3. Check whether the release name has it wrapped in quotes
+        1. Album name is found in *all* track names
+        2. When 'EP' or 'LP' is in the release name, album name is what precedes it.
+        3. If some words are enclosed in quotes in the release name, it is assumed
+           to be the album name. Remove the quotes in such case.
         """
         album_in_tracks = {t.album for t in self._tracks if t.album}
         if len(album_in_tracks) == 1:
             return list(album_in_tracks)[0]
 
         album = self.album_name
-        for pat, text in [
-            (r"(((&|#?\b(?!Double|VA|Various)(\w|[^\w| -])+) )+[EL]P)", album),
-            (r"((['\"])([^'\"]+)\2( VA\d+)*)( |$)", album),
+        for pat in [
+            r"(((&|#?\b(?!Double|VA|Various)(\w|[^\w| -])+) )+[EL]P)",
+            r"((['\"])([^'\"]+)\2( VA\d+)*)( |$)",
         ]:
-            m = re.search(pat, text)
+            m = re.search(pat, album)
             if m:
                 album = m.group(1).strip()
-                if album[0] in "'\"" and album[-1] in "'\"":
-                    return album.strip("\"'")
-                return album
-        return ""
+                return re.sub(r"^['\"](.+)['\"]$", r"\1", album)
+        return album
 
     @cached_property
     def album_name(self) -> str:
@@ -138,10 +137,7 @@ class Metaguru(Helpers):
         if match:
             return match.expand(r"\1").strip(" '\"")
 
-        try:
-            return self.meta["albumRelease"][0]["recordLabel"]["name"]
-        except (KeyError, IndexError):
-            return self.meta["publisher"]["name"]
+        return self.get_label(self.meta)
 
     @cached_property
     def album_id(self) -> str:
@@ -157,7 +153,8 @@ class Metaguru(Helpers):
     @cached_property
     def original_albumartist(self) -> str:
         m = re.search(r"Artists?:([^\n]+)", self.all_media_comments)
-        return m.group(1).strip() if m else self.meta["byArtist"]["name"]
+        aartist = m.group(1).strip() if m else self.meta["byArtist"]["name"]
+        return re.sub(r" +// +", ", ", aartist)
 
     @cached_property
     def bandcamp_albumartist(self) -> str:
@@ -171,21 +168,19 @@ class Metaguru(Helpers):
                 aartist = split[0]
 
         aartists = Helpers.split_artists([aartist])
-        remixers_str = " ".join(self._tracks.other_artists)
+        if len(aartists) == 1:
+            return aartist
+
+        remixers_str = " ".join(self._tracks.other_artists).lower()
 
         def not_remixer(x: str) -> bool:
-            return not any(map(lambda y: y in remixers_str, {x, *x.split(" & ")}))
+            splits = {x, *x.split(" & ")}
+            return not any(y.lower() in remixers_str for y in splits)
 
         valid = list(filter(not_remixer, aartists))
-        if (
-            len(aartists) == 1
-            or len(valid) == len(aartists)
-            and len(self._tracks.artists) <= 4
-        ):
-            ret = aartist
-        else:
-            ret = ", ".join(valid)
-        return ret
+        if len(valid) == len(aartists) and len(self._tracks.artists) <= 4:
+            return aartist
+        return ", ".join(valid)
 
     @cached_property
     def image(self) -> str:
@@ -199,7 +194,7 @@ class Metaguru(Helpers):
 
         If the field is not found, return None.
         """
-        rel = self.meta.get("datePublished")
+        rel = self.meta.get("datePublished") or self.meta.get("dateModified")
         if rel:
             return datetime.strptime(re.sub(r" \d{2}:.+", "", rel), "%d %b %Y").date()
         return rel
@@ -270,7 +265,7 @@ class Metaguru(Helpers):
 
     @cached_property
     def tracks(self) -> Tracks:
-        self._tracks.adjust_artists(self.bandcamp_albumartist, self._singleton)
+        self._tracks.adjust_artists(self.bandcamp_albumartist)
         return self._tracks
 
     @cached_property
@@ -284,6 +279,9 @@ class Metaguru(Helpers):
         """
         if self.va:
             return self.va_name
+
+        if len(self._tracks) == 1:
+            return self.tracks.first.artist
 
         aartist = self.original_albumartist
         if self.unique_artists:
@@ -310,7 +308,7 @@ class Metaguru(Helpers):
         return bool(
             catnum_pat.search(self.catalognum)
             or word_pat.search(self.album_name + " " + self.vinyl_disctitles)
-            or any(map(lambda s: word_pat.search(s) and name_pat.search(s), sentences))
+            or any(word_pat.search(s) and name_pat.search(s) for s in sentences)
         )
 
     @cached_property
@@ -337,7 +335,7 @@ class Metaguru(Helpers):
         """
         matches = re.findall(r"\b(album|ep|lp)\b", self.all_media_comments.lower())
         if matches:
-            counts = Counter(map(lambda x: x.replace("lp", "album"), matches))
+            counts = Counter(x.replace("lp", "album") for x in matches)
             # if equal, we assume it's an EP since it's more likely that an EP is
             # referred to as an "album" rather than the other way around
             if counts["ep"] >= counts["album"]:
@@ -433,8 +431,12 @@ class Metaguru(Helpers):
 
     @cached_property
     def eplp_album_comments(self) -> str:
-        m = re.search(r"[:-] ?([A-Z][\w ]+ ((?!an )[EL]P))", self.all_media_comments)
-        return m.group(1) if m else ""
+        """Parse comments looking for an indication of an album in the following format
+        (Capital-case Album Name) (EP or LP)
+        and return the matching album name if found.
+        """
+        m = re.search(r"((?!The|This)\b[A-Z][^ \n]+\b )+[EL]P", self.all_media_comments)
+        return m.group() if m else ""
 
     @cached_property
     def clean_album_name(self) -> str:
@@ -452,12 +454,12 @@ class Metaguru(Helpers):
 
     @property
     def _common(self) -> JSONDict:
-        return dict(
-            data_source=DATA_SOURCE,
-            media=self.media.name,
-            data_url=self.album_id,
-            artist_id=self.artist_id,
-        )
+        return {
+            "data_source": DATA_SOURCE,
+            "media": self.media.name,
+            "data_url": self.album_id,
+            "artist_id": self.artist_id,
+        }
 
     def get_fields(self, fields: Iterable[str], src: object = None) -> JSONDict:
         """Return a mapping between unexcluded fields and their values."""
@@ -469,7 +471,7 @@ class Metaguru(Helpers):
 
     @property
     def _common_album(self) -> JSONDict:
-        common_data: JSONDict = dict(album=self.clean_album_name)
+        common_data: JSONDict = {"album": self.clean_album_name}
         fields = ["label", "catalognum", "albumtype", "country"]
         if NEW_BEETS:
             fields.extend(["genre", "style", "comments", "albumtypes"])
@@ -501,8 +503,7 @@ class Metaguru(Helpers):
     def singleton(self) -> TrackInfo:
         self._singleton = True
         self.media = self.media_formats[0]
-        track = list(self.tracks)[0]
-        track = self._trackinfo(track)
+        track = self._trackinfo(self.tracks.first)
         if NEW_BEETS:
             track.update(self._common_album)
             track.pop("album", None)

@@ -104,12 +104,14 @@ class BandcampAlbumArt(BandcampRequestsHandler, fetchart.RemoteArtSource):
                 self._info("Could not connect to the URL")
             else:
                 try:
-                    yield self._candidate(
-                        url=Metaguru.from_html(html).image,
-                        match=fetchart.Candidate.MATCH_EXACT,
-                    )
+                    image_url = Metaguru.from_html(html).image
                 except (KeyError, AttributeError, ValueError):
                     self._info("Unexpected parsing error fetching album art")
+                else:
+                    if image_url:
+                        yield self._candidate(
+                            url=image_url, match=fetchart.Candidate.MATCH_EXACT
+                        )
 
 
 def urlify(pretty_string: str) -> str:
@@ -127,7 +129,8 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         self.beets_config = config
         self.config.add(DEFAULT_CONFIG.copy())
 
-        self.register_listener("pluginload", self.loaded)
+        if self.config["art"]:
+            self.register_listener("pluginload", self.loaded)
         self._gurucache = {}
 
     @property
@@ -149,17 +152,14 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
 
     def loaded(self) -> None:
         """Add our own artsource to the fetchart plugin."""
-        # TODO: This is ugly, but i didn't find another way to extend fetchart
-        # without declaring a new plugin.
-        if self.config["art"]:
-            fetchart.ART_SOURCES[self.data_source] = BandcampAlbumArt
-            fetchart.SOURCE_NAMES[BandcampAlbumArt] = self.data_source
-            bandcamp_fetchart = BandcampAlbumArt(self._log, self.config)
-
-            for plugin in plugins.find_plugins():
-                if isinstance(plugin, fetchart.FetchArtPlugin):
-                    plugin.sources = [bandcamp_fetchart, *plugin.sources]
-                    break
+        for plugin in plugins.find_plugins():
+            if isinstance(plugin, fetchart.FetchArtPlugin):
+                fetchart.ART_SOURCES[self.data_source] = BandcampAlbumArt
+                fetchart.SOURCE_NAMES[BandcampAlbumArt] = self.data_source
+                fetchart.SOURCES_ALL.append(self.data_source)
+                bandcamp_fetchart = BandcampAlbumArt(self._log, self.config)
+                plugin.sources = [bandcamp_fetchart, *plugin.sources]
+                break
 
     def _find_url(self, item: library.Item, name: str, _type: str) -> str:
         """If the item has previously been imported, `mb_albumid` (or `mb_trackid`
@@ -209,7 +209,7 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         if "various" in artist.lower():
             artist = ""
 
-        search = dict(query=album, artist=artist, label=label, search_type="a")
+        search = {"query": album, "artist": artist, "label": label, "search_type": "a"}
         results = map(itemgetter("url"), self._search(search))
         for res in filter(truth, map(self.get_album_info, results)):
             yield from res or [None]
@@ -230,7 +230,7 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
                 yield initial_guess
                 return
 
-        search = dict(query=title, artist=artist, label=label, search_type="t")
+        search = {"query": title, "artist": artist, "label": label, "search_type": "t"}
         results = map(itemgetter("url"), self._search(search))
         yield from filter(truth, map(self.get_track_info, results))
 
@@ -335,6 +335,14 @@ By default, all types are searched.
     store_const("-a", "--album", const="a", help="Search albums")
     store_const("-l", "--label", const="b", help="Search labels and artists")
     store_const("-t", "--track", const="t", help="Search tracks")
+    parser.add_argument(
+        "-o",
+        "--open",
+        action="store",
+        dest="index",
+        type=int,
+        help="Open search result indexed by INDEX",
+    )
     if not args:
         parser.print_help()
         parser.exit()
@@ -346,15 +354,29 @@ def main():
     import sys
 
     args = get_args(sys.argv[1:])
-    if args.query:
-        result = search_bandcamp(**vars(args))
+
+    search_vars = vars(args)
+    index = search_vars.pop("index", None)
+    if search_vars.get("query"):
+        result = search_bandcamp(**search_vars)
     else:
         pl = BandcampPlugin()
         result = pl.album_for_id(args.release_url) or pl.track_for_id(args.release_url)
         if not result:
             raise AssertionError("Failed to find a release under the given url")
 
-    print(json.dumps(result))
+    if index:
+        try:
+            url = result[index - 1]["url"]
+        except IndexError as e:
+            raise Exception("Specified index could not be found") from e
+
+        import webbrowser
+
+        print(f"Opening search result number {index}: {url}")
+        webbrowser.open(url)
+    else:
+        print(json.dumps(result))
 
 
 if __name__ == "__main__":

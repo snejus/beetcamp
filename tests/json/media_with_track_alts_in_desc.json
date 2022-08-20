@@ -331,23 +331,12 @@
         "@type": "MusicEvent",
         "location": {
           "@type": "MusicVenue",
-          "address": "Bonn, Germany",
-          "name": "Freizeitpark Rheinaue"
+          "address": "Giessen, Germany",
+          "name": "Hokus Pokus Festiwelt"
         },
         "name": "Dominik Eulberg",
-        "startDate": "01 Jul 2022 00:00:00 GMT",
-        "url": "https://www.songkick.com/festivals/1005553-panama-open-air/id/39405828-panama-open-air-2022?utm_source=1471&utm_medium=partner"
-      },
-      {
-        "@type": "MusicEvent",
-        "location": {
-          "@type": "MusicVenue",
-          "address": "Vitry-sur-Seine, France",
-          "name": "Le kilowatt"
-        },
-        "name": "Dominik Eulberg",
-        "startDate": "15 Jul 2022 00:00:00 GMT",
-        "url": "https://www.songkick.com/festivals/2365164-rituel-days/id/40312330-rituel-days-2022?utm_source=1471&utm_medium=partner"
+        "startDate": "02 Sep 2022 00:00:00 GMT",
+        "url": "https://www.songkick.com/festivals/3464169-hokus-pokus-festiwelt/id/40528692-hokus-pokus-festiwelt-2022?utm_source=1471&utm_medium=partner"
       }
     ],
     "foundingLocation": {

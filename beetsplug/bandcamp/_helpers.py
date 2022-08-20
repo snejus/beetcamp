@@ -7,7 +7,7 @@ from string import Template
 from typing import Any, Dict, Iterable, List, NamedTuple, Pattern, Tuple
 
 from beets.autotag.hooks import AlbumInfo
-from ordered_set import OrderedSet as ordset  # type: ignore
+from ordered_set import OrderedSet as ordset
 
 from .genres_lookup import GENRES
 
@@ -84,6 +84,7 @@ rm_strings = [
     r"^[EL]P( \d+)?",
     r"^Vol(ume)?\W*(?!.*\)$)\d+",
     r"\((digital )?album\)",
+    r"\(single\)",
     r"^va|va$|vinyl(-only)?|compiled by.*",
     r"free download|\([^()]*free(?!.*mix)[^()]*\)",
 ]
@@ -103,6 +104,13 @@ CLEAN_PATTERNS = [
 
 
 class Helpers:
+    @staticmethod
+    def get_label(meta: JSONDict) -> str:
+        try:
+            return meta["albumRelease"][0]["recordLabel"]["name"]
+        except (KeyError, IndexError):
+            return meta["publisher"]["name"]
+
     @staticmethod
     def get_vinyl_count(name: str) -> int:
         conv = {"single": 1, "double": 2, "triple": 3}
@@ -127,8 +135,8 @@ class Helpers:
             for char in "X&":
                 subartists = artist.split(f" {char} ")
                 if len(subartists) > 1 and any(s in split_artists for s in subartists):
-                    split_artists.discard(artist)
-                    split_artists.update(subartists)
+                    split_artists.discard(artist)  # type: ignore[attr-defined]
+                    split_artists.update(subartists)  # type: ignore[attr-defined]
         return list(split_artists)
 
     @staticmethod
@@ -176,8 +184,8 @@ class Helpers:
         """Return clean album name.
         Catalogue number and artists to be removed are given as args.
         """
-        # remove 'incl. remixes from ...' and similar
         name = PATTERNS["clean_incl"].sub("", name)
+        name = re.sub(r"^\[(.*)\]$", r"\1", name)
 
         for arg in [re.escape(arg) for arg in filter(op.truth, args)] + [
             r"Various Artists?\b(?! \w)"
@@ -187,7 +195,8 @@ class Helpers:
                     rf"(^|[^'\])\w]|_|\b)+(?i:{arg})([^'(\[\w]|_|(\d+$))*", " ", name
                 ).strip()
 
-        if label and not re.search(rf"\({label}|\w {label} \w|\w {label}$", name):
+        label_allow_pat = r"^{0}[^ ]|\({0}|\w {0} \w|\w {0}$".format(label)
+        if label and not re.search(label_allow_pat, name):
             lpat = rf"(\W\W+{label}\W*|\W*{label}(\W\W+|$)|(^\W*{label}\W*$))(VA)?\d*"
             name = re.sub(lpat, " ", name, re.I).strip()
 
@@ -218,7 +227,6 @@ class Helpers:
             >>> get_genre(['house', 'garage house', 'glitch'], "classical")
             'garage house, glitch'
         """
-        unique_genres = ordset()
         valid_mb_genre = partial(op.contains, GENRES)
         label_name = label.lower().replace(" ", "")
 
@@ -226,7 +234,7 @@ class Helpers:
             return kw.replace(" ", "") == label_name and not valid_mb_genre(kw)
 
         def is_included(kw: str) -> bool:
-            return any(map(lambda x: re.search(x, kw), config["always_include"]))
+            return any(re.search(x, kw) for x in config["always_include"])
 
         def valid_for_mode(kw: str) -> bool:
             if config["mode"] == "classical":
@@ -238,6 +246,7 @@ class Helpers:
 
             return valid_mb_genre(kw) or valid_mb_genre(list(words)[-1])
 
+        unique_genres: ordset[str] = ordset()
         # expand badly delimited keywords
         split_kw = partial(re.split, r"[.] | #| - ")
         for kw in it.chain(*map(split_kw, keywords)):
@@ -253,10 +262,8 @@ class Helpers:
             and not the other way around.
             """
             others = unique_genres - {genre}
-            others = others.union(
-                map(lambda x: x.replace(" ", "").replace("-", ""), others)
-            )
-            return any(map(lambda x: genre in x, others))
+            others = others.union(x.replace(" ", "").replace("-", "") for x in others)  # type: ignore[attr-defined] # noqa
+            return any(genre in x for x in others)
 
         return it.filterfalse(duplicate, unique_genres)
 

@@ -8,7 +8,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python: ["3.6", "3.7", "3.8", "3.9", "3.10"]
+        python: ["3.7", "3.8", "3.9", "3.10"]
         beets: ["1.4.9", "1.5.0", "1.6.0"]
     steps:
       - uses: actions/checkout@v3
@@ -40,6 +40,8 @@ jobs:
           COVERALLS_PARALLEL: true
       - name: Flake8
         run: flake8 . --output-file flake.log --exit-zero
+      - name: Mypy
+        run: mypy --strict >> flake.log || true
       - name: Pylint
         run: pylint --output pylint.log --exit-zero $(git ls-files '*.py')
       - name: SonarCloud Scan
