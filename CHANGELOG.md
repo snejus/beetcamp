@@ -1,3 +1,13 @@
+## [0.17.0] Unreleased
+
+[0.16.0]: https://github.com/snejus/beetcamp/releases/tag/0.17.0
+
+### Updated
+
+* `title`:
+  - Add missing closing parenthesis for mix/edit titles: **Title (Some Mix** -> **Title (Some Mix)**
+
+
 ## [0.16.0] 2022-08-19
 
 [0.16.0]: https://github.com/snejus/beetcamp/releases/tag/0.16.0
