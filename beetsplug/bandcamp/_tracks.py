@@ -6,7 +6,7 @@ import sys
 from collections import Counter
 from dataclasses import dataclass, field
 from functools import reduce
-from typing import Iterator, List, Optional, Set, Tuple
+from typing import Dict, Iterator, List, Optional, Set
 
 from ordered_set import OrderedSet as ordset
 
@@ -85,9 +85,7 @@ class Track:
     track_alt: Optional[str] = None
 
     @classmethod
-    def from_json(
-        cls, json: JSONDict, name: str, delim: str, catalognum: str, label: str
-    ) -> "Track":
+    def from_json(cls, json: JSONDict, delim: str, label: str) -> "Track":
         try:
             artist = json["inAlbum"]["byArtist"]["name"]
         except KeyError:
@@ -98,9 +96,9 @@ class Track:
             "json_artist": artist,
             "track_id": json["@id"],
             "index": json.get("position"),
-            "catalognum": catalognum,
+            "catalognum": json["name_parts"].get("catalognum", ""),
         }
-        return cls(**cls.parse_name(data, name, delim, label))
+        return cls(**cls.parse_name(data, json["name_parts"]["clean"], delim, label))
 
     @staticmethod
     def no_digi_name(name: str) -> str:
@@ -268,36 +266,57 @@ class Tracks(list):
 
         names = [i.get("name", "") for i in tracks]
         delim = cls.track_delimiter(names)
-        catalognum, names = cls.common_catalognum(names, delim)
-        return cls(
-            [
-                Track.from_json(t, n, delim, catalognum, Helpers.get_label(meta))
-                for n, t in zip(names, tracks)
-            ]
-        )
+        for track, name in zip(tracks, names):
+            track["name_parts"] = {"original": name, "clean": name}
+            track["delim"] = delim
+        tracks = cls.common_name_parts(tracks, names, delim)
+        return cls([Track.from_json(t, delim, Helpers.get_label(meta)) for t in tracks])
 
     @cached_property
     def first(self) -> Track:
         return self.tracks[0]
 
     @staticmethod
-    def common_catalognum(names: List[str], delim: str) -> Tuple[str, List[str]]:
-        """Split each track name into words, find the list of words that are common
-        to all tracks, and check the *first* and the *last* word for a catalog number.
+    def common_name_parts(
+        tracks: List[JSONDict], names: List[str], delim: str
+    ) -> List[Dict[str, str]]:
+        """Parse track names for parts that require knowledge of the other names.
 
-        If found, remove that word / catalog number from each track name.
+        1. Split each track name into words
+        2. Find the list of words that are common to all tracks
+           a. check the *first* and the *last* word for the catalog number
+              1. If found, remove it from every track name
+           b. check whether tracks start the same way. This indicates an album with
+              one unique root title and a couple of its remixes. This is especially
+              relevant when the remix is not delimited appropriately.
         Return the catalog number and the new list of names.
         """
         names_tokens = list(map(str.split, names))
-        common_words = reduce(op.and_, [ordset(x) for x in names_tokens]) - {delim}
-        if common_words:
-            for word in common_words[0], common_words[-1]:  # type: ignore[index]
-                m = CATNUM_PAT["anywhere"].search(word)
-                if m:
-                    for tokens in names_tokens:
-                        tokens.remove(word)
-                    return m.group(1), list(map(" ".join, names_tokens))
-        return "", names
+        common_words = reduce(op.and_, [ordset(x) for x in names_tokens])
+        if not common_words:
+            return tracks
+
+        matches = (CATNUM_PAT["anywhere"].search(common_words[i]) for i in [0, -1])
+        try:
+            cat, word = next(((m.group(1), m.string) for m in matches if m))
+        except StopIteration:
+            pass
+        else:
+            for track in tracks:
+                track["name_parts"].update(
+                    catalognum=cat,
+                    clean=track["name_parts"]["clean"].replace(word, "").strip(),
+                )
+
+        joined = " ".join(common_words)
+        if joined in names:  # it is one of the track names (root title)
+            for track in tracks:
+                leftover = track["name_parts"]["clean"].replace(joined, "").lstrip()
+                # looking for a remix without brackets
+                if re.fullmatch(_remix_pat, leftover, re.I):
+                    track["name_parts"]["clean"] = f"{joined} ({leftover})"
+
+        return tracks
 
     @cached_property
     def raw_artists(self) -> List[str]:
@@ -340,6 +359,12 @@ class Tracks(list):
                 # one artist was confused for a track alt, like 'B2', - reverse this
                 t.artist, t.track_alt = t.track_alt, None
             elif len(artists) == len(self) - 1:  # only 1 missing artist
+                # if this is a remix and the parsed title is part of the albumartist or is one
+                # of the track artists, we made a mistake parsing the remix:
+                #   it is most probably the edge case where the `main_title` is a legitimate
+                #   artist and the track title is something like 'Hello Remix'
+                if t.remix and (t.main_title in aartist or t.main_title in artists):
+                    t.artist, t.title = t.main_title, t.remix.remix
                 # this is the only artist that didn't get parsed - relax the rule
                 # and try splitting with '-' without spaces
                 split = t.title.split("-")

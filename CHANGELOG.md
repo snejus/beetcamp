@@ -8,6 +8,7 @@
   - Address a long-standing issue with track names of the form **Title - Some Mix** where we
     would parse **Title** as the artist and **Some Mix** as the title. Such name now gets
     replaced by **Title (Some Mix)** which is then attributed correctly.
+  - Handle remix album where titles of the remixes are not delimited in any way.
 
 ### Updated
 
