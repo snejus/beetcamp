@@ -26,16 +26,10 @@ RELEASE_PATTERNS = [
     re.compile(r"\n\s+by " + _f("artist")),
     re.compile(r"\n\s+released " + _f("date")),
     re.compile(r"\n\s+(?P<tracks>\d+) tracks"),
-    re.compile(
-        r"""
-(?P<url>
-    https://
-    (?:bandcamp[.])?
-    (?P<label>(?!bandcamp|com)[^.]+)
-    [.](?!bcbits)[\w/.-]+
-)""",
-        re.VERBOSE,
-    ),
+]
+URL_PATTERNS = [
+    re.compile(r"(?P<url>https://(?P<label>(?!bandcamp\.)[^.]+)\.(?!bcbits)[\w/.-]+)"),  # label-first pattern
+    re.compile(r"(?P<url>https://bandcamp\.(?P<label>[^.]+)\.(?!bcbits)[\w/.-]+)"),  # label-second pattern
 ]
 
 
@@ -67,7 +61,13 @@ def get_matches(text: str) -> JSONDict:
     for pat in RELEASE_PATTERNS:
         for m in pat.finditer(text):
             result.update(m.groupdict())
-    result["type"] = result["type"].lower()
+    for url_pat in URL_PATTERNS:
+        for m in url_pat.finditer(text):
+            if m:
+                result.update(m.groupdict())
+                break
+    if "type" in result:
+        result["type"] = result["type"].lower()
     if "date" in result:
         result["date"] = " ".join(reversed(result["date"].split()))
     return result

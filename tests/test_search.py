@@ -1,6 +1,6 @@
 """Tests for searching functionality."""
 import pytest
-from beetsplug.bandcamp._search import RELEASE_PATTERNS, parse_and_sort_results
+from beetsplug.bandcamp._search import URL_PATTERNS, get_matches, parse_and_sort_results
 
 # simplified version of the search result HTML block
 HTML_ITEM = """
@@ -70,17 +70,16 @@ def test_search_prioritises_best_matches(search_data):
 @pytest.mark.parametrize(
     ("test_url", "expected_label"),
     (
-        (
-            "https://bandcamp.materiacollective.com/track/the-illusionary-dance",
-            "materiacollective",
-        ),
-        (
-            "https://finderskeepersrecords.bandcamp.com/track/illusional-frieze",
-            "finderskeepersrecords",
-        ),
+        ("https://bandcamp.materiacollective.com/track/the-illusionary-dance", "materiacollective", ),
+        ("https://finderskeepersrecords.bandcamp.com/track/illusional-frieze", "finderskeepersrecords", ),
+        ("https://compiladoaspen.bandcamp.com/track/kiss-from-a-rose", "compiladoaspen", ),
+        ("https://comtruise.bandcamp.com/track/karova-digital-bonus-3", "comtruise",),
+        ("https://bandofholyjoy.bandcamp.com/track/lost-in-the-night", "bandofholyjoy",),
+        ("https://bandcampcomp.bandcamp.com/track/everything-everything-in-birdsong-acoustic", "bandcampcomp",),
+        ("https://bandcamp.bandcamp.com/track/warm-2", "bandcamp",),
     ),
 )
 def test_search_matches(test_url, expected_label):
-    test_matches = RELEASE_PATTERNS[-1].match(test_url)
-    assert test_matches.group("url") == test_url
-    assert test_matches.group("label") == expected_label
+    result = get_matches(test_url)
+    assert result["url"] == test_url
+    assert result["label"] == expected_label
