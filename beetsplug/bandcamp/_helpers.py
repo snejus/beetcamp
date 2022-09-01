@@ -7,7 +7,7 @@ from string import Template
 from typing import Any, Dict, Iterable, List, NamedTuple, Pattern, Tuple
 
 from beets.autotag.hooks import AlbumInfo
-from ordered_set import OrderedSet as ordset  # type: ignore
+from ordered_set import OrderedSet as ordset
 
 from .genres_lookup import GENRES
 
@@ -57,9 +57,9 @@ _cat_pat = _catalognum.template
 
 CATNUM_PAT = {
     "with_header": re.compile(r"(?:^|\s)cat[\w .]+?(?:number:?|:) ?(\w[^\n,]+)", re.I),
-    "start_end": re.compile(fr"((^|\n){_cat_pat}|{_cat_pat}(\n|$))", re.VERBOSE),
-    "delimited": re.compile(fr"(?:[\[(])(?!.*MIX){_cat_pat}(?:[])]|$)", re.VERBOSE),
-    "anywhere": re.compile(fr"(?<!,[ ])({_cat_pat}([ ]/[ ]{_cat_pat})?)", re.VERBOSE),
+    "start_end": re.compile(rf"((^|\n){_cat_pat}|{_cat_pat}(\n|$))", re.VERBOSE),
+    "delimited": re.compile(rf"(?:[\[(])(?!.*MIX){_cat_pat}(?:[])]|$)", re.VERBOSE),
+    "anywhere": re.compile(rf"(?<!,[ ])({_cat_pat}([ ]/[ ]{_cat_pat})?)", re.VERBOSE),
 }
 
 _comp = re.compile
@@ -177,13 +177,13 @@ class Helpers:
         for arg in [re.escape(arg) for arg in filter(op.truth, args)] + [
             r"Various Artists?\b(?! \w)"
         ]:
-            if not re.search(fr"\w {arg} \w", name, re.I):
+            if not re.search(rf"\w {arg} \w", name, re.I):
                 name = re.sub(
-                    fr"(^|[^'\])\w]|_|\b)+(?i:{arg})([^'(\[\w]|_|(\d+$))*", " ", name
+                    rf"(^|[^'\])\w]|_|\b)+(?i:{arg})([^'(\[\w]|_|(\d+$))*", " ", name
                 ).strip()
 
-        if label and not re.search(fr"\({label}|\w {label} \w|\w {label}$", name):
-            lpat = fr"(\W\W+{label}\W*|\W*{label}(\W\W+|$)|(^\W*{label}\W*$))(VA)?\d*"
+        if label and not re.search(rf"\({label}|\w {label} \w|\w {label}$", name):
+            lpat = rf"(\W\W+{label}\W*|\W*{label}(\W\W+|$)|(^\W*{label}\W*$))(VA)?\d*"
             name = re.sub(lpat, " ", name, re.I).strip()
 
         name = Helpers.clean_name(name)
@@ -305,7 +305,9 @@ class Helpers:
             formats.append(
                 MediaInfo(
                     _format["@id"],
-                    FORMAT_TO_MEDIA[_format.get("musicReleaseFormat") or "DigitalFormat"],
+                    FORMAT_TO_MEDIA[
+                        _format.get("musicReleaseFormat") or "DigitalFormat"
+                    ],
                     _format["name"],
                     _format.get("description") or "",
                     float(_format.get("offers", {}).get("price") or 0) or 0,
@@ -321,7 +323,7 @@ class Helpers:
         @lru_cache(maxsize=None)
         def get_medium_total(medium: int) -> int:
             starts = {1: "AB", 2: "CD", 3: "EF", 4: "GH", 5: "IJ"}[medium]
-            return len(re.findall(fr"^[{starts}]", "\n".join(track_alts), re.M))
+            return len(re.findall(rf"^[{starts}]", "\n".join(track_alts), re.M))
 
         medium = 1
         medium_index = 1

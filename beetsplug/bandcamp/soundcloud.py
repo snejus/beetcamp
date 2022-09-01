@@ -23,32 +23,17 @@ def get_country(loc: str) -> str:
 
 
 def parse_title(source: str, title: str) -> JSONDict:
-    index_pat = r"(?:\s|0)*(?P<index>[1-9][0-9]*)"
-    artist_pat = r"(?P<artist>[^\[]?[^\[_-]+[[]?)"
-    title_pat = r"(?P<title>[^-]+)"
-    data: JSONDict = {}
-    if title.startswith("DETECT"):
-        data["album"] = "DETECT"
-        pat = rf"\[{index_pat}\] - {title_pat}"
-    elif title.startswith("Morph"):
+    delim = r"([-&|]|w/|__)"
+    _delim = r" {delim} |__"
+
+    index_pat = r"(?P<full_index>[\[# ]*(?P<index>[\d.]+)\]?)"
+    artist_pat = rf"(?P<artist>.+(?!{delim}))"
+    album_pat = rf"(?P<album>.+(?!{delim}))"
+
+    data: JSONDict = {"artist": source, "title": title}
+    if title.startswith("Morph"):
         data["album"] = "Morph"
         pat = rf"{index_pat} {artist_pat}"
-    elif "DISSENTIENT" in source:
-        data["album"] = source
-        pat = rf"{index_pat}[ .-]+(?P<title>{artist_pat}.*)$"
-    elif title.startswith("Ismcast"):
-        data["album"] = "Ismcast"
-        pat = rf"{index_pat} - (?P<title>{artist_pat}.*)$"
-    elif title.startswith("DUSKCAST"):
-        data["album"] = "DUSKCAST"
-        pat = rf"{index_pat} [|] {artist_pat}"
-    elif title.startswith("Axxidcast"):
-        data["album"] = "Axxidcast"
-        pat = r"w/ (?P<artist>[^-]+) - .* (?P<index>[0-9.]+)$"
-    elif title.startswith("CRUDE"):
-        data["album"] = "CRUDE MIX Series"
-        data["label"] = "CRUDE"
-        pat = rf"CRUDE MIX\D+{index_pat} - {artist_pat}(_+(?P<title>[^_]+))?$"
     elif "SlamRadio" in title:
         data["album"] = "SlamRadio"
         pat = rf"- {index_pat} - {artist_pat}$"
@@ -67,18 +52,18 @@ def parse_title(source: str, title: str) -> JSONDict:
     elif title.startswith("Reclaim Your"):
         data["album"] = "Reclaim Your City"
         pat = rf"City {index_pat} [|] {artist_pat}$"
-    elif "Boiler Room" in title:
-        data["album"] = "Boiler Room"
-        pat = rf"{artist_pat} [|] Boiler Room x {title_pat}$"
+    # elif "Boiler Room" in title:
+    #     data["album"] = "Boiler Room"
+    #     pat = rf"{artist_pat} [|] Boiler Room x {title_pat}$"
     elif title.startswith("STRECK PO"):
         data["label"], data["album"] = "STRECK", "STRECK PODCAST"
         pat = rf"{index_pat} [|] {artist_pat}"
     elif title.startswith("Hard Dance"):
         data["album"] = "Hard Dance"
         pat = rf"{index_pat} [:] {artist_pat}"
-    elif "SLIT " in title:
-        data["album"] = "SLIT"
-        pat = rf"{artist_pat} [|] SLIT - {title_pat}$"
+    # elif "SLIT " in title:
+    #     data["album"] = "SLIT"
+    #     pat = rf"{artist_pat} [|] SLIT - {title_pat}$"
     elif "FOLD Invites" in title:
         data["label"], data["album"], data["title"] = "FOLD", "FOLD Invites", title
         pat = rf"Invites {artist_pat}$"
@@ -102,9 +87,6 @@ def parse_title(source: str, title: str) -> JSONDict:
     elif re.match(r"Hardcore \d+", title):
         data["album"], data["title"] = "Hardcore", title
         pat = rf"Hardcore {index_pat}"
-    elif title.startswith("discast"):
-        data["album"], data["label"], data["title"] = "discast", "disgust", title
-        pat = rf"discast [|] {index_pat} [|] {artist_pat}"
     elif source == "Sarunas":
         data["artist"] = "SN"
         data["title"] = title
@@ -117,43 +99,55 @@ def parse_title(source: str, title: str) -> JSONDict:
             data["album"] = ""
         pat = "aaaaaa"
     else:
-        pat = rf"{artist_pat} - {title_pat}"
-    if pat:
-        match = re.search(pat, title)
-        if match:
-            mdata = match.groupdict()
-            data.update(mdata)
+        for pat in (
+            # DISSENTIENT.SPACE
+            rf"^{index_pat}{_delim}{artist_pat}{delim}$",
+            # Ismcast, DUSKCAST, POSSESSION, DETECT
+            rf"^{album_pat} {index_pat}{_delim}{artist_pat}{delim}.*$",
+            # discast
+            rf"^{album_pat}{_delim}{index_pat}{_delim}{artist_pat}{delim}.*$",
+            # Axxidcast
+            rf"^{album_pat}{_delim}{artist_pat}{_delim}(Live )?{index_pat}$",
+        ):
+            m = re.search(pat, title)
+            if m:
+                mdata = m.groupdict()
+                data.update(mdata)
+                full_index = data.pop("full_index", "")
+                if full_index and title.startswith(full_index):
+                    title = title.split(full_index)[1].strip(" -|")
+                data["title"] = title
+                break
 
-    data["track"] = data.get("index")
-    artist = data.get("artist") or ""
-    if not artist:
-        data["artist"] = source
-    else:
-        m = re.search(r" [^ ]*live[^ ]*", artist, re.I)
-        if m:
-            data["title"] = data["artist"]
-            data["artist"] = data["artist"].replace(m.group(0), "")
-            data["live"] = True
-        if data["artist"] == data.get("title") or "":
-            data.pop("title", None)
+    index = data.pop("index", "")
+    if "." not in index:
+        index = index.lstrip("0")
+    data["track"] = index
 
+    artist = data.get("artist", "")
+    m = re.search(r" [^ ]*live[^ ]*", artist, re.I)
+    if m:
+        data["artist"] = data["artist"].replace(m.group(0), "")
+        data["live"] = True
+    if data["artist"] == data.get("title") or "":
+        data.pop("title", None)
+    data["artist"] = data["artist"].replace(" & ", ", ")
     return data
 
 
 def get_soundcloud_track(data: JSONDict, config: JSONDict) -> TrackInfo:
     from dateutil.parser import isoparse
 
-    userdata = data.get("user") or dict()
+    userdata = data.get("user") or {}
     date = isoparse(data["display_date"])
     url = data["permalink_url"]
     loc = userdata.get("country_code") or userdata.get("city") or ""
     track = TrackInfo(
         title=data["title"],
-        index=0,
         track_id=url,
         isrc=(data.get("publisher_metadata") or {}).get("isrc"),
         length=round(data["duration"] / 1000) - 1,
-        label=data.get("label_name") or userdata["username"],
+        label=(data.get("label_name") or userdata["username"]).strip(" /"),
         media=DIGI_MEDIA,
         genre=", ".join(
             Helpers.get_genre(
@@ -172,16 +166,11 @@ def get_soundcloud_track(data: JSONDict, config: JSONDict) -> TrackInfo:
         data_url=url,
         artist_id=userdata["urn"],
         artist=userdata["username"],
+        artwork_url=(data.get("artwork_url") or "").replace("-large", "-t500x500"),
+        visual_url=(userdata.get("visuals") or {})
+        .get("visuals", [{}])[0]
+        .get("visual_url"),
     )
-    print(track)
-    artwork_url = (data.get("artwork_url") or "").replace("-large", "-t500x500")
-    if artwork_url:
-        track["artwork_url"] = artwork_url
-    visual_url = (
-        (userdata.get("visuals") or {}).get("visuals", [{}])[0].get("visual_url")
-    )
-    if visual_url:
-        track["visual_url"] = visual_url
 
     parsed_track = parse_title(track.label, track.title)
     track.update(parsed_track)
@@ -198,13 +187,15 @@ def get_soundcloud_track(data: JSONDict, config: JSONDict) -> TrackInfo:
         track.albumstatus = "Official"
 
     track.albumartist = ""
+
     if track.get("album"):
         track.update(
             album_id=userdata.get("station_urn") or url,
             albumartist=track.get("label") or track.get("artist"),
         )
-        parsed_title = parsed_track.get("title")
-        if not parsed_title:
-            track.title = f"{track.album} {track.index}"
+
+    track.title = parsed_track.pop("title", None)
+    if not track.title:
+        track.title = f"{track.album} {track.track}"
 
     return track
