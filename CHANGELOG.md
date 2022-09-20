@@ -1,3 +1,9 @@
+## UPCOMING
+
+### Fixed
+
+* (#36) Fix bug with some URLs
+
 ## [0.16.0] 2022-08-19
 
 [0.16.0]: https://github.com/snejus/beetcamp/releases/tag/0.16.0
