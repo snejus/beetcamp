@@ -4,6 +4,7 @@
 
 ### Fixed
 
+* (#36) Fix bug with some URLs
 * `title`:
   - Address a long-standing issue with track names of the form **Title - Some Mix** where we
     would parse **Title** as the artist and **Some Mix** as the title. Such name now gets
