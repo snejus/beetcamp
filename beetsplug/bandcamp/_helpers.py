@@ -191,7 +191,7 @@ class Helpers:
         name = re.sub(r"^\[(.*)\]$", r"\1", name)
 
         for arg in [re.escape(arg) for arg in filter(op.truth, args)] + [
-            r"Various Artists?\b(?! \w)"
+            r"Various Artists?\b(?! [A-z])( \d+)?"
         ]:
             if not re.search(rf"\w {arg} \w", name, re.I):
                 name = re.sub(

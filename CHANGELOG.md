@@ -13,6 +13,8 @@
 
 ### Updated
 
+* `album`:
+  - Remove **Various Artists** (optionally followed by some numbers) from the album name
 * `title`:
   - Add missing closing parenthesis for mix/edit titles: **Title (Some Mix** -> **Title (Some Mix)**
 
