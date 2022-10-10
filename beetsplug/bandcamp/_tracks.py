@@ -249,6 +249,7 @@ class Track:
 
 @dataclass
 class Tracks(list):
+    TITLE_IN_QUOTES = re.compile(r'^(.+[^ -])[ -]+"([^"]+)"$')
     tracks: List[Track]
 
     def __iter__(self) -> Iterator[Track]:
@@ -265,6 +266,7 @@ class Tracks(list):
             tracks = [meta]
 
         names = [i.get("name", "") for i in tracks]
+        names = cls.split_quoted_titles(names)
         delim = cls.track_delimiter(names)
         for track, name in zip(tracks, names):
             track["name_parts"] = {"original": name, "clean": name}
@@ -275,6 +277,16 @@ class Tracks(list):
     @cached_property
     def first(self) -> Track:
         return self.tracks[0]
+
+    @classmethod
+    def split_quoted_titles(cls, names: List[str]) -> List[str]:
+        if (
+            len(names) > 1
+            and cls.TITLE_IN_QUOTES.match(names[0])
+            and all(cls.TITLE_IN_QUOTES.match(n) for n in names)
+        ):
+            return [cls.TITLE_IN_QUOTES.sub(r"\1 - \2", n) for n in names]
+        return names
 
     @staticmethod
     def common_name_parts(
