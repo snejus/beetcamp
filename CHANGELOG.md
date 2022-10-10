@@ -17,6 +17,8 @@
 
 * `album`:
   - Remove **Various Artists** (optionally followed by some numbers) from the album name
+* `catalognum`:
+  - Handling some rare edge cases of both false positives and false negatives
 * `title`:
   - Add missing closing parenthesis for mix/edit titles: **Title (Some Mix** -> **Title (Some Mix)**
 

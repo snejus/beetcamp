@@ -42,10 +42,10 @@ _cat_pat = CATALOGNUM_CONSTRAINT.format(
     | (?<!\w\W)[A-Z.]{2,}[ ]\d+  # OBS.CUR 9
     | [A-z]+-[A-z]+[ ]?\d+       # o-ton 119
     | \w+[A-z]0\d+               # 1ØPILLS018, fa036
-    | [a-z]+(cd|lp|:)\d+         # ostgutlp45, reni:7
+    | [a-z]+(?:cd|lp|:)\d+       # ostgutlp45, reni:7
     | [A-z]+\d+-\d+              # P90-003
 )
-( # optionally followed by
+(?: # optionally followed by
       (?<=\d\d)-?[A-Z]+  # IBM001CD (needs at least two digits before the letter)
     | [.]\d+             # ISMVA002.1
 )?
@@ -163,16 +163,22 @@ class Helpers:
         tracks_str = " ".join([*(tracks or []), *(artists or [])]).lower()
 
         def find(pat: Pattern, string: str) -> str:
-            """Return the match if it is not found in any of the track names."""
-            m = pat.search(string)
-            if m:
+            """Return the match if
+            * it is not found in any of the track artists or titles
+            * it's made of the label name when it has a space and is shorter than 6 chars
+            """
+            for m in pat.finditer(string):
                 catnum = m.group(1).strip()
                 if catnum.lower() not in tracks_str:
+                    if " " in catnum:
+                        first = catnum.split()[0].lower()
+                        if len(catnum) <= 5 and first not in label.lower():
+                            continue
                     return catnum
             return ""
 
         try:
-            return next(filter(op.truth, it.starmap(find, cases)))
+            return next(filter(None, it.starmap(find, cases)))
         except StopIteration:
             return ""
 
