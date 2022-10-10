@@ -3,7 +3,6 @@ import itertools as it
 import operator as op
 import re
 from functools import lru_cache, partial
-from string import Template
 from typing import Any, Dict, Iterable, List, NamedTuple, Pattern, Tuple
 
 from beets.autotag.hooks import AlbumInfo
@@ -30,54 +29,55 @@ class MediaInfo(NamedTuple):
     description: str
 
 
-_catalognum = Template(
-    r"""(?<![]/@-])(\b
-(?!\W|LC[ ]|VA[\d ]+|[EL]P\W|[^\n.]+[ ](?:20\d{2}|VA[ \d]+)|(?i:vol|disc|number))
+CATALOGNUM_CONSTRAINT = r"""(?<![]/@-])(\b
+(?!\W|LC[ ]|VA[\d ]+|[EL]P\W|[^\n.]+[ ](?:20\d\d|VA[ \d]+)|(?i:vol|disc|number))
+{}
+\b(?!["%]))"""
+_cat_pat = CATALOGNUM_CONSTRAINT.format(
+    r"""
 (
       [A-Z][A-Z .]+\d{3}         # HANDS D300, CC ATOM 101
     | [A-Z-]{3,}\d+              # RIV4
-    # dollar signs need escaping here since the $label below will be
-    # substituted later, and we do not want to touch these two
-    | [A-Z]{2,}[A-Z.$$-]*\d{2,}  # HS11, USE202, HEY-101, LI$$INGLE025
+    | [A-Z]{2,}[A-Z.$-]*\d{2,}   # HS11, USE202, HEY-101, LI$INGLE025
     | (?<!\w\W)[A-Z.]{2,}[ ]\d+  # OBS.CUR 9
     | [A-z]+-[A-z]+[ ]?\d+       # o-ton 119
     | \w+[A-z]0\d+               # 1ØPILLS018, fa036
     | [a-z]+(cd|lp|:)\d+         # ostgutlp45, reni:7
     | [A-z]+\d+-\d+              # P90-003
-    | (?i:$label[ ]?[A-Z]*\d+[A-Z]*)
 )
 ( # optionally followed by
       (?<=\d\d)-?[A-Z]+  # IBM001CD (needs at least two digits before the letter)
     | [.]\d+             # ISMVA002.1
 )?
-\b(?!["%]))"""
+"""
 )
-_cat_pat = _catalognum.template
 
+LABEL_CATNUM = CATALOGNUM_CONSTRAINT.format(r"(?i:{}[ ]?[A-Z]*\d+[A-Z]*)")
 CATNUM_PAT = {
-    "with_header": re.compile(
-        r"(?:^|\s)cat[\w .]+?(?:number\b:?|:) ?(\w[^\n,]+)", re.I
-    ),
-    "start_end": re.compile(rf"((^|\n){_cat_pat}|{_cat_pat}(\n|$))", re.VERBOSE),
+    # preceded by some variation of 'Catalogue number:'
+    "header": re.compile(r"^cat[\w .]+(?:number\b:?|:) ?(\w.+)$", re.I | re.M),
+    # beginning or end of line
+    "start_end": re.compile(rf"(^{_cat_pat}|{_cat_pat}$)", re.M | re.VERBOSE),
     # enclosed by parens or square brackets, but not ending with MIX
     "delimited": re.compile(rf"(?:[\[(])(?!.*MIX){_cat_pat}(?:[])]|$)", re.VERBOSE),
-    "anywhere": re.compile(rf"(?<!,[ ])({_cat_pat}([ ]/[ ]{_cat_pat})?)", re.VERBOSE),
+    # can possibly be followed up by a second catalogue number
+    "anywhere": re.compile(rf"({_cat_pat}(\ /\ {_cat_pat})?)", re.VERBOSE),
 }
 
-_comp = re.compile
 PATTERNS: Dict[str, Pattern] = {
-    "split_artists": _comp(r", - |, | (?:[x+/-]|//|vs|and)[.]? "),
-    "meta": _comp(r'.*"@id".*', re.M),
-    "remix_or_ft": _comp(r" [\[(].*(?i:mix|edit|f(ea)?t([.]|uring)?).*"),
-    "ft": _comp(
+    "split_artists": re.compile(r", - |, | (?:[x+/-]|//|vs|and)[.]? "),
+    "meta": re.compile(r'.*"@id".*'),
+    "ft": re.compile(
         r" *((([\[(])| )f(ea)?t([. ]|uring)(?![^()]*mix)[^]\[()]+(?(3)[]\)])) *", re.I
     ),
-    "track_alt": _comp(
+    "track_alt": re.compile(
         r"^([A-J]{1,3}[12]?\d|[AB]+(?=\W{2,}))(?:(?!-\w)[^\w(]|_)+", re.I + re.M
     ),
-    "vinyl_name": _comp(r"[1-5](?= ?(xLP|LP|x))|single|double|triple", re.I),
-    "clean_incl": _comp(r" *(\(?incl|\((inc|tracks|.*remix( |es)))([^)]+\)|.*)", re.I),
-    "tidy_eplp": _comp(r"\S*(?:Double )?(\b[EL]P\b)\S*", re.I),
+    "vinyl_name": re.compile(r"[1-5](?= ?(xLP|LP|x))|single|double|triple", re.I),
+    "clean_incl": re.compile(
+        r" *(\(?incl|\((inc|tracks|.*remix( |es)))([^)]+\)|.*)", re.I
+    ),
+    "tidy_eplp": re.compile(r"\S*(?:Double )?(\b[EL]P\b)\S*", re.I),
 }
 rm_strings = [
     "limited edition",
@@ -92,16 +92,16 @@ rm_strings = [
 _remix_pat = r"(?P<remix>((?P<remixer>[^])]+) )?\b((re)?mix|edit|bootleg)\b[^])]*)"
 # fmt: off
 CLEAN_PATTERNS = [
-    (_comp(fr"(([\[(])|(^| ))\*?({'|'.join(rm_strings)})(?(2)[])]|( |$))", re.I), ""),
-    (_comp(r" -(\S)"), r" - \1"),                   # hi -bye          -> hi - bye
-    (_comp(r"(\S)- "), r"\1 - "),                   # hi- bye          -> hi - bye
-    (_comp(r"  +"), " "),                           # hi  bye          -> hi bye
-    (_comp(r"(- )?\( *"), "("),                     # hi - ( bye)      -> hi (bye)
-    (_comp(r" \)+|\)+$"), ")"),                     # hi (bye ))       -> hi (bye)
-    (_comp(r"- Reworked"), "(Reworked)"),           # bye - Reworked   -> bye (Reworked)
-    (_comp(rf"(\({_remix_pat})$", re.I), r"\1)"),   # bye - (Some Mix  -> bye - (Some Mix)
-    (_comp(rf"- *({_remix_pat})$", re.I), r"(\1)"),  # bye - Some Mix   -> bye (Some Mix)
-    (_comp(r'(^|- )"([^"]+)"( \(|$)'), r"\1\2\3"),  # "bye" -> bye; hi - "bye" -> hi - bye
+    (re.compile(fr"(([\[(])|(^| ))\*?({'|'.join(rm_strings)})(?(2)[])]|( |$))", re.I), ""),       # noqa
+    (re.compile(r" -(\S)"), r" - \1"),                    # hi -bye          -> hi - bye
+    (re.compile(r"(\S)- "), r"\1 - "),                    # hi- bye          -> hi - bye
+    (re.compile(r"  +"), " "),                            # hi  bye          -> hi bye
+    (re.compile(r"(- )?\( *"), "("),                      # hi - ( bye)      -> hi (bye)
+    (re.compile(r" \)+|\)+$"), ")"),                      # hi (bye ))       -> hi (bye)
+    (re.compile(r"- Reworked"), "(Reworked)"),            # bye - Reworked   -> bye (Reworked)    # noqa
+    (re.compile(rf"(\({_remix_pat})$", re.I), r"\1)"),    # bye - (Some Mix  -> bye - (Some Mix)  # noqa
+    (re.compile(rf"- *({_remix_pat})$", re.I), r"(\1)"),  # bye - Some Mix   -> bye (Some Mix)    # noqa
+    (re.compile(r'(^|- )"([^"]+)"( \(|$)'), r"\1\2\3"),   # "bye" -> bye; hi - "bye" -> hi - bye  # noqa
 ]
 # fmt: on
 
@@ -117,8 +117,8 @@ class Helpers:
     @staticmethod
     def get_vinyl_count(name: str) -> int:
         conv = {"single": 1, "double": 2, "triple": 3}
-        for match in PATTERNS["vinyl_name"].finditer(name):
-            count = match.group()
+        for m in PATTERNS["vinyl_name"].finditer(name):
+            count = m.group()
             return int(count) if count.isdigit() else conv[count.lower()]
         return 1
 
@@ -150,14 +150,14 @@ class Helpers:
         # type: (str, str, str, Tuple[str], Tuple[str]) -> str
         """Try getting the catalog number looking at text from various fields."""
         cases = [
-            (CATNUM_PAT["with_header"], description),
+            (CATNUM_PAT["header"], description),
             (CATNUM_PAT["anywhere"], disctitle),
             (CATNUM_PAT["anywhere"], album),
             (CATNUM_PAT["start_end"], description),
             (CATNUM_PAT["anywhere"], description),
         ]
         if label:
-            pat = re.compile(_catalognum.substitute(label=re.escape(label)), re.VERBOSE)
+            pat = re.compile(LABEL_CATNUM.format(re.escape(label)), re.VERBOSE)
             cases.append((pat, "\n".join((album, disctitle, description))))
 
         tracks_str = " ".join([*(tracks or []), *(artists or [])]).lower()

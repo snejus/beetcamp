@@ -182,10 +182,10 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
             self._info("Fetching the URL attached to the first item, {}", url)
             return url
 
-        match = re.match(r"Visit (https:[\w/.-]+com)", item.comments)
+        m = re.match(r"Visit (https:[\w/.-]+com)", item.comments)
         urlified_name = urlify(name)
-        if match and urlified_name:
-            label = match.expand(r"\1")
+        if m and urlified_name:
+            label = m.expand(r"\1")
             url = "/".join([label, _type, urlified_name])
             self._info("Trying our guess {} before searching", url)
             return url
@@ -276,9 +276,9 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         """
         html = self._get(url)
         if "/track/" in url:
-            match = ALBUM_URL_IN_TRACK.search(html)
-            if match:
-                url = re.sub(r"/track/.*", match.expand(r"\1"), url)
+            m = ALBUM_URL_IN_TRACK.search(html)
+            if m:
+                url = re.sub(r"/track/.*", m.expand(r"\1"), url)
                 return self.handle_guru("albums", url)
         return self.handle_guru("albums", url, html)
 

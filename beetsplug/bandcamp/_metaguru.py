@@ -133,9 +133,9 @@ class Metaguru(Helpers):
 
     @cached_property
     def label(self) -> str:
-        match = re.search(r"Label:([^/,\n]+)", self.all_media_comments)
-        if match:
-            return match.expand(r"\1").strip(" '\"")
+        m = re.search(r"Label:([^/,\n]+)", self.all_media_comments)
+        if m:
+            return m.expand(r"\1").strip(" '\"")
 
         return self.get_label(self.meta)
 

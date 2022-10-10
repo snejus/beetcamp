@@ -17,18 +17,16 @@ if sys.version_info.minor > 7:
 else:
     from cached_property import cached_property  # type: ignore # pylint: disable=import-error # noqa
 
-_comp = re.compile
-
 DIGI_ONLY_PATTERNS = [
-    _comp(r"^(DIGI(TAL)? ?[\d.]+|Bonus\W{2,})\W*"),
-    _comp(
+    re.compile(r"^(DIGI(TAL)? ?[\d.]+|Bonus\W{2,})\W*"),
+    re.compile(
         r"[^\w)]+(bandcamp[^-]+|digi(tal)?)(\W*(\W+|only|bonus|exclusive)\W*$)", re.I
     ),
-    _comp(r"[^\w)]+(bandcamp exclusive )?bonus( track)?(\]\W*|\W*$)", re.I),
+    re.compile(r"[^\w)]+(bandcamp exclusive )?bonus( track)?(\]\W*|\W*$)", re.I),
 ]
-DELIMITER_PAT = _comp(r" ([^\w&()+/[\] ]) ")
-ELP_ALBUM_PAT = _comp(r"[- ]*\[([^\]]+ [EL]P)\]+")  # Title [Some Album EP]
-FT_PAT = _comp(
+DELIMITER_PAT = re.compile(r" ([^\w&()+/[\] ]) ")
+ELP_ALBUM_PAT = re.compile(r"[- ]*\[([^\]]+ [EL]P)\]+")  # Title [Some Album EP]
+FT_PAT = re.compile(
     r"""
 [ ]*                     # all preceding space
 ((?P<br>[\[(])|\b)       # bracket or word boundary
@@ -404,8 +402,8 @@ class Tracks(list):
         """
 
         def get_delim(string: str) -> str:
-            match = DELIMITER_PAT.search(string)
-            return match.group(1) if match else "-"
+            m = DELIMITER_PAT.search(string)
+            return m.group(1) if m else "-"
 
         delim, count = Counter(map(get_delim, names)).most_common(1).pop()
         return delim if (len(names) == 1 or count > len(names) / 2) else "-"

@@ -26,8 +26,10 @@ RELEASE_PATTERNS = [
     re.compile(r"\n\s+by " + _f("artist")),
     re.compile(r"\n\s+released " + _f("date")),
     re.compile(r"\n\s+(?P<tracks>\d+) tracks"),
-    re.compile(r"(?P<url>https://bandcamp\.(?P<label>[^.]+)\.(?!bcbits)[\w/.-]+)"),  # label-second pattern
-    re.compile(r"(?P<url>https://(?P<label>(?!bandcamp\.)[^.]+)\.(?!bcbits)[\w/.-]+)"),  # label-first pattern
+    # label-first pattern
+    re.compile(r"(?P<url>https://bandcamp\.(?P<label>[^.]+)\.(?!bcbits)[\w/.-]+)"),
+    # label-second pattern
+    re.compile(r"(?P<url>https://(?P<label>(?!bandcamp\.)[^.]+)\.(?!bcbits)[\w/.-]+)"),
 ]
 
 
@@ -49,8 +51,8 @@ def get_similarity(a: str, b: str) -> float:
     a, b = to_ascii(a), to_ascii(b)
     if not a or not b:
         return 0
-    match = SequenceMatcher(a=a, b=b).find_longest_match(0, len(a), 0, len(b))
-    return ((match.size / len(a)) * 2 + match.size / len(b)) / 3
+    m = SequenceMatcher(a=a, b=b).find_longest_match(0, len(a), 0, len(b))
+    return ((m.size / len(a)) * 2 + m.size / len(b)) / 3
 
 
 def get_matches(text: str) -> JSONDict:
