@@ -348,10 +348,27 @@ class Tracks(list):
             if t.remix and not t.remix.by_other_artist
         ]
 
-    @cached_property
+    @property
     def other_artists(self) -> Set[str]:
         ft = [j.ft for j in self.tracks if j.ft]
         return set(it.chain(self.remixers, ft))
+
+    @cached_property
+    def all_artists(self) -> Set[str]:
+        return self.other_artists | set(self.raw_artists)
+
+    @cached_property
+    def artistitles(self) -> str:
+        """Returned artists and titles joined into one long string."""
+        return " ".join(it.chain(self.raw_names, self.all_artists)).lower()
+
+    @cached_property
+    def single_catalognum(self) -> Optional[str]:
+        """Return catalognum if every track is marked with the same one."""
+        cats = [t.catalognum for t in self if t.catalognum]
+        if len(cats) == len(self) and len(set(cats)) == 1:
+            return cats[0]
+        return None
 
     def adjust_artists(self, aartist: str) -> None:
         """Handle some track artist edge cases

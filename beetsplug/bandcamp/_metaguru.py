@@ -216,22 +216,12 @@ class Metaguru(Helpers):
     @cached_property
     def general_catalognum(self) -> str:
         """Find catalog number in the media-agnostic release metadata and cache it."""
-        cats = [t.catalognum for t in self._tracks if t.catalognum]
-        artists = ordset([self.original_albumartist])
-        if not self._singleton or len(self._tracks.artists) > 1:
-            artists.update(self._tracks.artists)
-            artists.update(self._tracks.other_artists)
-
-        catnum = self.parse_catalognum(
+        return self._tracks.single_catalognum or self.parse_catalognum(
             album=self.meta["name"],
             description=self.comments,
             label=self.label if not self._singleton else "",
-            tracks=tuple(self._tracks.raw_names),
-            artists=tuple(artists),
+            artistitles=self._tracks.artistitles,
         )
-        if len(cats) == len(self._tracks) and len(set(cats)) == 1:
-            return list(cats)[0]
-        return catnum
 
     @property
     def catalognum(self) -> str:
@@ -243,7 +233,7 @@ class Metaguru(Helpers):
                 disctitle=self.disctitle,
                 description=self.media.description,
                 label=self.label if not self._singleton else "",
-                tracks=tuple(self._tracks.raw_names),
+                artistitles=self._tracks.artistitles,
             )
             or self.general_catalognum
         )

@@ -3,7 +3,7 @@ import itertools as it
 import operator as op
 import re
 from functools import lru_cache, partial
-from typing import Any, Dict, Iterable, List, NamedTuple, Pattern, Tuple
+from typing import Any, Dict, Iterable, List, NamedTuple, Pattern
 
 from beets.autotag.hooks import AlbumInfo
 from ordered_set import OrderedSet as ordset
@@ -64,7 +64,7 @@ CATNUM_PAT = {
     "anywhere": re.compile(rf"({_cat_pat}(\ /\ {_cat_pat})?)", re.VERBOSE),
 }
 
-PATTERNS: Dict[str, Pattern] = {
+PATTERNS: Dict[str, Pattern[str]] = {
     "split_artists": re.compile(r", - |, | (?:[x+/-]|//|vs|and)[.]? "),
     "meta": re.compile(r'.*"@id".*'),
     "ft": re.compile(
@@ -110,9 +110,10 @@ class Helpers:
     @staticmethod
     def get_label(meta: JSONDict) -> str:
         try:
-            return meta["albumRelease"][0]["recordLabel"]["name"]
+            item = meta["albumRelease"][0]["recordLabel"]
         except (KeyError, IndexError):
-            return meta["publisher"]["name"]
+            item = meta["publisher"]
+        return item.get("name") or ""
 
     @staticmethod
     def get_vinyl_count(name: str) -> int:
@@ -145,9 +146,9 @@ class Helpers:
     @staticmethod
     @lru_cache(maxsize=None)
     def parse_catalognum(
-        album="", disctitle="", description="", label="", tracks=None, artists=None
+        album="", disctitle="", description="", label="", artistitles=""
     ):
-        # type: (str, str, str, Tuple[str], Tuple[str]) -> str
+        # type: (str, str, str, str, str) -> str
         """Try getting the catalog number looking at text from various fields."""
         cases = [
             (CATNUM_PAT["header"], description),
@@ -160,16 +161,14 @@ class Helpers:
             pat = re.compile(LABEL_CATNUM.format(re.escape(label)), re.VERBOSE)
             cases.append((pat, "\n".join((album, disctitle, description))))
 
-        tracks_str = " ".join([*(tracks or []), *(artists or [])]).lower()
-
-        def find(pat: Pattern, string: str) -> str:
-            """Return the match if
-            * it is not found in any of the track artists or titles
-            * it's made of the label name when it has a space and is shorter than 6 chars
+        def find(pat: Pattern[str], string: str) -> str:
+            """Return the match if it is
+            * not found in any of the track artists or titles
+            * made of the label name when it has a space and is shorter than 6 chars
             """
             for m in pat.finditer(string):
                 catnum = m.group(1).strip()
-                if catnum.lower() not in tracks_str:
+                if catnum.lower() not in artistitles:
                     if " " in catnum:
                         first = catnum.split()[0].lower()
                         if len(catnum) <= 5 and first not in label.lower():
