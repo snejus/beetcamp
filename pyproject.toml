@@ -47,7 +47,7 @@ pytest-clarity = ">=1.0.1"
 pytest-cov = ">=2.10.1"
 pytest-randomly = ">=3.10"
 pytest-lazy-fixture = ">=0.6.3"
-rich = ">11"
+rich-tables = { git = "https://github.com/snejus/rich-tables" }
 types-setuptools = ">=57.0.0"
 types-requests = ">=2.25.0"
 types-six = ">=0.1.7"
