@@ -23,12 +23,13 @@ def get_country(loc: str) -> str:
 
 
 def parse_title(source: str, title: str) -> JSONDict:
-    delim = r"([-&|]|w/|__)"
+    delim = r"([-&|x]|w/|__)"
     _delim = rf" {delim} "
 
-    index_pat = r"(?P<full_index>[\[# ]*(?P<index>\b[\d.]+\b)\]?)"
+    index_pat = r"(?P<full_index>[\[# 0]+(?P<index>[\d.]+\b)\]?)"
     artist_pat = rf"(?P<artist>.+(?!{delim}))"
-    album_pat = rf"#*(?P<album>.+(?!{delim}))"
+    album_pat = rf"#*(?P<album>.+(?!{delim})\D)"
+    label_pat = r"(?P<full_label> \[(?P<label>[^\]]+)\])"
 
     data: JSONDict = {"artist": source, "title": title}
     m = re.search(r" [^ ]*live[^ ]*", data["title"], re.I)
@@ -42,19 +43,24 @@ def parse_title(source: str, title: str) -> JSONDict:
         # DISSENTIENT.SPACE
         rf"^{index_pat}{_delim}{artist_pat}{delim}$",
         # Ismcast, DUSKCAST, POSSESSION, DETECT
-        rf"^{album_pat}{index_pat}{_delim}{artist_pat}{delim}.*$",
+        rf"^{album_pat}{index_pat}{_delim}{artist_pat}({delim}.*$|{label_pat})",
         # Axxidcast
         rf"^{album_pat}{_delim}{artist_pat}{_delim}(Live )?{index_pat}$",
         # CRUDE MIX
         rf"^{album_pat} {index_pat}{_delim}{artist_pat}$",
     ):
+        # print(pat)
         m = re.search(pat, title)
         if m:
             mdata = m.groupdict()
+            # print(mdata)
             data.update(mdata)
             full_index = data.pop("full_index", "")
             if full_index and title.startswith(full_index):
                 title = title.split(full_index)[1].strip(" -|")
+            full_label = data.pop("full_label", "")
+            if full_label:
+                title = title.replace(full_label, "")
             data["title"] = title
             break
 
