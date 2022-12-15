@@ -284,6 +284,7 @@
     "techno",
     "Montabaur"
   ],
+  "mainEntityOfPage": "https://dominikeulberg.bandcamp.com/album/mannigfaltig",
   "name": "Mannigfaltig",
   "numTracks": 12,
   "publisher": {
@@ -294,11 +295,6 @@
         "@type": "PropertyValue",
         "name": "band_id",
         "value": 799180214
-      },
-      {
-        "@type": "PropertyValue",
-        "name": "currency",
-        "value": "EUR"
       },
       {
         "@type": "PropertyValue",
@@ -331,12 +327,12 @@
         "@type": "MusicEvent",
         "location": {
           "@type": "MusicVenue",
-          "address": "Giessen, Germany",
-          "name": "Hokus Pokus Festiwelt"
+          "address": "Villiersdorp, South Africa",
+          "name": "Elandskloof Farm"
         },
-        "name": "Dominik Eulberg",
-        "startDate": "02 Sep 2022 00:00:00 GMT",
-        "url": "https://www.songkick.com/festivals/3464169-hokus-pokus-festiwelt/id/40528692-hokus-pokus-festiwelt-2022?utm_source=1471&utm_medium=partner"
+        "name": "Elandskloof Farm, Villiersdorp, South Africa",
+        "startDate": "10 Mar 2023 00:00:00 GMT",
+        "url": "https://www.songkick.com/festivals/91431-timeless/id/40573162-timeless-festival-2023?utm_source=1471&utm_medium=partner"
       }
     ],
     "foundingLocation": {
@@ -407,6 +403,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H07M08S",
+          "mainEntityOfPage": "https://dominikeulberg.bandcamp.com/track/eintagsfliege",
           "name": "Eintagsfliege"
         },
         "position": 1
@@ -430,6 +427,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H07M13S",
+          "mainEntityOfPage": "https://dominikeulberg.bandcamp.com/track/zweibr-tiger-scheckenfalter",
           "name": "Zweibrütiger Scheckenfalter"
         },
         "position": 2
@@ -453,6 +451,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H03M34S",
+          "mainEntityOfPage": "https://dominikeulberg.bandcamp.com/track/dreizehenspecht",
           "name": "Dreizehenspecht"
         },
         "position": 3
@@ -476,6 +475,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H06M12S",
+          "mainEntityOfPage": "https://dominikeulberg.bandcamp.com/track/vierfleck",
           "name": "Vierfleck"
         },
         "position": 4
@@ -499,6 +499,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H09M08S",
+          "mainEntityOfPage": "https://dominikeulberg.bandcamp.com/track/f-nffleck-widderchen-2",
           "name": "Fünffleck-Widderchen"
         },
         "position": 5
@@ -522,6 +523,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H08M36S",
+          "mainEntityOfPage": "https://dominikeulberg.bandcamp.com/track/sechslinien-bodeneule",
           "name": "Sechslinien-Bodeneule"
         },
         "position": 6
@@ -545,6 +547,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H06M01S",
+          "mainEntityOfPage": "https://dominikeulberg.bandcamp.com/track/siebenschl-fer",
           "name": "Siebenschläfer"
         },
         "position": 7
@@ -568,6 +571,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H08M52S",
+          "mainEntityOfPage": "https://dominikeulberg.bandcamp.com/track/goldene-acht-5",
           "name": "Goldene Acht"
         },
         "position": 8
@@ -591,6 +595,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H07M29S",
+          "mainEntityOfPage": "https://dominikeulberg.bandcamp.com/track/neunt-ter-4",
           "name": "Neuntöter"
         },
         "position": 9
@@ -614,6 +619,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H11M03S",
+          "mainEntityOfPage": "https://dominikeulberg.bandcamp.com/track/zehnpunkt-marienk-fer",
           "name": "Zehnpunkt-Marienkäfer"
         },
         "position": 10
@@ -637,6 +643,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H07M00S",
+          "mainEntityOfPage": "https://dominikeulberg.bandcamp.com/track/elfenbein-flechtenb-rchen",
           "name": "Elfenbein-Flechtenbärchen"
         },
         "position": 11
@@ -660,6 +667,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H04M43S",
+          "mainEntityOfPage": "https://dominikeulberg.bandcamp.com/track/zw-lfpunkt-spargelk-fer",
           "name": "Zwölfpunkt-Spargelkäfer"
         },
         "position": 12

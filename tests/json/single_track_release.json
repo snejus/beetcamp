@@ -73,13 +73,6 @@
         "name": "Arangel",
         "offers": {
           "@type": "Offer",
-          "additionalProperty": [
-            {
-              "@type": "PropertyValue",
-              "name": "max_price",
-              "value": 7000
-            }
-          ],
           "availability": "OnlineOnly",
           "price": 12,
           "priceCurrency": "SEK",
@@ -97,6 +90,7 @@
   "keywords": [
     "Malmö"
   ],
+  "mainEntityOfPage": "https://mega-tech.bandcamp.com/track/arangel",
   "name": "Arangel",
   "publisher": {
     "@id": "https://mega-tech.bandcamp.com",
@@ -106,11 +100,6 @@
         "@type": "PropertyValue",
         "name": "band_id",
         "value": 563736578
-      },
-      {
-        "@type": "PropertyValue",
-        "name": "currency",
-        "value": "SEK"
       },
       {
         "@type": "PropertyValue",

@@ -61,7 +61,7 @@
       "name": "PROCESS 404 'Cybernetic Punk Unit'"
     },
     {
-      "@id": "https://blvckplvgue.bandcamp.com/album/process-404-cybernetic-punk-unit#b45635451",
+      "@id": "https://blvckplvgue.bandcamp.com/album/process-404-cybernetic-punk-unit#b50092565",
       "@type": [
         "MusicRelease",
         "Product"
@@ -70,7 +70,7 @@
         {
           "@type": "PropertyValue",
           "name": "item_id",
-          "value": 45635451
+          "value": 50092565
         },
         {
           "@type": "PropertyValue",
@@ -90,7 +90,7 @@
         {
           "@type": "PropertyValue",
           "name": "art_id",
-          "value": 3294538263
+          "value": 575324961
         },
         {
           "@type": "PropertyValue",
@@ -99,36 +99,31 @@
         }
       ],
       "image": [
-        "https://f4.bcbits.com/img/a3294538263_10.jpg"
+        "https://f4.bcbits.com/img/a0575324961_10.jpg"
       ],
       "musicReleaseFormat": "DigitalFormat",
-      "name": "full digital discography (25 releases)",
+      "name": "full digital discography (27 releases)",
       "offers": {
         "@type": "Offer",
         "additionalProperty": [
           {
             "@type": "PropertyValue",
             "name": "bundle_size",
-            "value": 25
+            "value": 27
           },
           {
             "@type": "PropertyValue",
             "name": "discount",
             "value": 0.4
-          },
-          {
-            "@type": "PropertyValue",
-            "name": "max_price",
-            "value": 1000
           }
         ],
         "availability": "OnlineOnly",
-        "price": 79.08,
+        "price": 85.08,
         "priceCurrency": "EUR",
         "priceSpecification": {
-          "minPrice": 79.08
+          "minPrice": 85.08
         },
-        "url": "https://blvckplvgue.bandcamp.com/album/process-404-cybernetic-punk-unit#b45635451-buy"
+        "url": "https://blvckplvgue.bandcamp.com/album/process-404-cybernetic-punk-unit#b50092565-buy"
       }
     },
     {
@@ -166,6 +161,7 @@
     "techno",
     "Paris"
   ],
+  "mainEntityOfPage": "https://blvckplvgue.bandcamp.com/album/process-404-cybernetic-punk-unit",
   "name": "PROCESS 404 'Cybernetic Punk Unit'",
   "numTracks": 4,
   "publisher": {
@@ -176,11 +172,6 @@
         "@type": "PropertyValue",
         "name": "band_id",
         "value": 2754639698
-      },
-      {
-        "@type": "PropertyValue",
-        "name": "currency",
-        "value": "EUR"
       },
       {
         "@type": "PropertyValue",
@@ -294,6 +285,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H06M33S",
+          "mainEntityOfPage": "https://blvckplvgue.bandcamp.com/track/metallic-dominance",
           "name": "Metallic Dominance"
         },
         "position": 1
@@ -317,6 +309,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H08M34S",
+          "mainEntityOfPage": "https://blvckplvgue.bandcamp.com/track/cybernetic-punk-unit",
           "name": "Cybernetic Punk Unit"
         },
         "position": 2
@@ -340,6 +333,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H07M16S",
+          "mainEntityOfPage": "https://blvckplvgue.bandcamp.com/track/megacity-corporation",
           "name": "Megacity Corporation"
         },
         "position": 3
@@ -363,6 +357,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H04M23S",
+          "mainEntityOfPage": "https://blvckplvgue.bandcamp.com/track/social-overdose",
           "name": "Social Overdose"
         },
         "position": 4

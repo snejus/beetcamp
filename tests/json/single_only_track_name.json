@@ -11,7 +11,7 @@
     {
       "@type": "PropertyValue",
       "name": "art_id",
-      "value": 1255022292
+      "value": 2158518281
     },
     {
       "@type": "PropertyValue",
@@ -25,10 +25,10 @@
     "name": "GUTKEIN"
   },
   "copyrightNotice": "All Rights Reserved",
-  "dateModified": "04 Jun 2022 22:59:39 GMT",
+  "dateModified": "11 Sep 2022 04:14:58 GMT",
   "datePublished": "10 Jan 2021 00:00:00 GMT",
   "duration": "P00H05M55S",
-  "image": "https://f4.bcbits.com/img/a1255022292_10.jpg",
+  "image": "https://f4.bcbits.com/img/a2158518281_10.jpg",
   "inAlbum": {
     "@type": "MusicAlbum",
     "albumRelease": [
@@ -62,24 +62,17 @@
           {
             "@type": "PropertyValue",
             "name": "art_id",
-            "value": 1255022292
+            "value": 2158518281
           }
         ],
         "description": "Includes high-quality download in MP3, FLAC and more. Paying supporters also get unlimited streaming via the free Bandcamp app.",
         "image": [
-          "https://f4.bcbits.com/img/a1255022292_10.jpg"
+          "https://f4.bcbits.com/img/a2158518281_10.jpg"
         ],
         "musicReleaseFormat": "DigitalFormat",
         "name": "oenera",
         "offers": {
           "@type": "Offer",
-          "additionalProperty": [
-            {
-              "@type": "PropertyValue",
-              "name": "max_price",
-              "value": 1000
-            }
-          ],
           "availability": "OnlineOnly",
           "price": 1,
           "priceCurrency": "EUR",
@@ -101,6 +94,7 @@
     "techno",
     "trance"
   ],
+  "mainEntityOfPage": "https://gutkeinforu.bandcamp.com/track/oenera",
   "name": "oenera",
   "publisher": {
     "@id": "https://gutkeinforu.bandcamp.com",
@@ -110,11 +104,6 @@
         "@type": "PropertyValue",
         "name": "band_id",
         "value": 1309392494
-      },
-      {
-        "@type": "PropertyValue",
-        "name": "currency",
-        "value": "EUR"
       },
       {
         "@type": "PropertyValue",
@@ -165,18 +154,6 @@
         ],
         "name": "music",
         "url": "https://gutkeinforu.bandcamp.com/music"
-      },
-      {
-        "@type": "WebPage",
-        "additionalProperty": [
-          {
-            "@type": "PropertyValue",
-            "name": "nav_type",
-            "value": "p"
-          }
-        ],
-        "name": "merch",
-        "url": "https://gutkeinforu.bandcamp.com/merch"
       }
     ]
   }

@@ -115,11 +115,6 @@
             "@type": "PropertyValue",
             "name": "discount",
             "value": 0.35
-          },
-          {
-            "@type": "PropertyValue",
-            "name": "max_price",
-            "value": 1000
           }
         ],
         "availability": "OnlineOnly",
@@ -202,6 +197,7 @@
     "trance",
     "Berlin"
   ],
+  "mainEntityOfPage": "https://ismusberlin.bandcamp.com/album/ismva0033",
   "name": "ISMVA003.3",
   "numTracks": 13,
   "publisher": {
@@ -212,11 +208,6 @@
         "@type": "PropertyValue",
         "name": "band_id",
         "value": 2663533860
-      },
-      {
-        "@type": "PropertyValue",
-        "name": "currency",
-        "value": "EUR"
       },
       {
         "@type": "PropertyValue",
@@ -325,6 +316,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H06M54S",
+          "mainEntityOfPage": "https://ismusberlin.bandcamp.com/track/zebar-zimo-wish-granter-original-mix",
           "name": "Zebar & Zimo - Wish Granter (Original Mix)"
         },
         "position": 1
@@ -348,6 +340,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H06M01S",
+          "mainEntityOfPage": "https://ismusberlin.bandcamp.com/track/alpha-tracks-valimba-original-mix",
           "name": "Alpha Tracks - Valimba (Original Mix)"
         },
         "position": 2
@@ -371,6 +364,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H05M13S",
+          "mainEntityOfPage": "https://ismusberlin.bandcamp.com/track/less-distress-wheres-my-arc-paulie-original-mix",
           "name": "Less Distress - Where's My Arc, Paulie? (Original Mix)"
         },
         "position": 3
@@ -394,6 +388,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H06M28S",
+          "mainEntityOfPage": "https://ismusberlin.bandcamp.com/track/lucas-martins-south-original-mix",
           "name": "Lucas Martins - South (Original Mix)"
         },
         "position": 4
@@ -417,6 +412,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H05M30S",
+          "mainEntityOfPage": "https://ismusberlin.bandcamp.com/track/pro-athlete-floorcrusher-original-mix",
           "name": "Pro Athlete - Floorcrusher (Original Mix)"
         },
         "position": 5
@@ -440,6 +436,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H07M06S",
+          "mainEntityOfPage": "https://ismusberlin.bandcamp.com/track/zwyrg-point-of-no-return-original-mix",
           "name": "zwyrg - Point Of No Return (Original Mix)"
         },
         "position": 6
@@ -463,6 +460,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H06M54S",
+          "mainEntityOfPage": "https://ismusberlin.bandcamp.com/track/ndym-succession-original-mix",
           "name": "ΣNDYM  - Succession (Original Mix)"
         },
         "position": 7
@@ -486,6 +484,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H06M30S",
+          "mainEntityOfPage": "https://ismusberlin.bandcamp.com/track/kl-ne-woke-up-in-a-broken-world-original-mix",
           "name": "KLØNE - Woke Up In A Broken World (Original Mix)"
         },
         "position": 8
@@ -509,6 +508,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H06M10S",
+          "mainEntityOfPage": "https://ismusberlin.bandcamp.com/track/i-e-diva-plavalaguna-original-mix",
           "name": "I.E - Diva Plavalaguna (Original Mix)"
         },
         "position": 9
@@ -532,6 +532,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H06M14S",
+          "mainEntityOfPage": "https://ismusberlin.bandcamp.com/track/dj-g2g-darkbreak-escape-original-mix",
           "name": "DJ G2G - Darkbreak Escape (Original Mix)"
         },
         "position": 10
@@ -555,6 +556,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H05M44S",
+          "mainEntityOfPage": "https://ismusberlin.bandcamp.com/track/mr-free-the-4th-room-original-mix",
           "name": "Mr. Free - The 4th Room (Original Mix)"
         },
         "position": 11
@@ -578,6 +580,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H07M45S",
+          "mainEntityOfPage": "https://ismusberlin.bandcamp.com/track/abem-black-powder-original-mix",
           "name": "ABEM - Black Powder (Original Mix)"
         },
         "position": 12
@@ -601,6 +604,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H06M48S",
+          "mainEntityOfPage": "https://ismusberlin.bandcamp.com/track/dj-reiz-plan-9-from-outer-space-original-mix",
           "name": "DJ Reiz - Plan 9 From Outer Space (Original Mix)"
         },
         "position": 13

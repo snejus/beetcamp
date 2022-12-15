@@ -124,6 +124,7 @@
     "rap",
     "Denver"
   ],
+  "mainEntityOfPage": "https://54thregiment.bandcamp.com/album/fall-in",
   "name": "FALL IN",
   "numTracks": 12,
   "publisher": {
@@ -134,11 +135,6 @@
         "@type": "PropertyValue",
         "name": "band_id",
         "value": 732004402
-      },
-      {
-        "@type": "PropertyValue",
-        "name": "currency",
-        "value": "USD"
       },
       {
         "@type": "PropertyValue",
@@ -203,6 +199,7 @@
             "name": "General Dicon"
           },
           "copyrightNotice": "All Rights Reserved",
+          "mainEntityOfPage": "https://54thregiment.bandcamp.com/track/54-regi",
           "name": "54 regi"
         },
         "position": 1
@@ -226,6 +223,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H03M47S",
+          "mainEntityOfPage": "https://54thregiment.bandcamp.com/track/54-regi-2",
           "name": "54 regi"
         },
         "position": 2
@@ -249,6 +247,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H02M37S",
+          "mainEntityOfPage": "https://54thregiment.bandcamp.com/track/mile-high-monsta-ft-nation",
           "name": "Mile high monsta ft.nation"
         },
         "position": 3
@@ -276,6 +275,7 @@
           },
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H02M46S",
+          "mainEntityOfPage": "https://54thregiment.bandcamp.com/track/pure-entertainment",
           "name": "Pure entertainment"
         },
         "position": 4
@@ -303,6 +303,7 @@
           },
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H01M09S",
+          "mainEntityOfPage": "https://54thregiment.bandcamp.com/track/smoke-interlude",
           "name": "Smoke interlude"
         },
         "position": 5
@@ -326,6 +327,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H03M55S",
+          "mainEntityOfPage": "https://54thregiment.bandcamp.com/track/ganja-tune-ft-spellbinder",
           "name": "Ganja tune ft.spellbinder"
         },
         "position": 6
@@ -349,6 +351,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H03M23S",
+          "mainEntityOfPage": "https://54thregiment.bandcamp.com/track/war-ft-spellbinder",
           "name": "War ft.spellbinder"
         },
         "position": 7
@@ -372,6 +375,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H02M27S",
+          "mainEntityOfPage": "https://54thregiment.bandcamp.com/track/w-m-m-a-where-my-money-ft-spellbinder",
           "name": "w.m.m.a(where my money @) ft.Spellbinder"
         },
         "position": 8
@@ -399,6 +403,7 @@
           },
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H04M17S",
+          "mainEntityOfPage": "https://54thregiment.bandcamp.com/track/due-time",
           "name": "Due time"
         },
         "position": 9
@@ -426,6 +431,7 @@
           },
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H03M17S",
+          "mainEntityOfPage": "https://54thregiment.bandcamp.com/track/hustle-aint-no-game",
           "name": "Hustle Ain't no game"
         },
         "position": 10
@@ -449,6 +455,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H03M21S",
+          "mainEntityOfPage": "https://54thregiment.bandcamp.com/track/its-ova-ft-scrilla-scratch",
           "name": "It's ova ft. scrilla scratch"
         },
         "position": 11
@@ -476,6 +483,7 @@
           },
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H04M04S",
+          "mainEntityOfPage": "https://54thregiment.bandcamp.com/track/dont-stop-ft-spellbinder",
           "name": "Don't stop ft.Spellbinder"
         },
         "position": 12
