@@ -5,6 +5,7 @@
 ### Fixed
 
 * (#36) Fix bug with some URLs
+* (#37) Fix KeyError: 'url' / searching parsing recaptcha URLs
 * `title`:
   - When album lists titles in the quoted form (**Artist "Title"**), split artist from the
     title correctly.

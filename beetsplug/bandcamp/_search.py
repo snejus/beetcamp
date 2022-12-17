@@ -29,7 +29,7 @@ RELEASE_PATTERNS = [
     # label-first pattern
     re.compile(r"(?P<url>https://bandcamp\.(?P<label>[^.]+)\.(?!bcbits)[\w/.-]+)"),
     # label-second pattern
-    re.compile(r"(?P<url>https://(?P<label>(?!bandcamp\.)[^.]+)\.(?!bcbits)[\w/.-]+)"),
+    re.compile(r"(?P<url>https://(?P<label>[^.]+)\.bandcamp(?!bcbits)[\w/.-]+)"),
 ]
 
 
@@ -38,7 +38,7 @@ def to_ascii(string: str) -> str:
     return string.lower().encode("ascii", "replace").decode()
 
 
-def get_similarity(a: str, b: str) -> float:
+def get_similarity(query: str, result: str) -> float:
     """Return the similarity between two strings normalized to [0, 1].
     We take into account how well the result matches the query, e.g.
         query: "foo"
@@ -48,7 +48,7 @@ def get_similarity(a: str, b: str) -> float:
     2/3 of the result is how much of the query is found in the result,
     and 1/3 is a penalty for the non-matching part.
     """
-    a, b = to_ascii(a), to_ascii(b)
+    a, b = to_ascii(query), to_ascii(result)
     if not a or not b:
         return 0
     m = SequenceMatcher(a=a, b=b).find_longest_match(0, len(a), 0, len(b))
@@ -59,7 +59,8 @@ def get_matches(text: str) -> JSONDict:
     """Reduce matches from all patterns into a single dictionary."""
     result: JSONDict = {}
     for pat in RELEASE_PATTERNS:
-        for m in pat.finditer(text):
+        m = pat.search(text)
+        if m:
             result.update(m.groupdict())
     if "type" in result:
         result["type"] = result["type"].lower()
@@ -76,8 +77,8 @@ def parse_and_sort_results(html: str, **kwargs: str) -> List[JSONDict]:
     for block in html.split("searchresult data-search")[1:]:
         similarities = []
         res = get_matches(block)
-        for field, expected in kwargs.items():
-            similarities.append(get_similarity(expected, res.get(field, "")))
+        for field, query in kwargs.items():
+            similarities.append(get_similarity(query, res.get(field, "")))
 
         res["similarity"] = round(sum(similarities) / len(similarities), 3)
         results.append(res)
@@ -95,7 +96,7 @@ def search_bandcamp(
     query: str = "",
     search_type: str = "",
     get: Callable[[str], str] = get_bandcamp_url,
-    **kwargs,
+    **kwargs: Any,
 ) -> List[JSONDict]:
     """Return a list with item JSONs of type search_type matching the query.
     Bandcamp search may be unpredictable, therefore search results get sorted
