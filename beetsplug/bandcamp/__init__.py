@@ -341,7 +341,7 @@ By default, all types are searched.
         action="store",
         dest="index",
         type=int,
-        help="Open search result indexed by INDEX",
+        help="Open search result indexed by INDEX in the browser",
     )
     if not args:
         parser.print_help()
@@ -349,7 +349,7 @@ By default, all types are searched.
     return parser.parse_args(args=args)
 
 
-def main():
+def main() -> None:
     import json
     import sys
 
