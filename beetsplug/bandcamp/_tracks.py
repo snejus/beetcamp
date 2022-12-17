@@ -6,7 +6,7 @@ import sys
 from collections import Counter
 from dataclasses import dataclass, field
 from functools import reduce
-from typing import Dict, Iterator, List, Optional, Set
+from typing import Dict, Iterator, List, Optional, Set, Tuple
 
 from ordered_set import OrderedSet as ordset
 
@@ -99,9 +99,13 @@ class Track:
         return cls(**cls.parse_name(data, json["name_parts"]["clean"], delim, label))
 
     @staticmethod
-    def no_digi_name(name: str) -> str:
-        """Return the track title which is clear from digi-only artifacts."""
-        return reduce(lambda a, b: b.sub("", a), DIGI_ONLY_PATTERNS, name)
+    def clean_digi_name(name: str) -> Tuple[str, bool]:
+        """Clean the track title from digi-only artifacts.
+
+        Return the clean name, and whether this track is digi-only.
+        """
+        clean_name = reduce(lambda a, b: b.sub("", a), DIGI_ONLY_PATTERNS, name)
+        return clean_name, clean_name != name
 
     @staticmethod
     def find_featuring(data: JSONDict) -> JSONDict:
@@ -133,9 +137,7 @@ class Track:
             name = name.replace(label, "").strip(" -")
         data["json_artist"] = Helpers.clean_name(data["json_artist"])
 
-        digi_only_name = Track.no_digi_name(name)
-        data["digi_only"] = digi_only_name != name
-        name = digi_only_name
+        name, data["digi_only"] = Track.clean_digi_name(name)
 
         name = Helpers.clean_name(name).strip().lstrip("-")
 
@@ -246,7 +248,7 @@ class Track:
 
 
 @dataclass
-class Tracks(list):
+class Tracks(List[Track]):
     TITLE_IN_QUOTES = re.compile(r'^(.+[^ -])[ -]+"([^"]+)"$')
     tracks: List[Track]
 

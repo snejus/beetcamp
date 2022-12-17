@@ -13,7 +13,6 @@ from unicodedata import normalize
 from beets import __version__ as beets_version
 from beets import config as beets_config
 from beets.autotag.hooks import AlbumInfo, TrackInfo
-from ordered_set import OrderedSet as ordset
 from pycountry import countries, subdivisions
 
 from ._helpers import PATTERNS, Helpers, MediaInfo

@@ -168,6 +168,4 @@ def test_parse_catalognum_from_track_name(
     ],
 )
 def test_check_digi_only(name, expected_digi_only, expected_name):
-    track = Track(_name=name)
-    assert track.no_digi_name == expected_name
-    assert track.digi_only == expected_digi_only
+    assert Track.clean_digi_name(name) == (expected_name, expected_digi_only)
