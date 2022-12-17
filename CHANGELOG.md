@@ -1,6 +1,6 @@
-## [0.17.0] Unreleased
+## [0.16.1] 2022-12-17
 
-[0.17.0]: https://github.com/snejus/beetcamp/releases/tag/0.17.0
+[0.16.1]: https://github.com/snejus/beetcamp/releases/tag/0.16.1
 
 ### Fixed
 
