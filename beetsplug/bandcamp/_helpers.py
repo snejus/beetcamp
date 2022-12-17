@@ -97,7 +97,7 @@ CLEAN_PATTERNS = [
     (re.compile(r"(\S)- "), r"\1 - "),                    # hi- bye          -> hi - bye
     (re.compile(r"  +"), " "),                            # hi  bye          -> hi bye
     (re.compile(r"(- )?\( *"), "("),                      # hi - ( bye)      -> hi (bye)
-    (re.compile(r" \)+|\)+$"), ")"),                      # hi (bye ))       -> hi (bye)
+    (re.compile(r" \)+|(\)+$)"), ")"),                    # hi (bye ))       -> hi (bye)
     (re.compile(r"- Reworked"), "(Reworked)"),            # bye - Reworked   -> bye (Reworked)    # noqa
     (re.compile(rf"(\({_remix_pat})$", re.I), r"\1)"),    # bye - (Some Mix  -> bye - (Some Mix)  # noqa
     (re.compile(rf"- *({_remix_pat})$", re.I), r"(\1)"),  # bye - Some Mix   -> bye (Some Mix)    # noqa

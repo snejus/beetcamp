@@ -22,7 +22,7 @@ DIGI_ONLY_PATTERNS = [
     re.compile(
         r"[^\w)]+(bandcamp[^-]+|digi(tal)?)(\W*(\W+|only|bonus|exclusive)\W*$)", re.I
     ),
-    re.compile(r"[^\w)]+(bandcamp exclusive )?bonus( track)?(\]\W*|\W*$)", re.I),
+    re.compile(r"[^\w)]+(bandcamp exclusive )?bonus( track)?(\]\W*|(\W*$))", re.I),
 ]
 DELIMITER_PAT = re.compile(r" ([^\w&()+/[\] ]) ")
 ELP_ALBUM_PAT = re.compile(r"[- ]*\[([^\]]+ [EL]P)\]+")  # Title [Some Album EP]
