@@ -70,7 +70,7 @@ def print_result(console, case, expected, result):
         ("¯\\_(ツ)_/¯", ("", "", "", "¯\\_(ツ)_/¯", "¯\\_(ツ)_/¯")),
         (
             "VIENNA (WARM UP MIX",
-            ("", "", "", "VIENNA (WARM UP MIX", "VIENNA (WARM UP MIX"),
+            ("", "", "", "VIENNA (WARM UP MIX)", "VIENNA"),
         ),
         ("MOD-R - ARE YOU", ("", "MOD-R", "", "ARE YOU", "ARE YOU")),
         ("K - The Lightning", ("", "K", "", "The Lightning", "The Lightning")),
@@ -140,9 +140,10 @@ def test_parse_catalognum_from_track_name(
         **json_track["item"],
         "position": json_track["position"],
         "name": name,
+        "name_parts": {"catalognum": initial_catalognum, "clean": name},
     }
 
-    track = Track.from_json(json_track, name, "-", initial_catalognum, "Label")
+    track = Track.from_json(json_track, "-", "Label")
     assert track.title == expected_title, print(track)
     assert track.catalognum == expected_catalognum, print(track)
 

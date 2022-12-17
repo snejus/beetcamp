@@ -6,9 +6,9 @@ import sys
 from collections import Counter
 from dataclasses import dataclass, field
 from functools import reduce
-from typing import Dict, Iterator, List, Optional, Set, Tuple
+from typing import Iterator, List, Optional, Set, Tuple
 
-from ordered_set import OrderedSet as ordset
+from ordered_set import OrderedSet
 
 from ._helpers import CATNUM_PAT, PATTERNS, Helpers, JSONDict, _remix_pat
 
@@ -182,9 +182,11 @@ class Track:
     @cached_property
     def lyrics(self) -> str:
         try:
-            return self.json_item["recordingOf"]["lyrics"]["text"].replace("\r", "")
+            text: str = self.json_item["recordingOf"]["lyrics"]["text"]
         except KeyError:
             return ""
+        else:
+            return text.replace("\r", "")
 
     @cached_property
     def name(self) -> str:
@@ -269,9 +271,9 @@ class Tracks(List[Track]):
         names = cls.split_quoted_titles(names)
         delim = cls.track_delimiter(names)
         for track, name in zip(tracks, names):
-            track["name_parts"] = {"original": name, "clean": name}
+            track["name_parts"] = {"clean": name}
             track["delim"] = delim
-        tracks = cls.common_name_parts(tracks, names, delim)
+        tracks = cls.common_name_parts(tracks, names)
         return cls([Track.from_json(t, delim, Helpers.get_label(meta)) for t in tracks])
 
     @cached_property
@@ -289,9 +291,8 @@ class Tracks(List[Track]):
         return names
 
     @staticmethod
-    def common_name_parts(
-        tracks: List[JSONDict], names: List[str], delim: str
-    ) -> List[Dict[str, str]]:
+    def common_name_parts(tracks, names):
+        # type: (List[JSONDict], List[str]) -> List[JSONDict]
         """Parse track names for parts that require knowledge of the other names.
 
         1. Split each track name into words
@@ -303,8 +304,8 @@ class Tracks(List[Track]):
               relevant when the remix is not delimited appropriately.
         Return the catalog number and the new list of names.
         """
-        names_tokens = list(map(str.split, names))
-        common_words = reduce(op.and_, [ordset(x) for x in names_tokens])
+        names_tokens = map(str.split, names)
+        common_words = reduce(op.and_, [OrderedSet(x) for x in names_tokens])
         if not common_words:
             return tracks
 
@@ -331,19 +332,25 @@ class Tracks(List[Track]):
         return tracks
 
     @cached_property
-    def raw_artists(self) -> List[str]:
-        return list(ordset(j.artist for j in self.tracks))
-
-    @cached_property
     def raw_names(self) -> List[str]:
         return [j.name for j in self.tracks]
 
+    @cached_property
+    def full_artists(self) -> List[str]:
+        """Return all unique unsplit main track artists."""
+        return list(dict.fromkeys(j.artist for j in self.tracks))
+
     @property
     def artists(self) -> List[str]:
-        return list(ordset(it.chain(*(j.artists for j in self.tracks))))
+        """Return all unique split main track artists.
+
+        "Artist1 x Artist2" -> ["Artist1", "Artist2"]
+        """
+        return list(dict.fromkeys(it.chain(*(j.artists for j in self.tracks))))
 
     @property
     def remixers(self) -> List[str]:
+        """Return all remix artists."""
         return [
             t.remix.remixer
             for t in self.tracks
@@ -352,12 +359,14 @@ class Tracks(List[Track]):
 
     @property
     def other_artists(self) -> Set[str]:
+        """Return all unique remix and featuring artists."""
         ft = [j.ft for j in self.tracks if j.ft]
         return set(it.chain(self.remixers, ft))
 
     @cached_property
     def all_artists(self) -> Set[str]:
-        return self.other_artists | set(self.raw_artists)
+        """Return all unique (1) track, (2) remix, (3) featuring artists."""
+        return self.other_artists | set(self.full_artists)
 
     @cached_property
     def artistitles(self) -> str:
@@ -366,21 +375,25 @@ class Tracks(List[Track]):
 
     @cached_property
     def single_catalognum(self) -> Optional[str]:
-        """Return catalognum if every track is marked with the same one."""
+        """Return catalognum if every track contains the same one."""
         cats = [t.catalognum for t in self if t.catalognum]
         if len(cats) == len(self) and len(set(cats)) == 1:
             return cats[0]
         return None
 
-    def adjust_artists(self, aartist: str) -> None:
-        """Handle some track artist edge cases
+    def adjust_artists(self, albumartist: str) -> None:
+        """Handle some track artist edge cases.
+
+        These checks require knowledge of the entire release, therefore cannot be
+        performed within the context of a single track.
+
         * When artist name is mistaken for the track_alt
         * When artist and title are delimited by '-' without spaces
         * When artist and title are delimited by a UTF-8 dash equivalent
         * Defaulting to the album artist
         """
         track_alts = {t.track_alt for t in self.tracks if t.track_alt}
-        artists = [t.artists for t in self.tracks if t.artists]
+        artists = [t.artist for t in self.tracks if t.artist]
 
         for t in [track for track in self.tracks if not track.artist]:
             if t.track_alt and len(track_alts) == 1:  # only one track_alt
@@ -388,11 +401,11 @@ class Tracks(List[Track]):
                 # one artist was confused for a track alt, like 'B2', - reverse this
                 t.artist, t.track_alt = t.track_alt, None
             elif len(artists) == len(self) - 1:  # only 1 missing artist
-                # if this is a remix and the parsed title is part of the albumartist or is one
-                # of the track artists, we made a mistake parsing the remix:
-                #   it is most probably the edge case where the `main_title` is a legitimate
-                #   artist and the track title is something like 'Hello Remix'
-                if t.remix and (t.main_title in aartist or t.main_title in artists):
+                # if this is a remix and the parsed title is part of the albumartist or
+                # is one of the track artists, we made a mistake parsing the remix:
+                #  it is most probably the edge case where the `main_title` is a
+                #  legitimate artist and the track title is something like 'Hello Remix'
+                if t.remix and (t.main_title in albumartist):
                     t.artist, t.title = t.main_title, t.remix.remix
                 # this is the only artist that didn't get parsed - relax the rule
                 # and try splitting with '-' without spaces
@@ -404,8 +417,8 @@ class Tracks(List[Track]):
                 if len(split) > 1:
                     t.artist, t.title = split
             if not t.artist:
-                # use the albumartist
-                t.artist = aartist
+                # default to the albumartist
+                t.artist = albumartist
 
     @staticmethod
     def track_delimiter(names: List[str]) -> str:
