@@ -26,8 +26,8 @@ pytestmark = pytest.mark.lib
 
 BASE_DIR = "lib_tests"
 TEST_DIR = "dev"
-# REFERENCE_DIR = "91572c9"
-REFERENCE_DIR = "91572c9"
+# REFERENCE_DIR = "3dc0852"
+REFERENCE_DIR = "3dc0852"
 JSONS_DIR = "jsons"
 
 IGNORE_FIELDS = {
