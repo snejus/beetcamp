@@ -61,7 +61,7 @@
       "name": "UNREALNUMBERS - Unseen EP (Varya Karpova & Lacchesi Remixes)"
     },
     {
-      "@id": "https://maisoncloserecords.bandcamp.com/album/unrealnumbers-unseen-ep-varya-karpova-lacchesi-remixes#b47806547",
+      "@id": "https://maisoncloserecords.bandcamp.com/album/unrealnumbers-unseen-ep-varya-karpova-lacchesi-remixes#b49057499",
       "@type": [
         "MusicRelease",
         "Product"
@@ -70,7 +70,7 @@
         {
           "@type": "PropertyValue",
           "name": "item_id",
-          "value": 47806547
+          "value": 49057499
         },
         {
           "@type": "PropertyValue",
@@ -90,7 +90,7 @@
         {
           "@type": "PropertyValue",
           "name": "art_id",
-          "value": 1123181565
+          "value": 1996438118
         },
         {
           "@type": "PropertyValue",
@@ -99,36 +99,31 @@
         }
       ],
       "image": [
-        "https://f4.bcbits.com/img/a1123181565_10.jpg"
+        "https://f4.bcbits.com/img/a1996438118_10.jpg"
       ],
       "musicReleaseFormat": "DigitalFormat",
-      "name": "full digital discography (12 releases)",
+      "name": "full digital discography (13 releases)",
       "offers": {
         "@type": "Offer",
         "additionalProperty": [
           {
             "@type": "PropertyValue",
             "name": "bundle_size",
-            "value": 12
+            "value": 13
           },
           {
             "@type": "PropertyValue",
             "name": "discount",
             "value": 0.4
-          },
-          {
-            "@type": "PropertyValue",
-            "name": "max_price",
-            "value": 1000
           }
         ],
         "availability": "OnlineOnly",
-        "price": 63.6,
+        "price": 67.8,
         "priceCurrency": "EUR",
         "priceSpecification": {
-          "minPrice": 63.6
+          "minPrice": 67.8
         },
-        "url": "https://maisoncloserecords.bandcamp.com/album/unrealnumbers-unseen-ep-varya-karpova-lacchesi-remixes#b47806547-buy"
+        "url": "https://maisoncloserecords.bandcamp.com/album/unrealnumbers-unseen-ep-varya-karpova-lacchesi-remixes#b49057499-buy"
       }
     },
     {
@@ -172,6 +167,7 @@
     "techno",
     "Paris"
   ],
+  "mainEntityOfPage": "https://maisoncloserecords.bandcamp.com/album/unrealnumbers-unseen-ep-varya-karpova-lacchesi-remixes",
   "name": "UNREALNUMBERS - Unseen EP (Varya Karpova & Lacchesi Remixes)",
   "numTracks": 6,
   "publisher": {
@@ -182,11 +178,6 @@
         "@type": "PropertyValue",
         "name": "band_id",
         "value": 1994130301
-      },
-      {
-        "@type": "PropertyValue",
-        "name": "currency",
-        "value": "EUR"
       },
       {
         "@type": "PropertyValue",
@@ -284,6 +275,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H06M23S",
+          "mainEntityOfPage": "https://maisoncloserecords.bandcamp.com/track/unrealnumbers-unseen",
           "name": "UNREALNUMBERS - Unseen"
         },
         "position": 1
@@ -307,6 +299,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H05M52S",
+          "mainEntityOfPage": "https://maisoncloserecords.bandcamp.com/track/unrealnumbers-mk4",
           "name": "UNREALNUMBERS - MK4"
         },
         "position": 2
@@ -330,6 +323,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H05M41S",
+          "mainEntityOfPage": "https://maisoncloserecords.bandcamp.com/track/unrealnumbers-karaburan",
           "name": "UNREALNUMBERS -Karaburan"
         },
         "position": 3
@@ -353,6 +347,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H05M40S",
+          "mainEntityOfPage": "https://maisoncloserecords.bandcamp.com/track/unrealnumbers-rekon",
           "name": "UNREALNUMBERS - Rekon"
         },
         "position": 4
@@ -380,6 +375,7 @@
           },
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H06M02S",
+          "mainEntityOfPage": "https://maisoncloserecords.bandcamp.com/track/unrealnumbers-unseen-varya-karpova-remix",
           "name": "UNREALNUMBERS - Unseen (Varya Karpova Remix)"
         },
         "position": 5
@@ -407,6 +403,7 @@
           },
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H05M50S",
+          "mainEntityOfPage": "https://maisoncloserecords.bandcamp.com/track/unrealnumbers-mk4-lacchesi-remix",
           "name": "UNREALNUMBERS - MK4 (Lacchesi Remix)"
         },
         "position": 6

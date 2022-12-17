@@ -1,3 +1,29 @@
+## [0.16.1] 2022-12-17
+
+[0.16.1]: https://github.com/snejus/beetcamp/releases/tag/0.16.1
+
+### Fixed
+
+* (#36) Fix bug with some URLs
+* (#37) Fix KeyError: 'url' / searching parsing recaptcha URLs
+* `title`:
+  - When album lists titles in the quoted form (**Artist "Title"**), split artist from the
+    title correctly.
+  - Address a long-standing issue with track names of the form **Title - Some Mix** where we
+    would parse **Title** as the artist and **Some Mix** as the title. Such name now gets
+    replaced by **Title (Some Mix)** which is then attributed correctly.
+  - Handle remix album where titles of the remixes are not delimited in any way.
+
+### Updated
+
+* `album`:
+  - Remove **Various Artists** (optionally followed by some numbers) from the album name
+* `catalognum`:
+  - Handling some rare edge cases of both false positives and false negatives
+* `title`:
+  - Add missing closing parenthesis for mix/edit titles: **Title (Some Mix** -> **Title (Some Mix)**
+
+
 ## [0.16.0] 2022-08-19
 
 [0.16.0]: https://github.com/snejus/beetcamp/releases/tag/0.16.0

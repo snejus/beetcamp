@@ -13,7 +13,6 @@ from unicodedata import normalize
 from beets import __version__ as beets_version
 from beets import config as beets_config
 from beets.autotag.hooks import AlbumInfo, TrackInfo
-from ordered_set import OrderedSet as ordset
 from pycountry import countries, subdivisions
 
 from ._helpers import PATTERNS, Helpers, MediaInfo
@@ -133,9 +132,9 @@ class Metaguru(Helpers):
 
     @cached_property
     def label(self) -> str:
-        match = re.search(r"Label:([^/,\n]+)", self.all_media_comments)
-        if match:
-            return match.expand(r"\1").strip(" '\"")
+        m = re.search(r"Label:([^/,\n]+)", self.all_media_comments)
+        if m:
+            return m.expand(r"\1").strip(" '\"")
 
         return self.get_label(self.meta)
 
@@ -216,22 +215,12 @@ class Metaguru(Helpers):
     @cached_property
     def general_catalognum(self) -> str:
         """Find catalog number in the media-agnostic release metadata and cache it."""
-        cats = [t.catalognum for t in self._tracks if t.catalognum]
-        artists = ordset([self.original_albumartist])
-        if not self._singleton or len(self._tracks.artists) > 1:
-            artists.update(self._tracks.artists)
-            artists.update(self._tracks.other_artists)
-
-        catnum = self.parse_catalognum(
+        return self._tracks.single_catalognum or self.parse_catalognum(
             album=self.meta["name"],
             description=self.comments,
             label=self.label if not self._singleton else "",
-            tracks=tuple(self._tracks.raw_names),
-            artists=tuple(artists),
+            artistitles=self._tracks.artistitles,
         )
-        if len(cats) == len(self._tracks) and len(set(cats)) == 1:
-            return list(cats)[0]
-        return catnum
 
     @property
     def catalognum(self) -> str:
@@ -243,7 +232,7 @@ class Metaguru(Helpers):
                 disctitle=self.disctitle,
                 description=self.media.description,
                 label=self.label if not self._singleton else "",
-                tracks=tuple(self._tracks.raw_names),
+                artistitles=self._tracks.artistitles,
             )
             or self.general_catalognum
         )
@@ -389,10 +378,7 @@ class Metaguru(Helpers):
         for word in ["remix", "rmx", "edits", "live", "soundtrack"]:
             if word in self.album_name.lower():
                 albumtypes.add(word.replace("rmx", "remix").replace("edits", "remix"))
-        rmxers = [
-            t.remixer for t in self.tracks if t.remixer and t.remixer != "Original"
-        ]
-        if len(rmxers) == len(self.tracks):
+        if len(self.tracks.remixers) == len(self.tracks):
             albumtypes.add("remix")
 
         return "; ".join(sorted(albumtypes))
@@ -444,7 +430,7 @@ class Metaguru(Helpers):
             return self.official_album_name
 
         album = self.parsed_album_name or self.album_name
-        artists = [*self.tracks.raw_artists, *self.tracks.artists]
+        artists = [*self.tracks.full_artists, *self.tracks.artists]
         artists.sort(key=len, reverse=True)
         album = self.clean_album(album, self.catalognum, *artists, label=self.label)
 

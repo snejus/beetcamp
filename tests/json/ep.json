@@ -132,7 +132,7 @@
       }
     },
     {
-      "@id": "https://fallingapart.bandcamp.com/album/fa010-kickdown-vienna#b48188954",
+      "@id": "https://fallingapart.bandcamp.com/album/fa010-kickdown-vienna#b50562643",
       "@type": [
         "MusicRelease",
         "Product"
@@ -141,7 +141,7 @@
         {
           "@type": "PropertyValue",
           "name": "item_id",
-          "value": 48188954
+          "value": 50562643
         },
         {
           "@type": "PropertyValue",
@@ -161,7 +161,7 @@
         {
           "@type": "PropertyValue",
           "name": "art_id",
-          "value": 351018297
+          "value": 92683853
         },
         {
           "@type": "PropertyValue",
@@ -170,36 +170,31 @@
         }
       ],
       "image": [
-        "https://f4.bcbits.com/img/a0351018297_10.jpg"
+        "https://f4.bcbits.com/img/a0092683853_10.jpg"
       ],
       "musicReleaseFormat": "DigitalFormat",
-      "name": "full digital discography (17 releases)",
+      "name": "full digital discography (18 releases)",
       "offers": {
         "@type": "Offer",
         "additionalProperty": [
           {
             "@type": "PropertyValue",
             "name": "bundle_size",
-            "value": 17
+            "value": 18
           },
           {
             "@type": "PropertyValue",
             "name": "discount",
             "value": 0.2
-          },
-          {
-            "@type": "PropertyValue",
-            "name": "max_price",
-            "value": 1000
           }
         ],
         "availability": "OnlineOnly",
-        "price": 155.2,
+        "price": 164.8,
         "priceCurrency": "EUR",
         "priceSpecification": {
-          "minPrice": 155.2
+          "minPrice": 164.8
         },
-        "url": "https://fallingapart.bandcamp.com/album/fa010-kickdown-vienna#b48188954-buy"
+        "url": "https://fallingapart.bandcamp.com/album/fa010-kickdown-vienna#b50562643-buy"
       }
     },
     {
@@ -238,6 +233,7 @@
     "acid",
     "Frankfurt"
   ],
+  "mainEntityOfPage": "https://fallingapart.bandcamp.com/album/fa010-kickdown-vienna",
   "name": "fa010 | Kickdown Vienna",
   "numTracks": 4,
   "publisher": {
@@ -248,11 +244,6 @@
         "@type": "PropertyValue",
         "name": "band_id",
         "value": 3963823236
-      },
-      {
-        "@type": "PropertyValue",
-        "name": "currency",
-        "value": "EUR"
       },
       {
         "@type": "PropertyValue",
@@ -285,7 +276,7 @@
         "value": 480
       }
     ],
-    "description": "vinyl record label / disc-jockey\n\nbooking (masha): goldfishage@gmail.com",
+    "description": "vinyl record label / disc-jockey\n\nbookings:\nfallingapart030@gmail.com",
     "foundingLocation": {
       "@type": "Place",
       "name": "Frankfurt, Germany"
@@ -371,6 +362,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H06M25S",
+          "mainEntityOfPage": "https://fallingapart.bandcamp.com/track/je-nne-the-devils-not-s-bl-ck-s-he-is-p-inted-h-rd-mix",
           "name": "jeånne - the devil's not ås blåck ås he is påinted (hård mix)"
         },
         "position": 1
@@ -394,6 +386,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H05M33S",
+          "mainEntityOfPage": "https://fallingapart.bandcamp.com/track/je-nne-the-p-th-to-p-r-dise-begins-in-hell",
           "name": "jeånne - the påth to pårådise begins in hell"
         },
         "position": 2
@@ -417,6 +410,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H05M15S",
+          "mainEntityOfPage": "https://fallingapart.bandcamp.com/track/dj-disrespect-vienna-warm-up-mix",
           "name": "DJ DISRESPECT - VIENNA (WARM UP MIX"
         },
         "position": 3
@@ -440,6 +434,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H05M33S",
+          "mainEntityOfPage": "https://fallingapart.bandcamp.com/track/dj-disrespect-transition-athletic-mix",
           "name": "DJ DISRESPECT - TRANSITION (ATHLETIC MIX)"
         },
         "position": 4

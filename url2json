@@ -1,11 +1,15 @@
 #!/bin/bash
 #
-# Usage: url2json [-hu] [<bandcamp-url>]
+# Usage: url2json [-ahsu] [<bandcamp-url>]
 #
 #Parse given bandcamp url and print the resulting json. By default,
 #it outputs an indented/prettified json string which is used by the tests.
-#Use (human) flag -h to include colors and to page it, -a to show all fields, 
-#or -u to update #the json data in ./tests/json. 
+#Use 
+#
+#-a to show all fields, 
+#-h (human) to include colors and to page it
+#-s to save the initial Bandcamp JSON to ./jsons folder in the repo root
+#-u to update the json data in ./tests/json. 
 #Ensure you have curl, jq and git on your system.
 #
 # Examples
@@ -27,8 +31,12 @@ get_json () {
   jqargs=(--sort-keys)
   (( ALL_FIELDS )) || jqargs+=('del(.comment, .sponsor, .albumRelease[0].offers)')
 
-  curl -sL "${1//[\"\']}" | grep dateModif | {
-    if (( HUMAN )); then
+  curl -sL "${1//[\"\']}" | sed 's/^[^{]*//; s/[^}]*$//; s/&quot;/"/g' | grep -E '\{.*(dateModif|action=gift)' | {
+    if (( SAVE )); then
+      url=$1
+      save_path=$(dirname "$(realpath "$0")")/jsons/${1//\//_}.json
+      jq -cM '' > "$save_path"
+    elif (( HUMAN )); then
       jq -C "${jqargs[@]}" | less -R
     else
       jq "${jqargs[@]}"
@@ -64,6 +72,7 @@ else
     case $arg in
       -a) ALL_FIELDS=1 ;;
       -h) HUMAN=1 ;;
+      -s) SAVE=1 ;;
       -u) UPDATE=1 ;;
       *) url=$arg ;;
     esac

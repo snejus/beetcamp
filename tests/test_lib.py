@@ -26,7 +26,7 @@ pytestmark = pytest.mark.lib
 
 BASE_DIR = "lib_tests"
 TEST_DIR = "dev"
-REFERENCE_DIR = "v0.15.1"
+REFERENCE_DIR = "1ddb9b5"
 JSONS_DIR = "jsons"
 
 IGNORE_FIELDS = {
@@ -43,6 +43,7 @@ IGNORE_FIELDS = {
     "disctitle",
     "times_bought",
 }
+DO_NOT_COMPARE = set()
 
 target_dir = os.path.join(BASE_DIR, TEST_DIR)
 compare_against = os.path.join(BASE_DIR, REFERENCE_DIR)
@@ -60,7 +61,7 @@ TRACK_FIELDS = ["track_alt", "artist", "title"]
 
 
 def album_table(**kwargs):
-    table = new_table(*TRACK_FIELDS, show_header=False, highlight=False)
+    table = new_table(*TRACK_FIELDS, show_header=False, expand=False, highlight=False)
     return border_panel(table, **{"expand": True, **kwargs})
 
 
@@ -109,7 +110,7 @@ def config():
 
 
 def do_key(table, key: str, before, after, cached_value=None, album_name=None):
-    if before == after and not cached_value:
+    if before == after and cached_value is None:
         return None
 
     key_fixed = False
@@ -119,10 +120,18 @@ def do_key(table, key: str, before, after, cached_value=None, album_name=None):
 
     parts = []
     if key == "tracks":
-        for old_track, new_track in zip(before, after):
-            parts.append(
-                [make_difftext(str(a), str(b)) for a, b in zip(old_track, new_track)]
-            )
+        for old_track, new_track in [
+            (dict(zip(TRACK_FIELDS, a)), dict(zip(TRACK_FIELDS, b)))
+            for a, b in zip(before, after)
+        ]:
+            diffs = []
+            for field in TRACK_FIELDS:
+                old_val, new_val = old_track[field], new_track[field]
+                diff = make_difftext(str(old_val), str(new_val))
+                diffs.append(diff)
+                if old_val != new_val:
+                    oldnew[field].append(Oldnew(old_val, new_val, str(diff)))
+            parts.append(diffs)
     else:
         before, after = str(before), str(after)
         difftext = make_difftext(before, after)
@@ -161,21 +170,30 @@ def compare(old, new, cache) -> bool:
     else:
         desc, _id = f"{new['artist']} - {new['title']}", new["track_id"]
 
-    table = new_table(padding=0, collapse_padding=True)
+    table = new_table(padding=0, expand=False, collapse_padding=True)
+    for key in IGNORE_FIELDS:
+        new.pop(key, None)
+        old.pop(key, None)
+
     all_fields = set(new).union(set(old))
 
     compare_key = partial(do_key, table, album_name=desc)
 
     fail = False
-    for key in sorted(all_fields - IGNORE_FIELDS):
+    for key in sorted(all_fields - DO_NOT_COMPARE):
         values = old.get(key), new.get(key)
         if values[0] is None and values[1] is None:
             continue
         cache_key = f"{_id}_{key}"
-        out = compare_key(key, *values, cached_value=cache.get(cache_key, None))
-        cache.set(cache_key, out)
+        try:
+            out = compare_key(key, *values, cached_value=cache.get(cache_key, None))
+        except Exception:
+            console.print_exception(show_locals=True)
         if values[0] != values[1]:
+            cache.set(cache_key, out or "")
             fail = True
+        else:
+            cache.set(cache_key, None)
 
     albums[desc].title = desc
     fixed[desc].title = desc
@@ -183,7 +201,9 @@ def compare(old, new, cache) -> bool:
     if fail:
         subtitle = wrap(f"{_id} - {new['media']}", "dim")
         console.print("")
-        console.print(border_panel(table, title=wrap(desc, "b"), subtitle=subtitle))
+        console.print(
+            border_panel(table, title=wrap(desc, "b"), expand=True, subtitle=subtitle)
+        )
         new_fails[desc].title = desc
         return False
     return True
@@ -203,8 +223,8 @@ def guru(file, config):
 
 
 @pytest.mark.usefixtures("_report")
-def test_file(file, guru, cache):
-    IGNORE_FIELDS.update({"album_id", "media", "mediums", "disctitle"})
+def test_file(file, guru, cache: pytest.Cache):
+    DO_NOT_COMPARE.update({"album_id", "media", "mediums", "disctitle"})
 
     target_file = os.path.join(target_dir, file)
     if "_track_" in file:
@@ -217,23 +237,23 @@ def test_file(file, guru, cache):
                 new = album
                 break
 
-    new.catalognum = " / ".join(x.catalognum for x in guru.albums if x.catalognum)
-    try:
-        with open(target_file) as f:
-            contents = json.load(f)
-    except FileNotFoundError:
-        with open(target_file, "w") as f:
-            json.dump(new, f, indent=2)
-    else:
-        if new != contents:
-            with open(target_file, "w") as f:
-                json.dump(new, f, indent=2)
-
     try:
         with open(os.path.join(compare_against, file)) as f:
             old = json.load(f)
     except FileNotFoundError:
         old = {}
+
+    new.catalognum = " / ".join(x.catalognum for x in guru.albums if x.catalognum)
+
+    if new != old:
+        try:
+            with open(target_file) as f:
+                contents = json.load(f)
+        except FileNotFoundError:
+            contents = {}
+        if not contents:
+            with open(target_file, "w") as f:
+                json.dump(new, f, indent=2, sort_keys=True)
 
     if not compare(old, new, cache):
         pytest.fail(pytrace=False)
@@ -251,7 +271,7 @@ def test_media(file, guru, cache):
         file = (new.get("album_id") or new.track_id).replace("/", "_") + ".json"
         target_file = os.path.join(target_dir, file)
         with open(target_file, "w") as f:
-            json.dump(new, f, indent=2)
+            json.dump(new, f, indent=2, sort_keys=True)
 
         try:
             with open(os.path.join(compare_against, file)) as f:

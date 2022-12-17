@@ -119,7 +119,7 @@
       }
     },
     {
-      "@id": "https://diffusereality.bandcamp.com/album/francois-dillinger-icosahedrone-lp#b48835721",
+      "@id": "https://diffusereality.bandcamp.com/album/francois-dillinger-icosahedrone-lp#b50768542",
       "@type": [
         "MusicRelease",
         "Product"
@@ -128,7 +128,7 @@
         {
           "@type": "PropertyValue",
           "name": "item_id",
-          "value": 48835721
+          "value": 50768542
         },
         {
           "@type": "PropertyValue",
@@ -148,7 +148,7 @@
         {
           "@type": "PropertyValue",
           "name": "art_id",
-          "value": 3258459299
+          "value": 749216117
         },
         {
           "@type": "PropertyValue",
@@ -157,36 +157,31 @@
         }
       ],
       "image": [
-        "https://f4.bcbits.com/img/a3258459299_10.jpg"
+        "https://f4.bcbits.com/img/a0749216117_10.jpg"
       ],
       "musicReleaseFormat": "DigitalFormat",
-      "name": "full digital discography (591 releases)",
+      "name": "full digital discography (681 releases)",
       "offers": {
         "@type": "Offer",
         "additionalProperty": [
           {
             "@type": "PropertyValue",
             "name": "bundle_size",
-            "value": 591
+            "value": 681
           },
           {
             "@type": "PropertyValue",
             "name": "discount",
-            "value": 0.8
-          },
-          {
-            "@type": "PropertyValue",
-            "name": "max_price",
-            "value": 1000
+            "value": 0.85
           }
         ],
         "availability": "OnlineOnly",
-        "price": 926.36,
+        "price": 796.65,
         "priceCurrency": "EUR",
         "priceSpecification": {
-          "minPrice": 926.36
+          "minPrice": 796.65
         },
-        "url": "https://diffusereality.bandcamp.com/album/francois-dillinger-icosahedrone-lp#b48835721-buy"
+        "url": "https://diffusereality.bandcamp.com/album/francois-dillinger-icosahedrone-lp#b50768542-buy"
       }
     },
     {
@@ -249,6 +244,7 @@
     "techno",
     "Portugal"
   ],
+  "mainEntityOfPage": "https://diffusereality.bandcamp.com/album/francois-dillinger-icosahedrone-lp",
   "name": "Francois Dillinger - Icosahedrone [LP]",
   "numTracks": 10,
   "publisher": {
@@ -259,11 +255,6 @@
         "@type": "PropertyValue",
         "name": "band_id",
         "value": 61399327
-      },
-      {
-        "@type": "PropertyValue",
-        "name": "currency",
-        "value": "EUR"
       },
       {
         "@type": "PropertyValue",
@@ -283,26 +274,26 @@
       {
         "@type": "PropertyValue",
         "name": "image_height",
-        "value": 1400
+        "value": 2917
       },
       {
         "@type": "PropertyValue",
         "name": "image_id",
-        "value": 27598543
+        "value": 29960568
       },
       {
         "@type": "PropertyValue",
         "name": "image_width",
-        "value": 1400
+        "value": 2917
       }
     ],
-    "description": "Independent Record Label & Party Promoter founded in 2013. Barcelona based.\nArts Festival: Teorema\nSublabel: Periphylla\n۩  Send a private message to visit our Record shop in Barcelona. \n> https://bit.ly/3j2ZxNU",
+    "description": "Independent Record Label founded in 2013.\nArts Festival: Teorema\nSublabel: Periphylla\n۩ Send a private message to visit our Record shop in Barcelona 💌\n→ https://linktr.ee/diffusereality",
     "foundingLocation": {
       "@type": "Place",
       "name": "Portugal"
     },
     "genre": "https://bandcamp.com/tag/electronic",
-    "image": "https://f4.bcbits.com/img/0027598543_10.jpg",
+    "image": "https://f4.bcbits.com/img/0029960568_10.jpg",
     "mainEntityOfPage": [
       {
         "@type": "WebPage",
@@ -377,6 +368,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H06M16S",
+          "mainEntityOfPage": "https://diffusereality.bandcamp.com/track/count-to-infinity",
           "name": "Count To Infinity"
         },
         "position": 1
@@ -400,6 +392,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H05M47S",
+          "mainEntityOfPage": "https://diffusereality.bandcamp.com/track/navigating-the-swamp-2",
           "name": "Navigating The Swamp"
         },
         "position": 2
@@ -423,6 +416,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H05M20S",
+          "mainEntityOfPage": "https://diffusereality.bandcamp.com/track/sit-and-wait-2",
           "name": "Sit And Wait"
         },
         "position": 3
@@ -446,6 +440,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H05M41S",
+          "mainEntityOfPage": "https://diffusereality.bandcamp.com/track/the-cup-runneth-over",
           "name": "The Cup Runneth Over"
         },
         "position": 4
@@ -469,6 +464,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H05M35S",
+          "mainEntityOfPage": "https://diffusereality.bandcamp.com/track/clockroaches",
           "name": "Clockroaches"
         },
         "position": 5
@@ -492,6 +488,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H06M18S",
+          "mainEntityOfPage": "https://diffusereality.bandcamp.com/track/ego-purge",
           "name": "Ego Purge"
         },
         "position": 6
@@ -515,6 +512,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H07M12S",
+          "mainEntityOfPage": "https://diffusereality.bandcamp.com/track/giving-in",
           "name": "Giving In"
         },
         "position": 7
@@ -538,6 +536,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H05M53S",
+          "mainEntityOfPage": "https://diffusereality.bandcamp.com/track/ending-endlessly",
           "name": "Ending Endlessly"
         },
         "position": 8
@@ -561,6 +560,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H05M20S",
+          "mainEntityOfPage": "https://diffusereality.bandcamp.com/track/sing-the-pain-away",
           "name": "Sing The Pain Away"
         },
         "position": 9
@@ -584,6 +584,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H07M22S",
+          "mainEntityOfPage": "https://diffusereality.bandcamp.com/track/dream-thief",
           "name": "Dream Thief"
         },
         "position": 10
