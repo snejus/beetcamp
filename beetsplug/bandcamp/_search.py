@@ -30,6 +30,8 @@ RELEASE_PATTERNS = [
     re.compile(r"(?P<url>https://bandcamp\.(?P<label>[^.]+)\.(?!bcbits)[\w/.-]+)"),
     # label-second pattern
     re.compile(r"(?P<url>https://(?P<label>[^.]+)\.bandcamp(?!bcbits)[\w/.-]+)"),
+    # alternative domain name pattern
+    re.compile(r"(?P<url>https://(?P<domain>[^\?]+)(?!bcbits)/album/[^\?]+)\?from=search"),
 ]
 
 
