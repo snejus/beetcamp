@@ -68,7 +68,23 @@ PATTERNS: Dict[str, Pattern[str]] = {
     "split_artists": re.compile(r", - |, | (?:[x+/-]|//|vs|and)[.]? "),
     "meta": re.compile(r'.*"@id".*'),
     "ft": re.compile(
-        r" *((([\[(])| )f(ea)?t([. ]|uring)(?![^()]*mix)[^]\[()]+(?(3)[]\)])) *", re.I
+        r"""
+        [ ]*                     # all preceding space
+        ((?P<br>[\[(])|\b)       # bracket or word boundary
+        (ft|feat|featuring)[. ]  # one of the three ft variations
+        (
+            # when it does not start with a bracket, do not allow " - " in it, otherwise
+            # we may match full track name
+            (?(br)|(?!.*[ ]-[ ].*))
+            # anything but brackets or a slash, except for a slash preceded
+            # by a non-space (can be part of artist or title)
+            (?:[^]\[()/]|\S/)+
+        )
+        (?<!mix)\b    # does not end with "mix"
+        (?(br)[]\)])  # if it started with a bracket, it must end with a closing bracket
+        [ ]*          # trailing space
+    """,
+        re.I | re.VERBOSE,
     ),
     "track_alt": re.compile(
         r"^([A-J]{1,3}[12]?\d|[AB]+(?=\W{2,}))(?:(?!-\w)[^\w(]|_)+", re.I + re.M
@@ -193,6 +209,7 @@ class Helpers:
         Catalogue number and artists to be removed are given as args.
         """
         name = PATTERNS["clean_incl"].sub("", name)
+        name = PATTERNS["ft"].sub(" ", name)
         name = re.sub(r"^\[(.*)\]$", r"\1", name)
 
         for arg in [re.escape(arg) for arg in filter(op.truth, args)] + [

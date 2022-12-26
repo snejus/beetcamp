@@ -26,24 +26,6 @@ DIGI_ONLY_PATTERNS = [
 ]
 DELIMITER_PAT = re.compile(r" ([^\w&()+/[\] ]) ")
 ELP_ALBUM_PAT = re.compile(r"[- ]*\[([^\]]+ [EL]P)\]+")  # Title [Some Album EP]
-FT_PAT = re.compile(
-    r"""
-[ ]*                     # all preceding space
-((?P<br>[\[(])|\b)       # bracket or word boundary
-(ft|feat|featuring)[. ]  # one of the three ft variations
-(
-    # when it does not start with a bracket, do not allow " - " in it, otherwise
-    # we may match full track name
-    (?(br)|(?!.* - .*))
-    [^]\[()]+     # anything but brackets
-)
-(?<!mix)\b        # does not end with "mix"
-(?(br)[]\)])      # if it started with a bracket, it must end with a closing bracket
-[ ]*              # trailing space
-    """,
-    re.I | re.VERBOSE,
-)
-TRACK_ALT_PAT = PATTERNS["track_alt"]
 
 
 @dataclass
@@ -117,7 +99,7 @@ class Track:
         Otherwise, strip brackets and spaces and save it in the 'ft' field.
         """
         for _field in "_name", "json_artist":
-            m = FT_PAT.search(data[_field])
+            m = PATTERNS["ft"].search(data[_field])
             if m:
                 ft = m.groups()[-1].strip()
                 if ft not in data.get("remixer", ""):
@@ -141,7 +123,7 @@ class Track:
 
         name = Helpers.clean_name(name).strip().lstrip("-")
 
-        m = TRACK_ALT_PAT.search(name)
+        m = PATTERNS["track_alt"].search(name)
         if m:
             data["track_alt"] = m.group(1).upper()
             name = name.replace(m.group(), "")
