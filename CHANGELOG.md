@@ -2,7 +2,9 @@
 
 ### Updated
 
-* `album`: Remove **ft.** and alike from album name
+* `album`: 
+  - Remove **ft.** and alike
+  - Remove non-alphanumeric chars after **VA** in the beginning, like **VA -**
 
 ## [0.16.2] 2022-12-28
 
