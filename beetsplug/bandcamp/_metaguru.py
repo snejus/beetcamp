@@ -52,7 +52,7 @@ class Metaguru(Helpers):
 
     def __init__(self, meta: JSONDict, config: Optional[JSONDict] = None) -> None:
         self.meta = meta
-        self.media_formats = Helpers.get_media_formats(
+        self.media_formats = self.get_media_formats(
             (meta.get("inAlbum") or meta).get("albumRelease") or []
         )
         if self.media_formats:
@@ -62,7 +62,7 @@ class Metaguru(Helpers):
         self._tracks = Tracks.from_json(meta)
 
     @classmethod
-    def from_html(cls, html: str, config: JSONDict = None) -> "Metaguru":
+    def from_html(cls, html: str, config: Optional[JSONDict] = None) -> "Metaguru":
         try:
             meta = re.search(PATTERNS["meta"], html).group()  # type: ignore[union-attr]
         except AttributeError as exc:
@@ -79,13 +79,13 @@ class Metaguru(Helpers):
         """Return release, media descriptions and credits separated by
         the configured separator string.
         """
-        parts = [self.meta.get("description")]
+        parts: List[str] = [self.meta.get("description") or ""]
         media_desc = self.media.description
         if media_desc and not media_desc.startswith("Includes high-quality"):
             parts.append(media_desc)
 
-        parts.append(self.meta.get("creditText"))
-        sep = self.config["comments_separator"]
+        parts.append(self.meta.get("creditText") or "")
+        sep: str = self.config["comments_separator"]
         return sep.join(filter(op.truth, parts)).replace("\r", "")
 
     @cached_property
@@ -128,7 +128,7 @@ class Metaguru(Helpers):
 
     @cached_property
     def album_name(self) -> str:
-        return self.meta["name"]
+        return self.meta.get("name") or ""
 
     @cached_property
     def label(self) -> str:
@@ -140,14 +140,14 @@ class Metaguru(Helpers):
 
     @cached_property
     def album_id(self) -> str:
-        return self.meta["@id"]
+        return self.meta.get("@id") or ""
 
     @cached_property
     def artist_id(self) -> str:
         try:
-            return self.meta["byArtist"]["@id"]
+            return self.meta["byArtist"]["@id"]  # type: ignore [no-any-return]
         except KeyError:
-            return self.meta["publisher"]["@id"]
+            return self.meta["publisher"]["@id"]  # type: ignore [no-any-return]
 
     @cached_property
     def original_albumartist(self) -> str:
@@ -183,8 +183,10 @@ class Metaguru(Helpers):
 
     @cached_property
     def image(self) -> str:
-        image = self.meta.get("image", "")
-        return image[0] if isinstance(image, list) else image
+        image = self.meta.get("image") or ""
+        if isinstance(image, list) and isinstance(image[0], str):
+            return image[0]
+        return image
 
     @cached_property
     def release_date(self) -> Optional[date]:

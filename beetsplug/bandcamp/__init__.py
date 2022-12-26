@@ -22,7 +22,7 @@ import re
 from functools import partial
 from html import unescape
 from operator import itemgetter, truth
-from typing import Any, Dict, Iterable, List, Optional, Sequence, Union
+from typing import TYPE_CHECKING, Any, Dict, Iterable, List, Optional, Sequence, Union
 
 import requests
 from beets import IncludeLazyConfig, __version__, config, library, plugins
@@ -91,7 +91,7 @@ class BandcampAlbumArt(BandcampRequestsHandler, fetchart.RemoteArtSource):
     NAME = "Bandcamp"
 
     def get(self, album, plugin, paths):
-        # type: (AlbumInfo, plugins.BeetsPlugin, List) -> Iterable[fetchart.Candidate]  # noqa
+        # type: (AlbumInfo, plugins.BeetsPlugin, List[str]) -> Iterable[fetchart.Candidate]  # noqa
         """Return the url for the cover from the bandcamp album page.
         This only returns cover art urls for bandcamp albums (by id).
         """
@@ -297,6 +297,9 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
 def get_args(args: List[str]) -> Any:
     from argparse import Action, ArgumentParser
 
+    if TYPE_CHECKING:
+        from argparse import Namespace
+
     parser = ArgumentParser(
         description="""Get bandcamp release metadata from the given <release-url>
 or perform bandcamp search with <query>. Anything that does not start with https://
@@ -309,14 +312,14 @@ By default, all types are searched.
 
     class UrlOrQueryAction(Action):
         def __call__(self, parser, namespace, values, option_string=None):
-            val = values
-            if val:
-                if val.startswith("https://"):
+            # type: (Any, Namespace, Any, Any) -> None
+            if values:
+                if values.startswith("https://"):
                     target = "release_url"
                 else:
                     target = "query"
                     del namespace.release_url
-                setattr(namespace, target, val)
+                setattr(namespace, target, values)
 
     exclusive = parser.add_mutually_exclusive_group()
     exclusive.add_argument(
