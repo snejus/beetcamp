@@ -19,7 +19,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import logging
 import re
-from functools import partial
+from functools import lru_cache, partial
 from html import unescape
 from operator import itemgetter, truth
 from typing import TYPE_CHECKING, Any, Dict, Iterable, List, Optional, Sequence, Union
@@ -53,10 +53,16 @@ ALBUM_URL_IN_TRACK = re.compile(r'<a id="buyAlbumLink" href="([^"]+)')
 USER_AGENT = f"beets/{__version__} +http://beets.radbox.org/"
 
 
+@lru_cache(maxsize=None)
+def get_response(url: str) -> requests.Response:
+    return requests.get(url, headers={"User-Agent": USER_AGENT})
+
+
 class BandcampRequestsHandler:
     """A class that provides an ability to make requests and handles failures."""
 
     _log: logging.Logger
+    config: IncludeLazyConfig
 
     def _exc(self, msg_template: str, *args: Sequence[str]) -> None:
         self._log.log(logging.WARNING, msg_template, *args, exc_info=True)
@@ -66,14 +72,28 @@ class BandcampRequestsHandler:
 
     def _get(self, url: str) -> str:
         """Return text contents of the url response."""
-        headers = {"User-Agent": USER_AGENT}
+        response = get_response(url)
         try:
-            response = requests.get(url, headers=headers)
             response.raise_for_status()
-        except requests.exceptions.RequestException:
-            self._info("Error while fetching URL: {}", url)
+        except requests.HTTPError:
+            self._info("URL Not found: {}", url)
             return ""
         return unescape(response.text)
+
+    def guru(self, url, attr):
+        # type: (str, str) -> Optional[Union[TrackInfo, List[AlbumInfo]]]
+        """Return Metaguru for the given URL."""
+        kwargs = {}
+        if hasattr(self, "config"):
+            kwargs["config"] = self.config.flatten()
+        try:
+            return getattr(Metaguru.from_html(self._get(url), **kwargs), attr)
+        except (KeyError, ValueError, AttributeError, IndexError):
+            self._info("Failed obtaining {} from {}", attr, url)
+        except Exception:  # pylint: disable=broad-except
+            i_url = "https://github.com/snejus/beetcamp/issues/new"
+            self._exc("Unexpected error obtaining {}, please report at {}", url, i_url)
+        return None
 
 
 def _from_bandcamp(clue: str) -> bool:
@@ -99,19 +119,9 @@ class BandcampAlbumArt(BandcampRequestsHandler, fetchart.RemoteArtSource):
         if not _from_bandcamp(url):
             self._info("Not fetching art for a non-bandcamp album URL")
         else:
-            html = self._get(url)
-            if not html:
-                self._info("Could not connect to the URL")
-            else:
-                try:
-                    image_url = Metaguru.from_html(html).image
-                except (KeyError, AttributeError, ValueError):
-                    self._info("Unexpected parsing error fetching album art")
-                else:
-                    if image_url:
-                        yield self._candidate(
-                            url=image_url, match=fetchart.Candidate.MATCH_EXACT
-                        )
+            image = self.guru(url, "image")
+            if image:
+                yield self._candidate(url=image, match=fetchart.Candidate.MATCH_EXACT)
 
 
 def urlify(pretty_string: str) -> str:
@@ -121,7 +131,6 @@ def urlify(pretty_string: str) -> str:
 
 
 class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
-    _gurucache: Dict[str, Metaguru]
     beets_config: IncludeLazyConfig
 
     def __init__(self) -> None:
@@ -131,24 +140,10 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
 
         if self.config["art"]:
             self.register_listener("pluginload", self.loaded)
-        self._gurucache = {}
 
     @property
     def data_source(self) -> str:
         return "bandcamp"
-
-    def guru(self, url: str, html: Optional[str] = None) -> Optional[Metaguru]:
-        """Return cached guru. If there isn't one, fetch the url if html isn't
-        already given, initialise guru and add it to the cache. This way they
-        can be re-used by separate import stages.
-        """
-        if url in self._gurucache:
-            return self._gurucache[url]
-        if not html:
-            html = self._get(url)
-        if html:
-            self._gurucache[url] = Metaguru.from_html(html, self.config.flatten())
-        return self._gurucache.get(url)
 
     def loaded(self) -> None:
         """Add our own artsource to the fetchart plugin."""
@@ -174,8 +169,8 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
             * album name has been updated on Bandcamp but the file contains the old one
             * album name does not contain a single ascii alphanumeric character
               - in reality, this becomes '--{num}' in the url, where `num` depends on
-              the number of previous releases that also did not have any valid alphanums.
-              Therefore, we cannot make a reliable guess here.
+              the number of previous releases that also did not have any valid
+              alphanums. Therefore, we cannot make a reliable guess here.
         """
         url = getattr(item, f"mb_{_type}id", "")
         if _from_bandcamp(url):
@@ -259,32 +254,20 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         self._info("Not a bandcamp URL, skipping")
         return None
 
-    def handle_guru(self, attr, url, html=None):
-        # type: (str, str, Optional[str]) -> Optional[Union[TrackInfo, List[AlbumInfo]]]
-        try:
-            return getattr(self.guru(url, html=html), attr)
-        except (KeyError, ValueError, AttributeError, IndexError):
-            self._info("Failed obtaining {}", url)
-        except Exception:  # pylint: disable=broad-except
-            i_url = "https://github.com/snejus/beetcamp/issues/new"
-            self._exc("Unexpected error obtaining {}, please report at {}", url, i_url)
-        return None
-
     def get_album_info(self, url: str) -> Optional[List[AlbumInfo]]:
         """Return an AlbumInfo object for a bandcamp album page.
         If track url is given by mistake, find and fetch the album url instead.
         """
         html = self._get(url)
-        if "/track/" in url:
+        if html and "/track/" in url:
             m = ALBUM_URL_IN_TRACK.search(html)
             if m:
                 url = re.sub(r"/track/.*", m.expand(r"\1"), url)
-                return self.handle_guru("albums", url)
-        return self.handle_guru("albums", url, html)
+        return self.guru(url, "albums")
 
     def get_track_info(self, url: str) -> Optional[TrackInfo]:
         """Returns a TrackInfo object for a bandcamp track page."""
-        return self.handle_guru("singleton", url)
+        return self.guru(url, "singleton")
 
     def _search(self, data: JSONDict) -> Iterable[JSONDict]:
         """Return a list of track/album URLs of type search_type matching the query."""
@@ -361,24 +344,28 @@ def main() -> None:
     search_vars = vars(args)
     index = search_vars.pop("index", None)
     if search_vars.get("query"):
-        result = search_bandcamp(**search_vars)
+        search_results = search_bandcamp(**search_vars)
+
+        if index:
+            try:
+                url = search_results[index - 1]["url"]
+            except IndexError as e:
+                raise Exception("Specified index could not be found") from e
+
+            import webbrowser
+
+            print(f"Opening search result number {index}: {url}")
+            webbrowser.open(url)
+        else:
+            print(json.dumps(search_results))
     else:
         pl = BandcampPlugin()
-        result = pl.album_for_id(args.release_url) or pl.track_for_id(args.release_url)
+        pl._log.setLevel(10)
+        url = args.release_url
+        result = pl.get_album_info(args.release_url) or pl.get_track_info(url)
         if not result:
             raise AssertionError("Failed to find a release under the given url")
 
-    if index:
-        try:
-            url = result[index - 1]["url"]
-        except IndexError as e:
-            raise Exception("Specified index could not be found") from e
-
-        import webbrowser
-
-        print(f"Opening search result number {index}: {url}")
-        webbrowser.open(url)
-    else:
         print(json.dumps(result))
 
 
