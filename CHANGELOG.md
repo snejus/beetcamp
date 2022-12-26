@@ -1,5 +1,7 @@
 ## [0.16.3] Unreleased
 
+[0.16.3]: https://github.com/snejus/beetcamp/releases/tag/0.16.3
+
 ### Updated
 
 * `album`: 
@@ -7,6 +9,10 @@
   - Remove non-alphanumeric chars after **VA** in the beginning, like **VA -**
 * `artist`: handle some edge cases of digital-only track title cleanup, like **Unreleased
   Bonus Track** or **Bonus Track 1**. These would previously end up in the artist name
+  - Remove **by** and **vs** from album names like 
+
+        Album by Albumartist                        -> Album
+        Album by Albumartist vs Another Albumartist -> Album
 
 
 ## [0.16.2] 2022-12-28
