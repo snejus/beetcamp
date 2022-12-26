@@ -17,13 +17,25 @@ if sys.version_info.minor > 7:
 else:
     from cached_property import cached_property  # type: ignore # pylint: disable=import-error # noqa
 
-DIGI_ONLY_PATTERNS = [
-    re.compile(r"^(DIGI(TAL)? ?[\d.]+|Bonus\W{2,})\W*"),
-    re.compile(
-        r"[^\w)]+(bandcamp[^-]+|digi(tal)?)(\W*(\W+|only|bonus|exclusive)\W*$)", re.I
-    ),
-    re.compile(r"[^\w)]+(bandcamp exclusive )?bonus( track)?(\]\W*|(\W*$))", re.I),
-]
+digiwords = r"""
+    # must contain at least one of
+    (\W*(bandcamp|digi(tal)?|exclusive|bonus|unreleased))+
+    # and may be followed by
+    (\W(track|only|tune))*
+    """
+DIGI_ONLY_PATTERN = re.compile(
+    rf"""
+\s*  # all preceding space
+(
+      (^{digiwords}[.:\d\s]+\s)    # begins with 'Bonus.', 'Bonus 1.' or 'Bonus :'
+ | [\[(]{digiwords}[]\)]\W*         # delimited by brackets, '[Bonus]', '(Bonus) -'
+ |   [*]{digiwords}[*]              # delimited by asterisks, '*Bonus*'
+ |  ([ ]{digiwords}$)               # might not be delimited if at the end, '... Bonus'
+)
+\s*  # all succeeding space
+    """,
+    re.I | re.VERBOSE,
+)
 DELIMITER_PAT = re.compile(r" ([^\w&()+/[\] ]) ")
 ELP_ALBUM_PAT = re.compile(r"[- ]*\[([^\]]+ [EL]P)\]+")  # Title [Some Album EP]
 
@@ -86,7 +98,7 @@ class Track:
 
         Return the clean name, and whether this track is digi-only.
         """
-        clean_name = reduce(lambda a, b: b.sub("", a), DIGI_ONLY_PATTERNS, name)
+        clean_name = DIGI_ONLY_PATTERN.sub("", name)
         return clean_name, clean_name != name
 
     @staticmethod

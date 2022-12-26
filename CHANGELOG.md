@@ -5,6 +5,9 @@
 * `album`: 
   - Remove **ft.** and alike
   - Remove non-alphanumeric chars after **VA** in the beginning, like **VA -**
+* `artist`: handle some edge cases of digital-only track title cleanup, like **Unreleased
+  Bonus Track** or **Bonus Track 1**. These would previously end up in the artist name
+
 
 ## [0.16.2] 2022-12-28
 
@@ -17,6 +20,7 @@
 ### Updated
 
 * internal/build: make sure tests and linting runs on pull requests.
+
 
 ## [0.16.1] 2022-12-17
 
