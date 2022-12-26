@@ -4,15 +4,20 @@
 
 ### Updated
 
-* `album`: 
+* `album`
+
   - Remove **ft.** and alike
-  - Remove non-alphanumeric chars after **VA** in the beginning, like **VA -**
+    * **Album**<b style="background-color:#FF5F70;"> ft. Another Artist</b>
+  - Remove non-alphanumeric chars following **VA** in the beginning
+    * <b style="background-color:#FF5F70;">VA - </b>**Album**
+  - Remove **V/A** from the beginning, same as **VA**
+    * <b style="background-color:#FF5F70;">V/A </b>**Album**
+  - Remove **by** and **vs**
+    * **Album**<b style="background-color:#FF5F70;"> by Albumartist</b>
+    * **Album**<b style="background-color:#FF5F70;"> by Albumartist vs Another Albumartist</b>
+
 * `artist`: handle some edge cases of digital-only track title cleanup, like **Unreleased
   Bonus Track** or **Bonus Track 1**. These would previously end up in the artist name
-  - Remove **by** and **vs** from album names like 
-
-        Album by Albumartist                        -> Album
-        Album by Albumartist vs Another Albumartist -> Album
 
 
 ## [0.16.2] 2022-12-28
