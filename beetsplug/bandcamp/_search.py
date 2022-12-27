@@ -26,10 +26,13 @@ RELEASE_PATTERNS = [
     re.compile(r"\n\s+by " + _f("artist")),
     re.compile(r"\n\s+released " + _f("date")),
     re.compile(r"\n\s+(?P<tracks>\d+) tracks"),
-    # label-first pattern
-    re.compile(r"(?P<url>https://bandcamp\.(?P<label>[^.]+)\.(?!bcbits)[\w/.-]+)"),
-    # label-second pattern
-    re.compile(r"(?P<url>https://(?P<label>[^.]+)\.bandcamp(?!bcbits)[\w/.-]+)"),
+    # order is important here
+    # general domain name pattern from search results (<label>/<path>?from=search)
+    re.compile(r"(?P<url>https://(?P<label>[^/]+)/[\w/.-]+)\?from=search"),
+    # label-first pattern (<label>.bandcamp.<tld>/<path>?from=search), for more detailed label data
+    re.compile(r"(?P<url>https://bandcamp\.(?P<label>[^.]+)\.[\w/.-]+)\?from=search"),
+    # label-second pattern (bandcamp.<label>.<tld>/<path>?from=search), for more detailed label data
+    re.compile(r"(?P<url>https://(?P<label>[^.]+)\.bandcamp[\w/.-]+)\?from=search"),
 ]
 
 
