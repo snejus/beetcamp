@@ -1,7 +1,9 @@
 """Pytest fixtures for tests."""
 import json
+import os
 import re
 from copy import deepcopy
+from glob import glob
 from operator import itemgetter
 from os import path
 
@@ -9,6 +11,34 @@ import pytest
 from beets.autotag.hooks import AlbumInfo, TrackInfo
 from beetsplug.bandcamp import DEFAULT_CONFIG
 from rich.console import Console
+
+
+def pytest_addoption(parser):
+    newest_folders = sorted(
+        glob(os.path.join("lib_tests", f"*{os.path.sep}")),
+        key=os.path.getctime,
+        reverse=True,
+    )
+    all_names = [f.split(os.path.sep)[-2] for f in newest_folders]
+    names = [n for n in all_names if n != "dev"]
+    parser.addoption(
+        "--base",
+        choices=all_names,
+        default=names[0] if names else "dev",
+        help="base directory / comparing against",
+    )
+    parser.addoption(
+        "--target",
+        default="dev",
+        metavar="COMMIT",
+        help="target name or short commit hash",
+    )
+
+
+def pytest_terminal_summary(terminalreporter, exitstatus, config):
+    base = config.getoption("base")
+    target = config.getoption("target")
+    terminalreporter.write(f"---\nCompared {target} against {base}\n---")
 
 
 @pytest.fixture(scope="session")

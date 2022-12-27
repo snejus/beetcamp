@@ -1,11 +1,31 @@
-#!/bin/sh
+#!/bin/bash
+
+TESTS_DIR=lib_tests
 
 [ "$(git branch --show-current)" = dev ] || exit
 
 commit=$(git rev-parse --short HEAD)
-previous_commit=$(ls --sort time ./lib_tests -1 | grep '^[0-9a-z]{7}$' -E | head -1)
+previous_commit=$(git rev-parse --short 'HEAD@{1}')
 
-git diff --no-index lib_tests/"$previous_commit" lib_tests/dev && exit
+git diff --quiet 'HEAD@{1}..HEAD' ./beetsplug
+committed_source_code=$?
+git diff --quiet ./beetsplug
+dirty_worktree=$?
 
-cp -r lib_tests/dev lib_tests/"$commit"
-sed -i 's/REFERENCE_DIR = .*/REFERENCE_DIR = "'"$commit"'"/' ./tests/test_lib.py
+if ((!committed_source_code)); then
+  mv "$TESTS_DIR/$previous_commit" "$TESTS_DIR/$commit"
+  mv "$TESTS_DIR/album-$previous_commit" "$TESTS_DIR/album-$commit"
+  mv "$TESTS_DIR/tracks-$previous_commit" "$TESTS_DIR/tracks-$commit"
+  exit
+fi
+
+cp -r "$TESTS_DIR/$previous_commit" "$TESTS_DIR/$commit"
+((dirty_worktree)) && git stash
+pytest -p no:randomly -k 'lib and file' --base "$previous_commit" --target "$commit"
+((dirty_worktree)) && git stash pop
+
+jq .album "$TESTS_DIR/$commit"/*.json -r >"$TESTS_DIR/album-$commit"
+jq '(.tracks//[]) | map(if .track_alt then "\(.track_alt). " else "" end + .artist + " - " + .title)[]' "$TESTS_DIR/$commit"/*.json -r >"$TESTS_DIR/tracks-$commit"
+
+git diff --unified=0 --no-index --color-words "$TESTS_DIR/album-$previous_commit" "$TESTS_DIR/album-$commit"
+git diff --unified=0 --no-index --color-words "$TESTS_DIR/tracks-$previous_commit" "$TESTS_DIR/tracks-$commit"
