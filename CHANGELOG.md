@@ -1,3 +1,15 @@
+## [0.16.2] 2022-12-27
+
+[0.16.2]: https://github.com/snejus/beetcamp/releases/tag/0.16.2
+
+### Fixed
+
+* (#40) Improve overall search reliability (#37) and handle alternative domain names, thanks @shagr4th.
+
+### Updated
+
+* internal/build: make sure tests and linting runs on pull requests.
+
 ## [0.16.1] 2022-12-17
 
 [0.16.1]: https://github.com/snejus/beetcamp/releases/tag/0.16.1
