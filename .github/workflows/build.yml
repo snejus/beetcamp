@@ -27,7 +27,7 @@ jobs:
           pip install -r requirements.txt
           pip install beets==${{ matrix.beets }}
           pip install coveralls
-          pip install .
+          pip install -e .
       - name: Pytest
         run: pytest -k 'not need_connection' --ignore-glob='*test_lib*'
       - name: Upload coverage data to coveralls.io
