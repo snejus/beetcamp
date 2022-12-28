@@ -6,7 +6,7 @@ from beetsplug.bandcamp._search import get_matches, parse_and_sort_results
 HTML_ITEM = """
 <div class="searchresult data-search">
 https://www.recaptcha.net/recaptcha/enterprise.js
-<a href="{url}?from=search">
+<a href="{url}?from=search">{url}</a>
 search_item_type="a">
      {name}
      <span>some
@@ -43,11 +43,12 @@ def test_search_logic(search_data):
     results = parse_and_sort_results(make_html_item(search_data), **expected_data)
     assert results == [{**expected_data, "similarity": 1.0, "index": 1}]
 
+
 def test_search_logic_alternate_domain_name(search_data):
     # test same dataset, but with alternate domain name, such as mydomain.com
     """Given a single matching release, the similarity should be 1."""
     search_data["url"] = "https://mydomain.com/album/release"
-    expected_data = {**search_data, "date": "2021 November 26", "label": "mydomain.com"}
+    expected_data = {**search_data, "date": "2021 November 26", "label": "mydomain"}
     results = parse_and_sort_results(make_html_item(search_data), **expected_data)
     assert results == [{**expected_data, "similarity": 1.0, "index": 1}]
 
@@ -96,7 +97,8 @@ def test_search_prioritises_best_matches(search_data):
         ("https://bandcamp.bandcamp.com/track/warm-2", "bandcamp"),
     ),
 )
-def test_search_matches(test_url, expected_label):
-    result = get_matches(test_url + "?from=search")
+# fmt: on
+def test_search_matches(search_data, test_url, expected_label):
+    result = get_matches(make_html_item({**search_data, "url": test_url}))
     assert result["url"] == test_url
     assert result["label"] == expected_label

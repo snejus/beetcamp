@@ -15,7 +15,7 @@ def _f(field: str) -> str:
     """Return pattern matching a string that does not start with '<' or space
     until the end of the line.
     """
-    return rf"(?P<{field}>[^ <][^\n]+)"
+    return rf"(?P<{field}>[^\s<][^\n]+)"
 
 
 RELEASE_PATTERNS = [
@@ -26,13 +26,10 @@ RELEASE_PATTERNS = [
     re.compile(r"\n\s+by " + _f("artist")),
     re.compile(r"\n\s+released " + _f("date")),
     re.compile(r"\n\s+(?P<tracks>\d+) tracks"),
-    # order is important here
-    # general domain name pattern from search results (<label>/<path>?from=search)
-    re.compile(r"(?P<url>https://(?P<label>[^/]+)/[\w/.-]+)\?from=search"),
-    # label-first pattern (<label>.bandcamp.<tld>/<path>?from=search), for more detailed label data
-    re.compile(r"(?P<url>https://bandcamp\.(?P<label>[^.]+)\.[\w/.-]+)\?from=search"),
-    # label-second pattern (bandcamp.<label>.<tld>/<path>?from=search), for more detailed label data
-    re.compile(r"(?P<url>https://(?P<label>[^.]+)\.bandcamp[\w/.-]+)\?from=search"),
+    re.compile(r">https://bandcamp\.(?P<label>[^.<]+)\.[^<]+<"),
+    re.compile(r">https://(?P<label>[^.]+)\.bandcamp\.[^<]+<"),
+    re.compile(r">https://(?P<label>(?!bandcamp)[^/]+)\.[^<]+<"),
+    re.compile(r">(?P<url>https://[^<]+)<"),
 ]
 
 
@@ -64,7 +61,7 @@ def get_matches(text: str) -> JSONDict:
     for pat in RELEASE_PATTERNS:
         m = pat.search(text)
         if m:
-            result.update(m.groupdict())
+            result = {**m.groupdict(), **result}
     if "type" in result:
         result["type"] = result["type"].lower()
     if "date" in result:
