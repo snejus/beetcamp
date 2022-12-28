@@ -81,7 +81,7 @@ options:
 
 You can see how the data looks below (the output is prettified with [rich-tables]).
 
-![image](images/search.png)
+![image](https://github.com/snejus/beetcamp/blob/fe6ea71a0ab0035d657d13f664de957befb4552c/images/search.png?raw=true)
 
 [rich-tables]: https://github.com/snejus/rich-tables
 
