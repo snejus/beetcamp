@@ -1,4 +1,4 @@
-## [0.16.2] 2022-12-27
+## [0.16.2] 2022-12-28
 
 [0.16.2]: https://github.com/snejus/beetcamp/releases/tag/0.16.2
 
