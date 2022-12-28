@@ -76,12 +76,14 @@ options:
 
 - Use `beetcamp <bandcamp-release-url>` to return release metadata in JSON format.
 - Use `beetcamp [-alt] <query>` to search albums, labels and tracks on Bandcamp and return
-  results in JSON. You can see the general idea of the kind of data the search returns below (the
-  output is prettified with [rich] externally)
+  results in JSON. 
+- Search results are indexed - add `-o <index>` in order to open the chosen URL in the browser.
+
+You can see how the data looks below (the output is prettified with [rich-tables]).
 
 ![image](images/search.png)
 
-[rich]: https://github.com/Textualize/rich
+[rich-tables]: https://github.com/snejus/rich-tables
 
 # Configuration
 
