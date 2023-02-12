@@ -15,6 +15,8 @@
   - Remove **by** and **vs**
     * **Album ~~by Albumartist~~**
     * **Album ~~by Albumartist vs Another Albumartist~~**
+  - Remove Unicode quotes (**“”**) when they wrap the album name
+    * **~~“~~**Album**~~”~~**
   - Do not remove albumartist when it's preceded by **of**
     * **25 years of ~~Albumartist~~** -> **25 years of Albumartist**
 
