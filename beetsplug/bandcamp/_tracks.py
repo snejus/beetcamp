@@ -19,7 +19,7 @@ else:
 
 digiwords = r"""
     # must contain at least one of
-    (\W*(bandcamp|digi(tal)?|exclusive|bonus|unreleased))+
+    (\W*(bandcamp|digi(tal)?|exclusive|bonus|bns|unreleased))+
     # and may be followed by
     (\W(track|only|tune))*
     """
@@ -27,8 +27,8 @@ DIGI_ONLY_PATTERN = re.compile(
     rf"""
 \s*  # all preceding space
 (
-      (^{digiwords}[.:\d\s]+\s)    # begins with 'Bonus.', 'Bonus 1.' or 'Bonus :'
- | [\[(]{digiwords}[]\)]\W*         # delimited by brackets, '[Bonus]', '(Bonus) -'
+      (^{digiwords}[.:\d\s]+\s)     # begins with 'Bonus.', 'Bonus 1.' or 'Bonus :'
+ | [\[(]{digiwords}[\])]\W*         # delimited by brackets, '[Bonus]', '(Bonus) -'
  |   [*]{digiwords}[*]              # delimited by asterisks, '*Bonus*'
  |  ([ ]{digiwords}$)               # might not be delimited if at the end, '... Bonus'
 )
@@ -129,10 +129,12 @@ class Track:
         # see https://gutterfunkuk.bandcamp.com/album/gutterfunk-all-subject-to-vibes-various-artists-lp  # noqa
         if name.endswith(label):
             name = name.replace(label, "").strip(" -")
-        data["json_artist"] = Helpers.clean_name(data["json_artist"])
 
-        name, data["digi_only"] = Track.clean_digi_name(name)
+        json_artist, artist_digi_only = Track.clean_digi_name(data["json_artist"])
+        name, name_digi_only = Track.clean_digi_name(name)
+        data["digi_only"] = name_digi_only or artist_digi_only
 
+        data["json_artist"] = Helpers.clean_name(json_artist)
         name = Helpers.clean_name(name).strip().lstrip("-")
 
         m = PATTERNS["track_alt"].search(name)

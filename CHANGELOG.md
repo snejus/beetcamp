@@ -18,8 +18,10 @@
   - Do not remove albumartist when it's preceded by **of**
     * **25 years of ~~Albumartist~~** -> **25 years of Albumartist**
 
-* `artist`: handle some edge cases of digital-only track title cleanup, like **Unreleased
+* `artist`: 
+  - Handle some edge cases of digital-only track title cleanup, like **Unreleased
   Bonus Track** or **Bonus Track 1**. These would previously end up in the artist name
+  - Remove digital-only artifacts from the artist name too
 
 
 ## [0.16.2] 2022-12-28
