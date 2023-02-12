@@ -139,7 +139,7 @@ class Track:
 
         m = PATTERNS["track_alt"].search(name)
         if m:
-            data["track_alt"] = m.group(1).upper()
+            data["track_alt"] = m.group(1).replace(".", "").upper()
             name = name.replace(m.group(), "")
 
         if not data.get("catalognum"):

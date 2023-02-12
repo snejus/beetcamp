@@ -25,6 +25,8 @@
   Bonus Track** or **Bonus Track 1**. These would previously end up in the artist name
   - Remove digital-only artifacts from the artist name too
 
+* `track_alt`: parse track alts like **B.1**
+
 
 ## [0.16.2] 2022-12-28
 

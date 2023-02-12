@@ -87,7 +87,7 @@ PATTERNS: Dict[str, Pattern[str]] = {
         re.I | re.VERBOSE,
     ),
     "track_alt": re.compile(
-        r"^([A-J]{1,3}[12]?\d|[AB]+(?=\W{2,}))(?:(?!-\w)[^\w(]|_)+", re.I + re.M
+        r"^([A-J]{1,3}[12]?\.?\d|[AB]+(?=\W{2,}))(?:(?!-\w)[^\w(]|_)+", re.I + re.M
     ),
     "vinyl_name": re.compile(r"[1-5](?= ?(xLP|LP|x))|single|double|triple", re.I),
     "clean_incl": re.compile(
