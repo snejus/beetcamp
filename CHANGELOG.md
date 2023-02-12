@@ -7,14 +7,16 @@
 * `album`
 
   - Remove **ft.** and alike
-    * **Album**<b style="background-color:#FF5F70;"> ft. Another Artist</b>
+    * **Album ~~ft. Another Artist~~**
   - Remove non-alphanumeric chars following **VA** in the beginning
-    * <b style="background-color:#FF5F70;">VA - </b>**Album**
+    * **VA ~~-~~ Album**
   - Remove **V/A** from the beginning, same as **VA**
-    * <b style="background-color:#FF5F70;">V/A </b>**Album**
+    * **~~V/A~~ Album**
   - Remove **by** and **vs**
-    * **Album**<b style="background-color:#FF5F70;"> by Albumartist</b>
-    * **Album**<b style="background-color:#FF5F70;"> by Albumartist vs Another Albumartist</b>
+    * **Album ~~by Albumartist~~**
+    * **Album ~~by Albumartist vs Another Albumartist~~**
+  - Do not remove albumartist when it's preceded by **of**
+    * **25 years of ~~Albumartist~~** -> **25 years of Albumartist**
 
 * `artist`: handle some edge cases of digital-only track title cleanup, like **Unreleased
   Bonus Track** or **Bonus Track 1**. These would previously end up in the artist name

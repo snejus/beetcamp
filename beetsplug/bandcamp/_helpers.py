@@ -216,7 +216,7 @@ class Helpers:
             r"Various Artists?\b(?! [A-z])( \d+)?"
         ]:
             name = re.sub(rf" *((compiled )?by|vs) {arg}", "", name)
-            if not re.search(rf"\w {arg} \w", name, re.I):
+            if not re.search(rf"\w {arg} \w|of {arg}", name, re.I):
                 name = re.sub(
                     rf"(^|[^'\])\w]|_|\b)+(?i:{arg})([^'(\[\w]|_|(\d+$))*", " ", name
                 ).strip()
