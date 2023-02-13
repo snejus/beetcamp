@@ -212,19 +212,22 @@ class Helpers:
         name = PATTERNS["ft"].sub(" ", name)
         name = re.sub(r"^\[(.*)\]$", r"\1", name)
 
-        for arg in [re.escape(arg) for arg in filter(op.truth, args)] + [
+        for arg in [re.escape(arg) for arg in filter(None, args)] + [
             r"Various Artists?\b(?! [A-z])( \d+)?"
         ]:
-            name = re.sub(rf" *((compiled )?by|vs) {arg}", "", name)
+            name = re.sub(rf" *(?i:(compiled )?by|vs|\W*split w) {arg}", "", name)
             if not re.search(rf"\w {arg} \w|of {arg}", name, re.I):
                 name = re.sub(
                     rf"(^|[^'\])\w]|_|\b)+(?i:{arg})([^'(\[\w]|_|(\d+$))*", " ", name
                 ).strip()
 
-        label_allow_pat = r"^{0}[^ ]|\({0}|\w {0} \w|\w {0}$".format(label)
-        if label and not re.search(label_allow_pat, name):
-            lpat = rf"(\W\W+{label}\W*|\W*{label}(\W\W+|$)|(^\W*{label}\W*$))(VA)?\d*"
-            name = re.sub(lpat, " ", name, re.I).strip()
+        if label:
+            label_allow_pat = r"^{0}[^ ]|\({0}|\w {0} \w|\w {0}$".format(label)
+            if label and not re.search(label_allow_pat, name):
+                lpat = (
+                    rf"(\W\W+{label}\W*|\W*{label}(\W\W+|$)|(^\W*{label}\W*$))(VA)?\d*"
+                )
+                name = re.sub(lpat, " ", name, re.I).strip()
 
         name = Helpers.clean_name(name)
         # uppercase EP and LP, and remove surrounding parens / brackets
@@ -275,7 +278,7 @@ class Helpers:
         unique_genres: ordset[str] = ordset()
         # expand badly delimited keywords
         split_kw = partial(re.split, r"[.] | #| - ")
-        for kw in it.chain(*map(split_kw, keywords)):
+        for kw in it.chain.from_iterable(map(split_kw, keywords)):
             # remove full stops and hashes and ensure the expected form of 'and'
             kw = re.sub("[.#]", "", str(kw)).replace("&", "and")
             if not is_label_name(kw) and (is_included(kw) or valid_for_mode(kw)):

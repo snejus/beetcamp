@@ -432,8 +432,7 @@ class Metaguru(Helpers):
             return self.official_album_name
 
         album = self.parsed_album_name or self.album_name
-        artists = [*self.tracks.full_artists, *self.tracks.artists]
-        artists.sort(key=len, reverse=True)
+        artists = sorted({*self.tracks.full_artists, *self.tracks.artists}, key=len, reverse=True)
         album = self.clean_album(album, self.catalognum, *artists, label=self.label)
 
         if album.startswith("("):
