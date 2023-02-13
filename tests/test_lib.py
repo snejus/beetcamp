@@ -6,6 +6,7 @@ import json
 import os
 from collections import Counter, defaultdict, namedtuple
 from functools import partial
+from glob import glob
 from itertools import groupby, starmap
 
 import pytest
@@ -24,9 +25,7 @@ from rich_tables.utils import (
 
 pytestmark = pytest.mark.lib
 
-BASE_DIR = "lib_tests"
-TEST_DIR = "dev"
-REFERENCE_DIR = "706c32e"
+LIB_TESTS_DIR = "lib_tests"
 JSONS_DIR = "jsons"
 
 IGNORE_FIELDS = {
@@ -45,14 +44,8 @@ IGNORE_FIELDS = {
 }
 DO_NOT_COMPARE = set()
 
-target_dir = os.path.join(BASE_DIR, TEST_DIR)
-compare_against = os.path.join(BASE_DIR, REFERENCE_DIR)
-if not os.path.exists(target_dir):
-    os.makedirs(target_dir)
 install(show_locals=True, extra_lines=8, width=int(os.environ.get("COLUMNS", 150)))
 console = make_console(stderr=True, record=True)
-
-testfiles = sorted(filter(lambda x: x.endswith("json"), os.listdir(JSONS_DIR)))
 
 
 Oldnew = namedtuple("Oldnew", ["old", "new", "diff"])
@@ -75,6 +68,55 @@ open = partial(open, encoding="utf-8")  # pylint: disable=redefined-builtin
 
 def _fmt_old(s: str, times: int) -> str:
     return (f"{times} x " if times > 1 else "") + wrap(s, "b s red")
+
+
+@pytest.fixture(scope="module")
+def base_dir(pytestconfig):
+    return os.path.join(LIB_TESTS_DIR, pytestconfig.getoption("base"))
+
+
+@pytest.fixture(scope="module")
+def target_dir(pytestconfig):
+    target = os.path.join(LIB_TESTS_DIR, pytestconfig.getoption("target"))
+    if not os.path.exists(target):
+        os.makedirs(target)
+    return target
+
+
+@pytest.fixture(scope="module")
+def config():
+    yield BandcampPlugin().config.flatten()
+
+
+@pytest.fixture(params=sorted(glob(os.path.join(JSONS_DIR, "*.json"))))
+def filename(request):
+    return os.path.basename(request.param)
+
+
+@pytest.fixture
+def base(base_dir, filename):
+    try:
+        with open(os.path.join(base_dir, filename)) as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return {}
+
+
+@pytest.fixture
+def target(target_dir, filename):
+    try:
+        with open(os.path.join(target_dir, filename)) as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return {}
+
+
+@pytest.fixture
+def guru(config, filename):
+    with open(os.path.join(JSONS_DIR, filename)) as f:
+        test_data = f.read()
+
+    return Metaguru.from_html(test_data, config)
 
 
 @pytest.fixture(scope="session")
@@ -104,11 +146,6 @@ def _report():
     console.print(Group(*(t for t in new_fails.values() if t.renderable.rows)))
 
 
-@pytest.fixture(scope="module")
-def config():
-    yield BandcampPlugin().config.flatten()
-
-
 def do_key(table, key: str, before, after, cached_value=None, album_name=None):
     if before == after and cached_value is None:
         return None
@@ -126,15 +163,15 @@ def do_key(table, key: str, before, after, cached_value=None, album_name=None):
         ]:
             diffs = []
             for field in TRACK_FIELDS:
-                old_val, new_val = old_track[field], new_track[field]
-                diff = make_difftext(str(old_val), str(new_val))
+                old, new = old_track[field], new_track[field]
+                diff = make_difftext(str(old), str(new))
                 diffs.append(diff)
-                if old_val != new_val:
-                    oldnew[field].append(Oldnew(old_val, new_val, str(diff)))
+                if old != new:
+                    oldnew[field].append(Oldnew(old, new, str(diff)))
             parts.append(diffs)
     else:
-        before, after = str(before), str(after)
-        difftext = make_difftext(before, after)
+        old, new = str(before), str(after)
+        difftext = make_difftext(old, new)
         parts = [[wrap(key, "b"), difftext]]
         if not key_fixed:
             oldnew[key].append(Oldnew(before, after, difftext))
@@ -185,10 +222,7 @@ def compare(old, new, cache) -> bool:
         if values[0] is None and values[1] is None:
             continue
         cache_key = f"{_id}_{key}"
-        try:
-            out = compare_key(key, *values, cached_value=cache.get(cache_key, None))
-        except Exception:
-            console.print_exception(show_locals=True)
+        out = compare_key(key, *values, cached_value=cache.get(cache_key, None))
         if values[0] != values[1]:
             cache.set(cache_key, out or "")
             fail = True
@@ -209,25 +243,10 @@ def compare(old, new, cache) -> bool:
     return True
 
 
-@pytest.fixture(params=testfiles)
-def file(request):
-    return request.param
-
-
-@pytest.fixture
-def guru(file, config):
-    with open(os.path.join(JSONS_DIR, file)) as f:
-        meta = f.read()
-
-    return Metaguru.from_html(meta, config)
-
-
 @pytest.mark.usefixtures("_report")
-def test_file(file, guru, cache: pytest.Cache):
+def test_file(base, target_dir, target, filename, guru, cache: pytest.Cache):
     DO_NOT_COMPARE.update({"album_id", "media", "mediums", "disctitle"})
-
-    target_file = os.path.join(target_dir, file)
-    if "_track_" in file:
+    if "_track_" in filename:
         new = guru.singleton
     else:
         albums = guru.albums
@@ -237,48 +256,11 @@ def test_file(file, guru, cache: pytest.Cache):
                 new = album
                 break
 
-    try:
-        with open(os.path.join(compare_against, file)) as f:
-            old = json.load(f)
-    except FileNotFoundError:
-        old = {}
-
     new.catalognum = " / ".join(x.catalognum for x in guru.albums if x.catalognum)
 
-    if new != old:
-        try:
-            with open(target_file) as f:
-                contents = json.load(f)
-        except FileNotFoundError:
-            contents = {}
-        if not contents:
-            with open(target_file, "w") as f:
-                json.dump(new, f, indent=2, sort_keys=True)
-
-    if not compare(old, new, cache):
-        pytest.fail(pytrace=False)
-
-
-@pytest.mark.usefixtures("_report")
-def test_media(file, guru, cache):
-    if "_track_" in file:
-        entities = [guru.singleton]
-    else:
-        entities = guru.albums
-
-    same = False
-    for new in entities:
-        file = (new.get("album_id") or new.track_id).replace("/", "_") + ".json"
-        target_file = os.path.join(target_dir, file)
-        with open(target_file, "w") as f:
+    if new not in (base, target) or not target:
+        with open(os.path.join(target_dir, filename), "w") as f:
             json.dump(new, f, indent=2, sort_keys=True)
 
-        try:
-            with open(os.path.join(compare_against, file)) as f:
-                old = json.load(f)
-        except FileNotFoundError:
-            old = {}
-        same = compare(old, new, cache)
-
-    if not same:
+    if not compare(base, new, cache):
         pytest.fail(pytrace=False)

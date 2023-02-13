@@ -86,7 +86,7 @@ def parse_and_sort_results(html: str, **kwargs: str) -> List[JSONDict]:
     return [{"index": i + 1, **r} for i, r in enumerate(results)]
 
 
-def get_bandcamp_url(url: str) -> str:
+def get_url(url: str) -> str:
     response = requests.get(url)
     response.raise_for_status()
     return unescape(response.text)
@@ -95,7 +95,7 @@ def get_bandcamp_url(url: str) -> str:
 def search_bandcamp(
     query: str = "",
     search_type: str = "",
-    get: Callable[[str], str] = get_bandcamp_url,
+    get: Callable[[str], str] = get_url,
     **kwargs: Any,
 ) -> List[JSONDict]:
     """Return a list with item JSONs of type search_type matching the query.

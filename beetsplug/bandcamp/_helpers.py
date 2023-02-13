@@ -68,10 +68,26 @@ PATTERNS: Dict[str, Pattern[str]] = {
     "split_artists": re.compile(r", - |, | (?:[x+/-]|//|vs|and)[.]? "),
     "meta": re.compile(r'.*"@id".*'),
     "ft": re.compile(
-        r" *((([\[(])| )f(ea)?t([. ]|uring)(?![^()]*mix)[^]\[()]+(?(3)[]\)])) *", re.I
+        r"""
+        [ ]*                     # all preceding space
+        ((?P<br>[\[(])|\b)       # bracket or word boundary
+        (ft|feat|featuring)[. ]  # one of the three ft variations
+        (
+            # when it does not start with a bracket, do not allow " - " in it, otherwise
+            # we may match full track name
+            (?(br)|(?!.*[ ]-[ ].*))
+            # anything but brackets or a slash, except for a slash preceded
+            # by a non-space (can be part of artist or title)
+            (?:[^]\[()/]|\S/)+
+        )
+        (?<!mix)\b    # does not end with "mix"
+        (?(br)[]\)])  # if it started with a bracket, it must end with a closing bracket
+        [ ]*          # trailing space
+    """,
+        re.I | re.VERBOSE,
     ),
     "track_alt": re.compile(
-        r"^([A-J]{1,3}[12]?\d|[AB]+(?=\W{2,}))(?:(?!-\w)[^\w(]|_)+", re.I + re.M
+        r"^([A-J]{1,3}[12]?\.?\d|[AB]+(?=\W{2,}))(?:(?!-\w)[^\w(]|_)+", re.I + re.M
     ),
     "vinyl_name": re.compile(r"[1-5](?= ?(xLP|LP|x))|single|double|triple", re.I),
     "clean_incl": re.compile(
@@ -85,7 +101,7 @@ rm_strings = [
     r"^Vol(ume)?\W*(?!.*\)$)\d+",
     r"\((digital )?album\)",
     r"\(single\)",
-    r"^va|va$|vinyl(-only)?|compiled by.*",
+    r"^v/?a\W*|va$|vinyl(-only)?|compiled by.*",
     r"free download|\([^()]*free(?!.*mix)[^()]*\)",
 ]
 
@@ -101,9 +117,11 @@ CLEAN_PATTERNS = [
     (re.compile(r"- Reworked"), "(Reworked)"),            # bye - Reworked   -> bye (Reworked)    # noqa
     (re.compile(rf"(\({_remix_pat})$", re.I), r"\1)"),    # bye - (Some Mix  -> bye - (Some Mix)  # noqa
     (re.compile(rf"- *({_remix_pat})$", re.I), r"(\1)"),  # bye - Some Mix   -> bye (Some Mix)    # noqa
-    (re.compile(r'(^|- )"([^"]+)"( \(|$)'), r"\1\2\3"),   # "bye" -> bye; hi - "bye" -> hi - bye  # noqa
+    (re.compile(r'(^|- )[“"]([^”"]+)[”"]( \(|$)'), r"\1\2\3"),   # "bye" -> bye; hi - "bye" -> hi - bye  # noqa
 ]
 # fmt: on
+keep_label_pat = r"^{0}[^ ]|\({0}|\w {0} \w|\w {0}$"
+clean_label_pat = r"(\W\W+{0}\W*|\W*{0}(\W\W+|$)|(^\W*{0}\W*$))(VA)?\d*"
 
 
 class Helpers:
@@ -193,20 +211,22 @@ class Helpers:
         Catalogue number and artists to be removed are given as args.
         """
         name = PATTERNS["clean_incl"].sub("", name)
+        name = PATTERNS["ft"].sub(" ", name)
         name = re.sub(r"^\[(.*)\]$", r"\1", name)
 
-        for arg in [re.escape(arg) for arg in filter(op.truth, args)] + [
+        for arg in [re.escape(arg) for arg in filter(None, args)] + [
             r"Various Artists?\b(?! [A-z])( \d+)?"
         ]:
-            if not re.search(rf"\w {arg} \w", name, re.I):
+            name = re.sub(rf" *(?i:(compiled )?by|vs|\W*split w) {arg}", "", name)
+            if not re.search(rf"\w {arg} \w|of {arg}", name, re.I):
                 name = re.sub(
                     rf"(^|[^'\])\w]|_|\b)+(?i:{arg})([^'(\[\w]|_|(\d+$))*", " ", name
                 ).strip()
 
-        label_allow_pat = r"^{0}[^ ]|\({0}|\w {0} \w|\w {0}$".format(label)
-        if label and not re.search(label_allow_pat, name):
-            lpat = rf"(\W\W+{label}\W*|\W*{label}(\W\W+|$)|(^\W*{label}\W*$))(VA)?\d*"
-            name = re.sub(lpat, " ", name, re.I).strip()
+        if label:
+            label = re.escape(label)
+            if not re.search(keep_label_pat.format(label), name):
+                name = re.sub(clean_label_pat.format(label), " ", name, re.I).strip()
 
         name = Helpers.clean_name(name)
         # uppercase EP and LP, and remove surrounding parens / brackets
@@ -257,7 +277,7 @@ class Helpers:
         unique_genres: ordset[str] = ordset()
         # expand badly delimited keywords
         split_kw = partial(re.split, r"[.] | #| - ")
-        for kw in it.chain(*map(split_kw, keywords)):
+        for kw in it.chain.from_iterable(map(split_kw, keywords)):
             # remove full stops and hashes and ensure the expected form of 'and'
             kw = re.sub("[.#]", "", str(kw)).replace("&", "and")
             if not is_label_name(kw) and (is_included(kw) or valid_for_mode(kw)):

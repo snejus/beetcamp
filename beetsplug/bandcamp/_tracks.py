@@ -17,33 +17,28 @@ if sys.version_info.minor > 7:
 else:
     from cached_property import cached_property  # type: ignore # pylint: disable=import-error # noqa
 
-DIGI_ONLY_PATTERNS = [
-    re.compile(r"^(DIGI(TAL)? ?[\d.]+|Bonus\W{2,})\W*"),
-    re.compile(
-        r"[^\w)]+(bandcamp[^-]+|digi(tal)?)(\W*(\W+|only|bonus|exclusive)\W*$)", re.I
-    ),
-    re.compile(r"[^\w)]+(bandcamp exclusive )?bonus( track)?(\]\W*|(\W*$))", re.I),
-]
-DELIMITER_PAT = re.compile(r" ([^\w&()+/[\] ]) ")
-ELP_ALBUM_PAT = re.compile(r"[- ]*\[([^\]]+ [EL]P)\]+")  # Title [Some Album EP]
-FT_PAT = re.compile(
-    r"""
-[ ]*                     # all preceding space
-((?P<br>[\[(])|\b)       # bracket or word boundary
-(ft|feat|featuring)[. ]  # one of the three ft variations
+digiwords = r"""
+    # must contain at least one of
+    (\W*(bandcamp|digi(tal)?|exclusive|bonus|bns|unreleased))+
+    # and may be followed by
+    (\W(track|only|tune))*
+    """
+DIGI_ONLY_PATTERN = re.compile(
+    rf"""
+\s*  # all preceding space
 (
-    # when it does not start with a bracket, do not allow " - " in it, otherwise
-    # we may match full track name
-    (?(br)|(?!.* - .*))
-    [^]\[()]+     # anything but brackets
+      (^{digiwords}[.:\d\s]+\s)     # begins with 'Bonus.', 'Bonus 1.' or 'Bonus :'
+ | [\[(]{digiwords}[\])]\W*         # delimited by brackets, '[Bonus]', '(Bonus) -'
+ |   [*]{digiwords}[*]              # delimited by asterisks, '*Bonus*'
+ |  ([ ]{digiwords}$)               # might not be delimited if at the end, '... Bonus'
 )
-(?<!mix)\b        # does not end with "mix"
-(?(br)[]\)])      # if it started with a bracket, it must end with a closing bracket
-[ ]*              # trailing space
+\s*  # all succeeding space
     """,
     re.I | re.VERBOSE,
 )
-TRACK_ALT_PAT = PATTERNS["track_alt"]
+DELIMITER_PAT = re.compile(r" ([^\w&()+/[\] ]) ")
+ELP_ALBUM_PAT = re.compile(r"[- ]*\[([^\]]+ [EL]P)\]+")  # Title [Some Album EP]
+TITLE_IN_QUOTES = re.compile(r'^(.+[^ -])[ -]+"([^"]+)"$')
 
 
 @dataclass
@@ -104,7 +99,7 @@ class Track:
 
         Return the clean name, and whether this track is digi-only.
         """
-        clean_name = reduce(lambda a, b: b.sub("", a), DIGI_ONLY_PATTERNS, name)
+        clean_name = DIGI_ONLY_PATTERN.sub("", name)
         return clean_name, clean_name != name
 
     @staticmethod
@@ -117,7 +112,7 @@ class Track:
         Otherwise, strip brackets and spaces and save it in the 'ft' field.
         """
         for _field in "_name", "json_artist":
-            m = FT_PAT.search(data[_field])
+            m = PATTERNS["ft"].search(data[_field])
             if m:
                 ft = m.groups()[-1].strip()
                 if ft not in data.get("remixer", ""):
@@ -135,15 +130,17 @@ class Track:
         # see https://gutterfunkuk.bandcamp.com/album/gutterfunk-all-subject-to-vibes-various-artists-lp  # noqa
         if name.endswith(label):
             name = name.replace(label, "").strip(" -")
-        data["json_artist"] = Helpers.clean_name(data["json_artist"])
 
-        name, data["digi_only"] = Track.clean_digi_name(name)
+        json_artist, artist_digi_only = Track.clean_digi_name(data["json_artist"])
+        name, name_digi_only = Track.clean_digi_name(name)
+        data["digi_only"] = name_digi_only or artist_digi_only
 
+        data["json_artist"] = Helpers.clean_name(json_artist)
         name = Helpers.clean_name(name).strip().lstrip("-")
 
-        m = TRACK_ALT_PAT.search(name)
+        m = PATTERNS["track_alt"].search(name)
         if m:
-            data["track_alt"] = m.group(1).upper()
+            data["track_alt"] = m.group(1).replace(".", "").upper()
             name = name.replace(m.group(), "")
 
         if not data.get("catalognum"):
@@ -161,8 +158,7 @@ class Track:
             data.update(remix=remix)
             name = name.replace(remix.delimited, "").rstrip()
 
-        m = ELP_ALBUM_PAT.search(name)
-        if m:
+        for m in ELP_ALBUM_PAT.finditer(name):
             data["album"] = m.group(1).replace('"', "")
             name = name.replace(m.group(), "")
 
@@ -251,7 +247,6 @@ class Track:
 
 @dataclass
 class Tracks(List[Track]):
-    TITLE_IN_QUOTES = re.compile(r'^(.+[^ -])[ -]+"([^"]+)"$')
     tracks: List[Track]
 
     def __iter__(self) -> Iterator[Track]:
@@ -280,14 +275,10 @@ class Tracks(List[Track]):
     def first(self) -> Track:
         return self.tracks[0]
 
-    @classmethod
-    def split_quoted_titles(cls, names: List[str]) -> List[str]:
-        if (
-            len(names) > 1
-            and cls.TITLE_IN_QUOTES.match(names[0])
-            and all(cls.TITLE_IN_QUOTES.match(n) for n in names)
-        ):
-            return [cls.TITLE_IN_QUOTES.sub(r"\1 - \2", n) for n in names]
+    @staticmethod
+    def split_quoted_titles(names: List[str]) -> List[str]:
+        if len(names) > 1 and all(TITLE_IN_QUOTES.match(n) for n in names):
+            return [TITLE_IN_QUOTES.sub(r"\1 - \2", n) for n in names]
         return names
 
     @staticmethod

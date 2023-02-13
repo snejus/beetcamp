@@ -113,22 +113,22 @@
       {
         "@type": "PropertyValue",
         "name": "image_height",
-        "value": 583
+        "value": 3158
       },
       {
         "@type": "PropertyValue",
         "name": "image_id",
-        "value": 29531619
+        "value": 31082756
       },
       {
         "@type": "PropertyValue",
         "name": "image_width",
-        "value": 583
+        "value": 3158
       }
     ],
     "description": "support a tiny acquarium on the tip of a K-hall ~)",
     "genre": "https://bandcamp.com/tag/electronic",
-    "image": "https://f4.bcbits.com/img/0029531619_10.jpg",
+    "image": "https://f4.bcbits.com/img/0031082756_10.jpg",
     "mainEntityOfPage": [
       {
         "@type": "WebPage",

@@ -1,3 +1,43 @@
+## [0.16.3] 2023-02-13
+
+[0.16.3]: https://github.com/snejus/beetcamp/releases/tag/0.16.3
+
+### Fixed
+
+* (#41) fix `re.error: nothing to repeat` caused by missing regex escape
+
+### Updated
+
+* `album`
+
+  - Remove **ft.** and alike
+    * **Album ~~ft. Another Artist~~**
+  - Remove non-alphanumeric chars following **VA** in the beginning
+    * **VA ~~-~~ Album**
+  - Remove **V/A** from the beginning, same as **VA**
+    * **~~V/A~~ Album**
+  - Remove **by** and **vs**
+    * **Album ~~by Albumartist~~**
+    * **Album ~~by Albumartist vs Another Albumartist~~**
+  - Remove Unicode quotes (**“”**) when they wrap the album name (same as quotes before)
+    * **~~“~~**Album**~~”~~**
+  - Remove **split w** when it precedes the albumartist
+    * **Album ~~Split W Albumartist~~**
+  - Keep albumartist when it's preceded by **of**
+    * **25 years of ~~Albumartist~~** -> **25 years of Albumartist**
+  - Parse album part information and place it within parentheses at the end of album name,
+    as per MB [title guidelines]
+    * **Album - Part 123** -> **Album (Part 123)**
+
+* `artist`: 
+  - Handle some edge cases of digital-only track title cleanup, like **Unreleased
+  Bonus Track** or **Bonus Track 1**. These would previously end up in the artist name
+  - Remove digital-only artifacts from the artist name too
+
+* `track_alt`: parse track alts like **B.1**
+
+[title guidelines]: https://musicbrainz.org/doc/Style/Titles#Extra_title_information
+
 ## [0.16.2] 2022-12-28
 
 [0.16.2]: https://github.com/snejus/beetcamp/releases/tag/0.16.2
@@ -8,7 +48,8 @@
 
 ### Updated
 
-* internal/build: make sure tests and linting runs on pull requests.
+* internal/build: make sure tests and linting run on pull requests.
+
 
 ## [0.16.1] 2022-12-17
 
