@@ -1,0 +1,569 @@
+{
+  "@context": "https://schema.org",
+  "@id": "https://gutterfunkuk.bandcamp.com/album/gutterfunk-all-subject-to-vibes-various-artists-lp",
+  "@type": "MusicAlbum",
+  "additionalProperty": [
+    {
+      "@type": "PropertyValue",
+      "name": "art_id",
+      "value": 141370490
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "featured_track_num",
+      "value": 6
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "license_name",
+      "value": "all_rights_reserved"
+    }
+  ],
+  "albumRelease": [
+    {
+      "@id": "https://gutterfunkuk.bandcamp.com/album/gutterfunk-all-subject-to-vibes-various-artists-lp",
+      "@type": [
+        "MusicRelease",
+        "Product"
+      ],
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "item_id",
+          "value": 744405404
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "item_type",
+          "value": "a"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "selling_band_id",
+          "value": 996126859
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_name",
+          "value": "Digital"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "art_id",
+          "value": 141370490
+        }
+      ],
+      "description": "Includes high-quality download in MP3, FLAC and more. Paying supporters also get unlimited streaming via the free Bandcamp app.",
+      "image": [
+        "https://f4.bcbits.com/img/a0141370490_10.jpg"
+      ],
+      "musicReleaseFormat": "DigitalFormat",
+      "name": "GutterFunk: All Subject To Vibes [Various Artists LP]"
+    },
+    {
+      "@id": "https://gutterfunkuk.bandcamp.com/album/gutterfunk-all-subject-to-vibes-various-artists-lp#b46313789",
+      "@type": [
+        "MusicRelease",
+        "Product"
+      ],
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "item_id",
+          "value": 46313789
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "item_type",
+          "value": "b"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "selling_band_id",
+          "value": 996126859
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_name",
+          "value": "Digital"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "art_id",
+          "value": 4103233153
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "is_bfd",
+          "value": true
+        }
+      ],
+      "image": [
+        "https://f4.bcbits.com/img/a4103233153_10.jpg"
+      ],
+      "musicReleaseFormat": "DigitalFormat",
+      "name": "full digital discography (44 releases)",
+      "offers": {
+        "@type": "Offer",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "bundle_size",
+            "value": 44
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "discount",
+            "value": 0.35
+          }
+        ],
+        "availability": "OnlineOnly",
+        "price": 92.3,
+        "priceCurrency": "GBP",
+        "priceSpecification": {
+          "minPrice": 92.3
+        },
+        "url": "https://gutterfunkuk.bandcamp.com/album/gutterfunk-all-subject-to-vibes-various-artists-lp#b46313789-buy"
+      }
+    },
+    {
+      "@id": "https://gutterfunkuk.bandcamp.com/track/diemantle-spirit-world",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://gutterfunkuk.bandcamp.com/track/sure-thing-special-love-nuff-pedals-remix-all-subject-to-vibes-lp-gutterfunk",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://gutterfunkuk.bandcamp.com/track/monkey-wrench-lakossa-all-subject-to-vibes-lp-gutterfunk",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://gutterfunkuk.bandcamp.com/track/addison-groove-tokyo-beat-all-subject-to-vibes-lp-gutterfunk",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://gutterfunkuk.bandcamp.com/track/fox-diemantle-more-all-subject-to-vibes-lp-gutterfunk",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://gutterfunkuk.bandcamp.com/track/dj-die-pinch-jungle-reflection-all-subject-to-vibes-lp-gutterfunk",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://gutterfunkuk.bandcamp.com/track/dismantle-bodied-all-subject-to-vibes-lp-gutterfunk",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://gutterfunkuk.bandcamp.com/track/dead-mans-chest-josimar-out-there-all-subject-to-vibes-lp-gutterfunk",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://gutterfunkuk.bandcamp.com/track/fixate-one-for-the-floor-all-subject-to-vibes-lp-gutterfunk",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://gutterfunkuk.bandcamp.com/track/watch-the-ride-dj-randall-dj-die-dismantle-skeematics-all-subject-to-vibes-lp-gutterfunk",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://gutterfunkuk.bandcamp.com/track/sure-thing-atoms-all-subject-to-vibes-lp-gutterfunk",
+      "@type": "MusicRelease"
+    }
+  ],
+  "albumReleaseType": "AlbumRelease",
+  "byArtist": {
+    "@id": "https://gutterfunkuk.bandcamp.com",
+    "@type": "MusicGroup",
+    "name": "GutterFunk"
+  },
+  "copyrightNotice": "All Rights Reserved",
+  "dateModified": "13 Dec 2019 08:17:36 GMT",
+  "datePublished": "13 Dec 2019 00:00:00 GMT",
+  "description": "DJ Die's GutterFunk imprint has gone from strength to strength over the past few years, the label's ethos of ‘good-music-first’, whilst not being restricted by genre, has permeated with artists and listeners alike. The labels tracks have found their way into the sets of a massively diverse set of DJs - from the likes of Gerd Janson, David Rodigan, dBridge and Shy FX.\r\n\r\nThe labels first compilation album, ‘GutterFunk: All Subject To Vibes’ acts as an introduction or indeed a reminder of what GutterFunk is all about. Style-wise we are presented with House, mutations of 140bpm, Broken Beat, Drum and Bass, Jungle and Soul. The compilation is encapsulated by an archive photo from the legendary photographer Mark Simmons, reflecting the curveball nature of the album, whilst also paying homage to Bristol values of ignoring rules and tradition, which is embedded into GutterFunk’s DNA. The artwork used for the album is a photo by Mark Simmons from his book 'Bristol Black & White'.\r\n\r\n The guest list on the album speaks for itself, showing GutterFunk’s penchant for high-quality artists: DJ Die, Pinch, Fox, Randall, Dismantle, Addison Groove and Fixate to name a few. Meanwhile the newly formed Watch The Ride project delivers the club anthem 'Skeematics', riding high after the massive success of the collab with D Double E and mysterious Soul/boogie outfit Sure Thing close off the album with the perfect last dance 'Atoms.'\r\n\r\nIn true GutterFunk fashion, the album was worked on with a fine-tooth comb, each detail in each track was agonised over by the artist and then by DJ Die and Dismantle emphasising the importance of the labels first compilation album. It's an album that prides itself on working as a complete listen when going from track 1 to track 11, whilst working as DJ tools when used as club tracks.\r\n\r\nA great way to end a big year for the label and celebrate the achievements of all the artists’ successes during 2019.",
+  "image": "https://f4.bcbits.com/img/a0141370490_10.jpg",
+  "keywords": [
+    "Bass",
+    "Boogie",
+    "Broken Beat",
+    "Electronic",
+    "House",
+    "Jungle",
+    "disco",
+    "drum & bass",
+    "dub",
+    "Bristol"
+  ],
+  "mainEntityOfPage": "https://gutterfunkuk.bandcamp.com/album/gutterfunk-all-subject-to-vibes-various-artists-lp",
+  "name": "GutterFunk: All Subject To Vibes [Various Artists LP]",
+  "numTracks": 11,
+  "publisher": {
+    "@id": "https://gutterfunkuk.bandcamp.com",
+    "@type": "MusicGroup",
+    "additionalProperty": [
+      {
+        "@type": "PropertyValue",
+        "name": "band_id",
+        "value": 996126859
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "has_any_downloads",
+        "value": true
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "has_policies",
+        "value": true
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_height",
+        "value": 500
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_id",
+        "value": 10127893
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_width",
+        "value": 500
+      }
+    ],
+    "description": "Bristol's musical pioneer DJ Die presents GutterFunk.\n\nBristol has always been a melting pot full of musical styles & GutterFunk stays true to the rich sonic heritage of the city. \n\nOur roots are in Bristol but our branches spread worldwide.",
+    "foundingLocation": {
+      "@type": "Place",
+      "name": "Bristol, UK"
+    },
+    "genre": "https://bandcamp.com/tag/electronic",
+    "image": "https://f4.bcbits.com/img/0010127893_10.jpg",
+    "mainEntityOfPage": [
+      {
+        "@type": "WebSite",
+        "name": "gutterfunk.co",
+        "url": "http://www.gutterfunk.co"
+      },
+      {
+        "@type": "WebPage",
+        "name": "SoundCloud",
+        "url": "https://soundcloud.com/gutterfunk"
+      },
+      {
+        "@type": "WebPage",
+        "name": "Facebook",
+        "url": "https://www.facebook.com/Gutterfunk"
+      }
+    ],
+    "name": "GutterFunk",
+    "subjectOf": [
+      {
+        "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "m"
+          }
+        ],
+        "name": "Music",
+        "url": "https://gutterfunkuk.bandcamp.com/music"
+      },
+      {
+        "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "p"
+          }
+        ],
+        "name": "Store",
+        "url": "https://gutterfunkuk.bandcamp.com/merch"
+      },
+      {
+        "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "c"
+          }
+        ],
+        "name": "community",
+        "url": "https://gutterfunkuk.bandcamp.com/community"
+      }
+    ]
+  },
+  "track": {
+    "@type": "ItemList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://gutterfunkuk.bandcamp.com/track/diemantle-spirit-world",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 1393548334
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H02M24S",
+          "mainEntityOfPage": "https://gutterfunkuk.bandcamp.com/track/diemantle-spirit-world",
+          "name": "DieMantle- Spirit World"
+        },
+        "position": 1
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://gutterfunkuk.bandcamp.com/track/sure-thing-special-love-nuff-pedals-remix-all-subject-to-vibes-lp-gutterfunk",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 3689168236
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H04M46S",
+          "mainEntityOfPage": "https://gutterfunkuk.bandcamp.com/track/sure-thing-special-love-nuff-pedals-remix-all-subject-to-vibes-lp-gutterfunk",
+          "name": "Sure Thing - Special Love (Nuff Pedals Remix) -  [All Subject To Vibes LP] - GutterFunk"
+        },
+        "position": 2
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://gutterfunkuk.bandcamp.com/track/monkey-wrench-lakossa-all-subject-to-vibes-lp-gutterfunk",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 1202933604
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H06M24S",
+          "mainEntityOfPage": "https://gutterfunkuk.bandcamp.com/track/monkey-wrench-lakossa-all-subject-to-vibes-lp-gutterfunk",
+          "name": "Monkey Wrench - Lakossa -  [All Subject To Vibes LP] - GutterFunk"
+        },
+        "position": 3
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://gutterfunkuk.bandcamp.com/track/addison-groove-tokyo-beat-all-subject-to-vibes-lp-gutterfunk",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 1204145258
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H03M44S",
+          "mainEntityOfPage": "https://gutterfunkuk.bandcamp.com/track/addison-groove-tokyo-beat-all-subject-to-vibes-lp-gutterfunk",
+          "name": "Addison Groove - Tokyo Beat -  [All Subject To Vibes LP] - GutterFunk"
+        },
+        "position": 4
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://gutterfunkuk.bandcamp.com/track/fox-diemantle-more-all-subject-to-vibes-lp-gutterfunk",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 2673057261
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H04M00S",
+          "mainEntityOfPage": "https://gutterfunkuk.bandcamp.com/track/fox-diemantle-more-all-subject-to-vibes-lp-gutterfunk",
+          "name": "Fox & DieMantle - More -  [All Subject To Vibes LP] - GutterFunk"
+        },
+        "position": 5
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://gutterfunkuk.bandcamp.com/track/dj-die-pinch-jungle-reflection-all-subject-to-vibes-lp-gutterfunk",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 3165824141
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H04M19S",
+          "mainEntityOfPage": "https://gutterfunkuk.bandcamp.com/track/dj-die-pinch-jungle-reflection-all-subject-to-vibes-lp-gutterfunk",
+          "name": "DJ Die & Pinch - Jungle Reflection -  [All Subject To Vibes LP] - GutterFunk"
+        },
+        "position": 6
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://gutterfunkuk.bandcamp.com/track/dismantle-bodied-all-subject-to-vibes-lp-gutterfunk",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 360864791
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H03M06S",
+          "mainEntityOfPage": "https://gutterfunkuk.bandcamp.com/track/dismantle-bodied-all-subject-to-vibes-lp-gutterfunk",
+          "name": "Dismantle - Bodied -  [All Subject To Vibes LP] - GutterFunk"
+        },
+        "position": 7
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://gutterfunkuk.bandcamp.com/track/dead-mans-chest-josimar-out-there-all-subject-to-vibes-lp-gutterfunk",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 3133724441
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H05M44S",
+          "mainEntityOfPage": "https://gutterfunkuk.bandcamp.com/track/dead-mans-chest-josimar-out-there-all-subject-to-vibes-lp-gutterfunk",
+          "name": "Dead Mans Chest & Josimar - Out There -  [All Subject To Vibes LP]- GutterFunk"
+        },
+        "position": 8
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://gutterfunkuk.bandcamp.com/track/fixate-one-for-the-floor-all-subject-to-vibes-lp-gutterfunk",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 366977680
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H06M26S",
+          "mainEntityOfPage": "https://gutterfunkuk.bandcamp.com/track/fixate-one-for-the-floor-all-subject-to-vibes-lp-gutterfunk",
+          "name": "Fixate - One For The Floor -  [All Subject To Vibes LP] - GutterFunk"
+        },
+        "position": 9
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://gutterfunkuk.bandcamp.com/track/watch-the-ride-dj-randall-dj-die-dismantle-skeematics-all-subject-to-vibes-lp-gutterfunk",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 3110645604
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H04M24S",
+          "mainEntityOfPage": "https://gutterfunkuk.bandcamp.com/track/watch-the-ride-dj-randall-dj-die-dismantle-skeematics-all-subject-to-vibes-lp-gutterfunk",
+          "name": "Watch The Ride (DJ Randall, DJ Die, Dismantle)  - Skeematics -  [All Subject To Vibes LP] - GutterFunk"
+        },
+        "position": 10
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://gutterfunkuk.bandcamp.com/track/sure-thing-atoms-all-subject-to-vibes-lp-gutterfunk",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 1590363110
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H07M34S",
+          "mainEntityOfPage": "https://gutterfunkuk.bandcamp.com/track/sure-thing-atoms-all-subject-to-vibes-lp-gutterfunk",
+          "name": "Sure Thing - Atoms - [All Subject To Vibes LP] - GutterFunk"
+        },
+        "position": 11
+      }
+    ],
+    "numberOfItems": 11
+  }
+}

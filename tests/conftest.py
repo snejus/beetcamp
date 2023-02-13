@@ -123,9 +123,6 @@ def release(request):
 
     filename = request.param + ".json"
     input_folder = path.join("tests", "json")
-    if filename.startswith("issues"):
-        input_folder = path.join(input_folder, "issues")
-        filename = filename.replace("issues_", "")
 
     with open(path.join(input_folder, filename), encoding="utf-8") as in_f:
         input_json = re.sub(r"\n *", "", in_f.read())

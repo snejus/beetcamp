@@ -24,7 +24,7 @@
     "name": "Matriark"
   },
   "copyrightNotice": "All Rights Reserved",
-  "dateModified": "05 Aug 2021 15:40:56 GMT",
+  "dateModified": "05 Feb 2023 11:59:40 GMT",
   "datePublished": "09 Nov 2020 00:00:00 GMT",
   "description": "mt004\n\nmastering by alexander salomonsen\n\n\nI'm very happy to announce Andrea's debut track. <3\n\nhttps://soundcloud.com/matriarkcph\nhttps://www.instagram.com/andreaapettersen/",
   "duration": "P00H07M01S",
@@ -74,10 +74,10 @@
         "offers": {
           "@type": "Offer",
           "availability": "OnlineOnly",
-          "price": 12,
-          "priceCurrency": "SEK",
+          "price": 7.85,
+          "priceCurrency": "DKK",
           "priceSpecification": {
-            "minPrice": 12
+            "minPrice": 7.85
           },
           "url": "https://mega-tech.bandcamp.com/track/arangel#t2868806546-buy"
         }

@@ -333,6 +333,39 @@
         "name": "Elandskloof Farm, Villiersdorp, South Africa",
         "startDate": "10 Mar 2023 00:00:00 GMT",
         "url": "https://www.songkick.com/festivals/91431-timeless/id/40573162-timeless-festival-2023?utm_source=1471&utm_medium=partner"
+      },
+      {
+        "@type": "MusicEvent",
+        "location": {
+          "@type": "MusicVenue",
+          "address": "Berlin, Germany",
+          "name": "Ritter Butzke"
+        },
+        "name": "Ritter Butzke, Berlin, Germany",
+        "startDate": "29 Apr 2023 00:00:00 GMT",
+        "url": "https://www.songkick.com/concerts/40812733-dominik-eulberg-at-ritter-butzke?utm_source=1471&utm_medium=partner"
+      },
+      {
+        "@type": "MusicEvent",
+        "location": {
+          "@type": "MusicVenue",
+          "address": "Amsterdam, Netherlands",
+          "name": "Komm schon Alter Festival"
+        },
+        "name": "Komm schon Alter Festival, Amsterdam, Netherlands",
+        "startDate": "27 May 2023 00:00:00 GMT",
+        "url": "https://www.songkick.com/festivals/2357334-komm-schon-alter/id/40780548-komm-schon-alter-festival-2023?utm_source=1471&utm_medium=partner"
+      },
+      {
+        "@type": "MusicEvent",
+        "location": {
+          "@type": "MusicVenue",
+          "address": "Berlin, Germany",
+          "name": "Ritter Butzke"
+        },
+        "name": "Ritter Butzke, Berlin, Germany",
+        "startDate": "07 Aug 2023 00:00:00 GMT",
+        "url": "https://www.songkick.com/concerts/40813746-dominik-eulberg-at-ritter-butzke?utm_source=1471&utm_medium=partner"
       }
     ],
     "foundingLocation": {
