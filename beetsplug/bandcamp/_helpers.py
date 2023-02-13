@@ -120,6 +120,8 @@ CLEAN_PATTERNS = [
     (re.compile(r'(^|- )[“"]([^”"]+)[”"]( \(|$)'), r"\1\2\3"),   # "bye" -> bye; hi - "bye" -> hi - bye  # noqa
 ]
 # fmt: on
+keep_label_pat = r"^{0}[^ ]|\({0}|\w {0} \w|\w {0}$"
+clean_label_pat = r"(\W\W+{0}\W*|\W*{0}(\W\W+|$)|(^\W*{0}\W*$))(VA)?\d*"
 
 
 class Helpers:
@@ -222,12 +224,9 @@ class Helpers:
                 ).strip()
 
         if label:
-            label_allow_pat = r"^{0}[^ ]|\({0}|\w {0} \w|\w {0}$".format(label)
-            if label and not re.search(label_allow_pat, name):
-                lpat = (
-                    rf"(\W\W+{label}\W*|\W*{label}(\W\W+|$)|(^\W*{label}\W*$))(VA)?\d*"
-                )
-                name = re.sub(lpat, " ", name, re.I).strip()
+            label = re.escape(label)
+            if not re.search(keep_label_pat.format(label), name):
+                name = re.sub(clean_label_pat.format(label), " ", name, re.I).strip()
 
         name = Helpers.clean_name(name)
         # uppercase EP and LP, and remove surrounding parens / brackets

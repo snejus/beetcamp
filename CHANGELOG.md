@@ -2,6 +2,10 @@
 
 [0.16.3]: https://github.com/snejus/beetcamp/releases/tag/0.16.3
 
+### Fixed
+
+* (#41) fix `re.error: nothing to repeat` caused by missing regex escape
+
 ### Updated
 
 * `album`
@@ -44,7 +48,7 @@
 
 ### Updated
 
-* internal/build: make sure tests and linting runs on pull requests.
+* internal/build: make sure tests and linting run on pull requests.
 
 
 ## [0.16.1] 2022-12-17
