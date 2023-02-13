@@ -163,15 +163,15 @@ def do_key(table, key: str, before, after, cached_value=None, album_name=None):
         ]:
             diffs = []
             for field in TRACK_FIELDS:
-                old_val, new_val = old_track[field], new_track[field]
-                diff = make_difftext(str(old_val), str(new_val))
+                old, new = old_track[field], new_track[field]
+                diff = make_difftext(str(old), str(new))
                 diffs.append(diff)
-                if old_val != new_val:
-                    oldnew[field].append(Oldnew(old_val, new_val, str(diff)))
+                if old != new:
+                    oldnew[field].append(Oldnew(old, new, str(diff)))
             parts.append(diffs)
     else:
-        before, after = str(before), str(after)
-        difftext = make_difftext(before, after)
+        old, new = str(before), str(after)
+        difftext = make_difftext(old, new)
         parts = [[wrap(key, "b"), difftext]]
         if not key_fixed:
             oldnew[key].append(Oldnew(before, after, difftext))
@@ -222,10 +222,7 @@ def compare(old, new, cache) -> bool:
         if values[0] is None and values[1] is None:
             continue
         cache_key = f"{_id}_{key}"
-        try:
-            out = compare_key(key, *values, cached_value=cache.get(cache_key, None))
-        except Exception:
-            console.print_exception(show_locals=True)
+        out = compare_key(key, *values, cached_value=cache.get(cache_key, None))
         if values[0] != values[1]:
             cache.set(cache_key, out or "")
             fail = True
@@ -261,7 +258,7 @@ def test_file(base, target_dir, target, filename, guru, cache: pytest.Cache):
 
     new.catalognum = " / ".join(x.catalognum for x in guru.albums if x.catalognum)
 
-    if (base != new and target != new) or not target:
+    if new not in (base, target) or not target:
         with open(os.path.join(target_dir, filename), "w") as f:
             json.dump(new, f, indent=2, sort_keys=True)
 
