@@ -1,4 +1,4 @@
-## [0.16.3] Unreleased
+## [0.16.3] 2023-02-13
 
 [0.16.3]: https://github.com/snejus/beetcamp/releases/tag/0.16.3
 
