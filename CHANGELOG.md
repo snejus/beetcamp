@@ -21,6 +21,9 @@
     * **Album ~~Split W Albumartist~~**
   - Keep albumartist when it's preceded by **of**
     * **25 years of ~~Albumartist~~** -> **25 years of Albumartist**
+  - Parse album part information and place it within parentheses at the end of album name,
+    as per MB [title guidelines]
+    * **Album - Part 123** -> **Album (Part 123)**
 
 * `artist`: 
   - Handle some edge cases of digital-only track title cleanup, like **Unreleased
@@ -29,6 +32,7 @@
 
 * `track_alt`: parse track alts like **B.1**
 
+[title guidelines]: https://musicbrainz.org/doc/Style/Titles#Extra_title_information
 
 ## [0.16.2] 2022-12-28
 

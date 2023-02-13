@@ -428,16 +428,31 @@ class Metaguru(Helpers):
 
     @cached_property
     def clean_album_name(self) -> str:
+        to_clean = {self.catalognum}
         if self.official_album_name:
-            return self.official_album_name
+            album = self.official_album_name
+        else:
+            album = self.parsed_album_name or self.album_name
+            to_clean |= set(self.tracks.full_artists)
+            to_clean |= set(self.tracks.artists)
 
-        album = self.parsed_album_name or self.album_name
-        artists = sorted({*self.tracks.full_artists, *self.tracks.artists}, key=len, reverse=True)
-        album = self.clean_album(album, self.catalognum, *artists, label=self.label)
+        part = ""
+        m = re.search(r"\W+(part [\w-]+)", self.album_name, re.I)
+        if m:
+            album = album.replace(m.group(), "")
+            part = f" ({m.group(1)})"
+        album = self.clean_album(
+            album, *sorted(to_clean, key=len, reverse=True), label=self.label
+        )
 
         if album.startswith("("):
             album = self.album_name
-        return album or self.eplp_album_comments or self.catalognum or self.album_name
+
+        album = album or self.eplp_album_comments or self.catalognum or self.album_name
+        if part:
+            album += part
+
+        return album
 
     @property
     def _common(self) -> JSONDict:
