@@ -38,6 +38,7 @@ DIGI_ONLY_PATTERN = re.compile(
 )
 DELIMITER_PAT = re.compile(r" ([^\w&()+/[\] ]) ")
 ELP_ALBUM_PAT = re.compile(r"[- ]*\[([^\]]+ [EL]P)\]+")  # Title [Some Album EP]
+TITLE_IN_QUOTES = re.compile(r'^(.+[^ -])[ -]+"([^"]+)"$')
 
 
 @dataclass
@@ -157,8 +158,7 @@ class Track:
             data.update(remix=remix)
             name = name.replace(remix.delimited, "").rstrip()
 
-        m = ELP_ALBUM_PAT.search(name)
-        if m:
+        for m in ELP_ALBUM_PAT.finditer(name):
             data["album"] = m.group(1).replace('"', "")
             name = name.replace(m.group(), "")
 
@@ -247,7 +247,6 @@ class Track:
 
 @dataclass
 class Tracks(List[Track]):
-    TITLE_IN_QUOTES = re.compile(r'^(.+[^ -])[ -]+"([^"]+)"$')
     tracks: List[Track]
 
     def __iter__(self) -> Iterator[Track]:
@@ -276,14 +275,10 @@ class Tracks(List[Track]):
     def first(self) -> Track:
         return self.tracks[0]
 
-    @classmethod
-    def split_quoted_titles(cls, names: List[str]) -> List[str]:
-        if (
-            len(names) > 1
-            and cls.TITLE_IN_QUOTES.match(names[0])
-            and all(cls.TITLE_IN_QUOTES.match(n) for n in names)
-        ):
-            return [cls.TITLE_IN_QUOTES.sub(r"\1 - \2", n) for n in names]
+    @staticmethod
+    def split_quoted_titles(names: List[str]) -> List[str]:
+        if len(names) > 1 and all(TITLE_IN_QUOTES.match(n) for n in names):
+            return [TITLE_IN_QUOTES.sub(r"\1 - \2", n) for n in names]
         return names
 
     @staticmethod
