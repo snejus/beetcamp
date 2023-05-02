@@ -102,6 +102,7 @@ rm_strings = [
     r"\((digital )?album\)",
     r"\(single\)",
     r"^v/?a\W*|va$|vinyl(-only)?|compiled by.*",
+    r"[\[(]presented by.*",
     r"free download|\([^()]*free(?!.*mix)[^()]*\)",
 ]
 

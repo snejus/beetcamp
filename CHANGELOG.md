@@ -3,6 +3,7 @@
 ### Updated
 
 * `catalognum`: do not treat **RD-9** (Behringer RD-9) as a catalognum
+* `title`: remove **Presented by...**
 
 
 ## [0.16.3] 2023-02-13

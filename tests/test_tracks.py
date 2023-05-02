@@ -108,6 +108,7 @@ def print_result(console, case, expected, result):
         ("Artist - ;) (Original Mix)", ("", "Artist", "", ";) (Original Mix)", ";)")),
         ("Artist - Title - Label", ("", "Artist", "", "Title", "Title")),
         ("Title - Label", ("", "", "", "Title", "Title")),
+        ("Artist - Title [Presented by Other]", ("", "Artist", "", "Title", "Title")),
     ],
 )
 def test_parse_track_name(name, expected, json_track, json_meta, console):
