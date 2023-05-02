@@ -53,6 +53,7 @@ pytestmark = pytest.mark.parsing
         ("", "", 'BAD001"', "", ""),
         ("", "", "Modularz 40", "Modularz", "Modularz 40"),
         ("", "", " catalogue number GOOD001 ", "", "GOOD001"),
+        ("", "", "RD-9", "", ""),
     ],
 )
 def test_parse_catalognum(album, disctitle, description, label, expected):

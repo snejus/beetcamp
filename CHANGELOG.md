@@ -1,3 +1,10 @@
+## Unreleased
+
+### Updated
+
+* `catalognum`: do not treat **RD-9** (Behringer RD-9) as a catalognum
+
+
 ## [0.16.3] 2023-02-13
 
 [0.16.3]: https://github.com/snejus/beetcamp/releases/tag/0.16.3
