@@ -39,6 +39,7 @@ DIGI_ONLY_PATTERN = re.compile(
 DELIMITER_PAT = re.compile(r" ([^\w&()+/[\] ]) ")
 ELP_ALBUM_PAT = re.compile(r"[- ]*\[([^\]]+ [EL]P)\]+")  # Title [Some Album EP]
 TITLE_IN_QUOTES = re.compile(r'^(.+[^ -])[ -]+"([^"]+)"$')
+NUMBER_PREFIX = re.compile(r"(^|- )\d{2,}\W* ")
 
 
 @dataclass
@@ -264,6 +265,7 @@ class Tracks(List[Track]):
 
         names = [i.get("name", "") for i in tracks]
         names = cls.split_quoted_titles(names)
+        names = cls.remove_number_prefix(names)
         delim = cls.track_delimiter(names)
         for track, name in zip(tracks, names):
             track["name_parts"] = {"clean": name}
@@ -279,6 +281,12 @@ class Tracks(List[Track]):
     def split_quoted_titles(names: List[str]) -> List[str]:
         if len(names) > 1 and all(TITLE_IN_QUOTES.match(n) for n in names):
             return [TITLE_IN_QUOTES.sub(r"\1 - \2", n) for n in names]
+        return names
+
+    @staticmethod
+    def remove_number_prefix(names: List[str]) -> List[str]:
+        if len(names) > 1 and all(NUMBER_PREFIX.search(n) for n in names):
+            return [NUMBER_PREFIX.sub(r"\1", n) for n in names]
         return names
 
     @staticmethod

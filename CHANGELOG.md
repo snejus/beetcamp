@@ -3,7 +3,14 @@
 ### Updated
 
 * `catalognum`: do not treat **RD-9** (Behringer RD-9) as a catalognum
-* `title`: remove **Presented by...**
+* `title`: 
+  - remove **Presented by...**
+    * **Title ~~[Presented by Artist]~~**
+    * **Title ~~(Presented by Artist)~~**
+  - remove preceding number prefix when all album tracks have it and there are two numbers
+    * **01 Title, Other Title**
+    * **1 Title, 2 Other Title**
+    * **~~01~~ Title, ~~02~~ Other Title**
 
 
 ## [0.16.3] 2023-02-13
