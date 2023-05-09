@@ -10,7 +10,11 @@
   - remove preceding number prefix when all album tracks have it and there are two numbers
     * **01 Title, Other Title**
     * **1 Title, 2 Other Title**
-    * **~~01~~ Title, ~~02~~ Other Title**
+    * **~~01~~ Title, ~~02~~ Other Title**.
+
+### Fixed
+
+* `album`: add many cases of missing **EP** and **LP** bits when they are found in the comments
 
 
 ## [0.16.3] 2023-02-13

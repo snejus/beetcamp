@@ -417,14 +417,19 @@ class Metaguru(Helpers):
 
         return ", ".join(sorted(genres)).strip() or None
 
-    @cached_property
-    def eplp_album_comments(self) -> str:
-        """Parse comments looking for an indication of an album in the following format
-        (Capital-case Album Name) (EP or LP)
-        and return the matching album name if found.
+    def check_eplp(self, album) -> str:
+        """Return album name followed by 'EP' or 'LP' if that's given in the comments.
+
+        When album is given, search for the album.
+        Otherwise, search for (Capital-case Album Name) (EP or LP) and return the match.
         """
-        m = re.search(r"((?!The|This)\b[A-Z][^ \n]+\b )+[EL]P", self.all_media_comments)
-        return m.group() if m else ""
+        if album:
+            look_for = re.escape(f"{album} ")
+        else:
+            look_for = r"((?!The|This)\b[A-Z][^ \n]+\b )+"
+
+        m = re.search(rf"{look_for}[EL]P", self.all_media_comments)
+        return m.group() if m else album
 
     @cached_property
     def clean_album_name(self) -> str:
@@ -448,7 +453,7 @@ class Metaguru(Helpers):
         if album.startswith("("):
             album = self.album_name
 
-        album = album or self.eplp_album_comments or self.catalognum or self.album_name
+        album = self.check_eplp(album) or self.catalognum or self.album_name
         if part:
             album += part
 
