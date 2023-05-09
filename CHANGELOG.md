@@ -1,5 +1,13 @@
 ## Unreleased
 
+### Added
+
+* `album`: handling unnamed (after removal of catalognum and artist names) split EPs that
+  have two artists. In accordance with [title guidelines], the EP is named by separating the artists
+  with a slash.
+
+* `albumtype`: the EP albumtype is recognized in the cases above.
+
 ### Updated
 
 * `catalognum`: do not treat **RD-9** (Behringer RD-9) as a catalognum

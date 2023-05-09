@@ -318,7 +318,9 @@ class Metaguru(Helpers):
     @cached_property
     def is_ep(self) -> bool:
         """Return whether the release is an EP."""
-        return self._search_albumtype("ep")
+        return self._search_albumtype("ep") or (
+            " / " in self.clean_album_name and len(self.tracks.artists) == 2
+        )
 
     def check_albumtype_in_descriptions(self) -> str:
         """Count 'lp', 'album' and 'ep' words in the release and media descriptions
@@ -453,7 +455,14 @@ class Metaguru(Helpers):
         if album.startswith("("):
             album = self.album_name
 
-        album = self.check_eplp(album) or self.catalognum or self.album_name
+        album = self.check_eplp(album)
+
+        if "split ep" in self.album_name.lower() or (
+            not album and len(self.tracks.artists) == 2
+        ):
+            album = " / ".join(self.tracks.artists)
+
+        album = album or self.catalognum or self.album_name
         if part:
             album += part
 
