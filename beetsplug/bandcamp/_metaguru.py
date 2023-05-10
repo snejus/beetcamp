@@ -444,10 +444,13 @@ class Metaguru(Helpers):
             to_clean |= set(self.tracks.artists)
 
         part = ""
-        m = re.search(r"\W+(part [\w-]+)", self.album_name, re.I)
+        m = re.search(r" *(\(\w+|\W) *part [\w-]+\)?", self.album_name, re.I)
         if m:
-            album = album.replace(m.group(), "")
-            part = f" ({m.group(1)})"
+            part = m.group()
+            album = album.replace(part, "")
+            if part.strip()[0].isalpha():
+                part = f", {part.strip()}"
+
         album = self.clean_album(
             album, *sorted(to_clean, key=len, reverse=True), label=self.label
         )

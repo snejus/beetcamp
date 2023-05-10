@@ -22,7 +22,12 @@
 
 ### Fixed
 
-* `album`: add many cases of missing **EP** and **LP** bits when they are found in the comments
+* `album`: 
+  - add many cases of missing **EP** and **LP** bits when they are found in the comments
+  - fix series numbering format: when it is delimited by some character, keep it.
+    Otherwise, separate it with a comma
+    - Album - Part 2
+    - Album Part 2 -> Album, Part 2
 
 
 ## [0.16.3] 2023-02-13
