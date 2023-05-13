@@ -28,7 +28,7 @@ def parse_title(source: str, title: str) -> JSONDict:
 
     index_pat = r"(?P<full_index>[\[# 0]+(?P<index>[\d.]+\b)\]?)"
     artist_pat = rf"(?P<artist>.+(?!{delim}))"
-    album_pat = rf"#*(?P<album>.+(?!{delim})\D)"
+    album_pat = rf"#*(?P<album>.+(?!{delim}))"
     label_pat = r"(?P<full_label> \[(?P<label>[^\]]+)\])"
 
     data: JSONDict = {"artist": source, "title": title}
@@ -48,12 +48,13 @@ def parse_title(source: str, title: str) -> JSONDict:
         rf"^{album_pat}{_delim}{artist_pat}{_delim}(Live )?{index_pat}$",
         # CRUDE MIX
         rf"^{album_pat} {index_pat}{_delim}{artist_pat}$",
+        # SACHSENTRANCE PODCAST
+        rf"^{artist_pat}{_delim}{album_pat} {index_pat}$",
     ):
         # print(pat)
         m = re.search(pat, title)
         if m:
             mdata = m.groupdict()
-            # print(mdata)
             data.update(mdata)
             full_index = data.pop("full_index", "")
             if full_index and title.startswith(full_index):
@@ -68,6 +69,10 @@ def parse_title(source: str, title: str) -> JSONDict:
     if "." not in index:
         index = index.lstrip("0")
     data["track"] = index
+
+    title, artist = data["title"], data["artist"]
+    if title and title.startswith(artist):
+        data["title"] = re.sub(rf"{artist}{_delim}", "", title)
 
     data["artist"] = ", ".join(Helpers.split_artists([data["artist"]]))
     return data
