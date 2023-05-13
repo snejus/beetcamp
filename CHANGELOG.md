@@ -30,6 +30,9 @@
     Otherwise, separate it with a comma
     - Album - Part 2
     - Album Part 2 -> Album, Part 2
+  - tackled some edge cases where label name wrongly stayed on the album
+    - **~~Label:~~ Album**
+    - **~~Label -~~ Album**
 
 
 ## [0.16.3] 2023-02-13

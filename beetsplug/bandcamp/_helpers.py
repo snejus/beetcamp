@@ -121,8 +121,6 @@ CLEAN_PATTERNS = [
     (re.compile(r'(^|- )[“"]([^”"]+)[”"]( \(|$)'), r"\1\2\3"),   # "bye" -> bye; hi - "bye" -> hi - bye  # noqa
 ]
 # fmt: on
-keep_label_pat = r"^{0}[^ ]|\({0}|\w {0} \w|\w {0}$"
-clean_label_pat = r"(\W\W+{0}\W*|\W*{0}(\W\W+|$)|(^\W*{0}\W*$))(VA)?\d*"
 
 
 class Helpers:
@@ -207,6 +205,23 @@ class Helpers:
         return name
 
     @staticmethod
+    def remove_label(name: str, label: str) -> str:
+        if not label:
+            return name
+
+        pattern = re.compile(
+            rf"""
+            \W*               # pick up any punctuation
+            (?<!\w[ ])        # cannot be preceded by a simple word
+            \b{re.escape(label)}\b
+            (?![ -][A-Za-z])  # cannot be followed by a word
+            [\W\d]*           # pick up any digits and punctuation
+        """,
+            flags=re.VERBOSE | re.IGNORECASE,
+        )
+        return pattern.sub(" ", name).strip()
+
+    @staticmethod
     def clean_album(name: str, *args: str, label: str = "") -> str:
         """Return clean album name.
         Catalogue number and artists to be removed are given as args.
@@ -224,12 +239,8 @@ class Helpers:
                     rf"(^|[^'\])\w]|_|\b)+(?i:{arg})([^'(\[\w]|_|(\d+$))*", " ", name
                 ).strip()
 
-        if label:
-            label = re.escape(label)
-            if not re.search(keep_label_pat.format(label), name):
-                name = re.sub(clean_label_pat.format(label), " ", name, re.I).strip()
+        name = Helpers.remove_label(Helpers.clean_name(name), label)
 
-        name = Helpers.clean_name(name)
         # uppercase EP and LP, and remove surrounding parens / brackets
         name = PATTERNS["tidy_eplp"].sub(lambda x: x.group(1).upper(), name)
         return name.strip(" /")
