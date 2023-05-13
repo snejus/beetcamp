@@ -22,6 +22,8 @@
 
 ### Fixed
 
+* All **zero width space** characters (`\u200b`) are now removed before parsing.
+
 * `album`: 
   - add many cases of missing **EP** and **LP** bits when they are found in the comments
   - fix series numbering format: when it is delimited by some character, keep it.

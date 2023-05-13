@@ -64,7 +64,7 @@ class Metaguru(Helpers):
     @classmethod
     def from_html(cls, html: str, config: Optional[JSONDict] = None) -> "Metaguru":
         try:
-            meta = re.search(PATTERNS["meta"], html).group()  # type: ignore[union-attr]
+            meta = re.search(PATTERNS["meta"], html.replace("\u200b", "")).group()  # type: ignore[union-attr]  # noqa
         except AttributeError as exc:
             raise AttributeError("Could not find release metadata JSON") from exc
         else:
