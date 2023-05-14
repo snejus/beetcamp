@@ -42,6 +42,7 @@
   - Tackled some edge cases where label name wrongly stayed on the album
     - **~~Label:~~ Album**
     - **~~Label -~~ Album**
+  - Remove **Bonus**
 
 
 ## [0.16.3] 2023-02-13
