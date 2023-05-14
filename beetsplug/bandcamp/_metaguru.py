@@ -97,8 +97,8 @@ class AlbumName:
         return album
 
     @cached_property
-    def album_sources(self) -> str:
-        return "\n".join({self.in_description, self.parsed, self.original} - {""})
+    def album_sources(self) -> List[str]:
+        return list(filter(None, [self.in_description, self.parsed, self.original]))
 
     @cached_property
     def name(self) -> str:
@@ -106,7 +106,7 @@ class AlbumName:
 
     @cached_property
     def series(self) -> str:
-        m = self.SERIES.search(self.album_sources)
+        m = self.SERIES.search("\n".join(self.album_sources))
         return m.group() if m else ""
 
     def standardize_series(self, album: str) -> str:
