@@ -47,8 +47,10 @@ class AlbumName:
     SERIES = re.compile(rf"{_series}[ ]?[A-Z\d.-]+\b")
     INCL = re.compile(r" *(\(?incl|\((inc|tracks|.*remix( |es)))([^)]+\)|.*)", re.I)
     EPLP = re.compile(r"\S*(?:Double )?(\b[EL]P\b)\S*", re.I)
-    # Vol.1 -> Vol. 1
-    format_vol = partial(re.compile(rf"({_series})0*(\d)", re.I).sub, r"\1 \2")
+    # Vol.01 -> Vol. 1
+    format_series = partial(re.compile(rf"({_series})0*(\d)", re.I).sub, r"\1 \2")
+    # Pt 1 -> Pt. 1
+    add_series_abbr_delim = partial(re.compile(r"(?i:\b(pt|vol)) ").sub, r"\1. ")
 
     meta: JSONDict
     description: str
@@ -130,7 +132,7 @@ class AlbumName:
                 # otherwise, ensure that it is delimited by a comma
                 album = re.sub(rf"(?<=\w)( {series}(?!\)))", r",\1", album)
 
-        return self.format_vol(album)
+        return self.add_series_abbr_delim(self.format_series(album))
 
     @staticmethod
     def remove_label(name: str, label: str) -> str:
