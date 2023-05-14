@@ -96,7 +96,9 @@ rm_strings = [
     r"^[EL]P( \d+)?",
     r"\((digital )?album\)",
     r"\(single\)",
-    r"^v/?a\W*|va$|vinyl(-only)?|compiled by.*",
+    r"^v/?a\W*|va$",
+    r"\Wvinyl\W|vinyl-only",
+    "compiled by.*",
     r"[\[(]presented by.*",
     r"free download|\([^()]*free(?!.*mix)[^()]*\)",
 ]
@@ -104,7 +106,7 @@ rm_strings = [
 _remix_pat = r"(?P<remix>((?P<remixer>[^])]+) )?\b((re)?mix|edit|bootleg)\b[^])]*)"
 # fmt: off
 CLEAN_PATTERNS = [
-    (re.compile(fr"(([\[(])|(^| ))\*?({'|'.join(rm_strings)})(?(2)[])]|( |$))", re.I), ""),       # noqa
+    (re.compile(rf"(([\[(])|(^| ))\*?({'|'.join(rm_strings)})(?(2)[])]|( |$))", re.I), ""),       # noqa
     (re.compile(r" -(\S)"), r" - \1"),                    # hi -bye          -> hi - bye
     (re.compile(r"(\S)- "), r"\1 - "),                    # hi- bye          -> hi - bye
     (re.compile(r"  +"), " "),                            # hi  bye          -> hi bye
