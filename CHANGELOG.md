@@ -19,6 +19,10 @@
 
 ### Updated
 
+* `album`: 
+  - Remove **+ Some remix**
+    - **Album ~~+ Someone's Remix~~**
+
 * `catalognum`: do not treat **RD-9** (Behringer RD-9) as a catalognum
 * `title`: 
   - Remove **Presented by...**
