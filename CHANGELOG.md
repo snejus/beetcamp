@@ -11,8 +11,8 @@
     - **Compilation - Volume 2**
     - Compilation Volume 2 -> **Compilation, Volume 2**
     - If series is in the beginning of the album, it is moved to the end
-      - Vol 2 - Compilation -> **Compilation, Vol 2**
-    - We also ensure the delimiter, space and removal of leading zeroes
+      - Vol. 2 - Compilation -> **Compilation, Vol 2**
+    - We also ensure the delimiter for abbreviations, space, and removal of leading zeroes
       - Vol02 -> **Vol. 2**
 
 * `albumtype`: the EP albumtype is recognized for split EPs.

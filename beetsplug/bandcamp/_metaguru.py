@@ -43,14 +43,11 @@ VA = "Various Artists"
 
 @dataclass
 class AlbumName:
-    _series = r"(?i:\b(?:part|volume|pt|vol)\b\.?)"
+    _series = r"(?i:\b(part|volume|pt|vol)\b\.?)"
     SERIES = re.compile(rf"{_series}[ ]?[A-Z\d.-]+\b")
+    SERIES_FMT = re.compile(rf"^(.+){_series} *0*")
     INCL = re.compile(r" *(\(?incl|\((inc|tracks|.*remix( |es)))([^)]+\)|.*)", re.I)
     EPLP = re.compile(r"\S*(?:Double )?(\b[EL]P\b)\S*", re.I)
-    # Vol.01 -> Vol. 1
-    format_series = partial(re.compile(rf"({_series})0*(\d)", re.I).sub, r"\1 \2")
-    # Pt 1 -> Pt. 1
-    add_series_abbr_delim = partial(re.compile(r"(?i:\b(pt|vol)) ").sub, r"\1. ")
 
     meta: JSONDict
     description: str
@@ -113,6 +110,21 @@ class AlbumName:
         m = self.SERIES.search("\n".join(self.album_sources))
         return m.group() if m else ""
 
+    @staticmethod
+    def format_series(m: re.Match[str]) -> str:
+        """Format the series part in an album.
+
+        * Ensure 'Vol' or 'Pt' is suffixed by '.'
+        * Ensure that it is followed by a space
+        * Leading zeroes from the number are already removed by 'SERIES_FMT'.
+        """
+        album, series = m.groups()
+        if album[0].isupper() and not series[0].isupper():
+            series = series.capitalize()
+
+        suffix = "." if len(series) in {2, 3} else ""
+        return f"{album}{series}{suffix} "
+
     def standardize_series(self, album: str) -> str:
         """Standardize 'Vol', 'Part' etc. format."""
         series = self.series
@@ -132,7 +144,7 @@ class AlbumName:
                 # otherwise, ensure that it is delimited by a comma
                 album = re.sub(rf"(?<=\w)( {series}(?!\)))", r",\1", album)
 
-        return self.add_series_abbr_delim(self.format_series(album))
+        return self.SERIES_FMT.sub(self.format_series, album)
 
     @staticmethod
     def remove_label(name: str, label: str) -> str:
