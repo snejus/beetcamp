@@ -43,9 +43,10 @@ VA = "Various Artists"
 
 @dataclass
 class AlbumName:
-    PART = re.compile(r"\b(?i:(part|volume|pt|vol)\b\.?)[ ]?[A-Z\d.-]+\b")
+    SERIES = re.compile(r"\b(?i:(part|volume|pt|vol)\b\.?)[ ]?[A-Z\d.-]+\b")
     INCL = re.compile(r" *(\(?incl|\((inc|tracks|.*remix( |es)))([^)]+\)|.*)", re.I)
     EPLP = re.compile(r"\S*(?:Double )?(\b[EL]P\b)\S*", re.I)
+    format_vol = partial(re.compile(r"(Vol\.)0*(\d)").sub, r"\1 \2")  # Vol.1 -> Vol. 1
 
     meta: JSONDict
     description: str
@@ -104,30 +105,30 @@ class AlbumName:
         return self.in_description or self.parsed or self.original
 
     @cached_property
-    def part(self) -> str:
-        m = self.PART.search(self.album_sources)
+    def series(self) -> str:
+        m = self.SERIES.search(self.album_sources)
         return m.group() if m else ""
 
-    def standardize_part(self, album: str) -> str:
+    def standardize_series(self, album: str) -> str:
         """Standardize 'Vol', 'Part' etc. format."""
-        part = self.part
-        if not part:
+        series = self.series
+        if not series:
             return album
 
-        # part was not given in the description, but found in the original name
-        if part.lower() not in album.lower():
-            if part[0].isalpha():
-                part = f", {part}"
+        if series.lower() not in album.lower():
+            # series was not given in the description, but found in the original name
+            if series[0].isalpha():
+                series = f", {series}"
 
-            return album + part
+            album += series
+        else:
+            # move from the beginning to the end of the album
+            album, moved = re.subn(rf"^({series})\W+(.+)", r"\2, \1", album)
+            if not moved:
+                # otherwise, ensure that it is delimited by a comma
+                album = re.sub(rf"(?<=\w)( {series}(?!\)))", r",\1", album)
 
-        # move the part from the beginning to the end of the album
-        album, moved = re.subn(rf"^({part})\W+(.+)", r"\2, \1", album)
-        if moved:
-            return album
-
-        # otherwise, ensure that it is delimited by a comma
-        return re.sub(rf"(?<=\w)( {part}(?!\)))", r",\1", album)
+        return self.format_vol(album)
 
     @staticmethod
     def remove_label(name: str, label: str) -> str:
@@ -202,7 +203,7 @@ class AlbumName:
         if album.startswith("("):
             album = self.name
 
-        album = self.check_eplp(self.standardize_part(album))
+        album = self.check_eplp(self.standardize_series(album))
 
         if "split ep" in album.lower() or (not album and len(artists) == 2):
             album = " / ".join(artists)
