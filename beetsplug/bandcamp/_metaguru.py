@@ -43,11 +43,12 @@ VA = "Various Artists"
 
 @dataclass
 class AlbumName:
-    SERIES = re.compile(r"\b(?i:(part|volume|pt|vol)\b\.?)[ ]?[A-Z\d.-]+\b")
+    _series = r"(?i:\b(?:part|volume|pt|vol)\b\.?)"
+    SERIES = re.compile(rf"{_series}[ ]?[A-Z\d.-]+\b")
     INCL = re.compile(r" *(\(?incl|\((inc|tracks|.*remix( |es)))([^)]+\)|.*)", re.I)
     EPLP = re.compile(r"\S*(?:Double )?(\b[EL]P\b)\S*", re.I)
     # Vol.1 -> Vol. 1
-    format_vol = partial(re.compile(r"(Vol\.)0*(\d)", re.I).sub, r"\1 \2")
+    format_vol = partial(re.compile(rf"({_series})0*(\d)", re.I).sub, r"\1 \2")
 
     meta: JSONDict
     description: str

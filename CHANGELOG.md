@@ -12,7 +12,7 @@
     - Compilation Volume 2 -> **Compilation, Volume 2**
     - If series is in the beginning of the album, it is moved to the end
       - Vol 2 - Compilation -> **Compilation, Vol 2**
-    - For **Vol** we also ensure the space and removal of leading zeroes
+    - We also ensure the space and removal of leading zeroes
       - Vol.02 -> **Vol. 2**
 
 * `albumtype`: the EP albumtype is recognized for split EPs.
