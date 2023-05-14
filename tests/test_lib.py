@@ -4,6 +4,7 @@ the maintainer's beets library.
 """
 import json
 import os
+import re
 from collections import Counter, defaultdict, namedtuple
 from functools import partial
 from glob import glob
@@ -125,6 +126,10 @@ def guru(config, filename):
     return Metaguru.from_html(test_data, config)
 
 
+def escape(string: str) -> str:
+    return string.replace("[", r"\[")
+
+
 @pytest.fixture(scope="session")
 def _report():
     yield
@@ -136,10 +141,14 @@ def _report():
         tab = new_table()
         for new, all_old in groupby(field_diffs, lambda x: x.new):
             tab.add_row(
-                " | ".join(starmap(_fmt_old, Counter(d.old for d in all_old).items())),
-                wrap(new, "b green"),
+                " | ".join(
+                    starmap(_fmt_old, Counter(escape(d.old) for d in all_old).items())
+                ),
+                wrap(escape(new), "b green"),
             )
-        cols.append(simple_panel(tab, title=f"{len(field_diffs)} [magenta]{field}[/]"))
+        cols.append(
+            simple_panel(tab, title=f"{len(field_diffs)} [magenta]{escape(field)}[/]")
+        )
 
     if cols:
         console.print("")
@@ -219,14 +228,14 @@ def do_field(table, key: str, before, after, cached_value=None, album_name=None)
             (dict(zip(TRACK_FIELDS, a)), dict(zip(TRACK_FIELDS, b)))
             for a, b in zip(before, after)
         ]:
-            diffs = []
+            field_diffs: List[str] = []
             for field in TRACK_FIELDS:
                 old, new = old_track[field], new_track[field]
-                diff = make_difftext(str(old), str(new))
-                diffs.append((key, diff))
+                diff = str(make_difftext(str(old), str(new)))
+                field_diffs.append(diff)
                 if old != new:
-                    oldnew[field].append(Oldnew(old, new, str(diff)))
-            parts.extend(diffs)
+                    oldnew[field].append(Oldnew(old, new, diff))
+            parts.append(("tracks", " | ".join(field_diffs)))
     else:
         old, new = str(before), str(after)
         difftext = make_difftext(old, new)
@@ -238,7 +247,7 @@ def do_field(table, key: str, before, after, cached_value=None, album_name=None)
         fixed.extend(parts)
         return None
 
-    table.add_rows(parts)
+    table.add_rows( parts)
     if cached_value is None:
         new_fails.extend(parts)
     else:
@@ -248,9 +257,9 @@ def do_field(table, key: str, before, after, cached_value=None, album_name=None)
 @pytest.fixture
 def difference(old, new, guru, cache: pytest.Cache, desc, entity_id) -> bool:
     table = new_table(padding=0, expand=False, collapse_padding=True)
-    if "album" in new and old["album"] != new["album"]:
-        new["original_album"] = new["album"]
-        old["original_album"] = guru.original_album
+    # if "album" in new and old["album"] != new["album"]:
+    #     new["original_album"] = new["album"]
+    #     old["original_album"] = guru.original_album
 
     compare_fields = (new.keys() | old.keys()) - DO_NOT_COMPARE
 
@@ -278,7 +287,7 @@ def difference(old, new, guru, cache: pytest.Cache, desc, entity_id) -> bool:
         console.print(
             border_panel(
                 table,
-                title=wrap(desc, "b"),
+                title=escape(wrap(desc, "b")),
                 expand=True,
                 subtitle=wrap(f"{entity_id} - {new['media']}", "dim"),
             )
