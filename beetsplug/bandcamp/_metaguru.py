@@ -46,7 +46,8 @@ class AlbumName:
     SERIES = re.compile(r"\b(?i:(part|volume|pt|vol)\b\.?)[ ]?[A-Z\d.-]+\b")
     INCL = re.compile(r" *(\(?incl|\((inc|tracks|.*remix( |es)))([^)]+\)|.*)", re.I)
     EPLP = re.compile(r"\S*(?:Double )?(\b[EL]P\b)\S*", re.I)
-    format_vol = partial(re.compile(r"(Vol\.)0*(\d)").sub, r"\1 \2")  # Vol.1 -> Vol. 1
+    # Vol.1 -> Vol. 1
+    format_vol = partial(re.compile(r"(Vol\.)0*(\d)", re.I).sub, r"\1 \2")
 
     meta: JSONDict
     description: str
