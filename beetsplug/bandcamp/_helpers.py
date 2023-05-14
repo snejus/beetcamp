@@ -90,15 +90,10 @@ PATTERNS: Dict[str, Pattern[str]] = {
         r"^([A-J]{1,3}[12]?\.?\d|[AB]+(?=\W{2,}))(?:(?!-\w)[^\w(]|_)+", re.I + re.M
     ),
     "vinyl_name": re.compile(r"[1-5](?= ?(xLP|LP|x))|single|double|triple", re.I),
-    "clean_incl": re.compile(
-        r" *(\(?incl|\((inc|tracks|.*remix( |es)))([^)]+\)|.*)", re.I
-    ),
-    "tidy_eplp": re.compile(r"\S*(?:Double )?(\b[EL]P\b)\S*", re.I),
 }
 rm_strings = [
     "limited edition",
     r"^[EL]P( \d+)?",
-    r"^Vol(ume)?\W*(?!.*\)$)\d+",
     r"\((digital )?album\)",
     r"\(single\)",
     r"^v/?a\W*|va$|vinyl(-only)?|compiled by.*",
@@ -203,47 +198,6 @@ class Helpers:
         for pat, repl in CLEAN_PATTERNS:
             name = pat.sub(repl, name).strip()
         return name
-
-    @staticmethod
-    def remove_label(name: str, label: str) -> str:
-        if not label:
-            return name
-
-        pattern = re.compile(
-            rf"""
-            \W*               # pick up any punctuation
-            (?<!\w[ ])        # cannot be preceded by a simple word
-            \b{re.escape(label)}\b
-            (?![ -][A-Za-z])  # cannot be followed by a word
-            [\W\d]*           # pick up any digits and punctuation
-        """,
-            flags=re.VERBOSE | re.IGNORECASE,
-        )
-        return pattern.sub(" ", name).strip()
-
-    @staticmethod
-    def clean_album(name: str, *args: str, label: str = "") -> str:
-        """Return clean album name.
-        Catalogue number and artists to be removed are given as args.
-        """
-        name = PATTERNS["clean_incl"].sub("", name)
-        name = PATTERNS["ft"].sub(" ", name)
-        name = re.sub(r"^\[(.*)\]$", r"\1", name)
-
-        for arg in [re.escape(arg) for arg in filter(None, args)] + [
-            r"Various Artists?\b(?! [A-z])( \d+)?"
-        ]:
-            name = re.sub(rf" *(?i:(compiled )?by|vs|\W*split w) {arg}", "", name)
-            if not re.search(rf"\w {arg} \w|of {arg}", name, re.I):
-                name = re.sub(
-                    rf"(^|[^'\])\w]|_|\b)+(?i:{arg})([^'(\[\w]|_|(\d+$))*", " ", name
-                ).strip()
-
-        name = Helpers.remove_label(Helpers.clean_name(name), label)
-
-        # uppercase EP and LP, and remove surrounding parens / brackets
-        name = PATTERNS["tidy_eplp"].sub(lambda x: x.group(1).upper(), name)
-        return name.strip(" /")
 
     @staticmethod
     def get_genre(keywords, config, label):

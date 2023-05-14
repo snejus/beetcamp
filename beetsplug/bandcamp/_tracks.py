@@ -335,8 +335,8 @@ class Tracks(List[Track]):
         return [j.name for j in self.tracks]
 
     @cached_property
-    def full_artists(self) -> List[str]:
-        """Return all unique unsplit main track artists."""
+    def original_artists(self) -> List[str]:
+        """Return all unique unsplit (original) main track artists."""
         return list(dict.fromkeys(j.artist for j in self.tracks))
 
     @property
@@ -365,7 +365,7 @@ class Tracks(List[Track]):
     @cached_property
     def all_artists(self) -> Set[str]:
         """Return all unique (1) track, (2) remix, (3) featuring artists."""
-        return self.other_artists | set(self.full_artists)
+        return self.other_artists | set(self.original_artists)
 
     @cached_property
     def artistitles(self) -> str:
@@ -379,6 +379,10 @@ class Tracks(List[Track]):
         if len(cats) == len(self) and len(set(cats)) == 1:
             return cats[0]
         return None
+
+    @cached_property
+    def albums_in_titles(self) -> Set[str]:
+        return {t.album for t in self if t.album}
 
     def adjust_artists(self, albumartist: str) -> None:
         """Handle some track artist edge cases.

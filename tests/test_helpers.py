@@ -1,6 +1,9 @@
 """Module for the helpers module tests."""
+from typing import List
+
 import pytest
 from beetsplug.bandcamp._helpers import Helpers
+from beetsplug.bandcamp._metaguru import AlbumName
 
 pytestmark = pytest.mark.parsing
 
@@ -119,7 +122,7 @@ def test_parse_catalognum(album, disctitle, description, label, expected):
     ],
 )
 def test_clean_name(name, extras, expected):
-    assert Helpers.clean_album(name, *extras, label="Label") == expected
+    assert AlbumName.clean(name, extras, label="Label") == expected
 
 
 @pytest.mark.parametrize(

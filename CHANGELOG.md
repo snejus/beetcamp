@@ -2,20 +2,26 @@
 
 ### Added
 
-* `album`: handling unnamed (after removal of catalognum and artist names) split EPs that
-  have two artists. In accordance with [title guidelines], the EP is named by separating the artists
-  with a slash.
+* `album`: 
+  - Handling unnamed (after removal of catalognum and artist names) split EPs that
+    have two artists. In accordance with [title guidelines], the EP is named by separating the artists
+    with a slash.
+  - Following the [title guidelines], the standard series format now applies to
+    **Vol/Vol.**, **Volume**, **Pt** too. Previously we only considered **Part**.
+    - **Compilation - Volume 2**
+    - Compilation Volume 2 -> **Compilation, Volume 2**
+    - Vol 2 - Compilation -> **Compilation, Vol 2**
 
-* `albumtype`: the EP albumtype is recognized in the cases above.
+* `albumtype`: the EP albumtype is recognized for split EPs.
 
 ### Updated
 
 * `catalognum`: do not treat **RD-9** (Behringer RD-9) as a catalognum
 * `title`: 
-  - remove **Presented by...**
+  - Remove **Presented by...**
     * **Title ~~[Presented by Artist]~~**
     * **Title ~~(Presented by Artist)~~**
-  - remove preceding number prefix when all album tracks have it and there are two numbers
+  - Remove preceding number prefix when all album tracks have it and there are two numbers
     * **01 Title, Other Title**
     * **1 Title, 2 Other Title**
     * **~~01~~ Title, ~~02~~ Other Title**.
@@ -25,12 +31,12 @@
 * All **zero width space** characters (`\u200b`) are now removed before parsing.
 
 * `album`: 
-  - add many cases of missing **EP** and **LP** bits when they are found in the comments
-  - fix series numbering format: when it is delimited by some character, keep it.
+  - Add many cases of missing **EP** and **LP** bits when they are found in the comments
+  - Fix series numbering format: when it is delimited by some character, keep it.
     Otherwise, separate it with a comma
-    - Album - Part 2
-    - Album Part 2 -> Album, Part 2
-  - tackled some edge cases where label name wrongly stayed on the album
+    - **Album - Part 2**
+    - Album Part 2 -> **Album, Part 2**
+  - Tackled some edge cases where label name wrongly stayed on the album
     - **~~Label:~~ Album**
     - **~~Label -~~ Album**
 
