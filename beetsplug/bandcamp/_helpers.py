@@ -102,7 +102,7 @@ rm_strings = [
     r"[\[(]presented by.*",
     r"free download|\([^()]*free(?!.*mix)[^()]*\)",
     "(\W|\W )bonus( \w+)*",
-    r"[+] (\w|[ ])+mix",
+    r"[+][\w ]+remix|\(with remixes\)",
 ]
 
 _remix_pat = r"(?P<remix>((?P<remixer>[^])]+) )?\b((re)?mix|edit|bootleg)\b[^])]*)"
@@ -118,6 +118,7 @@ CLEAN_PATTERNS = [
     (re.compile(rf"(\({_remix_pat})$", re.I), r"\1)"),    # bye - (Some Mix  -> bye - (Some Mix)  # noqa
     (re.compile(rf"- *({_remix_pat})$", re.I), r"(\1)"),  # bye - Some Mix   -> bye (Some Mix)    # noqa
     (re.compile(r'(^|- )[“"]([^”"]+)[”"]( \(|$)'), r"\1\2\3"),   # "bye" -> bye; hi - "bye" -> hi - bye  # noqa
+    (re.compile(r"\((?i:(the )?(remixes))\)"), r"\2"),    # Album (Remixes)  -> Album Remixes     # noqa
 ]
 # fmt: on
 

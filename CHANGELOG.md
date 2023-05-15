@@ -15,6 +15,8 @@
     - We also ensure the delimiter for abbreviations, space, and removal of leading zeroes
       - Vol02 -> **Vol. 2**
 
+  - Replace **(Remixes)** -> **Remixes**
+
 * `albumtype`: the EP albumtype is recognized for split EPs.
 
 ### Updated

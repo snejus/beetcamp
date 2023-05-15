@@ -131,7 +131,7 @@ class Track:
         name, name_digi_only = Track.clean_digi_name(name)
         data["digi_only"] = name_digi_only or artist_digi_only
 
-        data["json_artist"] = Helpers.clean_name(json_artist)
+        data["json_artist"] = Helpers.clean_name(json_artist) if json_artist else ""
         name = Helpers.clean_name(name).strip().lstrip("-")
 
         m = PATTERNS["track_alt"].search(name)

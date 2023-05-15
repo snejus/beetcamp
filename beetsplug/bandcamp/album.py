@@ -19,7 +19,7 @@ class AlbumName:
     _series = r"(?i:\b(part|volume|pt|vol)\b\.?)"
     SERIES = re.compile(rf"{_series}[ ]?[A-Z\d.-]+\b")
     SERIES_FMT = re.compile(rf"^(.+){_series} *0*")
-    INCL = re.compile(r" *(\(?incl|\((inc|tracks|.*remix( |es)))([^)]+\)|.*)", re.I)
+    INCL = re.compile(r"[^][\w]*inc[^()]+mix(es)?[^()-]*\W?", re.I)
     EPLP = re.compile(r"\S*(?:Double )?(\b[EL]P\b)\S*", re.I)
 
     meta: JSONDict
@@ -84,7 +84,7 @@ class AlbumName:
         return m.group() if m else ""
 
     @staticmethod
-    def format_series(m: re.Match[str]) -> str:
+    def format_series(m: re.Match) -> str:  # type: ignore[type-arg]
         """Format the series part in an album.
 
         * Ensure 'Vol' or 'Pt' is suffixed by '.'
@@ -142,7 +142,6 @@ class AlbumName:
 
         Catalogue number and artists to be removed are provided as 'to_clean'.
         """
-        name = cls.INCL.sub("", name)
         name = PATTERNS["ft"].sub(" ", name)
         name = re.sub(r"^\[(.*)\]$", r"\1", name)
 
@@ -157,6 +156,7 @@ class AlbumName:
                 ).strip()
 
         name = cls.remove_label(Helpers.clean_name(name), label)
+        name = cls.INCL.sub("", name).strip("- ")
 
         # uppercase EP and LP, and remove surrounding parens / brackets
         name = cls.EPLP.sub(lambda x: x.group(1).upper(), name)
