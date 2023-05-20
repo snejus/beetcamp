@@ -80,10 +80,14 @@ def test_unpack_props(vinyl_format):
     assert {"some_id", "item_type"} < set(result)
 
 
-def test_bundles_get_excluded(bundle_format, vinyl_format):
-    result = Helpers.get_media_formats([bundle_format, vinyl_format])
+def test_bundles_get_excluded(bundle_format, digital_format):
+    album_name = "Everyone Bundle"
+    bundle_album_name_format = {**digital_format, "name": album_name}
+
+    result = Helpers.get_media_formats([bundle_format, bundle_album_name_format])
+
     assert len(result) == 1
-    assert result[0].name == "Vinyl"
+    assert result[0].title == album_name
 
 
 @pytest.mark.parametrize(

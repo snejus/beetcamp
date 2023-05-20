@@ -306,7 +306,7 @@ class Helpers:
                 # musicReleaseFormat format is given or it is a USB
                 and ("musicReleaseFormat" in obj or obj["type_id"] == 5)
                 # it is not a vinyl bundle
-                and "bundle" not in obj["name"].lower()
+                and not (obj["item_type"] == "p" and "bundle" in obj["name"].lower())
             )
 
         formats = []

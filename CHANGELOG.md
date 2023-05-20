@@ -1,3 +1,13 @@
+## [0.17.1] 2023-05-20
+
+[0.17.1]: https://github.com/snejus/beetcamp/releases/tag/0.17.1
+
+### Fixed
+
+* (#44) fix an issue with bundle media formats exclusion logic which would wrongly exclude
+  albums that have **bundle** in their names
+
+
 ## [0.17.0] 2023-05-20
 
 [0.17.0]: https://github.com/snejus/beetcamp/releases/tag/0.17.0
