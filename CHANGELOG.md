@@ -1,4 +1,6 @@
-## Unreleased
+## [0.17.0] 2023-05-20
+
+[0.17.0]: https://github.com/snejus/beetcamp/releases/tag/0.17.0
 
 ### Added
 
