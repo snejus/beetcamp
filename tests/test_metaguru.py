@@ -48,18 +48,18 @@ def test_comments(descr, disctitle, creds, expected, json_meta, vinyl_format):
         ("Seoul, South Korea", "KR"),
     ],
 )
-def test_parse_country(name, expected, json_meta):
+def test_parse_country(beets_config, name, expected, json_meta):
     json_meta["publisher"].update(foundingLocation={"name": name})
-    assert Metaguru(json_meta).country == expected
+    assert Metaguru(json_meta, beets_config).country == expected
 
 
 @pytest.mark.parametrize(
     ("date", "expected"),
     [("08 Dec 2020 00:00:00 GMT", date(2020, 12, 8)), (None, None)],
 )
-def test_handles_missing_publish_date(date, expected, json_meta):
+def test_handles_missing_publish_date(beets_config, date, expected, json_meta):
     json_meta.update(datePublished=date)
-    assert Metaguru(json_meta).release_date == expected
+    assert Metaguru(json_meta, beets_config).release_date == expected
 
 
 def test_digi_only_option(json_track, json_meta, beets_config):

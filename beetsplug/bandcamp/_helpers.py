@@ -30,7 +30,7 @@ class MediaInfo(NamedTuple):
 
 
 CATALOGNUM_CONSTRAINT = r"""(?<![]/@-])(\b
-(?!\W|LC[ ]|VA[\d ]+|[EL]P\W|[^\n.]+[ ](?:20\d\d|VA[ \d]+)|(?i:vol|disc|number))
+(?!\W|LC[ ]|VA[\d ]+|[EL]P\W|[^\n.]+[ ](?:20\d\d|VA[ \d]+)|(?i:vol|disc|number|rd-9))
 {}
 \b(?!["%]))"""
 _cat_pat = CATALOGNUM_CONSTRAINT.format(
@@ -90,25 +90,25 @@ PATTERNS: Dict[str, Pattern[str]] = {
         r"^([A-J]{1,3}[12]?\.?\d|[AB]+(?=\W{2,}))(?:(?!-\w)[^\w(]|_)+", re.I + re.M
     ),
     "vinyl_name": re.compile(r"[1-5](?= ?(xLP|LP|x))|single|double|triple", re.I),
-    "clean_incl": re.compile(
-        r" *(\(?incl|\((inc|tracks|.*remix( |es)))([^)]+\)|.*)", re.I
-    ),
-    "tidy_eplp": re.compile(r"\S*(?:Double )?(\b[EL]P\b)\S*", re.I),
 }
 rm_strings = [
     "limited edition",
     r"^[EL]P( \d+)?",
-    r"^Vol(ume)?\W*(?!.*\)$)\d+",
     r"\((digital )?album\)",
     r"\(single\)",
-    r"^v/?a\W*|va$|vinyl(-only)?|compiled by.*",
+    r"^v/?a\W*|va$",
+    r"\Wvinyl\W|vinyl-only",
+    "compiled by.*",
+    r"[\[(]presented by.*",
     r"free download|\([^()]*free(?!.*mix)[^()]*\)",
+    "(\W|\W )bonus( \w+)*",
+    r"[+][\w ]+remix|\(with remixes\)",
 ]
 
 _remix_pat = r"(?P<remix>((?P<remixer>[^])]+) )?\b((re)?mix|edit|bootleg)\b[^])]*)"
 # fmt: off
 CLEAN_PATTERNS = [
-    (re.compile(fr"(([\[(])|(^| ))\*?({'|'.join(rm_strings)})(?(2)[])]|( |$))", re.I), ""),       # noqa
+    (re.compile(rf"(([\[(])|(^| ))\*?({'|'.join(rm_strings)})(?(2)[])]|( |$))", re.I), ""),       # noqa
     (re.compile(r" -(\S)"), r" - \1"),                    # hi -bye          -> hi - bye
     (re.compile(r"(\S)- "), r"\1 - "),                    # hi- bye          -> hi - bye
     (re.compile(r"  +"), " "),                            # hi  bye          -> hi bye
@@ -118,10 +118,9 @@ CLEAN_PATTERNS = [
     (re.compile(rf"(\({_remix_pat})$", re.I), r"\1)"),    # bye - (Some Mix  -> bye - (Some Mix)  # noqa
     (re.compile(rf"- *({_remix_pat})$", re.I), r"(\1)"),  # bye - Some Mix   -> bye (Some Mix)    # noqa
     (re.compile(r'(^|- )[“"]([^”"]+)[”"]( \(|$)'), r"\1\2\3"),   # "bye" -> bye; hi - "bye" -> hi - bye  # noqa
+    (re.compile(r"\((?i:(the )?(remixes))\)"), r"\2"),    # Album (Remixes)  -> Album Remixes     # noqa
 ]
 # fmt: on
-keep_label_pat = r"^{0}[^ ]|\({0}|\w {0} \w|\w {0}$"
-clean_label_pat = r"(\W\W+{0}\W*|\W*{0}(\W\W+|$)|(^\W*{0}\W*$))(VA)?\d*"
 
 
 class Helpers:
@@ -204,34 +203,6 @@ class Helpers:
         for pat, repl in CLEAN_PATTERNS:
             name = pat.sub(repl, name).strip()
         return name
-
-    @staticmethod
-    def clean_album(name: str, *args: str, label: str = "") -> str:
-        """Return clean album name.
-        Catalogue number and artists to be removed are given as args.
-        """
-        name = PATTERNS["clean_incl"].sub("", name)
-        name = PATTERNS["ft"].sub(" ", name)
-        name = re.sub(r"^\[(.*)\]$", r"\1", name)
-
-        for arg in [re.escape(arg) for arg in filter(None, args)] + [
-            r"Various Artists?\b(?! [A-z])( \d+)?"
-        ]:
-            name = re.sub(rf" *(?i:(compiled )?by|vs|\W*split w) {arg}", "", name)
-            if not re.search(rf"\w {arg} \w|of {arg}", name, re.I):
-                name = re.sub(
-                    rf"(^|[^'\])\w]|_|\b)+(?i:{arg})([^'(\[\w]|_|(\d+$))*", " ", name
-                ).strip()
-
-        if label:
-            label = re.escape(label)
-            if not re.search(keep_label_pat.format(label), name):
-                name = re.sub(clean_label_pat.format(label), " ", name, re.I).strip()
-
-        name = Helpers.clean_name(name)
-        # uppercase EP and LP, and remove surrounding parens / brackets
-        name = PATTERNS["tidy_eplp"].sub(lambda x: x.group(1).upper(), name)
-        return name.strip(" /")
 
     @staticmethod
     def get_genre(keywords, config, label):

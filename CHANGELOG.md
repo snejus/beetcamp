@@ -1,3 +1,58 @@
+## [0.17.0] 2023-05-20
+
+[0.17.0]: https://github.com/snejus/beetcamp/releases/tag/0.17.0
+
+### Added
+
+* `album`: 
+  - Handling unnamed (after removal of catalognum and artist names) split EPs that
+    have two artists. In accordance with [title guidelines], the EP is named by separating the artists
+    with a slash.
+  - Following the [title guidelines], the standard series format now applies to
+    **Vol/Vol.**, **Volume**, **Pt** too. Previously we only considered **Part**.
+    - **Compilation - Volume 2**
+    - Compilation Volume 2 -> **Compilation, Volume 2**
+    - If series is in the beginning of the album, it is moved to the end
+      - Vol. 2 - Compilation -> **Compilation, Vol 2**
+    - We also ensure the delimiter for abbreviations, space, and removal of leading zeroes
+      - Vol02 -> **Vol. 2**
+
+  - Replace **(Remixes)** -> **Remixes**
+
+* `albumtype`: the EP albumtype is recognized for split EPs.
+
+### Updated
+
+* `album`: 
+  - Remove **+ Some remix**
+    - **Album ~~+ Someone's Remix~~**
+
+* `catalognum`: do not treat **RD-9** (Behringer RD-9) as a catalognum
+* `title`: 
+  - Remove **Presented by...**
+    * **Title ~~[Presented by Artist]~~**
+    * **Title ~~(Presented by Artist)~~**
+  - Remove preceding number prefix when all album tracks have it and there are two numbers
+    * **01 Title, Other Title**
+    * **1 Title, 2 Other Title**
+    * **~~01~~ Title, ~~02~~ Other Title**.
+
+### Fixed
+
+* All **zero width space** characters (`\u200b`) are now removed before parsing.
+
+* `album`: 
+  - Add many cases of missing **EP** and **LP** bits when they are found in the comments
+  - Fix series numbering format: when it is delimited by some character, keep it.
+    Otherwise, separate it with a comma
+    - **Album - Part 2**
+    - Album Part 2 -> **Album, Part 2**
+  - Tackled some edge cases where label name wrongly stayed on the album
+    - **~~Label:~~ Album**
+    - **~~Label -~~ Album**
+  - Remove **Bonus**
+
+
 ## [0.16.3] 2023-02-13
 
 [0.16.3]: https://github.com/snejus/beetcamp/releases/tag/0.16.3

@@ -2,12 +2,13 @@
 from operator import attrgetter
 
 import pytest
-from beetsplug.bandcamp._tracks import Track, Tracks
+from beetsplug.bandcamp._tracks import Tracks
 from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
 
 pytestmark = pytest.mark.parsing
+_p = pytest.param
 
 
 def print_result(console, case, expected, result):
@@ -108,6 +109,7 @@ def print_result(console, case, expected, result):
         ("Artist - ;) (Original Mix)", ("", "Artist", "", ";) (Original Mix)", ";)")),
         ("Artist - Title - Label", ("", "Artist", "", "Title", "Title")),
         ("Title - Label", ("", "", "", "Title", "Title")),
+        ("Artist - Title [Presented by Other]", ("", "Artist", "", "Title", "Title")),
     ],
 )
 def test_parse_track_name(name, expected, json_track, json_meta, console):
@@ -126,47 +128,34 @@ def test_parse_track_name(name, expected, json_track, json_meta, console):
 
 
 @pytest.mark.parametrize(
-    ("name", "initial_catalognum", "expected_title", "expected_catalognum"),
+    ("names", "expected_names"),
     [
-        ("Artist - Title CAT001", "", "Title CAT001", ""),
-        ("Artist - Title [CAT001]", "INIT001", "Title [CAT001]", "INIT001"),
-        ("Artist - Title [CAT001]", "", "Title", "CAT001"),
+        _p(
+            ["Artist - Title", "Artist - Title"],
+            ["Artist - Title", "Artist - Title"],
+            id="no-prefixes",
+        ),
+        _p(
+            ["Artist - 01 Title"],
+            ["Artist - 01 Title"],
+            id="only-one-track",
+        ),
+        _p(
+            ["Artist - 01 Title", "Artist - Title"],
+            ["Artist - 01 Title", "Artist - Title"],
+            id="some-tracks-without-prefix",
+        ),
+        _p(
+            ["Artist - 1 Title", "Artist - 2. Title", "03 Title"],
+            ["Artist - 1 Title", "Artist - 2. Title", "03 Title"],
+            id="prefix-needs-to-be-two-numbers",
+        ),
+        _p(
+            ["Artist - 01 Title", "Artist - 02. Title", "03 Title"],
+            ["Artist - Title", "Artist - Title", "Title"],
+            id="removed-prefixes",
+        ),
     ],
 )
-def test_parse_catalognum_from_track_name(
-    name, initial_catalognum, expected_title, expected_catalognum, json_track
-):
-    json_track = {
-        **json_track["item"],
-        "position": json_track["position"],
-        "name": name,
-        "name_parts": {"catalognum": initial_catalognum, "clean": name},
-    }
-
-    track = Track.from_json(json_track, "-", "Label")
-    assert track.title == expected_title, print(track)
-    assert track.catalognum == expected_catalognum, print(track)
-
-
-@pytest.mark.parametrize(
-    ("name", "expected_digi_only", "expected_name"),
-    [
-        ("Artist - Track [Digital Bonus]", True, "Artist - Track"),
-        ("DIGI 11. Track", True, "Track"),
-        ("Digital Life", False, "Digital Life"),
-        ("Messier 33 (Bandcamp Digital Exclusive)", True, "Messier 33"),
-        ("33 (bandcamp exclusive)", True, "33"),
-        ("Tune (Someone's Remix) [Digital Bonus]", True, "Tune (Someone's Remix)"),
-        ("Hello - DIGITAL ONLY", True, "Hello"),
-        ("Hello *digital bonus*", True, "Hello"),
-        ("Only a Goodbye", False, "Only a Goodbye"),
-        ("Track *digital-only", True, "Track"),
-        ("DIGITAL 2. Track", True, "Track"),
-        ("Track (digital)", True, "Track"),
-        ("Bonus : Track", True, "Track"),
-        ("Bonus Rave Tool", False, "Bonus Rave Tool"),
-        ("TROPICOFRIO - DIGITAL DRIVER", False, "TROPICOFRIO - DIGITAL DRIVER"),
-    ],
-)
-def test_check_digi_only(name, expected_digi_only, expected_name):
-    assert Track.clean_digi_name(name) == (expected_name, expected_digi_only)
+def test_remove_number_prefix(names, expected_names):
+    assert Tracks.remove_number_prefix(names) == expected_names
