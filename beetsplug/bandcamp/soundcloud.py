@@ -42,7 +42,9 @@ def parse_title(source: str, title: str) -> JSONDict:
         rf"^{album_pat}{_delim}{index_pat}{_delim}{artist_pat}$",
         # DISSENTIENT.SPACE
         rf"^{index_pat}{_delim}{artist_pat}{delim}$",
-        # Ismcast, DUSKCAST, POSSESSION, DETECT
+        # Ismcast
+        rf"^{album_pat}{index_pat}{_delim}{artist_pat}",
+        # DUSKCAST, POSSESSION, DETECT
         rf"^{album_pat}{index_pat}{_delim}{artist_pat}({delim}.*$|{label_pat})",
         # Axxidcast
         rf"^{album_pat}{_delim}{artist_pat}{_delim}(Live )?{index_pat}$",
