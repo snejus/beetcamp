@@ -83,11 +83,9 @@ class BandcampRequestsHandler:
     def guru(self, url, attr):
         # type: (str, str) -> Optional[Union[TrackInfo, List[AlbumInfo]]]
         """Return Metaguru for the given URL."""
-        kwargs = {}
-        if hasattr(self, "config"):
-            kwargs["config"] = self.config.flatten()
+        config = self.config.flatten() if hasattr(self, "config") else DEFAULT_CONFIG
         try:
-            return getattr(Metaguru.from_html(self._get(url), **kwargs), attr)
+            return getattr(Metaguru.from_html(self._get(url), config=config), attr)
         except (KeyError, ValueError, AttributeError, IndexError):
             self._info("Failed obtaining {} from {}", attr, url)
         except Exception:  # pylint: disable=broad-except
