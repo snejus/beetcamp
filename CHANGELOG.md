@@ -1,12 +1,19 @@
+## [0.17.2] 2023-08-09
+
+### Fixed
+
+- (#50) Fix art fetching functionality which has essentially been disabled until now.
+
+[0.17.2]: https://github.com/snejus/beetcamp/releases/tag/0.17.2
+
 ## [0.17.1] 2023-05-20
 
 [0.17.1]: https://github.com/snejus/beetcamp/releases/tag/0.17.1
 
 ### Fixed
 
-* (#44) fix an issue with bundle media formats exclusion logic which would wrongly exclude
+- (#44) fix an issue with bundle media formats exclusion logic which would wrongly exclude
   albums that have **bundle** in their names
-
 
 ## [0.17.0] 2023-05-20
 
@@ -14,12 +21,14 @@
 
 ### Added
 
-* `album`: 
+- `album`:
+
   - Handling unnamed (after removal of catalognum and artist names) split EPs that
     have two artists. In accordance with [title guidelines], the EP is named by separating the artists
     with a slash.
   - Following the [title guidelines], the standard series format now applies to
     **Vol/Vol.**, **Volume**, **Pt** too. Previously we only considered **Part**.
+
     - **Compilation - Volume 2**
     - Compilation Volume 2 -> **Compilation, Volume 2**
     - If series is in the beginning of the album, it is moved to the end
@@ -29,29 +38,30 @@
 
   - Replace **(Remixes)** -> **Remixes**
 
-* `albumtype`: the EP albumtype is recognized for split EPs.
+- `albumtype`: the EP albumtype is recognized for split EPs.
 
 ### Updated
 
-* `album`: 
+- `album`:
+
   - Remove **+ Some remix**
     - **Album ~~+ Someone's Remix~~**
 
-* `catalognum`: do not treat **RD-9** (Behringer RD-9) as a catalognum
-* `title`: 
+- `catalognum`: do not treat **RD-9** (Behringer RD-9) as a catalognum
+- `title`:
   - Remove **Presented by...**
-    * **Title ~~[Presented by Artist]~~**
-    * **Title ~~(Presented by Artist)~~**
+    - **Title ~~[Presented by Artist]~~**
+    - **Title ~~(Presented by Artist)~~**
   - Remove preceding number prefix when all album tracks have it and there are two numbers
-    * **01 Title, Other Title**
-    * **1 Title, 2 Other Title**
-    * **~~01~~ Title, ~~02~~ Other Title**.
+    - **01 Title, Other Title**
+    - **1 Title, 2 Other Title**
+    - **~~01~~ Title, ~~02~~ Other Title**.
 
 ### Fixed
 
-* All **zero width space** characters (`\u200b`) are now removed before parsing.
+- All **zero width space** characters (`\u200b`) are now removed before parsing.
 
-* `album`: 
+- `album`:
   - Add many cases of missing **EP** and **LP** bits when they are found in the comments
   - Fix series numbering format: when it is delimited by some character, keep it.
     Otherwise, separate it with a comma
@@ -62,44 +72,44 @@
     - **~~Label -~~ Album**
   - Remove **Bonus**
 
-
 ## [0.16.3] 2023-02-13
 
 [0.16.3]: https://github.com/snejus/beetcamp/releases/tag/0.16.3
 
 ### Fixed
 
-* (#41) fix `re.error: nothing to repeat` caused by missing regex escape
+- (#41) fix `re.error: nothing to repeat` caused by missing regex escape
 
 ### Updated
 
-* `album`
+- `album`
 
   - Remove **ft.** and alike
-    * **Album ~~ft. Another Artist~~**
+    - **Album ~~ft. Another Artist~~**
   - Remove non-alphanumeric chars following **VA** in the beginning
-    * **VA ~~-~~ Album**
+    - **VA ~~-~~ Album**
   - Remove **V/A** from the beginning, same as **VA**
-    * **~~V/A~~ Album**
+    - **~~V/A~~ Album**
   - Remove **by** and **vs**
-    * **Album ~~by Albumartist~~**
-    * **Album ~~by Albumartist vs Another Albumartist~~**
+    - **Album ~~by Albumartist~~**
+    - **Album ~~by Albumartist vs Another Albumartist~~**
   - Remove Unicode quotes (**“”**) when they wrap the album name (same as quotes before)
-    * **~~“~~**Album**~~”~~**
+    - **~~“~~**Album**~~”~~**
   - Remove **split w** when it precedes the albumartist
-    * **Album ~~Split W Albumartist~~**
+    - **Album ~~Split W Albumartist~~**
   - Keep albumartist when it's preceded by **of**
-    * **25 years of ~~Albumartist~~** -> **25 years of Albumartist**
+    - **25 years of ~~Albumartist~~** -> **25 years of Albumartist**
   - Parse album part information and place it within parentheses at the end of album name,
     as per MB [title guidelines]
-    * **Album - Part 123** -> **Album (Part 123)**
+    - **Album - Part 123** -> **Album (Part 123)**
 
-* `artist`: 
+- `artist`:
+
   - Handle some edge cases of digital-only track title cleanup, like **Unreleased
-  Bonus Track** or **Bonus Track 1**. These would previously end up in the artist name
+    Bonus Track** or **Bonus Track 1**. These would previously end up in the artist name
   - Remove digital-only artifacts from the artist name too
 
-* `track_alt`: parse track alts like **B.1**
+- `track_alt`: parse track alts like **B.1**
 
 [title guidelines]: https://musicbrainz.org/doc/Style/Titles#Extra_title_information
 
@@ -109,12 +119,11 @@
 
 ### Fixed
 
-* (#40) Improve overall search reliability (#37) and handle alternative domain names, thanks @shagr4th.
+- (#40) Improve overall search reliability (#37) and handle alternative domain names, thanks @shagr4th.
 
 ### Updated
 
-* internal/build: make sure tests and linting run on pull requests.
-
+- internal/build: make sure tests and linting run on pull requests.
 
 ## [0.16.1] 2022-12-17
 
@@ -122,9 +131,9 @@
 
 ### Fixed
 
-* (#36) Fix bug with some URLs
-* (#37) Fix KeyError: 'url' / searching parsing recaptcha URLs
-* `title`:
+- (#36) Fix bug with some URLs
+- (#37) Fix KeyError: 'url' / searching parsing recaptcha URLs
+- `title`:
   - When album lists titles in the quoted form (**Artist "Title"**), split artist from the
     title correctly.
   - Address a long-standing issue with track names of the form **Title - Some Mix** where we
@@ -134,13 +143,12 @@
 
 ### Updated
 
-* `album`:
+- `album`:
   - Remove **Various Artists** (optionally followed by some numbers) from the album name
-* `catalognum`:
+- `catalognum`:
   - Handling some rare edge cases of both false positives and false negatives
-* `title`:
+- `title`:
   - Add missing closing parenthesis for mix/edit titles: **Title (Some Mix** -> **Title (Some Mix)**
-
 
 ## [0.16.0] 2022-08-19
 
@@ -148,32 +156,33 @@
 
 ### Fixed
 
-* (#34) Handle URLs like `https://bandcamp.materiacollective.com`, thanks @Serene-Arc
+- (#34) Handle URLs like `https://bandcamp.materiacollective.com`, thanks @Serene-Arc
 
 ### Removed
 
-* Dropped support for `python 3.6`.
+- Dropped support for `python 3.6`.
 
 ### Added
 
-* CLI search: index search results and add flag `-o, --open=INDEX` to open the given
+- CLI search: index search results and add flag `-o, --open=INDEX` to open the given
   result in the browser
 
 ### Updated
 
-* `album`:
+- `album`:
+
   - remove brackets if the entire album name is wrapped in them
   - remove **(Single)**
   - do not remove **label** from the front if it is not followed by a space
   - fix some false positives found in the comments when the album name is followed by
     **EP** or **LP**
 
-* `artist`: 
+- `artist`:
+
   - keep the original artist separator in releases with a single track
-  - replace ` // ` separator with `, ` in all cases
+  - replace `//` separator with `, ` in all cases
 
-* `release_date`: in rare cases when it is not found, use the _last modified_ date
-
+- `release_date`: in rare cases when it is not found, use the _last modified_ date
 
 ## [0.15.1] 2022-06-19
 
@@ -181,25 +190,24 @@
 
 ### Deprecations
 
-* Python 3.6 support will end with the next non-patch version update.
+- Python 3.6 support will end with the next non-patch version update.
 
 ### Fixed
 
-* During import, _albums_ can now again be obtained by their IDs. This functionality has
+- During import, _albums_ can now again be obtained by their IDs. This functionality has
   been broken since `v0.14.0`.
 
-* `album`: when album name contains **Album (Label something)**, the Label is kept in place
+- `album`: when album name contains **Album (Label something)**, the Label is kept in place
 
-* `albumartist`: remove catalogue number from the album artist when it's enclosed in
+- `albumartist`: remove catalogue number from the album artist when it's enclosed in
   brackets
 
-* `catalognum`: handle an edge case where several words from the description get assumed
+- `catalognum`: handle an edge case where several words from the description get assumed
   for the catalog number when **cat** and **numbers** are both found in the same line.
 
-* `genre`: exclude label name, unless it maps to a valid MusicBrainz genre
+- `genre`: exclude label name, unless it maps to a valid MusicBrainz genre
 
-* `title`: handle an edge case where one of the track names contains a utf-8 equivalent of a dash
-
+- `title`: handle an edge case where one of the track names contains a utf-8 equivalent of a dash
 
 ## [0.15.0] 2022-05-16
 
@@ -207,8 +215,10 @@
 
 ### Added
 
-* search: 
-  - you can now search from the command line: 
+- search:
+
+  - you can now search from the command line:
+
     ```sh
     beetcamp [ [-alt] QUERY | RELEASE-URL ]
     ```
@@ -218,7 +228,7 @@
     the first page, sorted by relevancy.
 
   - Flags **-a**, **-l** and **-t** can be used to search for **album**, **label/artist** or
-    **track** specifically. 
+    **track** specifically.
 
   - Run `beetcamp -h` to see more details. Example: searching for anything called **black sands**:
 
@@ -250,107 +260,113 @@
 
 ### Updated
 
-* search: 
+- search:
+
   - if `label` field is available, the plugin now takes it into account when it ranks
-    search results. 
+    search results.
   - `albumartist` field is not used to rank **compilations** anymore since some labels use
-    label name, some use the list of artists, and others a variation of **Various Artists** - 
+    label name, some use the list of artists, and others a variation of **Various Artists** -
     we cannot reliably tell. `label` is used instead.
 
-* `album`: track titles are read to see whether they contain the album name. There are
+- `album`: track titles are read to see whether they contain the album name. There are
   cases where titles have the following format: **Title [Album Name EP]**
 
-* `catalognum`: 
+- `catalognum`:
+
   - search track titles
   - do not match if preceded by **]** character
   - allow catalogue numbers like **o-ton 113**
   - allow a pair, if separated by a slash `/`
   - removed a pattern responsible for a fair bit of false positives
 
-* `albumtype`: 
+- `albumtype`:
+
   - to determine whether a release is a compilation, check comments for string
     **compilation**
   - check if all track titles are remixes; if so - include **remix** albumtype into
     `albumtypes`
 
-* `albumtypes`:
+- `albumtypes`:
   - **remix**: check for string **rmx** in album name
   - **compilation**: even if a release is an **ep**, check whether it's also a compilation
     and include it
 
 ### Fixed
 
-* search: fixed searching of singletons, where the plugin now actually performs search instead of 
+- search: fixed searching of singletons, where the plugin now actually performs search instead of
   immediately returning the currently selected singleton when option **E** was selected
   during the import process
 
-* album art fetching functionality has been broken for a while - it should now work fine
+- album art fetching functionality has been broken for a while - it should now work fine
 
-* `album`: simplified album name clean-up logic and thus fixed a couple of edge cases
+- `album`: simplified album name clean-up logic and thus fixed a couple of edge cases
 
-* `albumartist`: remove **, more** from the end
+- `albumartist`: remove **, more** from the end
 
-* `catalognum`: in rare cases, if the track list was given in the comments, one of the
+- `catalognum`: in rare cases, if the track list was given in the comments, one of the
   track titles would get assumed for the catalognum and subsequently cleaned up. From now
   on this will only apply if **all** track names include the match (usually delimited by
   brackets at the end)
 
-* `title`: 
+- `title`:
+
   - track parsing has been refactored, therefore many of previously removed bits from the
     title are now kept in place, such as bits in parentheses, double quotes (unless they
     wrap the entire title) or non-alphanumeric characters at the end
   - allow titles to start with an opening parentheses :exploding_head:
   - when the title is found as **(Some Remix) Title**, it becomes **Title (Some Remix)**
 
-* `artist`: 
+- `artist`:
+
   - featuring artists given in square brackets are now parsed correctly
   - de-duplication now ignores the case
   - when only one of the track artists in the release is missing, try splitting the name
     with **-** (no spaces) to account for bad formatting
 
-* `track_alt`: track alts with numbers above 6 (like **A7**) and letters **A** and **B**
+- `track_alt`: track alts with numbers above 6 (like **A7**) and letters **A** and **B**
   on their own are now extracted successfully
 
 ## [0.14.0] 2022-04-18
 
 ### Added
 
-* `media`: 
-  * previously, we picked the very first **Vinyl**, **CD** etc. media available and the
+- `media`:
+
+  - previously, we picked the very first **Vinyl**, **CD** etc. media available and the
     rest did not exist from the plugin's point of view. This is now updated: every media
     which maps to tracks in the same release will get returned, similar to Discogs and
-    MusicBrainz autotaggers. 
+    MusicBrainz autotaggers.
 
     Therefore, `bandcamp.preferred_media` configuration option does not have any effect
     anymore and it can be safely removed from your configuration. Instead, use the global
     `preferred.media` option and adjust distance weights correspondingly.
 
-  * If **Vinyl** format track list is found in its description, then `track_alt`,
+  - If **Vinyl** format track list is found in its description, then `track_alt`,
     `medium`, `medium_index` and `medium_total` are adjusted accordingly.
 
-
-* new field `albumtypes` which contains secondary release types, such as **remix**,
+- new field `albumtypes` which contains secondary release types, such as **remix**,
   **live**, **soundtrack** etc. Applies to `beets >= 1.5`
 
 ### Updated
 
-* internal: Tests clean up: pytest fixture-spaghetti has been replaced with JSON files that
+- internal: Tests clean up: pytest fixture-spaghetti has been replaced with JSON files that
   contain the expected output data.
 
-* `albumtype`: some accuracy improvements
-  * For **Vinyl** media, all `disctitle`s are checked for **EP** or **LP** presence
-  * **EP**, **LP** and **album** words in release and media descriptions are counted and decide the album type
-  * If **compilation** or **best of** or **anniversary** is present in the album name, then
-    the release is a compilation
-  * A single album with an original track and several remixes now has **album** albumtype, not **single**
+- `albumtype`: some accuracy improvements
 
-* `albumartist`: every release with more than 3 artists will now have **Various Artists** (or `va_name`) albumartist
+  - For **Vinyl** media, all `disctitle`s are checked for **EP** or **LP** presence
+  - **EP**, **LP** and **album** words in release and media descriptions are counted and decide the album type
+  - If **compilation** or **best of** or **anniversary** is present in the album name, then
+    the release is a compilation
+  - A single album with an original track and several remixes now has **album** albumtype, not **single**
+
+- `albumartist`: every release with more than 3 artists will now have **Various Artists** (or `va_name`) albumartist
 
 ### Fixed
 
-* `album`: 
-  * Remove **EP** or **LP** from the beginning more reliably
-  * Only remove **VA** if album name starts or ends with it
+- `album`:
+  - Remove **EP** or **LP** from the beginning more reliably
+  - Only remove **VA** if album name starts or ends with it
 
 [0.14.0]: https://github.com/snejus/beetcamp/releases/tag/0.14.0
 
@@ -358,7 +374,7 @@
 
 ### Fixed
 
-* Fixed importing of officially purchased Bandcamp tracks which have **Visit {label_url}** in their `COMMENT` field (at least for FLAC files) when the album name does not contain a single ASCII alphanumeric character. We here use the album name to guess the release url, and in this case the plugin has previously been failing to take into account this edge case and failed the import process immediately.
+- Fixed importing of officially purchased Bandcamp tracks which have **Visit {label_url}** in their `COMMENT` field (at least for FLAC files) when the album name does not contain a single ASCII alphanumeric character. We here use the album name to guess the release url, and in this case the plugin has previously been failing to take into account this edge case and failed the import process immediately.
 
 [0.13.2]: https://github.com/snejus/beetcamp/releases/tag/0.13.2
 
@@ -366,7 +382,7 @@
 
 ### Fixed
 
-* search: changes introduced in [0.13.0] broke searching functionality for `python 3.6-3.8` due to changes in the built-in `difflib` library. This has been fixed and tests for the searching logic are now added. Thanks to @emanuele-virgillito for reporting the issue.
+- search: changes introduced in [0.13.0] broke searching functionality for `python 3.6-3.8` due to changes in the built-in `difflib` library. This has been fixed and tests for the searching logic are now added. Thanks to @emanuele-virgillito for reporting the issue.
 
 [0.13.1]: https://github.com/snejus/beetcamp/releases/tag/0.13.1
 
@@ -409,32 +425,34 @@
 - `label`: strip quotes if sourced from the description
 
 - `artist`/`albumartist`: remove remixers from artists fields
+
   ```yaml
   title: Choone (Some Remix) -> title: Choone (Some Remix)
   artist: Artist, Some       -> artist: Artist
   ```
 
 - `artist`/`title`: **featuring** artists are moved from `title` to the `artist` field
-    ```yaml
-    artist: Artist        -> Artist ft. Some
-    title: Title ft. Some -> Title
-    ```
+
+  ```yaml
+  artist: Artist        -> Artist ft. Some
+  title: Title ft. Some -> Title
+  ```
 
 - `singleton`: do not populate `albumstatus`, `index`, `medium_index`, `medium`,
   `medium_total` fields
 
 ### Fixed
 
-- `artist` / `track_alt`: 
+- `artist` / `track_alt`:
+
   - artists like **B2** and **A4** are not anymore assumed to be `track_alt` when
-  `track_alt` is not present in any other track in that release.
+    `track_alt` is not present in any other track in that release.
 
   ```yaml
   # name: B2 - Some Title
   title: Some Title -> Some Title
   track_alt: B2     ->
-  artist:           -> B2
-
+  artist: -> B2
   ```
 
   - and other way around, `track_alt` like **A** or **B** are correctly parsed if
