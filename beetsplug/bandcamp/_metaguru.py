@@ -385,7 +385,7 @@ class Metaguru(Helpers):
 
     @cached_property
     def genre(self) -> Optional[str]:
-        kws: Iterable[str] = map(str.lower, self.meta["keywords"])
+        kws: Iterable[str] = map(str.lower, self.meta.get("keywords", []))
         if self.style:
             exclude_style = partial(op.ne, self.style.lower())
             kws = filter(exclude_style, kws)
