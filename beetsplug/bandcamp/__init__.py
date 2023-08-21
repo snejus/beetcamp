@@ -20,6 +20,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import logging
 import re
 from functools import lru_cache, partial
+from itertools import chain
 from html import unescape
 from operator import itemgetter, truth
 from typing import TYPE_CHECKING, Any, Dict, Iterable, List, Optional, Sequence, Union
@@ -204,8 +205,7 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
 
         search = {"query": album, "artist": artist, "label": label, "search_type": "a"}
         results = map(itemgetter("url"), self._search(search))
-        for res in filter(truth, map(self.get_album_info, results)):
-            yield from res or [None]
+        yield from chain.from_iterable(filter(truth, map(self.get_album_info, results)))
 
     def item_candidates(self, item, artist, title):
         # type: (library.Item, str, str) -> Iterable[TrackInfo]
