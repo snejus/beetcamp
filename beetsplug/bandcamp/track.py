@@ -31,10 +31,7 @@ DIGI_ONLY_PATTERN = re.compile(
     """,
     re.I | re.VERBOSE,
 )
-DELIMITER_PAT = re.compile(r" ([^\w&()+/[\] ]) ")
 ELP_ALBUM_PAT = re.compile(r"[- ]*\[([^\]]+ [EL]P)\]+")  # Title [Some Album EP]
-TITLE_IN_QUOTES = re.compile(r'^(.+[^ -])[ -]+"([^"]+)"$')
-NUMBER_PREFIX = re.compile(r"(^|- )\d{2,}\W* ")
 
 
 @dataclass
