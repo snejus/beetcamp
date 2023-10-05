@@ -1,3 +1,9 @@
+## Unreleased
+
+### Fixed
+
+- Do not fail parsing a release without any keywords, for example https://amniote-editions.bandcamp.com/album/ae-mj-0011-the-collective-capsule-vol-1
+
 ## [0.17.2] 2023-08-09
 
 ### Fixed
