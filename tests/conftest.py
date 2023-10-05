@@ -1,4 +1,5 @@
 """Pytest fixtures for tests."""
+
 import json
 import os
 import re
@@ -38,7 +39,7 @@ def pytest_addoption(parser):
 def pytest_terminal_summary(terminalreporter, exitstatus, config):
     base = config.getoption("base")
     target = config.getoption("target")
-    terminalreporter.write(f"---\nCompared {target} against {base}\n---")
+    terminalreporter.write(f"--- Compared {target} against {base} ---\n")
 
 
 @pytest.fixture(scope="session")

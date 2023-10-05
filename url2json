@@ -4,12 +4,12 @@
 #
 #Parse given bandcamp url and print the resulting json. By default,
 #it outputs an indented/prettified json string which is used by the tests.
-#Use 
+#Use
 #
-#-a to show all fields, 
+#-a to show all fields,
 #-h (human) to include colors and to page it
 #-s to save the initial Bandcamp JSON to ./jsons folder in the repo root
-#-u to update the json data in ./tests/json. 
+#-u to update the json data in ./tests/json.
 #Ensure you have curl, jq and git on your system.
 #
 # Examples
@@ -26,17 +26,24 @@
 ALL_FIELDS=0
 HUMAN=0
 UPDATE=0
+SAVE=0
 
-get_json () {
+get_json() {
   jqargs=(--sort-keys)
-  (( ALL_FIELDS )) || jqargs+=('del(.comment, .sponsor, .albumRelease[0].offers)')
+  ((ALL_FIELDS)) || jqargs+=('del(.comment, .sponsor, .albumRelease[0].offers)')
 
-  curl -sL "${1//[\"\']}" | sed 's/^[^{]*//; s/[^}]*$//; s/&quot;/"/g' | grep -E '\{.*(dateModif|action=gift)' | {
-    if (( SAVE )); then
+  curl -sL "${1//[\"\']/}" | sed 's/^[^{]*//; s/[^}]*$//; s/&quot;/"/g' | grep -E '\{.*(dateModif|action=gift)' | {
+    if ((SAVE)); then
       url=$1
-      save_path=$(dirname "$(realpath "$0")")/jsons/${1//\//_}.json
-      jq -cM '' > "$save_path"
-    elif (( HUMAN )); then
+      save_path=$(realpath "$0")
+      save_path=$(dirname "$save_path")
+      save_path=$save_path/_jsons/${1//\//_}.json
+      jq -cM >"$save_path"
+      [[ -s $save_path ]] || {
+        rm "$save_path"
+        exit 1
+      }
+    elif ((HUMAN)); then
       jq -C "${jqargs[@]}" | less -R
     else
       jq "${jqargs[@]}"
@@ -44,17 +51,17 @@ get_json () {
   }
 }
 
-update_test_jsons () {
+update_test_jsons() {
   files=(./tests/json/{,issues/}*.json)
   for file in "${files[@]}"; do
     url=$(jq -r '.["@id"]' "$file")
     printf '%-50s' "$file"
-    get_json "$url" \
-      | jq 'del(
+    get_json "$url" |
+      jq 'del(
           (if .track then .track.itemListElement[].item else . end)
             | .additionalProperty[]
             | select(.name | test("mp3"))
-        )' > "$file"
+        )' >"$file"
     if git diff --quiet "$file" &>/dev/null; then
       echo -e ' \e[1;32mNo changes\e[0m'
     else
@@ -77,7 +84,7 @@ else
       *) url=$arg ;;
     esac
   done
-  if (( UPDATE )); then
+  if ((UPDATE)); then
     update_test_jsons
   else
     get_json "$url"
