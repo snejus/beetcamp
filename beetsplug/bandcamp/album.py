@@ -20,7 +20,10 @@ class AlbumName:
     SERIES = re.compile(rf"{_series}[ ]?[A-Z\d.-]+\b")
     SERIES_FMT = re.compile(rf"^(.+){_series} *0*")
     INCL = re.compile(r"[^][\w]*inc[^()]+mix(es)?[^()-]*\W?", re.I)
-    EPLP = re.compile(r"\S*(?:Double )?(\b[EL]P\b)\S*", re.I)
+    CLEAN_EPLP = re.compile(r"(?:[([]|Double ){0,2}(\b[EL]P\b)\S?", re.I)
+    EPLP_ALBUM = re.compile(r"(((&|#?\b(?!Double|VA|Various)(\w|[^\w| -])+) )+[EL]P)")
+    IN_QUOTES = re.compile(r"((['\"])([^'\"]+)\2( VA\d+)*)( |$)")
+    WITHOUT_QUOTES = re.compile(r"^['\"](.+)['\"]$")
 
     meta: JSONDict
     description: str
@@ -60,14 +63,11 @@ class AlbumName:
             return next(iter(self.albums_in_titles))
 
         album = self.original
-        for pat in [
-            r"(((&|#?\b(?!Double|VA|Various)(\w|[^\w| -])+) )+[EL]P)",
-            r"((['\"])([^'\"]+)\2( VA\d+)*)( |$)",
-        ]:
-            m = re.search(pat, album)
+        for pat in [self.EPLP_ALBUM, self.IN_QUOTES]:
+            m = pat.search(album)
             if m:
                 album = m.group(1).strip()
-                return re.sub(r"^['\"](.+)['\"]$", r"\1", album)
+                return self.WITHOUT_QUOTES.sub(r"\1", album)
         return album
 
     @cached_property
@@ -159,7 +159,7 @@ class AlbumName:
         name = cls.INCL.sub("", name).strip("- ")
 
         # uppercase EP and LP, and remove surrounding parens / brackets
-        name = cls.EPLP.sub(lambda x: x.group(1).upper(), name)
+        name = cls.CLEAN_EPLP.sub(lambda x: x.group(1).upper(), name)
         return name.strip(" /")
 
     def check_eplp(self, album: str) -> str:
