@@ -16,35 +16,15 @@ from .track import Track
 if sys.version_info.minor > 7:
     from functools import cached_property  # pylint: disable=ungrouped-imports
 else:
-    from cached_property import cached_property  # type: ignore # pylint: disable=import-error # noqa
+    from cached_property import cached_property  # type: ignore
 
-digiwords = r"""
-    # must contain at least one of
-    (\W*(bandcamp|digi(tal)?|exclusive|bonus|bns|unreleased))+
-    # and may be followed by
-    (\W(track|only|tune))*
-    """
-DIGI_ONLY_PATTERN = re.compile(
-    rf"""
-\s*  # all preceding space
-(
-      (^{digiwords}[.:\d\s]+\s)     # begins with 'Bonus.', 'Bonus 1.' or 'Bonus :'
- | [\[(]{digiwords}[\])]\W*         # delimited by brackets, '[Bonus]', '(Bonus) -'
- |   [*]{digiwords}[*]              # delimited by asterisks, '*Bonus*'
- |  ([ ]{digiwords}$)               # might not be delimited if at the end, '... Bonus'
-)
-\s*  # all succeeding space
-    """,
-    re.I | re.VERBOSE,
-)
 DELIMITER_PAT = re.compile(r" ([^\w&()+/[\] ]) ")
-ELP_ALBUM_PAT = re.compile(r"[- ]*\[([^\]]+ [EL]P)\]+")  # Title [Some Album EP]
 TITLE_IN_QUOTES = re.compile(r'^(.+[^ -])[ -]+"([^"]+)"$')
 NUMBER_PREFIX = re.compile(r"(^|- )\d{2,}\W* ")
 
 
 @dataclass
-class Tracks(List[Track]):
+class Tracks:
     tracks: List[Track]
 
     def __iter__(self) -> Iterator[Track]:
