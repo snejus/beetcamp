@@ -489,6 +489,6 @@ class Metaguru(Helpers):
         return album_info
 
     @cached_property
-    def albums(self) -> Iterable[AlbumInfo]:
+    def albums(self) -> List[AlbumInfo]:
         """Return album for the appropriate release format."""
         return list(map(self.get_media_album, self.media_formats))
