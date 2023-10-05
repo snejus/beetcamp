@@ -209,22 +209,22 @@ class Helpers:
         # type: (Iterable[str], JSONDict, str) -> Iterable[str]
         """Return a comma-delimited list of valid genres, using MB genres for reference.
 
-        Initially, exclude keywords that are label names (unless they are valid MB genres)
+        1. Exclude keywords that are label names, unless they are a valid MB genre
 
-        Verify each keyword's (potential genre) validity w.r.t. the configured `mode`:
+        2. Verify each keyword's (potential genre) validity w.r.t. the configured `mode`
           * classical: valid only if the _entire keyword_ matches a MB genre in the list
-          * progressive: either above or if each of the words matches MB genre - since it
-            is effectively a subgenre.
-          * psychedelic: either one of the above or if the last word is a valid MB genre.
+          * progressive: either above or if each of the words matches MB genre - since
+            it is effectively a subgenre.
+          * psychedelic: one of the above or if the last word is a valid MB genre.
             This allows to be flexible regarding the variety of potential genres while
             keeping away from spammy ones.
 
-        Once we have the list of keywords that make it through the mode filters,
-        an additional filter is executed:
-          * if a keyword is _part of another keyword_ (genre within a sub-genre),
-            the more generic option gets excluded, for example,
-            >>> get_genre(['house', 'garage house', 'glitch'], "classical")
-            'garage house, glitch'
+        3. Once we have the list of keywords that coming out of the mode filters,
+           an additional filter is executed:
+           * if a keyword is _part of another keyword_ (genre within a sub-genre),
+             the more generic option gets excluded, for example,
+             >>> get_genre(['house', 'garage house', 'glitch'], "classical")
+             'garage house, glitch'
         """
         valid_mb_genre = partial(op.contains, GENRES)
         label_name = label.lower().replace(" ", "")
