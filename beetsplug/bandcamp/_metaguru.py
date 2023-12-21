@@ -63,7 +63,9 @@ class Metaguru(Helpers):
         self.va_name = beets_config["va_name"].as_str() or self.va_name
         self._tracks = Tracks.from_json(meta)
         self._album_name = AlbumName(
-            meta, self.all_media_comments, self._tracks.albums_in_titles
+            meta.get("name") or "",
+            self.all_media_comments,
+            self._tracks.albums_in_titles,
         )
 
     @classmethod
