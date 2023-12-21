@@ -21,7 +21,9 @@ class AlbumName:
     SERIES_FMT = re.compile(rf"^(.+){_series} *0*")
     INCL = re.compile(r"[^][\w]*inc[^()]+mix(es)?[^()-]*\W?", re.I)
     CLEAN_EPLP = re.compile(r"\S*(?:Double )?(\b[EL]P\b)\S*", re.I)
-    EPLP_ALBUM = re.compile(r"(((&|#?\b(?!Double|VA|Various)(\w|[^\w| -])+) )+[EL]P)")
+    EPLP_ALBUM = re.compile(
+        r"(((&|#?\b(?!Double|VA|Various)(\w|[^\w| -])+) )+[EL]P[^[(-]+)"
+    )
     IN_QUOTES = re.compile(r"((['\"])([^'\"]+)\2( VA\d+)*)( |$)")
     WITHOUT_QUOTES = re.compile(r"^['\"](.+)['\"]$")
 
