@@ -202,7 +202,7 @@ def new(
 
 
 @pytest.fixture
-def desc(old: AttrDict, new: AttrDict) -> str:
+def desc(old: AttrDict, new: AttrDict, guru: Metaguru) -> str:
     get_values = itemgetter(*TRACK_FIELDS)
 
     def get_tracks(data: JSONDict) -> List[Tuple[str, ...]]:
@@ -215,7 +215,7 @@ def desc(old: AttrDict, new: AttrDict) -> str:
     else:
         artist, title = new["artist"], new["title"]
 
-    return f"{artist} - {title}"
+    return f"{artist} - {guru.meta['name']}"
 
 
 @pytest.fixture
