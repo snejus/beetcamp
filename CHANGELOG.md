@@ -7,6 +7,10 @@
 
 ### Updated
 
+- `album`:
+  - handle some edge cases when string **EP** or **LP** is followed with data relevant to
+    the album
+
 - `catalognum`:
   - allow catalogue numbers like **Dystopian LP01**
 

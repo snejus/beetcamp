@@ -62,3 +62,14 @@ from beetsplug.bandcamp.album import AlbumName
 )
 def test_clean_name(name, extras, expected):
     assert AlbumName.clean(name, extras, label="Label") == expected
+
+
+@pytest.mark.parametrize(
+    ("original", "expected"),
+    [
+        ("Self-Medicating LP - WU87d", "Self-Medicating LP"),
+        ("Stone Techno Series - Tetragonal EP", "Tetragonal EP"),
+    ],
+)
+def test_parsed_name(original, expected):
+    assert AlbumName(original).parsed == expected

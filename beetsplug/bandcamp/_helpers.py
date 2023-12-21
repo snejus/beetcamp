@@ -30,7 +30,7 @@ class MediaInfo(NamedTuple):
 
 
 CATALOGNUM_CONSTRAINT = r"""(?<![]/@-])(\b
-(?!\W|LC[ ]|VA[\d ]+|[EL]P\W|[^\n.]+[ ](?:20\d\d|VA[ \d]+)|(?i:vol|disc|number|rd-9))
+(?!\W|LC[ ]|VA[\d ]+|[EL]P[\W\d]|[^\n.]+[ ](?:20\d\d|VA[ \d]+)|(?i:vol|disc|number|rd-9))
 {}
 \b(?!["%]))"""
 _cat_pat = CATALOGNUM_CONSTRAINT.format(

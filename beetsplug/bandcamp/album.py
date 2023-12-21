@@ -21,11 +21,13 @@ class AlbumName:
     SERIES_FMT = re.compile(rf"^(.+){_series} *0*")
     INCL = re.compile(r"[^][\w]*inc[^()]+mix(es)?[^()-]*\W?", re.I)
     CLEAN_EPLP = re.compile(r"(?:[([]|Double ){0,2}(\b[EL]P\b)\S?", re.I)
-    EPLP_ALBUM = re.compile(r"(((&|#?\b(?!Double|VA|Various)(\w|[^\w| -])+) )+[EL]P)")
+    EPLP_ALBUM = re.compile(
+        r"\b((?:(?!VA|Various|-)[^: ]+ )+)([EL]P(?! *\d)(?: [\w#][^ ]+$)?)"
+    )
     IN_QUOTES = re.compile(r"((['\"])([^'\"]+)\2( VA\d+)*)( |$)")
     WITHOUT_QUOTES = re.compile(r"^['\"](.+)['\"]$")
 
-    meta: JSONDict
+    original: str
     description: str
     albums_in_titles: Set[str]
 
@@ -41,10 +43,6 @@ class AlbumName:
             self.remove_artists = False
             return m.group(3).strip()
         return ""
-
-    @cached_property
-    def original(self) -> str:
-        return self.meta.get("name") or ""
 
     @cached_property
     def mentions_compilation(self) -> bool:
@@ -63,12 +61,15 @@ class AlbumName:
             return next(iter(self.albums_in_titles))
 
         album = self.original
-        for pat in [self.EPLP_ALBUM, self.IN_QUOTES]:
-            m = pat.search(album)
+        m = self.EPLP_ALBUM.search(album)
+        if m:
+            album = " ".join(i.strip(" '") for i in m.groups())
+        else:
+            m = self.IN_QUOTES.search(album)
             if m:
-                album = m.group(1).strip()
-                return self.WITHOUT_QUOTES.sub(r"\1", album)
-        return album
+                album = m.group(1)
+
+        return self.WITHOUT_QUOTES.sub(r"\1", album)
 
     @cached_property
     def album_sources(self) -> List[str]:
