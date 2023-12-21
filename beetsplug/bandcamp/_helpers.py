@@ -69,9 +69,9 @@ PATTERNS: Dict[str, Pattern[str]] = {
     "meta": re.compile(r'.*"@id".*'),
     "ft": re.compile(
         r"""
-        [ ]*                     # all preceding space
-        ((?P<br>[\[(])|\b)       # bracket or word boundary
-        (ft|feat|featuring)[. ]  # one of the three ft variations
+        [ ]*                        # all preceding space
+        ((?P<br>[\[(])|\b)          # bracket or word boundary
+        (ft|feat|featuring|(?<=\()with|w/(?![ ]you))[. ]  # any ft variation
         (
             # when it does not start with a bracket, do not allow " - " in it, otherwise
             # we may match full track name
