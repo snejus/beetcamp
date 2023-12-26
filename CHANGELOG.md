@@ -14,6 +14,9 @@
     **`'`**, **`_`** and **`&`**, or words **EP**, **LP** and **deluxe**
   - handle apostrophes more reliably
 
+- `album` / `title`:
+  - Remove **`Various -`** from album and track names
+
 - `catalognum`:
   - allow catalogue numbers like **Dystopian LP01**
 
