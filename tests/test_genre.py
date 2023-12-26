@@ -1,6 +1,6 @@
 """Tests for genre functionality."""
 import pytest
-from beetsplug.bandcamp._metaguru import Metaguru
+from beetsplug.bandcamp.metaguru import Metaguru
 
 pytestmark = pytest.mark.parsing
 

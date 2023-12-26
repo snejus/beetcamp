@@ -1,5 +1,5 @@
 import pytest
-from beetsplug.bandcamp._tracks import Track
+from beetsplug.bandcamp.tracks import Track
 
 
 @pytest.mark.parametrize(

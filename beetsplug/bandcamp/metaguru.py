@@ -15,8 +15,8 @@ from beets import config as beets_config
 from beets.autotag.hooks import AlbumInfo, TrackInfo
 from pycountry import countries, subdivisions
 
-from ._helpers import PATTERNS, Helpers, MediaInfo
-from ._tracks import Track, Tracks
+from .helpers import PATTERNS, Helpers, MediaInfo
+from .tracks import Track, Tracks
 from .album import AlbumName
 
 if sys.version_info.minor > 7:

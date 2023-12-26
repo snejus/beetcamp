@@ -1,6 +1,6 @@
 """Tests for searching functionality."""
 import pytest
-from beetsplug.bandcamp._search import get_matches, parse_and_sort_results
+from beetsplug.bandcamp.search import get_matches, parse_and_sort_results
 
 # simplified version of the search result HTML block
 HTML_ITEM = """

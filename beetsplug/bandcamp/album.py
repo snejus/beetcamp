@@ -4,7 +4,7 @@ from dataclasses import dataclass
 import re
 from typing import List, Set, Dict, Any
 
-from ._helpers import PATTERNS, Helpers
+from .helpers import PATTERNS, Helpers
 
 if sys.version_info.minor > 7:
     from functools import cached_property  # pylint: disable=ungrouped-imports

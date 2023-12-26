@@ -1,6 +1,6 @@
 """Module for the helpers module tests."""
 import pytest
-from beetsplug.bandcamp._helpers import Helpers
+from beetsplug.bandcamp.helpers import Helpers
 
 pytestmark = pytest.mark.parsing
 
