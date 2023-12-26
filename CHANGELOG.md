@@ -6,7 +6,8 @@
 - `album`:
   - handle some edge cases when strings **EP** or **LP** are followed with data relevant
     to the album name
-  - do not remove artist or label when it's followed by a single quote or underscore
+  - do not remove artist or label when it's preceded by ' x ' or followed by a single
+    quote or underscore
 
 ### Updated
 

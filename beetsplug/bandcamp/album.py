@@ -155,6 +155,7 @@ class AlbumName:
             if not re.search(rf"\w {arg} \w|of {arg}|{arg}['_]", name, re.I):
                 name = re.sub(
                     rf"""
+    (?<! x )
     (^|[^\])\w])+
     (?i:{arg})
     ([^(\[\w]| _|(\d+$))*
