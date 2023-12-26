@@ -148,13 +148,20 @@ class AlbumName:
         name = re.sub(r"^\[(.*)\]$", r"\1", name)
 
         escaped = [re.escape(x) for x in filter(None, to_clean)] + [
-            r"Various Artists?\b(?! [A-z])( \d+)?"
+            r"Various[ ]Artists?\b(?![ ][A-z])([ ]\d+)?"
         ]
         for arg in escaped:
             name = re.sub(rf" *(?i:(compiled )?by|vs|\W*split w) {arg}", "", name)
-            if not re.search(rf"\w {arg} \w|of {arg}|{arg}'", name, re.I):
+            if not re.search(rf"\w {arg} \w|of {arg}|{arg}['_]", name, re.I):
                 name = re.sub(
-                    rf"(^|[^\])\w]|_|\b)+(?i:{arg})([^(\[\w]|_|(\d+$))*", " ", name
+                    rf"""
+    (^|[^\])\w])+
+    (?i:{arg})
+    ([^(\[\w]| _|(\d+$))*
+                    """,
+                    " ",
+                    name,
+                    flags=re.VERBOSE,
                 ).strip()
 
         name = cls.remove_label(Helpers.clean_name(name), label)
