@@ -10,7 +10,7 @@ from typing import Iterator, List, Optional, Set
 
 from ordered_set import OrderedSet
 
-from ._helpers import CATNUM_PAT, Helpers, JSONDict, _remix_pat
+from .helpers import CATNUM_PAT, Helpers, JSONDict, _remix_pat
 from .track import Track
 
 if sys.version_info.minor > 7:

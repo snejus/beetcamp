@@ -18,7 +18,7 @@ from _pytest.fixtures import FixtureRequest
 from beets import IncludeLazyConfig
 from beets.autotag.hooks import AttrDict
 from beetsplug.bandcamp import BandcampPlugin
-from beetsplug.bandcamp._metaguru import Metaguru
+from beetsplug.bandcamp.metaguru import Metaguru
 from rich.console import Group
 from rich.panel import Panel
 from rich.traceback import install

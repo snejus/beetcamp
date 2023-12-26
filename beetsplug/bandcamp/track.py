@@ -5,7 +5,7 @@ from dataclasses import dataclass, field
 from typing import List, Optional, Tuple
 
 
-from ._helpers import CATNUM_PAT, PATTERNS, Helpers, JSONDict, _remix_pat
+from .helpers import CATNUM_PAT, PATTERNS, Helpers, JSONDict, _remix_pat
 
 if sys.version_info.minor > 7:
     from functools import cached_property  # pylint: disable=ungrouped-imports

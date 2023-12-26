@@ -3,7 +3,7 @@ from copy import deepcopy
 from datetime import date
 
 import pytest
-from beetsplug.bandcamp._metaguru import Metaguru
+from beetsplug.bandcamp.metaguru import Metaguru
 
 pytestmark = pytest.mark.parsing
 
