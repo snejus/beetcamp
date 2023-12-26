@@ -128,11 +128,11 @@ class AlbumName:
 
         pattern = re.compile(
             rf"""
-            \W*               # pick up any punctuation
-            (?<!\w[ ])        # cannot be preceded by a simple word
+            \W*                 # pick up any punctuation
+            (?<!\w[ ])          # cannot be preceded by a simple word
             \b{re.escape(label)}\b
-            (?![ -][A-Za-z])  # cannot be followed by a word
-            ([^[\]\w]|\d)*    # pick up any digits and punctuation
+            (?!'|[ -][A-Za-z])  # cannot be followed by a word or a single quote
+            ([^[\]\w]|\d)*      # pick up any digits and punctuation
         """,
             flags=re.VERBOSE | re.IGNORECASE,
         )
@@ -152,9 +152,9 @@ class AlbumName:
         ]
         for arg in escaped:
             name = re.sub(rf" *(?i:(compiled )?by|vs|\W*split w) {arg}", "", name)
-            if not re.search(rf"\w {arg} \w|of {arg}", name, re.I):
+            if not re.search(rf"\w {arg} \w|of {arg}|{arg}'", name, re.I):
                 name = re.sub(
-                    rf"(^|[^'\])\w]|_|\b)+(?i:{arg})([^'(\[\w]|_|(\d+$))*", " ", name
+                    rf"(^|[^\])\w]|_|\b)+(?i:{arg})([^(\[\w]|_|(\d+$))*", " ", name
                 ).strip()
 
         name = cls.remove_label(Helpers.clean_name(name), label)

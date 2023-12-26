@@ -3,8 +3,10 @@
 ### Fixed
 
 - Do not fail parsing a release without any keywords, for example https://amniote-editions.bandcamp.com/album/ae-mj-0011-the-collective-capsule-vol-1
-- `album`: handle some edge cases when strings **EP** or **LP** are followed with data
-  relevant to the album name
+- `album`:
+  - handle some edge cases when strings **EP** or **LP** are followed with data relevant
+    to the album name
+  - do not remove artist or label when it's followed by a single quote
 
 ### Updated
 
