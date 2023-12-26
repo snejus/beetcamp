@@ -30,8 +30,8 @@ from beets.autotag.hooks import AlbumInfo, TrackInfo
 
 from beetsplug import fetchart  # type: ignore[attr-defined]
 
-from ._metaguru import Metaguru
-from ._search import search_bandcamp
+from .metaguru import Metaguru
+from .search import search_bandcamp
 
 JSONDict = Dict[str, Any]
 

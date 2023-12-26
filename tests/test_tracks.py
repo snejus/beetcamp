@@ -2,7 +2,7 @@
 from operator import attrgetter
 
 import pytest
-from beetsplug.bandcamp._tracks import Tracks
+from beetsplug.bandcamp.tracks import Tracks
 from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text

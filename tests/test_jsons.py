@@ -2,7 +2,7 @@
 from operator import itemgetter
 
 import pytest
-from beetsplug.bandcamp._metaguru import NEW_BEETS, Metaguru
+from beetsplug.bandcamp.metaguru import NEW_BEETS, Metaguru
 
 pytestmark = pytest.mark.jsons
 
