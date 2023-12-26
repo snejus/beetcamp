@@ -33,27 +33,6 @@ class Tracks:
     def __len__(self) -> int:
         return len(self.tracks)
 
-    @classmethod
-    def from_json(cls, meta: JSONDict) -> "Tracks":
-        try:
-            tracks = [{**t, **t["item"]} for t in meta["track"]["itemListElement"]]
-        except (TypeError, KeyError):
-            tracks = [meta]
-
-        names = [i.get("name", "") for i in tracks]
-        names = cls.split_quoted_titles(names)
-        names = cls.remove_number_prefix(names)
-        delim = cls.track_delimiter(names)
-        for track, name in zip(tracks, names):
-            track["name_parts"] = {"clean": name}
-            track["delim"] = delim
-        tracks = cls.common_name_parts(tracks, names)
-        return cls([Track.from_json(t, delim, Helpers.get_label(meta)) for t in tracks])
-
-    @cached_property
-    def first(self) -> Track:
-        return self.tracks[0]
-
     @staticmethod
     def split_quoted_titles(names: List[str]) -> List[str]:
         if len(names) > 1 and all(TITLE_IN_QUOTES.match(n) for n in names):
@@ -65,6 +44,26 @@ class Tracks:
         if len(names) > 1 and all(NUMBER_PREFIX.search(n) for n in names):
             return [NUMBER_PREFIX.sub(r"\1", n) for n in names]
         return names
+
+    @staticmethod
+    def track_delimiter(names: List[str]) -> str:
+        """Return the track parts delimiter that is in effect in the current release.
+        In some (rare) situations track parts are delimited by a pipe character
+        or some UTF-8 equivalent of a dash.
+
+        This checks every track for the first character (see the regex for exclusions)
+        that splits it. The character that splits the most and at least half of
+        the tracks is the character we need.
+
+        If no such character is found, or if we have just one track, return a dash '-'.
+        """
+
+        def get_delim(string: str) -> str:
+            m = DELIMITER_PAT.search(string)
+            return m.group(1) if m else "-"
+
+        delim, count = Counter(map(get_delim, names)).most_common(1).pop()
+        return delim if (len(names) == 1 or count > len(names) / 2) else "-"
 
     @staticmethod
     def common_name_parts(tracks, names):
@@ -106,6 +105,27 @@ class Tracks:
                     track["name_parts"]["clean"] = f"{joined} ({leftover})"
 
         return tracks
+
+    @classmethod
+    def from_json(cls, meta: JSONDict) -> "Tracks":
+        try:
+            tracks = [{**t, **t["item"]} for t in meta["track"]["itemListElement"]]
+        except (TypeError, KeyError):
+            tracks = [meta]
+
+        names = [i.get("name", "") for i in tracks]
+        names = cls.split_quoted_titles(names)
+        names = cls.remove_number_prefix(names)
+        delim = cls.track_delimiter(names)
+        for track, name in zip(tracks, names):
+            track["name_parts"] = {"clean": name}
+            track["delim"] = delim
+        tracks = cls.common_name_parts(tracks, names)
+        return cls([Track.from_json(t, delim, Helpers.get_label(meta)) for t in tracks])
+
+    @cached_property
+    def first(self) -> Track:
+        return self.tracks[0]
 
     @cached_property
     def raw_names(self) -> List[str]:
@@ -199,23 +219,3 @@ class Tracks:
             if not t.artist:
                 # default to the albumartist
                 t.artist = albumartist
-
-    @staticmethod
-    def track_delimiter(names: List[str]) -> str:
-        """Return the track parts delimiter that is in effect in the current release.
-        In some (rare) situations track parts are delimited by a pipe character
-        or some UTF-8 equivalent of a dash.
-
-        This checks every track for the first character (see the regex for exclusions)
-        that splits it. The character that splits the most and at least half of
-        the tracks is the character we need.
-
-        If no such character is found, or if we have just one track, return a dash '-'.
-        """
-
-        def get_delim(string: str) -> str:
-            m = DELIMITER_PAT.search(string)
-            return m.group(1) if m else "-"
-
-        delim, count = Counter(map(get_delim, names)).most_common(1).pop()
-        return delim if (len(names) == 1 or count > len(names) / 2) else "-"
