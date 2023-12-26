@@ -104,6 +104,7 @@ rm_strings = [
     r"free download|\([^()]*free(?!.*mix)[^()]*\)",
     "(\W|\W )bonus( \w+)*",
     r"[+][\w ]+remix|\(with remixes\)",
+    "Various -",
 ]
 
 _remix_pat = r"(?P<remix>((?P<remixer>[^])]+) )?\b((re)?mix|edit|bootleg)\b[^])]*)"
