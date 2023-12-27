@@ -167,7 +167,7 @@ class AlbumName:
 
         for w in (re.escape(x) for x in filter(None, to_clean)):
             name = re.sub(rf" *(?i:(compiled )?by|vs|\W*split w) {w}", "", name)
-            exclude = rf"\w {w} \w|of {w}|{w}['_]"
+            exclude = rf"\w {w} \w|of {w}|{w}['_\d]|{w} deluxe"
             if not re.search(exclude, name, re.I):
                 name = re.sub(
                     rf"""
