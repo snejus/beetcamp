@@ -48,8 +48,9 @@ from beetsplug.bandcamp.album import AlbumName
         ("hi'Hello", ["hi"], "hi'Hello"),
         ("fjern's stuff and such", [], "fjern's stuff and such"),
         # only remove VA if album name starts or ends with it
-        ("Album VA", [], "Album"),
-        ("VA Album", [], "Album"),
+        ("Album VA", [], "Album VA"),
+        ("VA. Album", [], "Album"),
+        ("VA Album", [], "VA Album"),
         ("Album VA001", [], "Album VA001"),
         ("Album VA 03", [], "Album VA 03"),
         # remove (weird chars too) regardless of its position if explicitly excluded
