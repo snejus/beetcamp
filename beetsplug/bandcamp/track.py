@@ -14,17 +14,20 @@ else:
 
 digiwords = r"""
     # must contain at least one of
-    (\W*(bandcamp|digi(tal)?|exclusive|bonus|bns|unreleased))+
+    ([ -]?  # delimiter
+        (bandcamp|digi(tal)?|exclusive|bonus|bns|unreleased)
+    )+
     # and may be followed by
     (\W(track|only|tune))*
     """
 DIGI_ONLY_PATTERN = re.compile(
     rf"""
-\s*  # all preceding space
+(\s|[^][()\w])*  # space or anything that is not a parens or an alphabetical char
 (
       (^{digiwords}[.:\d\s]+\s)     # begins with 'Bonus.', 'Bonus 1.' or 'Bonus :'
  | [\[(]{digiwords}[\])]\W*         # delimited by brackets, '[Bonus]', '(Bonus) -'
- |   [*]{digiwords}[*]              # delimited by asterisks, '*Bonus*'
+ |   [*]{digiwords}[*]?             # delimited by asterisks, '*Bonus', '*Bonus*'
+ |      {digiwords}[ ]-             # followed by ' -', 'Bonus -'
  |  ([ ]{digiwords}$)               # might not be delimited if at the end, '... Bonus'
 )
 \s*  # all succeeding space
