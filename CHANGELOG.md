@@ -10,6 +10,10 @@
   - Do not remove artist or label when it's preceded by ' x ' or followed by a single
     quote or underscore
 
+- `title`: Remove **bonus -**
+
+  - Artist - Title (bonus - something) -> **Artist - Title (something)**
+
 - `album` / `artist`: Remove **Various -** from album and track names
 - `album` / `title`/ `artist`: Handle this [album sent to us by the devil himself]
 
