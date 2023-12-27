@@ -10,7 +10,10 @@
   - Do not remove artist or label when it's preceded by ' x ' or followed by a single
     quote or underscore
 
-- Remove **Various -** from album and track names
+- `album` / `artist`: Remove **Various -** from album and track names
+- `album` / `title`/ `artist`: Handle this [album sent to us by the devil himself]
+
+[album sent to us by the devil himself]: https://examine-archive.bandcamp.com/album/va-examine-archive-international-sampler-xmn01
 
 ### Updated
 

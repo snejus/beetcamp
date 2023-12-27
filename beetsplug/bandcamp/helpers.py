@@ -104,12 +104,26 @@ rm_strings = [
     "(\W|\W )bonus( \w+)*",
     r"[+][\w ]+remix|\(with remixes\)",
     "Various -",
+    "^VA",
+    "CD ?\d+",
 ]
 
 _remix_pat = r"(?P<remix>((?P<remixer>[^])]+) )?\b((re)?mix|edit|bootleg)\b[^])]*)"
+CAMELCASE = re.compile(r"(?<=[a-z])(?=[A-Z])")
+
+
+def split_artist_title(m: re.Match[str]) -> str:
+    """See for yourself:"""
+    artist, title = m.groups()
+    artist = CAMELCASE.sub(" ", artist)
+    title = CAMELCASE.sub(" ", title)
+
+    return f"{artist} - {title}"
+
+
 # fmt: off
 CLEAN_PATTERNS = [
-    (re.compile(rf"(([\[(])|(^| ))\*?({'|'.join(rm_strings)})(?(2)[])]|( |$))", re.I), ""),       # noqa
+    (re.compile(rf"(([\[(])|(^| ))\*?({'|'.join(rm_strings)})(?(2)[])]|([- ]|$))", re.I), ""),       # noqa
     (re.compile(r" -(\S)"), r" - \1"),                    # hi -bye          -> hi - bye
     (re.compile(r"(\S)- "), r"\1 - "),                    # hi- bye          -> hi - bye
     (re.compile(r"  +"), " "),                            # hi  bye          -> hi bye
@@ -120,6 +134,7 @@ CLEAN_PATTERNS = [
     (re.compile(rf"- *({_remix_pat})$", re.I), r"(\1)"),  # bye - Some Mix   -> bye (Some Mix)    # noqa
     (re.compile(r'(^|- )[“"]([^”"]+)[”"]( \(|$)'), r"\1\2\3"),   # "bye" -> bye; hi - "bye" -> hi - bye  # noqa
     (re.compile(r"\((?i:(the )?(remixes))\)"), r"\2"),    # Album (Remixes)  -> Album Remixes     # noqa
+    (re.compile(r"examine-.+CD\d+_([^_-]+)[_-](.*)"), split_artist_title),  # See https://examine-archive.bandcamp.com/album/va-examine-archive-international-sampler-xmn01 # noqa
 ]
 # fmt: on
 
