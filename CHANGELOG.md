@@ -13,6 +13,7 @@
   - do not remove artist or label when it is preceded by **` x `** or followed by characters
     **`'`**, **`_`** and **`&`**, or words **EP**, **LP** and **deluxe**
   - handle apostrophes more reliably
+  - Do not remove **VA** or **V/A** from the beginning when followed by a word or a number
 
 - `album` / `title`:
   - Remove **`Various -`** from album and track names

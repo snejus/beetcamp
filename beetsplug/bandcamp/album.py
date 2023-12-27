@@ -27,6 +27,14 @@ class AlbumName:
     )
     IN_QUOTES = re.compile(r"((['\"])([^'\"]+)\2( VA\d+)*)( |$)")
     WITHOUT_QUOTES = re.compile(r"^['\"](.+)['\"]$")
+    CLEAN_VA_EXCLUDE = re.compile(r"\w various artists \w", re.I)
+    CLEAN_VA = re.compile(
+        r"""
+          (?<=^)v/?a\b(?!\ \w)[^A-z(]*
+        | \W*Various\ Artists?\b(?!\ [A-z])[^A-z(]*
+    """,
+        re.IGNORECASE + re.VERBOSE,
+    )
 
     original: str
     description: str
@@ -139,6 +147,13 @@ class AlbumName:
         return pattern.sub(" ", name).strip()
 
     @classmethod
+    def remove_va(cls, name: str) -> str:
+        if not cls.CLEAN_VA_EXCLUDE.search(name):
+            return cls.CLEAN_VA.sub(" ", name)
+
+        return name
+
+    @classmethod
     def clean(cls, name: str, to_clean: List[str], label: str = "") -> str:
         """Return clean album name.
 
@@ -147,10 +162,7 @@ class AlbumName:
         name = PATTERNS["ft"].sub(" ", name)
         name = re.sub(r"^\[(.*)\]$", r"\1", name)
 
-        escaped = [re.escape(x) for x in to_clean] + [
-            r"Various[ ]Artists?\b(?![ ][A-z])([ ]\d+)?"
-        ]
-        for w in escaped:
+        for w in map(re.escape, filter(None, to_clean)):
             name = re.sub(rf" *(?i:(compiled )?by|vs|\W*split w) {w}", "", name)
             if not re.search(
                 rf"\w {w} \w|(of|&) {w}|{w}(['_\d]| (deluxe|[el]p\b|&))", name, re.I
@@ -167,6 +179,7 @@ class AlbumName:
                     flags=re.VERBOSE,
                 ).strip()
 
+        name = cls.remove_va(name)
         name = cls.remove_label(Helpers.clean_name(name), label)
         name = cls.INCL.sub("", name).strip("- ")
 

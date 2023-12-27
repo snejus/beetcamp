@@ -100,7 +100,6 @@ rm_strings = [
     r"^[EL]P( \d+)?",
     r"\((digital )?album\)",
     r"\(single\)",
-    r"^v/?a\W*|va$",
     r"\Wvinyl\W|vinyl-only",
     "compiled by.*",
     r"[\[(]presented by.*",
@@ -108,7 +107,6 @@ rm_strings = [
     r"(\W|\W )bonus( \w+)*",
     r"[+][\w ]+remix|\(with remixes\)",
     "Various -",
-    "^VA",
     r"CD ?\d+",
 ]
 
@@ -223,6 +221,7 @@ class Helpers:
 
     @staticmethod
     def clean_name(name: str) -> str:
+        """Both album and track names are cleaned using these patterns."""
         for pat, repl in CLEAN_PATTERNS:
             name = pat.sub(repl, name).strip()
         return name
