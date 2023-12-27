@@ -26,6 +26,17 @@ class AlbumName:
     )
     IN_QUOTES = re.compile(r"((['\"])([^'\"]+)\2( VA\d+)*)( |$)")
     WITHOUT_QUOTES = re.compile(r"^['\"](.+)['\"]$")
+    CLEAN_VA_EXCLUDE = re.compile(r"\w various artists \w", re.I)
+    CLEAN_VA = re.compile(
+        r"""
+    (
+          ^v/?a\b(?![ ]vol)\W*
+        | \W*Various[ ]Artists?\b(?![ ][A-z])([ ]\d+)?[^(\w]*
+        | \bva$
+    )
+    """,
+        re.IGNORECASE + re.VERBOSE,
+    )
 
     meta: JSONDict
     description: str
@@ -139,6 +150,13 @@ class AlbumName:
         return pattern.sub(" ", name).strip()
 
     @classmethod
+    def remove_va(cls, name: str) -> str:
+        if not cls.CLEAN_VA_EXCLUDE.search(name):
+            return cls.CLEAN_VA.sub(" ", name)
+
+        return name
+
+    @classmethod
     def clean(cls, name: str, to_clean: List[str], label: str = "") -> str:
         """Return clean album name.
 
@@ -147,17 +165,15 @@ class AlbumName:
         name = PATTERNS["ft"].sub(" ", name)
         name = re.sub(r"^\[(.*)\]$", r"\1", name)
 
-        escaped = [re.escape(x) for x in filter(None, to_clean)] + [
-            r"Various[ ]Artists?\b(?![ ][A-z])([ ]\d+)?"
-        ]
-        for arg in escaped:
-            name = re.sub(rf" *(?i:(compiled )?by|vs|\W*split w) {arg}", "", name)
-            if not re.search(rf"\w {arg} \w|of {arg}|{arg}['_]", name, re.I):
+        for w in (re.escape(x) for x in filter(None, to_clean)):
+            name = re.sub(rf" *(?i:(compiled )?by|vs|\W*split w) {w}", "", name)
+            exclude = rf"\w {w} \w|of {w}|{w}['_]"
+            if not re.search(exclude, name, re.I):
                 name = re.sub(
                     rf"""
     (?<! x )
     (^|[^\])\w])+
-    (?i:{arg})
+    (?i:{w})
     ([^(\[\w]| _|(\d+$))*
                     """,
                     " ",
@@ -165,6 +181,7 @@ class AlbumName:
                     flags=re.VERBOSE,
                 ).strip()
 
+        name = cls.remove_va(name)
         name = cls.remove_label(Helpers.clean_name(name), label)
         name = cls.INCL.sub("", name).strip("- ")
 

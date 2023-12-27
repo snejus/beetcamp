@@ -96,7 +96,6 @@ rm_strings = [
     r"^[EL]P( \d+)?",
     r"\((digital )?album\)",
     r"\(single\)",
-    r"^v/?a(?! vol)\W*|va$",
     r"\Wvinyl\W|vinyl-only",
     "compiled by.*",
     r"[\[(]presented by.*",
@@ -104,11 +103,9 @@ rm_strings = [
     "(\W|\W )bonus( \w+)*",
     r"[+][\w ]+remix|\(with remixes\)",
     "Various -",
-    "^VA",
     "CD ?\d+",
 ]
 
-_remix_pat = r"(?P<remix>((?P<remixer>[^])]+) )?\b((re)?mix|edit|bootleg)\b[^])]*)"
 CAMELCASE = re.compile(r"(?<=[a-z])(?=[A-Z])")
 
 
@@ -121,6 +118,7 @@ def split_artist_title(m: re.Match[str]) -> str:
     return f"{artist} - {title}"
 
 
+_remix_pat = r"(?P<remix>((?P<remixer>[^])]+) )?\b((re)?mix|edit|bootleg)\b[^])]*)"
 # fmt: off
 CLEAN_PATTERNS = [
     (re.compile(rf"(([\[(])|(^| ))\*?({'|'.join(rm_strings)})(?(2)[])]|([- ]|$))", re.I), ""),       # noqa
@@ -216,6 +214,7 @@ class Helpers:
 
     @staticmethod
     def clean_name(name: str) -> str:
+        """Both album and track names are cleaned using these patterns."""
         for pat, repl in CLEAN_PATTERNS:
             name = pat.sub(repl, name).strip()
         return name
