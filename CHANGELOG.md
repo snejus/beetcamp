@@ -21,7 +21,10 @@
 - `catalognum`:
   - allow catalogue numbers like **Dystopian LP01**
 
-- `title`: consider **with** and **w/** as markers for collaborating artists
+- `title`:
+  - consider **with** and **w/** as markers for collaborating artists
+  - remove **`bonus -`**
+    - `Artist - Title (bonus - something)` -> **`Artist - Title (something)`**
 
 [album sent to us by the devil himself]: https://examine-archive.bandcamp.com/album/va-examine-archive-international-sampler-xmn01
 
