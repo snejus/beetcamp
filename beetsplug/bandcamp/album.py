@@ -30,7 +30,7 @@ class AlbumName:
     CLEAN_VA = re.compile(
         r"""
     (
-          ^v/?a\b(?![ ]vol)\W*
+          ^v/?a\b(?![ ]\w)\W*
         | \W*Various[ ]Artists?\b(?![ ][A-z])([ ]\d+)?[^(\w]*
         | \bva$
     )
