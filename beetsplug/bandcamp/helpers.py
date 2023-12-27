@@ -96,7 +96,7 @@ rm_strings = [
     r"^[EL]P( \d+)?",
     r"\((digital )?album\)",
     r"\(single\)",
-    r"^v/?a\W*|va$",
+    r"^v/?a(?! vol)\W*|va$",
     r"\Wvinyl\W|vinyl-only",
     "compiled by.*",
     r"[\[(]presented by.*",

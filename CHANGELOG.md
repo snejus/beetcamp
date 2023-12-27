@@ -9,6 +9,7 @@
     to the album name
   - Do not remove artist or label when it's preceded by ' x ' or followed by a single
     quote or underscore
+  - Do not remove **VA** or **V/A** from the beginning when followed by **Vol**
 
 - `title`: Remove **bonus -**
 
