@@ -71,18 +71,19 @@ PATTERNS: Dict[str, Pattern[str]] = {
         r"""
         [ ]*                        # all preceding space
         ((?P<br>[\[(])|\b)          # bracket or word boundary
-        (ft|feat|featuring|w/)[. ]  # any ft variation
-        (
-            # when it does not start with a bracket, do not allow " - " in it, otherwise
-            # we may match full track name
-            (?(br)|(?!.*[ ]-[ ].*))
-            # anything but brackets or a slash, except for a slash preceded
-            # by a non-space (can be part of artist or title)
-            (?:[^]\[()/]|\S/)+
+        (?P<without_brackets>
+            (ft|feat|featuring|w/)[. ]  # any ft variation
+            (?P<artist>
+                # when it does not start with a bracket, do not allow " - " in it, otherwise
+                # we may match full track name
+                (?(br)|(?!.*[ ]-[ ].*))
+                # anything but brackets or a slash, except for a slash preceded
+                # by a non-space (can be part of artist or title)
+                (?:[^]\[()/]|\S/)+
+            )
+            (?<!mix)\b    # does not end with "mix"
         )
-        (?<!mix)\b    # does not end with "mix"
         (?(br)[]\)])  # if it started with a bracket, it must end with a closing bracket
-        [ ]*          # trailing space
     """,
         re.I | re.VERBOSE,
     ),
@@ -100,10 +101,10 @@ rm_strings = [
     "compiled by.*",
     r"[\[(]presented by.*",
     r"free download|\([^()]*free(?!.*mix)[^()]*\)",
-    "(\W|\W )bonus( \w+)*",
+    r"(\W|\W )bonus( \w+)*",
     r"[+][\w ]+remix|\(with remixes\)",
     "Various -",
-    "CD ?\d+",
+    r"CD ?\d+",
 ]
 
 CAMELCASE = re.compile(r"(?<=[a-z])(?=[A-Z])")

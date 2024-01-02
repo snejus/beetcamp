@@ -2,7 +2,7 @@
 import re
 import sys
 from dataclasses import dataclass, field
-from typing import List, Optional, Tuple
+from typing import List, Optional, Tuple, Dict
 
 
 from .helpers import CATNUM_PAT, PATTERNS, Helpers, JSONDict, _remix_pat
@@ -62,10 +62,11 @@ class Track:
     json_item: JSONDict = field(default_factory=dict)
     track_id: str = ""
     index: Optional[int] = None
-    json_artist: str = ""
+    main_artist: str = ""
 
-    _name: str = ""
-    ft: str = ""
+    name: str = ""
+    ft_artist: str = ""
+    ft_string: str = ""
     album: str = ""
     catalognum: str = ""
     remix: Optional[Remix] = None
@@ -78,16 +79,18 @@ class Track:
         try:
             artist = json["inAlbum"]["byArtist"]["name"]
         except KeyError:
-            artist = ""
-        artist = artist or json.get("byArtist", {}).get("name", "")
+            artist = json.get("byArtist", {}).get("name", "")
+
+        catalognum = json.get("catalognum")
+        index = json.get("position")
         data = {
             "json_item": json,
-            "json_artist": artist,
             "track_id": json["@id"],
-            "index": json.get("position"),
-            "catalognum": json["name_parts"].get("catalognum", ""),
+            "index": index,
+            "catalognum": catalognum,
+            **cls.parse_name(json["name"], artist, delim, label, catalognum, index),
         }
-        return cls(**cls.parse_name(data, json["name_parts"]["clean"], delim, label))
+        return cls(**data)
 
     @staticmethod
     def clean_digi_name(name: str) -> Tuple[str, bool]:
@@ -99,7 +102,17 @@ class Track:
         return clean_name, clean_name != name
 
     @staticmethod
-    def find_featuring(data: JSONDict) -> JSONDict:
+    def get_ft_parts(value: str) -> Tuple[str, str, str]:
+        """Return ft artist, full ft string without brackets, and 'value' without the ft artist."""
+        m = PATTERNS["ft"].search(value)
+        if not m:
+            return "", "", ""
+
+        grp = m.groupdict()
+        return grp["artist"], grp["without_brackets"], m.group()
+
+    @classmethod
+    def get_featuring_artist(cls, name: str, artist: str) -> Dict[str, str]:
         """Find featuring artist in the track name.
 
         If the found artist is contained within the remixer, do not do anything.
@@ -107,60 +120,72 @@ class Track:
         do not consider it as a featuring artist.
         Otherwise, strip brackets and spaces and save it in the 'ft' field.
         """
-        for _field in "_name", "json_artist":
-            m = PATTERNS["ft"].search(data[_field])
-            if m:
-                ft = m.groups()[-1].strip()
-                if ft not in data.get("remixer", ""):
-                    data[_field] = data[_field].replace(m.group().rstrip(), "")
-                    if ft not in data["json_artist"]:
-                        data["ft"] = m.group().strip(" ([])")
-                    break
-        return data
+        ft_artist_in_name, name_ft_string, full_name_ft = cls.get_ft_parts(name)
+        ft_artist_in_artist, artist_ft_string, full_artist_ft = cls.get_ft_parts(artist)
+        name = name.replace(full_name_ft, "")
+        artist = artist.replace(full_artist_ft, "")
 
-    @staticmethod
-    def parse_name(data: JSONDict, name: str, delim: str, label: str) -> JSONDict:
-        name = name.replace(f" {delim} ", " - ")
+        return {
+            "name": name,
+            "main_artist": artist,
+            "ft_string": name_ft_string or artist_ft_string,
+            "ft_artist": ft_artist_in_name or ft_artist_in_artist,
+        }
+
+    @classmethod
+    def parse_name(
+        cls,
+        name: str,
+        artist: str,
+        delim: Optional[str] = None,
+        label: Optional[str] = None,
+        catalognum: Optional[str] = None,
+        index: Optional[int] = None,
+    ) -> JSONDict:
+        result: JSONDict = {}
+        if delim:
+            name = name.replace(f" {delim} ", " - ")
 
         # remove label from the end of the track name
         # see https://gutterfunkuk.bandcamp.com/album/gutterfunk-all-subject-to-vibes-various-artists-lp  # noqa
-        if name.endswith(label):
+        if label and name.endswith(label):
             name = name.replace(label, "").strip(" -")
 
-        json_artist, artist_digi_only = Track.clean_digi_name(data["json_artist"])
-        name, name_digi_only = Track.clean_digi_name(name)
-        data["digi_only"] = name_digi_only or artist_digi_only
+        artist, artist_digi_only = cls.clean_digi_name(artist)
+        name, name_digi_only = cls.clean_digi_name(name)
+        result["digi_only"] = name_digi_only or artist_digi_only
+        artist = Helpers.clean_name(artist) if artist else ""
 
-        data["json_artist"] = Helpers.clean_name(json_artist) if json_artist else ""
         name = Helpers.clean_name(name).strip().lstrip("-")
 
         m = PATTERNS["track_alt"].search(name)
         if m:
-            data["track_alt"] = m.group(1).replace(".", "").upper()
+            result["track_alt"] = m.group(1).replace(".", "").upper()
             name = name.replace(m.group(), "")
 
-        if not data.get("catalognum"):
+        if not catalognum:
             # check whether track name contains the catalog number within parens
             # or square brackets
             # see https://objection999x.bandcamp.com/album/eruption-va-obj012
             m = CATNUM_PAT["delimited"].search(name)
             if m:
-                data["catalognum"] = m.group(1)
+                result["catalognum"] = m.group(1)
                 name = name.replace(m.group(), "").strip()
-        name = re.sub(rf"^0*{data.get('index', 0)}(?!\W\d)\W+", "", name)
+
+        # Remove leading index
+        if index:
+            name = re.sub(rf"^0*{index}(?!\W\d)\W+", "", name)
 
         remix = Remix.from_name(name)
         if remix:
-            data.update(remix=remix)
+            result["remix"] = remix
             name = name.replace(remix.delimited, "").rstrip()
 
         for m in ELP_ALBUM_PAT.finditer(name):
-            data["album"] = m.group(1).replace('"', "")
+            result["album"] = m.group(1).replace('"', "")
             name = name.replace(m.group(), "")
 
-        data["_name"] = name
-        data = Track.find_featuring(data)
-        return data
+        return {**result, **cls.get_featuring_artist(name, artist)}
 
     @cached_property
     def duration(self) -> Optional[int]:
@@ -181,44 +206,45 @@ class Track:
             return text.replace("\r", "")
 
     @cached_property
-    def name(self) -> str:
-        name = self._name
-        if self.json_artist and " - " not in name:
-            name = f"{self.json_artist} - {name}"
+    def full_name(self) -> str:
+        name = self.name
+        if self.main_artist and " - " not in name:
+            name = f"{self.main_artist} - {name}"
         return name.strip()
 
     @cached_property
-    def main_title(self) -> str:
+    def title_without_remix(self) -> str:
         """Split the track name, deduce the title and return it.
         The extra complexity here is to ensure that it does not cut off a title
         that ends with ' - -', like in '(DJ) NICK JERSEY - 202memo - - -'.
         """
-        parts = re.split(r" - (?![^\[(]+[])])", self.name)
+        parts = re.split(r" - (?![^\[(]+[])])", self.full_name)
         if len(parts) == 1:
-            parts = self.name.split(" - ")
-        main_title = parts[-1]
+            parts = self.full_name.split(" - ")
+        title_without_remix = parts[-1]
         for idx, maybe in enumerate(reversed(parts)):
             if not maybe.strip(" -"):
-                main_title = " - ".join(parts[-idx - 2 :])
+                title_without_remix = " - ".join(parts[-idx - 2 :])
                 break
-        return main_title
+        return title_without_remix
 
     @cached_property
     def title(self) -> str:
         """Return the main title with the full remixer part appended to it."""
         if self.remix:
-            return f"{self.main_title} {self.remix.delimited}"
-        return self.main_title
+            return f"{self.title_without_remix} {self.remix.delimited}"
+        return self.title_without_remix
 
     @cached_property
     def artist(self) -> str:
         """Take the name, remove the title, ensure it does not duplicate any remixers
         and return the resulting artist.
         """
-        artist = self.name[: self.name.rfind(self.main_title)].strip(", -")
-        artist = Remix.PATTERN.sub("", artist)
+        title_start_idx = self.full_name.rfind(self.title_without_remix)
+        artist = Remix.PATTERN.sub("", self.full_name[:title_start_idx].strip(", -"))
         if self.remix:
             artist = artist.replace(self.remix.remixer, "").strip(" ,")
+
         return artist.strip(" -")
 
     @property
@@ -232,7 +258,10 @@ class Track:
             "medium_index": self.index,
             "medium": None,
             "track_id": self.track_id,
-            "artist": self.artist + (f" {self.ft}" if self.ft else ""),
+            "artist": (
+                self.artist
+                + (f" {self.ft_string}" if self.ft_artist not in self.artist else "")
+            ),
             "title": self.title,
             "length": self.duration,
             "track_alt": self.track_alt,

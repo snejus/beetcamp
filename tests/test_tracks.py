@@ -116,7 +116,7 @@ def test_parse_track_name(name, expected, json_track, json_meta, console):
     json_track["item"].update(name=name)
     json_meta.update(track={"itemListElement": [json_track]})
 
-    fields = "track_alt", "artist", "ft", "title", "main_title"
+    fields = "track_alt", "artist", "ft", "title", "title_without_remix"
     expected = dict(zip(fields, expected))
     if not expected["track_alt"]:
         expected["track_alt"] = None

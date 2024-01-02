@@ -91,18 +91,16 @@ class Tracks:
             pass
         else:
             for track in tracks:
-                track["name_parts"].update(
-                    catalognum=cat,
-                    clean=track["name_parts"]["clean"].replace(word, "").strip(),
-                )
+                track["catalognum"] = cat
+                track["name"] = track["name"].replace(word, "").strip()
 
         joined = " ".join(common_words)
         if joined in names:  # it is one of the track names (root title)
             for track in tracks:
-                leftover = track["name_parts"]["clean"].replace(joined, "").lstrip()
+                leftover = track["name"].replace(joined, "").lstrip()
                 # looking for a remix without brackets
                 if re.fullmatch(_remix_pat, leftover, re.I):
-                    track["name_parts"]["clean"] = f"{joined} ({leftover})"
+                    track["name"] = f"{joined} ({leftover})"
 
         return tracks
 
@@ -116,11 +114,12 @@ class Tracks:
         names = [i.get("name", "") for i in tracks]
         names = cls.split_quoted_titles(names)
         names = cls.remove_number_prefix(names)
-        delim = cls.track_delimiter(names)
         for track, name in zip(tracks, names):
-            track["name_parts"] = {"clean": name}
-            track["delim"] = delim
+            track["name"] = name
+
         tracks = cls.common_name_parts(tracks, names)
+
+        delim = cls.track_delimiter(names)
         return cls([Track.from_json(t, delim, Helpers.get_label(meta)) for t in tracks])
 
     @cached_property
@@ -156,7 +155,7 @@ class Tracks:
     @property
     def other_artists(self) -> Set[str]:
         """Return all unique remix and featuring artists."""
-        ft = [j.ft for j in self.tracks if j.ft]
+        ft = [j.ft_artist for j in self.tracks if j.ft_artist]
         return set(it.chain(self.remixers, ft))
 
     @cached_property
@@ -203,10 +202,10 @@ class Tracks:
             elif len(artists) == len(self) - 1:  # only 1 missing artist
                 # if this is a remix and the parsed title is part of the albumartist or
                 # is one of the track artists, we made a mistake parsing the remix:
-                #  it is most probably the edge case where the `main_title` is a
+                #  it is most probably the edge case where the `title_without_remix` is a
                 #  legitimate artist and the track title is something like 'Hello Remix'
-                if t.remix and (t.main_title in albumartist):
-                    t.artist, t.title = t.main_title, t.remix.remix
+                if t.remix and (t.title_without_remix in albumartist):
+                    t.artist, t.title = t.title_without_remix, t.remix.remix
                 # this is the only artist that didn't get parsed - relax the rule
                 # and try splitting with '-' without spaces
                 split = t.title.split("-")
