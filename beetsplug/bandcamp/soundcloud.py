@@ -5,7 +5,9 @@ from unicodedata import normalize
 from beets.autotag.hooks import TrackInfo
 from pycountry import countries, subdivisions
 
-from ._metaguru import COUNTRY_OVERRIDES, DIGI_MEDIA, Helpers
+from .metaguru import COUNTRY_OVERRIDES, DIGI_MEDIA
+from .helpers import Helpers
+from .track import Track
 
 JSONDict = Dict[str, Any]
 
@@ -22,7 +24,7 @@ def get_country(loc: str) -> str:
         return "XW"
 
 
-def parse_title(source: str, title: str) -> JSONDict:
+def parse_title(source: str, title: str, artist: str) -> JSONDict:
     delim = r"([-&|x]|w/|__)"
     _delim = rf" {delim} "
 
@@ -66,6 +68,16 @@ def parse_title(source: str, title: str) -> JSONDict:
                 title = title.replace(full_label, "")
             data["title"] = title
             break
+    else:
+        data = {"@id": "", "name": title, "byArtist": {"name": artist}}
+        track = Track.from_json(data, "-", "")
+        track_info = {**track.info, "album": ""}
+        return {
+            k: v
+            for k, v in track_info.items()
+            if k
+            not in {"track_id", "index", "medium_index", "medium", "length", "lyrics"}
+        }
 
     index = data.pop("index", "")
     if "." not in index:
@@ -100,6 +112,7 @@ def get_soundcloud_track(data: JSONDict, config: JSONDict) -> TrackInfo:
                     map(str.casefold, re.split(r" ?[-,/] ", data.get("genre") or ""))
                 ),
                 config=config,
+                label="",
             )
         ),
         country=loc if len(loc) == 2 else get_country(loc),
@@ -117,7 +130,8 @@ def get_soundcloud_track(data: JSONDict, config: JSONDict) -> TrackInfo:
         .get("visual_url"),
     )
 
-    parsed_track = parse_title(track.label, track.title)
+    parsed_track = parse_title(track.label, track.title, track.artist)
+    track["artist"] = parsed_track.pop("artist", None) or track["artist"]
     track.update(parsed_track)
 
     track.albumtype = "single"

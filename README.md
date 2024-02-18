@@ -3,8 +3,8 @@
 ---
 
 [![image](http://img.shields.io/pypi/v/beetcamp.svg)](https://pypi.python.org/pypi/beetcamp)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=snejus_beets-bandcamp&metric=alert_status)](https://sonarcloud.io/dashboard?id=snejus_beets-bandcamp)
-[![Coverage Status](https://coveralls.io/repos/github/snejus/beetcamp/badge.svg?branch=master)](https://coveralls.io/github/snejus/beetcamp?branch=master)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=snejus_beetcamp&metric=alert_status)](https://sonarcloud.io/dashboard?id=snejus_beetcamp)
+[![Coverage Status](https://coveralls.io/repos/github/snejus/beetcamp/badge.svg?branch=main)](https://coveralls.io/github/snejus/beetcamp?branch=main)
 [ ![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fsnejus%2Fbeetcamp&count_bg=%23842424&title_bg=%23846060&icon=postwoman.svg&icon_color=%23CF4D4D&title=hits&edge_flat=true)](https://hits.seeyoufarm.com)
 
 Bandcamp autotagger plugin for [beets]. It mostly focuses on
@@ -50,14 +50,15 @@ Navigate to your `beets` virtual environment and install the plug-in with
 ```
 
 # CLI
+
 The plugin exposes some of its functionality through a command-line application `beetcamp`:
 
 ```xml
 usage: beetcamp [-h] [-a] [-l] [-t] [release_url | query]
 
-Get bandcamp release metadata from the given <release-url> or perform 
-bandcamp search with <query>. Anything that does not start with https:// 
-will be assumed to be a query. Search type flags: -a for albums, -l for 
+Get bandcamp release metadata from the given <release-url> or perform
+bandcamp search with <query>. Anything that does not start with https://
+will be assumed to be a query. Search type flags: -a for albums, -l for
 labels and artists, -t for tracks. By default, all types are searched.
 
 positional arguments:
@@ -69,16 +70,20 @@ options:
   -a, --album  Search albums
   -l, --label  Search labels and artists
   -t, --track  Search tracks
+  -o INDEX, --open INDEX
+                        Open search result indexed by INDEX in the browser
 ```
 
-* Use `beetcamp <bandcamp-release-url>` to return release metadata in JSON format.
-* Use `beetcamp [-alt] <query>` to search albums, labels and tracks on Bandcamp and return
-  results in JSON. You can get the general idea of the kind of data the search returns below (the
-  output is prettified with [rich] externally)
+- Use `beetcamp <bandcamp-release-url>` to return release metadata in JSON format.
+- Use `beetcamp [-alt] <query>` to search albums, labels and tracks on Bandcamp and return
+  results in JSON. 
+- Search results are indexed - add `-o <index>` in order to open the chosen URL in the browser.
 
-![image](images/search.png)
+You can see how the data looks below (the output is prettified with [rich-tables]).
 
-[rich]: https://github.com/Textualize/rich
+![image](https://github.com/snejus/beetcamp/blob/fe6ea71a0ab0035d657d13f664de957befb4552c/images/search.png?raw=true)
+
+[rich-tables]: https://github.com/snejus/rich-tables
 
 # Configuration
 
@@ -254,38 +259,38 @@ select `enter Id` and paste the URL that you have.
 
 ## Supported metadata
 
-| field          | singleton | album track | album | note                                                                                |
+|          field | singleton | album track | album |                                        note                                         |
 | -------------: | :-------: | :---------: | :---: | :---------------------------------------------------------------------------------: |
-| `album`        |           |             | ✔     |                                                                                     |
-| `album_id`     |           |             | ✔     | release Bandcamp URL                                                                |
-| `albumartist`  |           |             | ✔     |                                                                                     |
-| `albumstatus`  |           |             | ✔     |                                                                                     |
-| `albumtype`    | \*✔       |             | ✔     |                                                                                     |
-| `albumtypes`   | \*✔       |             | \*✔   |                                                                                     |
-| `artist`       | ✔         | ✔           | ✔     |                                                                                     |
-| `artist_id`    | ✔         |             | ✔     | label / publisher Bandcamp URL                                                      |
-| `catalognum`   | \*✔       |             | ✔     |                                                                                     |
-| `comments`     | \*✔       |             | \*✔   | release and media descriptions, and credits                                         |
-| `country`      | \*✔       |             | ✔     |                                                                                     |
-| `day`          | \*✔       |             | ✔     |                                                                                     |
-| `disctitle`    | \*✔       | ✔           |       |                                                                                     |
-| `genre`        | \*✔       |             | \*✔   | comma-delimited list of **release keywords** which match [musicbrainz genres]       |
-| `index`        |           | ✔           |       |                                                                                     |
-| `label`        | \*✔       |             | ✔     |                                                                                     |
-| `length`       | ✔         | ✔           |       |                                                                                     |
-| `lyrics`       | \*✔       | \*✔         |       |                                                                                     |
-| `media`        | \*✔       | ✔           | ✔     |                                                                                     |
-| `medium`       |           | ✔           |       | likely to be inaccurate, since it depends on information in the release description |
-| `mediums`      |           |             | ✔     |                                                                                     |
-| `medium_index` |           | ✔           |       | for now, same as `index`                                                            |
-| `medium_total` |           | ✔           |       | total number of tracks in the release                                               |
-| `month`        | \*✔       |             | ✔     |                                                                                     |
-| `style`        | \*✔       |             | \*✔   | Bandcamp genre tag                                                                  |
-| `title`        | ✔         | ✔           |       |                                                                                     |
-| `track_alt`    | ✔         | ✔           |       |                                                                                     |
-| `track_id`     |           | ✔           |       | track URL                                                                           |
-| `va`           |           |             | ✔     |                                                                                     |
-| `year`         | \*✔       |             | ✔     |                                                                                     |
+|        `album` |           |             |   ✔   |                                                                                     |
+|     `album_id` |           |             |   ✔   |                                release Bandcamp URL                                 |
+|  `albumartist` |           |             |   ✔   |                                                                                     |
+|  `albumstatus` |           |             |   ✔   |                                                                                     |
+|    `albumtype` |    \*✔    |             |   ✔   |                                                                                     |
+|   `albumtypes` |    \*✔    |             |  \*✔  |                                                                                     |
+|       `artist` |     ✔     |      ✔      |   ✔   |                                                                                     |
+|    `artist_id` |     ✔     |             |   ✔   |                           label / publisher Bandcamp URL                            |
+|   `catalognum` |    \*✔    |             |   ✔   |                                                                                     |
+|     `comments` |    \*✔    |             |  \*✔  |                     release and media descriptions, and credits                     |
+|      `country` |    \*✔    |             |   ✔   |                                                                                     |
+|          `day` |    \*✔    |             |   ✔   |                                                                                     |
+|    `disctitle` |    \*✔    |      ✔      |       |                                                                                     |
+|        `genre` |    \*✔    |             |  \*✔  |    comma-delimited list of **release keywords** which match [musicbrainz genres]    |
+|        `index` |           |      ✔      |       |                                                                                     |
+|        `label` |    \*✔    |             |   ✔   |                                                                                     |
+|       `length` |     ✔     |      ✔      |       |                                                                                     |
+|       `lyrics` |    \*✔    |     \*✔     |       |                                                                                     |
+|        `media` |    \*✔    |      ✔      |   ✔   |                                                                                     |
+|       `medium` |           |      ✔      |       | likely to be inaccurate, since it depends on information in the release description |
+|      `mediums` |           |             |   ✔   |                                                                                     |
+| `medium_index` |           |      ✔      |       |                              for now, same as `index`                               |
+| `medium_total` |           |      ✔      |       |                        total number of tracks in the release                        |
+|        `month` |    \*✔    |             |   ✔   |                                                                                     |
+|        `style` |    \*✔    |             |  \*✔  |                                 Bandcamp genre tag                                  |
+|        `title` |     ✔     |      ✔      |       |                                                                                     |
+|    `track_alt` |     ✔     |      ✔      |       |                                                                                     |
+|     `track_id` |           |      ✔      |       |                                      track URL                                      |
+|           `va` |           |             |   ✔   |                                                                                     |
+|         `year` |    \*✔    |             |   ✔   |                                                                                     |
 
 **\*** Available with `beets` versions `1.5` or higher.
 

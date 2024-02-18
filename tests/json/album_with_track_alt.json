@@ -177,6 +177,7 @@
   "keywords": [
     "London"
   ],
+  "mainEntityOfPage": "https://foldrecords.bandcamp.com/album/fld001-gareth-wild-common-assault-ep",
   "name": "FLD001 // Gareth Wild - Common Assault EP",
   "numTracks": 6,
   "publisher": {
@@ -187,11 +188,6 @@
         "@type": "PropertyValue",
         "name": "band_id",
         "value": 1614229409
-      },
-      {
-        "@type": "PropertyValue",
-        "name": "currency",
-        "value": "GBP"
       },
       {
         "@type": "PropertyValue",
@@ -301,6 +297,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H05M57S",
+          "mainEntityOfPage": "https://foldrecords.bandcamp.com/track/a1-gareth-wild-live-wire",
           "name": "A1. Gareth Wild - Live Wire"
         },
         "position": 1
@@ -324,6 +321,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H05M51S",
+          "mainEntityOfPage": "https://foldrecords.bandcamp.com/track/a2-gareth-wild-live-wire-roll-dann-remix",
           "name": "A2. Gareth Wild - Live Wire ( Roll Dann Remix )"
         },
         "position": 2
@@ -347,6 +345,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H00M20S",
+          "mainEntityOfPage": "https://foldrecords.bandcamp.com/track/a3-gareth-wild-dds-locked-groove",
           "name": "A3. Gareth Wild - DDS [Locked Groove]"
         },
         "position": 3
@@ -370,6 +369,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H05M15S",
+          "mainEntityOfPage": "https://foldrecords.bandcamp.com/track/aa1-gareth-wild-common-assault",
           "name": "AA1. Gareth Wild - Common Assault"
         },
         "position": 4
@@ -393,6 +393,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H06M05S",
+          "mainEntityOfPage": "https://foldrecords.bandcamp.com/track/aa2-gareth-wild-saturn-storm",
           "name": "AA2. Gareth Wild - Saturn Storm"
         },
         "position": 5
@@ -416,6 +417,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H00M20S",
+          "mainEntityOfPage": "https://foldrecords.bandcamp.com/track/aa3-gareth-wild-quadrant-locked-groove",
           "name": "AA3. Gareth Wild - Quadrant [Locked Groove]"
         },
         "position": 6

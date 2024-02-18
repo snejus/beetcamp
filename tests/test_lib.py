@@ -6,28 +6,36 @@ import json
 import os
 from collections import Counter, defaultdict, namedtuple
 from functools import partial
+from glob import glob
 from itertools import groupby, starmap
-from operator import truth
+from operator import itemgetter
+from typing import Any, Dict, List, Optional, Tuple
 
 import pytest
+from _pytest.config import Config
+from _pytest.fixtures import FixtureRequest
+from beets import IncludeLazyConfig
+from beets.autotag.hooks import AttrDict
 from beetsplug.bandcamp import BandcampPlugin
-from beetsplug.bandcamp._metaguru import Metaguru
+from beetsplug.bandcamp.metaguru import Metaguru
 from rich.console import Group
+from rich.panel import Panel
 from rich.traceback import install
 from rich_tables.utils import (
+    NewTable,
     border_panel,
     make_console,
     make_difftext,
     new_table,
     simple_panel,
-    wrap
+    wrap,
 )
 
 pytestmark = pytest.mark.lib
 
-BASE_DIR = "lib_tests"
-TEST_DIR = "dev"
-REFERENCE_DIR = "v0.15.0"
+JSONDict = Dict[str, Any]
+
+LIB_TESTS_DIR = "lib_tests"
 JSONS_DIR = "jsons"
 
 IGNORE_FIELDS = {
@@ -42,42 +50,97 @@ IGNORE_FIELDS = {
     "artwork",
     "city",
     "disctitle",
+    "times_bought",
 }
+DO_NOT_COMPARE = {"album_id", "media", "mediums", "disctitle"}
 
-target_dir = os.path.join(BASE_DIR, TEST_DIR)
-compare_against = os.path.join(BASE_DIR, REFERENCE_DIR)
-if not os.path.exists(target_dir):
-    os.makedirs(target_dir)
 install(show_locals=True, extra_lines=8, width=int(os.environ.get("COLUMNS", 150)))
 console = make_console(stderr=True, record=True)
 
-testfiles = sorted(filter(lambda x: x.endswith("json"), os.listdir(JSONS_DIR)))
-
 
 Oldnew = namedtuple("Oldnew", ["old", "new", "diff"])
-oldnew = defaultdict(list)
+oldnew: Dict[str, List[Oldnew]] = defaultdict(list)
 TRACK_FIELDS = ["track_alt", "artist", "title"]
+TEST_FILES = sorted(glob(os.path.join(JSONS_DIR, "*.json")))
 
 
-def album_table(**kwargs):
-    table = new_table(*TRACK_FIELDS, show_header=False, highlight=False)
-    return border_panel(table, **{**dict(expand=True), **kwargs})
-
-
-albums = defaultdict(album_table)
-fixed = defaultdict(lambda: album_table(border_style="green"))
-new_fails = defaultdict(lambda: album_table(border_style="red"))
+albums: List[Tuple[str, str]] = []
+fixed: List[Tuple[str, str]] = []
+new_fails: List[Tuple[str, str]] = []
 
 
 open = partial(open, encoding="utf-8")  # pylint: disable=redefined-builtin
+
+
+@pytest.fixture(scope="module")
+def base_dir(pytestconfig: Config) -> str:
+    return os.path.join(LIB_TESTS_DIR, pytestconfig.getoption("base"))
+
+
+@pytest.fixture(params=TEST_FILES)
+def filename(request: FixtureRequest) -> str:
+    return str(os.path.basename(request.param))
+
+
+@pytest.fixture(scope="module")
+def target_dir(pytestconfig: Config) -> str:
+    target = os.path.join(LIB_TESTS_DIR, pytestconfig.getoption("target"))
+    if not os.path.exists(target):
+        os.makedirs(target)
+    return target
+
+
+@pytest.fixture
+def target_filename(target_dir: str, filename: str) -> str:
+    return os.path.join(target_dir, filename)
+
+
+@pytest.fixture(scope="module")
+def config() -> IncludeLazyConfig:
+    yield BandcampPlugin().config.flatten()
+
+
+def album_table(**kwargs: JSONDict) -> Panel:
+    table = new_table(*TRACK_FIELDS, show_header=False, expand=False, highlight=False)
+    return simple_panel(table, **{"expand": True, "border_style": "dim cyan", **kwargs})
 
 
 def _fmt_old(s: str, times: int) -> str:
     return (f"{times} x " if times > 1 else "") + wrap(s, "b s red")
 
 
+@pytest.fixture
+def base(base_dir: str, filename: str) -> AttrDict:
+    try:
+        with open(os.path.join(base_dir, filename)) as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return {}
+
+
+@pytest.fixture
+def target(target_filename: str) -> AttrDict:
+    try:
+        with open(target_filename) as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return {}
+
+
+@pytest.fixture
+def guru(config: IncludeLazyConfig, filename: str) -> Metaguru:
+    with open(os.path.join(JSONS_DIR, filename)) as f:
+        test_data = f.read()
+
+    return Metaguru.from_html(test_data, config)
+
+
+def escape(string: str) -> str:
+    return str(string).replace("[", r"\[")
+
+
 @pytest.fixture(scope="session")
-def _report():
+def _report() -> None:
     yield
     cols = []
     for field in set(oldnew.keys()) - {"comments", "genre", "track_fields"}:
@@ -87,29 +150,87 @@ def _report():
         tab = new_table()
         for new, all_old in groupby(field_diffs, lambda x: x.new):
             tab.add_row(
-                " | ".join(starmap(_fmt_old, Counter(d.old for d in all_old).items())),
-                wrap(new, "b green"),
+                " | ".join(
+                    starmap(_fmt_old, Counter(escape(d.old) for d in all_old).items())
+                ),
+                wrap(escape(new), "b green"),
             )
-        cols.append(simple_panel(tab, title=f"{len(field_diffs)} [magenta]{field}[/]"))
+        cols.append(
+            simple_panel(tab, title=f"{len(field_diffs)} [magenta]{escape(field)}[/]")
+        )
 
     if cols:
         console.print("")
         console.print(border_panel(Group(*cols)))
+
+    fails = [(wrap(x[0], "red"), x[1]) for x in new_fails if x]
+    fix = [(wrap(x[0], "green"), x[1]) for x in fixed if x]
+    _tables = [albums, fix, "", "", *fails] if albums else [fix, fails]
+    _tables = list(filter(None, _tables))
+
     console.print("")
-    console.print(Group(*(t for t in albums.values() if t.renderable.rows)))
-    console.print("")
-    console.print(Group(*(t for t in fixed.values() if t.renderable.rows)))
-    console.print("")
-    console.print(Group(*(t for t in new_fails.values() if t.renderable.rows)))
+    console.print(new_table(rows=[[border_panel(new_table(rows=t)) for t in _tables]]))
 
 
-@pytest.fixture(scope="module")
-def config():
-    yield BandcampPlugin().config.flatten()
+@pytest.fixture
+def old(base: JSONDict) -> AttrDict:
+    for key in IGNORE_FIELDS:
+        base.pop(key, None)
+
+    return base
 
 
-def do_key(table, key: str, before, after, cached_value=None, album_name=None):
-    if before == after and not cached_value:
+@pytest.fixture
+def new(
+    guru: Metaguru, base: AttrDict, target: AttrDict, target_filename: str
+) -> AttrDict:
+    new = (
+        guru.singleton
+        if "_track_" in target_filename
+        else next((a for a in guru.albums if a.media == "Vinyl"), guru.albums[0])
+    )
+
+    new.catalognum = " / ".join(x.catalognum for x in guru.albums if x.catalognum)
+
+    if not target or new not in (base, target):
+        with open(target_filename, "w") as f:
+            json.dump(new, f, indent=2, sort_keys=True)
+
+    for key in IGNORE_FIELDS:
+        new.pop(key, None)
+    return new
+
+
+@pytest.fixture
+def desc(old: AttrDict, new: AttrDict, guru: Metaguru) -> str:
+    get_values = itemgetter(*TRACK_FIELDS)
+
+    def get_tracks(data: JSONDict) -> List[Tuple[str, ...]]:
+        return [tuple(get_values(t)) for t in data.get("tracks", [])]
+
+    if "/album/" in new["data_url"]:
+        old.update(albumartist=old.pop("artist", ""), tracks=get_tracks(old))
+        new.update(albumartist=new.pop("artist", ""), tracks=get_tracks(new))
+        artist, title = new.get("albumartist", ""), new.get("album", "")
+    else:
+        artist, title = new["artist"], new["title"]
+
+    return f"{artist} - {guru.meta['name']}"
+
+
+@pytest.fixture
+def entity_id(new: AttrDict) -> str:
+    return new["album_id"] if "/album/" in new["data_url"] else new["track_id"]
+
+
+def do_field(
+    table: NewTable,
+    field: str,
+    before: Any,
+    after: Any,
+    cached_value: Optional[Any] = None,
+) -> None:
+    if before == after and cached_value is None:
         return None
 
     key_fixed = False
@@ -117,136 +238,82 @@ def do_key(table, key: str, before, after, cached_value=None, album_name=None):
         key_fixed = True
         before = cached_value
 
-    parts = []
-    if key == "tracks":
-        for old_track, new_track in zip(before, after):
-            parts.append(
-                [make_difftext(str(a), str(b)) for a, b in zip(old_track, new_track)]
-            )
+    parts: List[Tuple[str, str]] = []
+    if field == "tracks":
+        for old_track, new_track in [
+            (dict(zip(TRACK_FIELDS, a)), dict(zip(TRACK_FIELDS, b)))
+            for a, b in zip(before, after)
+        ]:
+            field_diffs: List[str] = []
+            for field in TRACK_FIELDS:
+                old, new = old_track[field], new_track[field]
+                diff = str(make_difftext(str(old), str(new)))
+                field_diffs.append(diff)
+                if old != new:
+                    oldnew[field].append(Oldnew(old, new, diff))
+            parts.append(("tracks", " | ".join(field_diffs)))
     else:
-        before, after = str(before), str(after)
-        difftext = make_difftext(before, after)
-        parts = [[wrap(key, "b"), difftext]]
-        if not key_fixed:
-            oldnew[key].append(Oldnew(before, after, difftext))
+        old, new = str(before), str(after)
+        difftext = make_difftext(old, new)
+        parts = [(wrap(field, "b"), difftext)]
+        if old != new:
+            oldnew[field].append(Oldnew(before, after, difftext))
 
     if key_fixed:
-        fixed[album_name].renderable.add_rows(parts)
+        fixed.extend(parts)
         return None
 
     table.add_rows(parts)
     if cached_value is None:
-        new_fails[album_name].renderable.add_rows(parts)
+        new_fails.extend(parts)
     else:
-        albums[album_name].renderable.add_rows(parts)
-    return after
-
-
-def compare(old, new, cache) -> bool:
-    if "/album/" in new["data_url"]:
-        old.update(
-            albumartist=old.pop("artist", ""),
-            tracks=[tuple(t.get(f, "") for f in TRACK_FIELDS) for t in old["tracks"]],
-        )
-        new.update(
-            albumartist=new.pop("artist", ""),
-            tracks=[tuple(t.get(f, "") for f in TRACK_FIELDS) for t in new["tracks"]],
-        )
-        desc = f"{new.get('albumartist', '')} - {new.get('album', '')}"
-        _id = new["album_id"]
-    else:
-        desc, _id = f"{new['artist']} - {new['title']}", new["track_id"]
-
-    table = new_table(padding=0, collapse_padding=True)
-    all_fields = set(new).union(set(old))
-
-    compare_key = partial(do_key, table, album_name=desc)
-
-    fail = False
-    for key in sorted(all_fields - IGNORE_FIELDS):
-        values = old.get(key), new.get(key)
-        if values[0] is None and values[1] is None:
-            continue
-        cache_key = f"{_id}_{key}"
-        out = compare_key(key, *values, cached_value=cache.get(cache_key, None))
-        cache.set(cache_key, out)
-        if values[0] != values[1]:
-            fail = True
-
-    albums[desc].title = desc
-    fixed[desc].title = desc
-    new_fails[desc].title = desc
-    if fail:
-        subtitle = wrap(f"{_id} - {new['media']}", "dim")
-        console.print("")
-        console.print(border_panel(table, title=wrap(desc, "b"), subtitle=subtitle))
-        new_fails[desc].title = desc
-        return False
-    return True
-
-
-@pytest.fixture(params=testfiles)
-def file(request):
-    return request.param
+        albums.extend(parts)
 
 
 @pytest.fixture
-def guru(file, config):
-    with open(os.path.join(JSONS_DIR, file)) as f:
-        meta = f.read()
+def difference(
+    old: AttrDict, new: AttrDict, cache: pytest.Cache, desc: str, entity_id: str
+) -> bool:
+    table = new_table(padding=0, expand=False, collapse_padding=True)
+    compare_fields = (new.keys() | old.keys()) - DO_NOT_COMPARE
+    compare_field = partial(do_field, table)
 
-    return Metaguru.from_html(meta, config)
+    fail = False
+    for field in sorted(compare_fields):
+        old_val, new_val = old.get(field), new.get(field)
+        if old_val is None and new_val is None:
+            continue
+
+        cache_key = f"{entity_id}_{field}"
+        compare_field(field, old_val, new_val, cached_value=cache.get(cache_key, None))
+        if old_val != new_val:
+            backup = new_val or ""
+            fail = True
+        else:
+            backup = None
+
+        cache.set(cache_key, backup)
+
+    for lst in albums, fixed, new_fails:
+        if lst and lst[-1]:
+            lst.append([])
+
+    if fail:
+        console.print("")
+        console.print(
+            border_panel(
+                table,
+                title=desc,
+                expand=True,
+                subtitle=wrap(f"{entity_id} - {new['media']}", "dim"),
+            )
+        )
+        return True
+
+    return False
 
 
 @pytest.mark.usefixtures("_report")
-def test_file(file, guru, cache):
-    IGNORE_FIELDS.update({"album_id", "media", "mediums", "disctitle"})
-
-    target_file = os.path.join(target_dir, file)
-    if "_track_" in file:
-        new = guru.singleton
-    else:
-        albums = guru.albums
-        new = albums[0]
-        for album in albums:
-            if album.media == "Vinyl":
-                new = album
-                break
-
-    new.catalognum = " / ".join(filter(truth, map(lambda x: x.catalognum, guru.albums)))
-    with open(target_file, "w") as f:
-        json.dump(new, f, indent=2)
-
-    try:
-        with open(os.path.join(compare_against, file)) as f:
-            old = json.load(f)
-    except FileNotFoundError:
-        old = {}
-
-    if not compare(old, new, cache):
-        pytest.fail(pytrace=False)
-
-
-@pytest.mark.usefixtures("_report")
-def test_media(file, guru, cache):
-    if "_track_" in file:
-        entities = [guru.singleton]
-    else:
-        entities = guru.albums
-
-    same = False
-    for new in entities:
-        file = (new.get("album_id") or new.track_id).replace("/", "_") + ".json"
-        target_file = os.path.join(target_dir, file)
-        with open(target_file, "w") as f:
-            json.dump(new, f, indent=2)
-
-        try:
-            with open(os.path.join(compare_against, file)) as f:
-                old = json.load(f)
-        except FileNotFoundError:
-            old = {}
-        same = compare(old, new, cache)
-
-    if not same:
+def test_file(difference: bool) -> None:
+    if difference:
         pytest.fail(pytrace=False)

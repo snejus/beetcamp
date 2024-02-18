@@ -123,12 +123,78 @@
           }
         ],
         "availability": "InStock",
-        "price": 10,
+        "price": 12,
         "priceCurrency": "EUR",
         "priceSpecification": {
-          "minPrice": 10
+          "minPrice": 12
         },
         "url": "https://fallingapart.bandcamp.com/album/fa010-kickdown-vienna#p2928220301-buy"
+      }
+    },
+    {
+      "@id": "https://fallingapart.bandcamp.com/album/fa010-kickdown-vienna#b50562643",
+      "@type": [
+        "MusicRelease",
+        "Product"
+      ],
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "item_id",
+          "value": 50562643
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "item_type",
+          "value": "b"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "selling_band_id",
+          "value": 3963823236
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_name",
+          "value": "Digital"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "art_id",
+          "value": 92683853
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "is_bfd",
+          "value": true
+        }
+      ],
+      "image": [
+        "https://f4.bcbits.com/img/a0092683853_10.jpg"
+      ],
+      "musicReleaseFormat": "DigitalFormat",
+      "name": "full digital discography (18 releases)",
+      "offers": {
+        "@type": "Offer",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "bundle_size",
+            "value": 18
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "discount",
+            "value": 0.2
+          }
+        ],
+        "availability": "OnlineOnly",
+        "price": 164.8,
+        "priceCurrency": "EUR",
+        "priceSpecification": {
+          "minPrice": 164.8
+        },
+        "url": "https://fallingapart.bandcamp.com/album/fa010-kickdown-vienna#b50562643-buy"
       }
     },
     {
@@ -154,17 +220,20 @@
     "name": "jeånne, DJ DISRESPECT"
   },
   "copyrightNotice": "All Rights Reserved",
-  "dateModified": "14 Aug 2021 09:35:03 GMT",
+  "dateModified": "06 Jul 2022 21:18:27 GMT",
   "datePublished": "09 Oct 2020 00:00:00 GMT",
   "image": "https://f4.bcbits.com/img/a3742084072_10.jpg",
   "keywords": [
+    "Ambient",
     "Chicago",
     "Electronic",
     "Experimental",
+    "House",
     "Techno",
     "acid",
     "Frankfurt"
   ],
+  "mainEntityOfPage": "https://fallingapart.bandcamp.com/album/fa010-kickdown-vienna",
   "name": "fa010 | Kickdown Vienna",
   "numTracks": 4,
   "publisher": {
@@ -175,11 +244,6 @@
         "@type": "PropertyValue",
         "name": "band_id",
         "value": 3963823236
-      },
-      {
-        "@type": "PropertyValue",
-        "name": "currency",
-        "value": "EUR"
       },
       {
         "@type": "PropertyValue",
@@ -212,7 +276,7 @@
         "value": 480
       }
     ],
-    "description": "vinyl record label / disc-jockey\n\nbooking (masha): goldfishage@gmail.com",
+    "description": "vinyl record label / disc-jockey\n\nbookings:\nfallingapart030@gmail.com",
     "foundingLocation": {
       "@type": "Place",
       "name": "Frankfurt, Germany"
@@ -298,6 +362,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H06M25S",
+          "mainEntityOfPage": "https://fallingapart.bandcamp.com/track/je-nne-the-devils-not-s-bl-ck-s-he-is-p-inted-h-rd-mix",
           "name": "jeånne - the devil's not ås blåck ås he is påinted (hård mix)"
         },
         "position": 1
@@ -321,6 +386,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H05M33S",
+          "mainEntityOfPage": "https://fallingapart.bandcamp.com/track/je-nne-the-p-th-to-p-r-dise-begins-in-hell",
           "name": "jeånne - the påth to pårådise begins in hell"
         },
         "position": 2
@@ -344,6 +410,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H05M15S",
+          "mainEntityOfPage": "https://fallingapart.bandcamp.com/track/dj-disrespect-vienna-warm-up-mix",
           "name": "DJ DISRESPECT - VIENNA (WARM UP MIX"
         },
         "position": 3
@@ -367,6 +434,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H05M33S",
+          "mainEntityOfPage": "https://fallingapart.bandcamp.com/track/dj-disrespect-transition-athletic-mix",
           "name": "DJ DISRESPECT - TRANSITION (ATHLETIC MIX)"
         },
         "position": 4

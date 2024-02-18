@@ -133,10 +133,10 @@
           }
         ],
         "availability": "InStock",
-        "price": 95,
+        "price": 105,
         "priceCurrency": "DKK",
         "priceSpecification": {
-          "minPrice": 95
+          "minPrice": 105
         },
         "url": "https://reececox.bandcamp.com/album/emotion-1-kul-r-008#p1985399228-buy"
       }
@@ -177,6 +177,7 @@
     "Electronic",
     "Berlin"
   ],
+  "mainEntityOfPage": "https://reececox.bandcamp.com/album/emotion-1-kul-r-008",
   "name": "Emotion 1 - Kulør 008",
   "numTracks": 5,
   "publisher": {
@@ -190,12 +191,12 @@
       },
       {
         "@type": "PropertyValue",
-        "name": "currency",
-        "value": "EUR"
+        "name": "has_any_downloads",
+        "value": true
       },
       {
         "@type": "PropertyValue",
-        "name": "has_any_downloads",
+        "name": "has_download_codes",
         "value": true
       },
       {
@@ -299,6 +300,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H04M55S",
+          "mainEntityOfPage": "https://reececox.bandcamp.com/track/emotion-1",
           "name": "Emotion 1"
         },
         "position": 1
@@ -322,6 +324,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H08M41S",
+          "mainEntityOfPage": "https://reececox.bandcamp.com/track/emotion-1-ibons-dizzy-stomp-mix",
           "name": "Emotion 1 (Ibon's Dizzy Stomp Mix)"
         },
         "position": 2
@@ -345,6 +348,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H05M39S",
+          "mainEntityOfPage": "https://reececox.bandcamp.com/track/emotion-1-parris-remix",
           "name": "Emotion 1 (Parris Remix)"
         },
         "position": 3
@@ -368,6 +372,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H06M40S",
+          "mainEntityOfPage": "https://reececox.bandcamp.com/track/emotion-1-call-super-remix",
           "name": "Emotion 1 (Call Super Remix)"
         },
         "position": 4
@@ -391,6 +396,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H04M25S",
+          "mainEntityOfPage": "https://reececox.bandcamp.com/track/emotion-1-upsammy-remix",
           "name": "Emotion 1 (upsammy Remix)"
         },
         "position": 5

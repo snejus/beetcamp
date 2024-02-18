@@ -11,7 +11,7 @@
     {
       "@type": "PropertyValue",
       "name": "art_id",
-      "value": 1255022292
+      "value": 2158518281
     },
     {
       "@type": "PropertyValue",
@@ -25,10 +25,10 @@
     "name": "GUTKEIN"
   },
   "copyrightNotice": "All Rights Reserved",
-  "dateModified": "09 Nov 2021 05:15:25 GMT",
+  "dateModified": "11 Sep 2022 04:14:58 GMT",
   "datePublished": "10 Jan 2021 00:00:00 GMT",
   "duration": "P00H05M55S",
-  "image": "https://f4.bcbits.com/img/a1255022292_10.jpg",
+  "image": "https://f4.bcbits.com/img/a2158518281_10.jpg",
   "inAlbum": {
     "@type": "MusicAlbum",
     "albumRelease": [
@@ -62,27 +62,20 @@
           {
             "@type": "PropertyValue",
             "name": "art_id",
-            "value": 1255022292
+            "value": 2158518281
           }
         ],
         "description": "Includes high-quality download in MP3, FLAC and more. Paying supporters also get unlimited streaming via the free Bandcamp app.",
         "image": [
-          "https://f4.bcbits.com/img/a1255022292_10.jpg"
+          "https://f4.bcbits.com/img/a2158518281_10.jpg"
         ],
         "musicReleaseFormat": "DigitalFormat",
         "name": "oenera",
         "offers": {
           "@type": "Offer",
-          "additionalProperty": [
-            {
-              "@type": "PropertyValue",
-              "name": "max_price",
-              "value": 1000
-            }
-          ],
           "availability": "OnlineOnly",
           "price": 1,
-          "priceCurrency": "USD",
+          "priceCurrency": "EUR",
           "priceSpecification": {
             "minPrice": 1
           },
@@ -98,9 +91,10 @@
     "Electronic",
     "keta techno",
     "meta",
-    "trance",
-    "Russia"
+    "techno",
+    "trance"
   ],
+  "mainEntityOfPage": "https://gutkeinforu.bandcamp.com/track/oenera",
   "name": "oenera",
   "publisher": {
     "@id": "https://gutkeinforu.bandcamp.com",
@@ -113,37 +107,28 @@
       },
       {
         "@type": "PropertyValue",
-        "name": "currency",
-        "value": "USD"
-      },
-      {
-        "@type": "PropertyValue",
         "name": "has_any_downloads",
         "value": true
       },
       {
         "@type": "PropertyValue",
         "name": "image_height",
-        "value": 711
+        "value": 3158
       },
       {
         "@type": "PropertyValue",
         "name": "image_id",
-        "value": 23849457
+        "value": 31082756
       },
       {
         "@type": "PropertyValue",
         "name": "image_width",
-        "value": 749
+        "value": 3158
       }
     ],
     "description": "support a tiny acquarium on the tip of a K-hall ~)",
-    "foundingLocation": {
-      "@type": "Place",
-      "name": "Russia"
-    },
     "genre": "https://bandcamp.com/tag/electronic",
-    "image": "https://f4.bcbits.com/img/0023849457_10.jpg",
+    "image": "https://f4.bcbits.com/img/0031082756_10.jpg",
     "mainEntityOfPage": [
       {
         "@type": "WebPage",
@@ -169,18 +154,6 @@
         ],
         "name": "music",
         "url": "https://gutkeinforu.bandcamp.com/music"
-      },
-      {
-        "@type": "WebPage",
-        "additionalProperty": [
-          {
-            "@type": "PropertyValue",
-            "name": "nav_type",
-            "value": "p"
-          }
-        ],
-        "name": "merch",
-        "url": "https://gutkeinforu.bandcamp.com/merch"
       }
     ]
   }

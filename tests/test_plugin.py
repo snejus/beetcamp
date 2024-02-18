@@ -1,15 +1,28 @@
 """Tests for any logic found in the main plugin module."""
 import json
-from logging import getLogger
+from itertools import zip_longest
 
 import pytest
+from beets.autotag.hooks import AlbumInfo
 from beets.library import Item
-from beetsplug.bandcamp import BandcampAlbumArt, BandcampPlugin, urlify
+from beets.plugins import log
+from beetsplug.bandcamp import DEFAULT_CONFIG, BandcampAlbumArt, BandcampPlugin, urlify
 
 LABEL_URL = "https://label.bandcamp.com"
 ALBUM_URL = f"{LABEL_URL}/album/release"
 
 _p = pytest.param
+
+
+def check_album(actual, expected):
+    expected.tracks.sort(key=lambda t: t.index)
+    actual.tracks.sort(key=lambda t: t.index)
+
+    for actual_track, expected_track in zip(actual.tracks, expected.tracks):
+        assert vars(actual_track) == vars(expected_track)
+    actual.tracks = None
+    expected.tracks = None
+    assert vars(actual) == vars(expected)
 
 
 @pytest.mark.parametrize(
@@ -51,7 +64,91 @@ def test_urlify(title, expected):
     assert urlify(title) == expected
 
 
-def test_coverart(monkeypatch, beets_config):
+@pytest.fixture
+def plugin(monkeypatch, release):
+    html, _ = release
+    monkeypatch.setattr(BandcampPlugin, "_get", lambda *args: html)
+    pl = BandcampPlugin()
+    pl.config.set(DEFAULT_CONFIG)
+    return pl
+
+
+@pytest.mark.parametrize("method", ["album_for_id", "track_for_id"])
+def test_handle_non_bandcamp_url(method):
+    """The plugin should not break if a non-bandcamp URL is presented."""
+    assert getattr(BandcampPlugin(), method)("https://www.some-random-url") is None
+
+
+@pytest.mark.usefixtures("release")
+@pytest.mark.parametrize(
+    ["release", "preferred_media", "expected_media"],
+    [
+        ("album", "Vinyl", "Vinyl"),
+        ("album", "CD", "Digital Media"),
+        ("album", "", "Digital Media"),
+        (None, None, None),
+    ],
+    indirect=["release"],
+)
+def test_album_for_id(plugin, album_for_media, preferred_media, expected_media):
+    """Check that when given an album id, the plugin returns a _single_ album in the
+    preferred media format.
+    """
+    expected_album = album_for_media
+    if expected_album:
+        album_id = expected_album.album_id
+    else:
+        album_id = "https://bandcamp.com/album/doesntexist"
+    plugin.beets_config["match"]["preferred"]["media"].set([preferred_media])
+
+    album = plugin.album_for_id(album_id)
+
+    if expected_album:
+        assert isinstance(album, AlbumInfo)
+        assert album.media == expected_media
+        check_album(album, expected_album)
+    else:
+        assert album is None
+
+
+@pytest.mark.usefixtures("release")
+@pytest.mark.parametrize("release", ["album"], indirect=["release"])
+def test_candidates(plugin, albuminfos):
+    first = albuminfos[0]
+    artist, album = first.artist, first.album
+    item = Item(albumartist=artist, album=album, mb_albumid=first.album_id)
+
+    candidates = list(plugin.candidates([item], artist, album, False))
+
+    assert len(candidates) == len(albuminfos)
+    for actual, expected in zip(candidates, albuminfos):
+        check_album(actual, expected)
+
+
+@pytest.mark.usefixtures("release")
+@pytest.mark.parametrize("release", ["single_track_release"], indirect=["release"])
+def test_singleton_candidates(plugin, albuminfos):
+    first = albuminfos[0]
+    artist, title = first.artist, first.title
+    item = Item(artist=artist, title=title, mb_trackid=first.track_id)
+
+    candidates = list(plugin.item_candidates(item, artist, title))
+
+    assert len(candidates) == len(albuminfos)
+    for actual, expected in zip_longest(candidates, albuminfos):
+        assert vars(actual) == vars(expected)
+
+
+def test_bandcamp_plugin_name():
+    assert BandcampPlugin().data_source == "bandcamp"
+
+
+@pytest.fixture
+def bandcamp_item():
+    return Item(mb_albumid="https://bandcamp.com/album/")
+
+
+def test_coverart(monkeypatch, bandcamp_item, beets_config):
     with open("tests/json/album.json", encoding="utf-8") as f:
         text = "".join(f.read().splitlines())
 
@@ -59,7 +156,34 @@ def test_coverart(monkeypatch, beets_config):
 
     monkeypatch.setattr(BandcampAlbumArt, "_get", lambda *args: text)
 
-    album = Item(mb_albumid="https://bandcamp.com/album/")
-    log = getLogger(__name__)
-    for cand in BandcampAlbumArt(log, beets_config).get(album, None, []):
-        assert cand.url == img_url
+    for candidate in BandcampAlbumArt(log, beets_config).get(bandcamp_item, None, []):
+        assert candidate.url == img_url
+
+
+def test_no_coverart_non_bandcamp_url(beets_config):
+    album = Item(mb_albumid="123-abc-12323")
+    with pytest.raises(StopIteration):
+        next(BandcampAlbumArt(log, beets_config).get(album, None, []))
+
+
+def test_no_coverart_empty_response(monkeypatch, bandcamp_item, beets_config):
+    monkeypatch.setattr(BandcampAlbumArt, "_get", lambda *args: "")
+    with pytest.raises(StopIteration):
+        next(BandcampAlbumArt(log, beets_config).get(bandcamp_item, None, []))
+
+
+@pytest.mark.parametrize(
+    "html",
+    (
+        "empty",
+        json.dumps({"@id": "", "image": "someurl"}),  # no tracks
+        json.dumps({"@id": "", "track": [], "image": "someurl"}),  # no label
+        json.dumps(
+            {"@id": "", "track": [], "publisher": {"name": "Label"}}
+        ),  # missing image
+    ),
+)
+def test_no_coverart_bad_html(monkeypatch, html, bandcamp_item, beets_config):
+    monkeypatch.setattr(BandcampAlbumArt, "_get", lambda *args: html)
+    with pytest.raises(StopIteration):
+        next(BandcampAlbumArt(log, beets_config).get(bandcamp_item, None, []))

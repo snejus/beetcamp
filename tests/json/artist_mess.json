@@ -137,6 +137,7 @@
     "psytrance",
     "Niue"
   ],
+  "mainEntityOfPage": "https://psykovsky.bandcamp.com/album/ksolntsu",
   "name": "Ksolntsu",
   "numTracks": 15,
   "publisher": {
@@ -147,11 +148,6 @@
         "@type": "PropertyValue",
         "name": "band_id",
         "value": 250137266
-      },
-      {
-        "@type": "PropertyValue",
-        "name": "currency",
-        "value": "USD"
       },
       {
         "@type": "PropertyValue",
@@ -240,6 +236,7 @@
           },
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H08M38S",
+          "mainEntityOfPage": "https://psykovsky.bandcamp.com/track/ela-na-pame",
           "name": "Ela Na Pame"
         },
         "position": 1
@@ -267,6 +264,7 @@
           },
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H11M13S",
+          "mainEntityOfPage": "https://psykovsky.bandcamp.com/track/stone-sea",
           "name": "Stone Sea"
         },
         "position": 2
@@ -294,6 +292,7 @@
           },
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H07M34S",
+          "mainEntityOfPage": "https://psykovsky.bandcamp.com/track/so-we-sailed-till-we-found",
           "name": "So We Sailed Till We Found"
         },
         "position": 3
@@ -321,6 +320,7 @@
           },
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H07M53S",
+          "mainEntityOfPage": "https://psykovsky.bandcamp.com/track/doors-of-perception",
           "name": "Doors Of Perception"
         },
         "position": 4
@@ -348,6 +348,7 @@
           },
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H12M16S",
+          "mainEntityOfPage": "https://psykovsky.bandcamp.com/track/variant-on-the-right",
           "name": "Variant On The Right"
         },
         "position": 5
@@ -371,6 +372,7 @@
           ],
           "copyrightNotice": "Attribution Non Commercial Share Alike",
           "duration": "P00H12M49S",
+          "mainEntityOfPage": "https://psykovsky.bandcamp.com/track/call-of-beauty",
           "name": "Call Of Beauty"
         },
         "position": 6
@@ -398,6 +400,7 @@
           },
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H12M09S",
+          "mainEntityOfPage": "https://psykovsky.bandcamp.com/track/many-many-krishnas",
           "name": "Many Many Krishnas"
         },
         "position": 7
@@ -425,6 +428,7 @@
           },
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H06M49S",
+          "mainEntityOfPage": "https://psykovsky.bandcamp.com/track/prem-i-um",
           "name": "Prem I Um"
         },
         "position": 8
@@ -452,6 +456,7 @@
           },
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H09M17S",
+          "mainEntityOfPage": "https://psykovsky.bandcamp.com/track/now-here-nowhere",
           "name": "Now Here Nowhere"
         },
         "position": 9
@@ -479,6 +484,7 @@
           },
           "copyrightNotice": "Attribution Non Commercial Share Alike",
           "duration": "P00H18M07S",
+          "mainEntityOfPage": "https://psykovsky.bandcamp.com/track/holy-black-little-lark",
           "name": "Holy Black / Little Lark",
           "recordingOf": {
             "@type": "MusicComposition",
@@ -509,6 +515,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H06M48S",
+          "mainEntityOfPage": "https://psykovsky.bandcamp.com/track/worlds-of-wisdom",
           "name": "Worlds Of Wisdom"
         },
         "position": 11
@@ -532,6 +539,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H09M21S",
+          "mainEntityOfPage": "https://psykovsky.bandcamp.com/track/pc-transmission",
           "name": "PC Transmission"
         },
         "position": 12
@@ -555,6 +563,7 @@
           ],
           "copyrightNotice": "Attribution Non Commercial Share Alike",
           "duration": "P00H06M51S",
+          "mainEntityOfPage": "https://psykovsky.bandcamp.com/track/rs-lightmusic",
           "name": "RS Lightmusic"
         },
         "position": 13
@@ -582,6 +591,7 @@
           },
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H09M15S",
+          "mainEntityOfPage": "https://psykovsky.bandcamp.com/track/ksolntsu",
           "name": "Ksolntsu"
         },
         "position": 14
@@ -609,6 +619,7 @@
           },
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H10M23S",
+          "mainEntityOfPage": "https://psykovsky.bandcamp.com/track/dadme-albricios-hijos-deva",
           "name": "Dadme albricios hijos d'Eva"
         },
         "position": 15

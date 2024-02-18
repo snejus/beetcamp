@@ -161,6 +161,7 @@
   "keywords": [
     "Oslo"
   ],
+  "mainEntityOfPage": "https://ute-rec.bandcamp.com/album/ute004",
   "name": "UTE004",
   "numTracks": 4,
   "publisher": {
@@ -171,11 +172,6 @@
         "@type": "PropertyValue",
         "name": "band_id",
         "value": 788052312
-      },
-      {
-        "@type": "PropertyValue",
-        "name": "currency",
-        "value": "EUR"
       },
       {
         "@type": "PropertyValue",
@@ -278,6 +274,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H08M24S",
+          "mainEntityOfPage": "https://ute-rec.bandcamp.com/track/the-human-experience-empathy-mix",
           "name": "The Human Experience (Empathy Mix)"
         },
         "position": 1
@@ -301,6 +298,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H08M07S",
+          "mainEntityOfPage": "https://ute-rec.bandcamp.com/track/parallell",
           "name": "Parallell"
         },
         "position": 2
@@ -324,6 +322,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H07M11S",
+          "mainEntityOfPage": "https://ute-rec.bandcamp.com/track/formulae",
           "name": "Formulae"
         },
         "position": 3
@@ -347,6 +346,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H07M01S",
+          "mainEntityOfPage": "https://ute-rec.bandcamp.com/track/biotope",
           "name": "Biotope"
         },
         "position": 4

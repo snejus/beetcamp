@@ -212,83 +212,6 @@
       }
     },
     {
-      "@id": "https://dominikeulberg.bandcamp.com/album/mannigfaltig#p974145596",
-      "@type": [
-        "MusicRelease",
-        "Product"
-      ],
-      "additionalProperty": [
-        {
-          "@type": "PropertyValue",
-          "name": "item_id",
-          "value": 974145596
-        },
-        {
-          "@type": "PropertyValue",
-          "name": "item_type",
-          "value": "p"
-        },
-        {
-          "@type": "PropertyValue",
-          "name": "selling_band_id",
-          "value": 233016894
-        },
-        {
-          "@type": "PropertyValue",
-          "name": "type_name",
-          "value": "Other Vinyl"
-        },
-        {
-          "@type": "PropertyValue",
-          "name": "image_ids",
-          "value": [
-            17154151,
-            17154152,
-            17154153,
-            17154154,
-            17154156
-          ]
-        },
-        {
-          "@type": "PropertyValue",
-          "name": "is_music_merch",
-          "value": true
-        },
-        {
-          "@type": "PropertyValue",
-          "name": "type_id",
-          "value": 18
-        }
-      ],
-      "description": "How can you fulfil the desire to have something tangible that you can hold in your hand, when music is now primarily digital? Dominik Eulberg has come up with a very special solution in the form of the Mannigfaltig album memo game. It’s a deck of 24 beautifully designed cards, consisting of the 12 pairs of animals featured on the album. Each game comes with a digital download code for the full album, making it a great gift or addition to your own collection. All cards include information about the animal and their importance to the environment, in both English and German, making it a great educational tool. The set comes in a sturdy box with a linen-paper cover from an old Westerwald factory and follows the previous game 'Fliegende Edelsteine'.\n\nExternal dimensions: 84 x 134 x 35 mm\n\nWeight: 145 g\n\nUm dem zeitgenössischen Dilemma vom Anspruch nach digitaler Verfügbarkeit und dennoch haptischem Erlebnis entgegenzuwirken, haben wir uns etwas ganz Besonders überlegt. Das Album Mannigfaltig gibt es auch als hochwertiges Memo Game inklusive Downloadcode! So werden alle Bedürfnisse befriedigt: Man hat die Musik in digitaler Form und zusätzlich etwas Tolles zum Sammeln oder Verschenken. Gleichzeitig ist es ein wunderbares Sensibilisierungs-Spiel. Die zwölf tierischen Protagonisten sind in einem Memo Game mit 24 Karten verewigt. Erst wenn man die Pärchen findet, ergeben Fragmente von Erläuterungstexten auf den Spielkarten einen Sinn und erörtern dieses Lebewesen. Das Spiel kommt in einer massive Stülpschachtel mit robustem Leinenpapierüberzug aus einer alten Manufaktur im Westerwald, deren Qualität ihr vielleicht schon von dem Vogelquartett „Fliegende Edelsteine“ kennt.  \n\nAußenmaß: 84 x 134 x 35 mm \n\nGewicht: 145 g",
-      "image": [
-        "https://f4.bcbits.com/img/0017154151_10.jpg",
-        "https://f4.bcbits.com/img/0017154152_10.jpg",
-        "https://f4.bcbits.com/img/0017154153_10.jpg",
-        "https://f4.bcbits.com/img/0017154154_10.jpg",
-        "https://f4.bcbits.com/img/0017154156_10.jpg"
-      ],
-      "musicReleaseFormat": "VinylFormat",
-      "name": "Memo Game with album download card",
-      "offers": {
-        "@type": "Offer",
-        "additionalProperty": [
-          {
-            "@type": "PropertyValue",
-            "name": "includes_digital_download",
-            "value": true
-          }
-        ],
-        "availability": "InStock",
-        "price": 18,
-        "priceCurrency": "EUR",
-        "priceSpecification": {
-          "minPrice": 18
-        },
-        "url": "https://dominikeulberg.bandcamp.com/album/mannigfaltig#p974145596-buy"
-      }
-    },
-    {
       "@id": "https://dominikeulberg.bandcamp.com/track/eintagsfliege",
       "@type": "MusicRelease"
     },
@@ -361,6 +284,7 @@
     "techno",
     "Montabaur"
   ],
+  "mainEntityOfPage": "https://dominikeulberg.bandcamp.com/album/mannigfaltig",
   "name": "Mannigfaltig",
   "numTracks": 12,
   "publisher": {
@@ -371,11 +295,6 @@
         "@type": "PropertyValue",
         "name": "band_id",
         "value": 799180214
-      },
-      {
-        "@type": "PropertyValue",
-        "name": "currency",
-        "value": "EUR"
       },
       {
         "@type": "PropertyValue",
@@ -408,56 +327,45 @@
         "@type": "MusicEvent",
         "location": {
           "@type": "MusicVenue",
-          "address": "Le Bourget, France",
-          "name": "Musée de l'Air et de l'Espace"
+          "address": "Villiersdorp, South Africa",
+          "name": "Elandskloof Farm"
         },
-        "name": "Dominik Eulberg",
-        "startDate": "14 May 2022 00:00:00 GMT",
-        "url": "https://www.songkick.com/festivals/3302769-cercle/id/40229492-cercle-festival-2022?utm_source=1471&utm_medium=partner"
+        "name": "Elandskloof Farm, Villiersdorp, South Africa",
+        "startDate": "10 Mar 2023 00:00:00 GMT",
+        "url": "https://www.songkick.com/festivals/91431-timeless/id/40573162-timeless-festival-2023?utm_source=1471&utm_medium=partner"
       },
       {
         "@type": "MusicEvent",
         "location": {
           "@type": "MusicVenue",
-          "address": "Cologne, Germany",
-          "name": "Odonien"
+          "address": "Berlin, Germany",
+          "name": "Ritter Butzke"
         },
-        "name": "Dominik Eulberg",
-        "startDate": "22 May 2022 00:00:00 GMT",
-        "url": "https://www.songkick.com/concerts/40387440-dominik-eulberg-at-odonien?utm_source=1471&utm_medium=partner"
+        "name": "Ritter Butzke, Berlin, Germany",
+        "startDate": "29 Apr 2023 00:00:00 GMT",
+        "url": "https://www.songkick.com/concerts/40812733-dominik-eulberg-at-ritter-butzke?utm_source=1471&utm_medium=partner"
       },
       {
         "@type": "MusicEvent",
         "location": {
           "@type": "MusicVenue",
-          "address": "Offenbach, Germany",
-          "name": "MTW Club"
+          "address": "Amsterdam, Netherlands",
+          "name": "Komm schon Alter Festival"
         },
-        "name": "Dominik Eulberg",
-        "startDate": "26 May 2022 00:00:00 GMT",
-        "url": "https://www.songkick.com/concerts/40402946-dominik-eulberg-at-mtw-club?utm_source=1471&utm_medium=partner"
+        "name": "Komm schon Alter Festival, Amsterdam, Netherlands",
+        "startDate": "27 May 2023 00:00:00 GMT",
+        "url": "https://www.songkick.com/festivals/2357334-komm-schon-alter/id/40780548-komm-schon-alter-festival-2023?utm_source=1471&utm_medium=partner"
       },
       {
         "@type": "MusicEvent",
         "location": {
           "@type": "MusicVenue",
-          "address": "Memmingen, Germany",
-          "name": "Ikarus Festival"
+          "address": "Berlin, Germany",
+          "name": "Ritter Butzke"
         },
-        "name": "Dominik Eulberg",
-        "startDate": "02 Jun 2022 00:00:00 GMT",
-        "url": "https://www.songkick.com/festivals/1319688-ikarus/id/39548080-ikarus-festival-2022?utm_source=1471&utm_medium=partner"
-      },
-      {
-        "@type": "MusicEvent",
-        "location": {
-          "@type": "MusicVenue",
-          "address": "Bonn, Germany",
-          "name": "Freizeitpark Rheinaue"
-        },
-        "name": "Dominik Eulberg",
-        "startDate": "01 Jul 2022 00:00:00 GMT",
-        "url": "https://www.songkick.com/festivals/1005553-panama-open-air/id/39405828-panama-open-air-2022?utm_source=1471&utm_medium=partner"
+        "name": "Ritter Butzke, Berlin, Germany",
+        "startDate": "07 Aug 2023 00:00:00 GMT",
+        "url": "https://www.songkick.com/concerts/40813746-dominik-eulberg-at-ritter-butzke?utm_source=1471&utm_medium=partner"
       }
     ],
     "foundingLocation": {
@@ -528,6 +436,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H07M08S",
+          "mainEntityOfPage": "https://dominikeulberg.bandcamp.com/track/eintagsfliege",
           "name": "Eintagsfliege"
         },
         "position": 1
@@ -551,6 +460,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H07M13S",
+          "mainEntityOfPage": "https://dominikeulberg.bandcamp.com/track/zweibr-tiger-scheckenfalter",
           "name": "Zweibrütiger Scheckenfalter"
         },
         "position": 2
@@ -574,6 +484,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H03M34S",
+          "mainEntityOfPage": "https://dominikeulberg.bandcamp.com/track/dreizehenspecht",
           "name": "Dreizehenspecht"
         },
         "position": 3
@@ -597,6 +508,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H06M12S",
+          "mainEntityOfPage": "https://dominikeulberg.bandcamp.com/track/vierfleck",
           "name": "Vierfleck"
         },
         "position": 4
@@ -620,6 +532,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H09M08S",
+          "mainEntityOfPage": "https://dominikeulberg.bandcamp.com/track/f-nffleck-widderchen-2",
           "name": "Fünffleck-Widderchen"
         },
         "position": 5
@@ -643,6 +556,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H08M36S",
+          "mainEntityOfPage": "https://dominikeulberg.bandcamp.com/track/sechslinien-bodeneule",
           "name": "Sechslinien-Bodeneule"
         },
         "position": 6
@@ -666,6 +580,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H06M01S",
+          "mainEntityOfPage": "https://dominikeulberg.bandcamp.com/track/siebenschl-fer",
           "name": "Siebenschläfer"
         },
         "position": 7
@@ -689,6 +604,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H08M52S",
+          "mainEntityOfPage": "https://dominikeulberg.bandcamp.com/track/goldene-acht-5",
           "name": "Goldene Acht"
         },
         "position": 8
@@ -712,6 +628,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H07M29S",
+          "mainEntityOfPage": "https://dominikeulberg.bandcamp.com/track/neunt-ter-4",
           "name": "Neuntöter"
         },
         "position": 9
@@ -735,6 +652,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H11M03S",
+          "mainEntityOfPage": "https://dominikeulberg.bandcamp.com/track/zehnpunkt-marienk-fer",
           "name": "Zehnpunkt-Marienkäfer"
         },
         "position": 10
@@ -758,6 +676,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H07M00S",
+          "mainEntityOfPage": "https://dominikeulberg.bandcamp.com/track/elfenbein-flechtenb-rchen",
           "name": "Elfenbein-Flechtenbärchen"
         },
         "position": 11
@@ -781,6 +700,7 @@
           ],
           "copyrightNotice": "All Rights Reserved",
           "duration": "P00H04M43S",
+          "mainEntityOfPage": "https://dominikeulberg.bandcamp.com/track/zw-lfpunkt-spargelk-fer",
           "name": "Zwölfpunkt-Spargelkäfer"
         },
         "position": 12

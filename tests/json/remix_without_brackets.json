@@ -1,0 +1,324 @@
+{
+  "@context": "https://schema.org",
+  "@id": "https://purehate000.bandcamp.com/album/aluphobia-x-astatine-problem-child-ep",
+  "@type": "MusicAlbum",
+  "additionalProperty": [
+    {
+      "@type": "PropertyValue",
+      "name": "art_id",
+      "value": 237465596
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "featured_track_num",
+      "value": 3
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "license_name",
+      "value": "all_rights_reserved"
+    }
+  ],
+  "albumRelease": [
+    {
+      "@id": "https://purehate000.bandcamp.com/album/aluphobia-x-astatine-problem-child-ep",
+      "@type": [
+        "MusicRelease",
+        "Product"
+      ],
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "item_id",
+          "value": 1784256378
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "item_type",
+          "value": "a"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "selling_band_id",
+          "value": 241766404
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_name",
+          "value": "Digital"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "art_id",
+          "value": 237465596
+        }
+      ],
+      "description": "Includes high-quality download in MP3, FLAC and more. Paying supporters also get unlimited streaming via the free Bandcamp app.",
+      "image": [
+        "https://f4.bcbits.com/img/a0237465596_10.jpg"
+      ],
+      "musicReleaseFormat": "DigitalFormat",
+      "name": "Aluphobia x Astatine - Problem Child EP"
+    },
+    {
+      "@id": "https://purehate000.bandcamp.com/album/aluphobia-x-astatine-problem-child-ep#b51768982",
+      "@type": [
+        "MusicRelease",
+        "Product"
+      ],
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "item_id",
+          "value": 51768982
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "item_type",
+          "value": "b"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "selling_band_id",
+          "value": 241766404
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_name",
+          "value": "Digital"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "art_id",
+          "value": 3978758765
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "is_bfd",
+          "value": true
+        }
+      ],
+      "image": [
+        "https://f4.bcbits.com/img/a3978758765_10.jpg"
+      ],
+      "musicReleaseFormat": "DigitalFormat",
+      "name": "full digital discography (56 releases)",
+      "offers": {
+        "@type": "Offer",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "bundle_size",
+            "value": 56
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "discount",
+            "value": 0.7
+          }
+        ],
+        "availability": "OnlineOnly",
+        "price": 66,
+        "priceCurrency": "EUR",
+        "priceSpecification": {
+          "minPrice": 66
+        },
+        "url": "https://purehate000.bandcamp.com/album/aluphobia-x-astatine-problem-child-ep#b51768982-buy"
+      }
+    },
+    {
+      "@id": "https://purehate000.bandcamp.com/track/aluphobia-x-astatine-problem-child",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://purehate000.bandcamp.com/track/aluphobia-x-astatine-problem-child-illiya-korniyen-remix",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://purehate000.bandcamp.com/track/aluphobia-x-astatine-problem-child-korcs-remix",
+      "@type": "MusicRelease"
+    }
+  ],
+  "albumReleaseType": "AlbumRelease",
+  "byArtist": {
+    "@id": "https://purehate000.bandcamp.com",
+    "@type": "MusicGroup",
+    "name": "PURE HATE"
+  },
+  "copyrightNotice": "All Rights Reserved",
+  "dateModified": "10 Dec 2021 15:36:56 GMT",
+  "datePublished": "10 Dec 2021 00:00:00 GMT",
+  "image": "https://f4.bcbits.com/img/a0237465596_10.jpg",
+  "keywords": [
+    "Electronic",
+    "HardTechno",
+    "industrialtechno",
+    "techno",
+    "Budapest"
+  ],
+  "mainEntityOfPage": "https://purehate000.bandcamp.com/album/aluphobia-x-astatine-problem-child-ep",
+  "name": "Aluphobia x Astatine - Problem Child EP",
+  "numTracks": 3,
+  "publisher": {
+    "@id": "https://purehate000.bandcamp.com",
+    "@type": "MusicGroup",
+    "additionalProperty": [
+      {
+        "@type": "PropertyValue",
+        "name": "band_id",
+        "value": 241766404
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "has_any_downloads",
+        "value": true
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_height",
+        "value": 2126
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_id",
+        "value": 20591482
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_width",
+        "value": 2126
+      }
+    ],
+    "description": "Hungary based event series / movement / independent label",
+    "foundingLocation": {
+      "@type": "Place",
+      "name": "Budapest, Hungary"
+    },
+    "genre": "https://bandcamp.com/tag/electronic",
+    "image": "https://f4.bcbits.com/img/0020591482_10.jpg",
+    "mainEntityOfPage": [
+      {
+        "@type": "WebPage",
+        "name": "SoundCloud",
+        "url": "https://soundcloud.com/purehate000"
+      }
+    ],
+    "name": "PURE HATE",
+    "subjectOf": [
+      {
+        "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "m"
+          }
+        ],
+        "name": "NOISE",
+        "url": "https://purehate000.bandcamp.com/music"
+      },
+      {
+        "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "p"
+          }
+        ],
+        "name": "CLOTHING/12\"",
+        "url": "https://purehate000.bandcamp.com/merch"
+      },
+      {
+        "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "c"
+          }
+        ],
+        "name": "COMMUNITY",
+        "url": "https://purehate000.bandcamp.com/community"
+      }
+    ]
+  },
+  "track": {
+    "@type": "ItemList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://purehate000.bandcamp.com/track/aluphobia-x-astatine-problem-child",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 441026690
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H05M12S",
+          "mainEntityOfPage": "https://purehate000.bandcamp.com/track/aluphobia-x-astatine-problem-child",
+          "name": "Aluphobia x Astatine - Problem Child"
+        },
+        "position": 1
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://purehate000.bandcamp.com/track/aluphobia-x-astatine-problem-child-illiya-korniyen-remix",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 897535301
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H06M35S",
+          "mainEntityOfPage": "https://purehate000.bandcamp.com/track/aluphobia-x-astatine-problem-child-illiya-korniyen-remix",
+          "name": "Aluphobia x Astatine - Problem Child Illiya Korniyen Remix"
+        },
+        "position": 2
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://purehate000.bandcamp.com/track/aluphobia-x-astatine-problem-child-korcs-remix",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 2655269613
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H06M31S",
+          "mainEntityOfPage": "https://purehate000.bandcamp.com/track/aluphobia-x-astatine-problem-child-korcs-remix",
+          "name": "Aluphobia x Astatine - Problem Child Korcs Remix"
+        },
+        "position": 3
+      }
+    ],
+    "numberOfItems": 3
+  }
+}

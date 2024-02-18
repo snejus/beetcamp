@@ -1,6 +1,6 @@
 """Tests for genre functionality."""
 import pytest
-from beetsplug.bandcamp._metaguru import Metaguru
+from beetsplug.bandcamp.metaguru import Metaguru
 
 pytestmark = pytest.mark.parsing
 
@@ -33,12 +33,12 @@ def test_genre_variations(keywords, expected, json_meta, beets_config):
     assert Metaguru(json_meta, beets_config).genre == expected
 
 
-TEST_KEYWORDS = dict(
-    single_word_valid_kw=["house"],
-    double_word_valid_kw=["tech house"],
-    double_word_valid_separately=["techno house"],
-    only_last_word_valid=["crazy techno"],
-)
+TEST_KEYWORDS = {
+    "single_word_valid_kw": ["house"],
+    "double_word_valid_kw": ["tech house"],
+    "double_word_valid_separately": ["techno house"],
+    "only_last_word_valid": ["crazy techno"],
+}
 
 
 @pytest.fixture(params=TEST_KEYWORDS.keys())
@@ -53,12 +53,12 @@ def keywords(keyword_type):
 
 @pytest.fixture(scope="module")
 def modes_spec():
-    base_spec = dict(
-        single_word_valid_kw=True,
-        double_word_valid_kw=True,
-        double_word_valid_separately=False,
-        only_last_word_valid=False,
-    )
+    base_spec = {
+        "single_word_valid_kw": True,
+        "double_word_valid_kw": True,
+        "double_word_valid_separately": False,
+        "only_last_word_valid": False,
+    }
     modes = {}
     modes["classical"] = base_spec
     modes["progressive"] = {**base_spec, "double_word_valid_separately": True}
@@ -79,7 +79,7 @@ def mode_result(keywords, keyword_type, modes_spec, mode):
 def test_genre(keywords, mode, mode_result, beets_config):
     config = beets_config["genre"]
     config["mode"] = mode
-    assert list(Metaguru.get_genre(keywords, config)) == mode_result
+    assert list(Metaguru.get_genre(keywords, config, "")) == mode_result
 
 
 @pytest.mark.parametrize(
@@ -98,3 +98,18 @@ def test_genre_options(capitalize, maximum, expected, json_meta, beets_config):
 
     assert guru.style == ("Dubstep" if capitalize else "dubstep")
     assert guru.genre == expected
+
+
+@pytest.mark.parametrize(
+    ("keywords", "label", "expected"),
+    [
+        (["house", "classical"], "Classical", "classical, house"),
+        (["house", "hard tunenetwork"], "Hard Tune Network", "house"),
+    ],
+)
+def test_label_excluded_from_genre(keywords, label, expected, json_meta, beets_config):
+    beets_config["genre"]["mode"] = "psychedelic"
+    beets_config["genre"]["always_include"] = ["^hard"]
+    json_meta["publisher"]["name"] = label
+    json_meta.update(keywords=keywords)
+    assert Metaguru(json_meta, beets_config).genre == expected

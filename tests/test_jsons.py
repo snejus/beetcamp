@@ -2,7 +2,7 @@
 from operator import itemgetter
 
 import pytest
-from beetsplug.bandcamp._metaguru import NEW_BEETS, Metaguru
+from beetsplug.bandcamp.metaguru import NEW_BEETS, Metaguru
 
 pytestmark = pytest.mark.jsons
 
@@ -23,7 +23,7 @@ def check(actual, expected) -> None:
 def test_parse_single_track_release(release, beets_config):
     html, expected = release
     actual = Metaguru.from_html(html, beets_config).singleton
-    check(actual, expected)
+    check(actual, expected[0])
 
 
 @pytest.mark.parametrize(
@@ -38,9 +38,11 @@ def test_parse_single_track_release(release, beets_config):
         "single_with_remixes",
         "remix_artists",
         "edge_cases",
-        "issues_18",
+        "issue-18",
         "media_with_track_alts_in_desc",
         "artist_catalognum",
+        "album_in_titles",
+        "remix_without_brackets",
     ],
     indirect=["release"],
 )

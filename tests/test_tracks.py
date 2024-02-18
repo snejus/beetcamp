@@ -2,12 +2,13 @@
 from operator import attrgetter
 
 import pytest
-from beetsplug.bandcamp._tracks import Track, Tracks
+from beetsplug.bandcamp.tracks import Tracks
 from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
 
 pytestmark = pytest.mark.parsing
+_p = pytest.param
 
 
 def print_result(console, case, expected, result):
@@ -58,7 +59,10 @@ def print_result(console, case, expected, result):
             "Lacchesi - UNREALNUMBERS - MK4 (Lacchesi Remix)",
             ("", "UNREALNUMBERS", "", "MK4 (Lacchesi Remix)", "MK4"),
         ),
-        ("UNREALNUMBERS -Karaburan", ("", "UNREALNUMBERS", "", "Karaburan", "Karaburan")),
+        (
+            "UNREALNUMBERS -Karaburan",
+            ("", "UNREALNUMBERS", "", "Karaburan", "Karaburan"),
+        ),
         (
             "Ellie Goulding- Eyed ( ROWDIBOÏ EDIT))",
             ("", "Ellie Goulding", "", "Eyed (ROWDIBOÏ EDIT)", "Eyed"),
@@ -67,19 +71,25 @@ def print_result(console, case, expected, result):
         ("¯\\_(ツ)_/¯", ("", "", "", "¯\\_(ツ)_/¯", "¯\\_(ツ)_/¯")),
         (
             "VIENNA (WARM UP MIX",
-            ("", "", "", "VIENNA (WARM UP MIX", "VIENNA (WARM UP MIX"),
+            ("", "", "", "VIENNA (WARM UP MIX)", "VIENNA"),
         ),
         ("MOD-R - ARE YOU", ("", "MOD-R", "", "ARE YOU", "ARE YOU")),
         ("K - The Lightning", ("", "K", "", "The Lightning", "The Lightning")),
         ("MEAN-E - PLANETARY", ("", "MEAN-E", "", "PLANETARY", "PLANETARY")),
         ("f-theme", ("", "", "", "f-theme", "f-theme")),
-        ("Mr. Free - The 4th Room", ("", "Mr. Free", "", "The 4th Room", "The 4th Room")),
+        (
+            "Mr. Free - The 4th Room",
+            ("", "Mr. Free", "", "The 4th Room", "The 4th Room"),
+        ),
         ("O)))Bow 1", ("", "", "", "O)))Bow 1", "O)))Bow 1")),
         ("H.E.L.L.O.", ("", "", "", "H.E.L.L.O.", "H.E.L.L.O.")),
         ("Erik Burka - Pigeon [MNRM003]", ("", "Erik Burka", "", "Pigeon", "Pigeon")),
         ("Artist - Title [ONE001]", ("", "Artist", "", "Title", "Title")),
         ("Artist + Other - Title", ("", "Artist + Other", "", "Title", "Title")),
-        ("Artist (feat. Other) - Title", ("", "Artist", "feat. Other", "Title", "Title")),
+        (
+            "Artist (feat. Other) - Title",
+            ("", "Artist", "feat. Other", "Title", "Title"),
+        ),
         (
             "Artist (some remix) - Title",
             ("", "Artist", "", "Title (some remix)", "Title"),
@@ -97,13 +107,16 @@ def print_result(console, case, expected, result):
         ("A. Title", ("A", "", "", "Title", "Title")),
         ("BB. Title", ("BB", "", "", "Title", "Title")),
         ("Artist - ;) (Original Mix)", ("", "Artist", "", ";) (Original Mix)", ";)")),
+        ("Artist - Title - Label", ("", "Artist", "", "Title", "Title")),
+        ("Title - Label", ("", "", "", "Title", "Title")),
+        ("Artist - Title [Presented by Other]", ("", "Artist", "", "Title", "Title")),
     ],
 )
 def test_parse_track_name(name, expected, json_track, json_meta, console):
     json_track["item"].update(name=name)
     json_meta.update(track={"itemListElement": [json_track]})
 
-    fields = "track_alt", "artist", "ft", "title", "main_title"
+    fields = "track_alt", "artist", "ft", "title", "title_without_remix"
     expected = dict(zip(fields, expected))
     if not expected["track_alt"]:
         expected["track_alt"] = None
@@ -115,26 +128,34 @@ def test_parse_track_name(name, expected, json_track, json_meta, console):
 
 
 @pytest.mark.parametrize(
-    ("name", "expected_digi_only", "expected_name"),
+    ("names", "expected_names"),
     [
-        ("Artist - Track [Digital Bonus]", True, "Artist - Track"),
-        ("DIGI 11. Track", True, "Track"),
-        ("Digital Life", False, "Digital Life"),
-        ("Messier 33 (Bandcamp Digital Exclusive)", True, "Messier 33"),
-        ("33 (bandcamp exclusive)", True, "33"),
-        ("Tune (Someone's Remix) [Digital Bonus]", True, "Tune (Someone's Remix)"),
-        ("Hello - DIGITAL ONLY", True, "Hello"),
-        ("Hello *digital bonus*", True, "Hello"),
-        ("Only a Goodbye", False, "Only a Goodbye"),
-        ("Track *digital-only", True, "Track"),
-        ("DIGITAL 2. Track", True, "Track"),
-        ("Track (digital)", True, "Track"),
-        ("Bonus : Track", True, "Track"),
-        ("Bonus Rave Tool", False, "Bonus Rave Tool"),
-        ("TROPICOFRIO - DIGITAL DRIVER", False, "TROPICOFRIO - DIGITAL DRIVER"),
+        _p(
+            ["Artist - Title", "Artist - Title"],
+            ["Artist - Title", "Artist - Title"],
+            id="no-prefixes",
+        ),
+        _p(
+            ["Artist - 01 Title"],
+            ["Artist - 01 Title"],
+            id="only-one-track",
+        ),
+        _p(
+            ["Artist - 01 Title", "Artist - Title"],
+            ["Artist - 01 Title", "Artist - Title"],
+            id="some-tracks-without-prefix",
+        ),
+        _p(
+            ["Artist - 1 Title", "Artist - 2. Title", "03 Title"],
+            ["Artist - 1 Title", "Artist - 2. Title", "03 Title"],
+            id="prefix-needs-to-be-two-numbers",
+        ),
+        _p(
+            ["Artist - 01 Title", "Artist - 02. Title", "03 Title"],
+            ["Artist - Title", "Artist - Title", "Title"],
+            id="removed-prefixes",
+        ),
     ],
 )
-def test_check_digi_only(name, expected_digi_only, expected_name):
-    track = Track(_name=name)
-    assert track.no_digi_name == expected_name
-    assert track.digi_only == expected_digi_only
+def test_remove_number_prefix(names, expected_names):
+    assert Tracks.remove_number_prefix(names) == expected_names

@@ -1,6 +1,6 @@
 """Module for the helpers module tests."""
 import pytest
-from beetsplug.bandcamp._helpers import Helpers
+from beetsplug.bandcamp.helpers import Helpers
 
 pytestmark = pytest.mark.parsing
 
@@ -53,67 +53,11 @@ pytestmark = pytest.mark.parsing
         ("", "", 'BAD001"', "", ""),
         ("", "", "Modularz 40", "Modularz", "Modularz 40"),
         ("", "", " catalogue number GOOD001 ", "", "GOOD001"),
+        ("", "", "RD-9", "", ""),
     ],
 )
 def test_parse_catalognum(album, disctitle, description, label, expected):
     assert Helpers.parse_catalognum(album, disctitle, description, label) == expected
-
-
-@pytest.mark.parametrize(
-    ("name", "extras", "expected"),
-    [
-        ("Album - Various Artists", [], "Album"),
-        ("Various Artists - Album", [], "Album"),
-        ("Various Artists Album", [], "Various Artists Album"),
-        ("Label Various Artists Album", [], "Label Various Artists Album"),
-        ("Album EP", [], "Album EP"),
-        ("Album [EP]", [], "Album EP"),
-        ("Album (EP)", [], "Album EP"),
-        ("Album E.P.", [], "Album E.P."),
-        ("Album LP", [], "Album LP"),
-        ("Album [LP]", [], "Album LP"),
-        ("Album (LP)", [], "Album LP"),
-        ("[Label] Album EP", ["Label"], "Album EP"),
-        ("Artist - Album EP", ["Artist"], "Album EP"),
-        ("Label | Album", ["Label"], "Album"),
-        ("Tweaker-229 [PRH-002]", ["PRH-002", "Tweaker-229"], ""),
-        ("Album (limited edition)", [], "Album"),
-        ("Album - VARIOUS ARTISTS", [], "Album"),
-        ("Drepa Mann", [], "Drepa Mann"),
-        ("Some ft. Some ONE - Album", ["Some ft. Some ONE"], "Album"),
-        ("Some feat. Some ONE - Album", ["Some feat. Some ONE"], "Album"),
-        ("Healing Noise (EP) (Free Download)", [], "Healing Noise EP"),
-        ("[MCVA003] - VARIOUS ARTISTS", ["MCVA003"], ""),
-        ("Drepa Mann [Vinyl]", [], "Drepa Mann"),
-        ("Drepa Mann  [Vinyl]", [], "Drepa Mann"),
-        ("The Castle [BLCKLPS009] Incl. Remix", ["BLCKLPS009"], "The Castle"),
-        ("The Castle [BLCKLPS009] Incl. Remix", [], "The Castle [BLCKLPS009]"),
-        ('Anetha - "Ophiuchus EP"', ["Anetha"], "Ophiuchus EP"),
-        ("Album (FREE DL)", [], "Album"),
-        (
-            "Dax J - EDLX.051 Illusions Of Power",
-            ["EDLX.051", "Dax J"],
-            "Illusions Of Power",
-        ),
-        ("WEAPONS 001 - VARIOUS ARTISTS", ["WEAPONS 001"], ""),
-        ("Diva Hello", [], "Diva Hello"),
-        ("RR009 - Various Artist", ["RR009"], ""),
-        ("Diva (Incl. some sort of Remixes)", [], "Diva"),
-        ("HWEP010 - MEZZ - COLOR OF WAR", ["HWEP010", "MEZZ"], "COLOR OF WAR"),
-        ("O)))Bow 1", [], "O)))Bow 1"),
-        ("hi'Hello", ["hi"], "'Hello"),
-        # only remove VA if album name starts or ends with it
-        ("Album VA", [], "Album"),
-        ("VA Album", [], "Album"),
-        ("Album VA001", [], "Album VA001"),
-        ("Album VA 03", [], "Album VA 03"),
-        # remove (weird chars too) regardless of its position if explicitly excluded
-        ("Album †INVI VA006†", ["INVI VA006"], "Album"),
-        ("Album (Label Refix)", [], "Album (Label Refix)"),
-    ],
-)
-def test_clean_name(name, extras, expected):
-    assert Helpers.clean_album(name, *extras, label="Label") == expected
 
 
 @pytest.mark.parametrize(
@@ -136,10 +80,14 @@ def test_unpack_props(vinyl_format):
     assert {"some_id", "item_type"} < set(result)
 
 
-def test_bundles_get_excluded(bundle_format, vinyl_format):
-    result = Helpers.get_media_formats([bundle_format, vinyl_format])
+def test_bundles_get_excluded(bundle_format, digital_format):
+    album_name = "Everyone Bundle"
+    bundle_album_name_format = {**digital_format, "name": album_name}
+
+    result = Helpers.get_media_formats([bundle_format, bundle_album_name_format])
+
     assert len(result) == 1
-    assert result[0].name == "Vinyl"
+    assert result[0].title == album_name
 
 
 @pytest.mark.parametrize(
