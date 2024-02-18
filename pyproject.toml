@@ -13,11 +13,11 @@ include = ["LICENSE", "README.md"]
 
 keywords = ["music", "bandcamp", "beets", "metadata"]
 classifiers = [
-    "Environment :: Console",
-    "Intended Audience :: End Users/Desktop",
-    "Operating System :: OS Independent",
-    "Topic :: Multimedia :: Sound/Audio",
-    "Topic :: Text Processing :: General",
+  "Environment :: Console",
+  "Intended Audience :: End Users/Desktop",
+  "Operating System :: OS Independent",
+  "Topic :: Multimedia :: Sound/Audio",
+  "Topic :: Text Processing :: General",
 ]
 
 [tool.poetry.urls]
@@ -25,16 +25,15 @@ Changelog = "https://github.com/snejus/beetcamp/blob/master/CHANGELOG.md"
 "Bug Tracker" = "https://github.com/snejus/beetcamp/issues"
 
 [tool.poetry.dependencies]
-python = ">=3.7, <4"
+python = ">=3.8, <4"
 
 requests = ">=2.27"
-cached-property = { version = ">=1.5.2", python = "<3.8" }
 pycountry = ">=20.7.3"
 beets = ">=1.4"
 ordered-set = ">=4.0"
+pydantic = "^2.6.1"
 
 [tool.poetry.dev-dependencies]
-dataclasses = { version = ">=0.7", python = "<3.7" }
 flake8 = ">=3.8.4"
 flake8-bugbear = "^22.7.1"
 flake8-comprehensions = "^3.10.0"

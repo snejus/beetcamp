@@ -15,14 +15,19 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 """Adds bandcamp album search support to the autotagger."""
-from __future__ import absolute_import, division, print_function, unicode_literals
+from __future__ import (
+    absolute_import,
+    annotations,
+    division,
+    print_function,
+    unicode_literals,
+)
 
 import json
 import logging
 import re
 from functools import lru_cache, partial
 from itertools import chain
-from html import unescape
 from operator import itemgetter, truth
 from typing import TYPE_CHECKING, Any, Dict, Iterable, List, Optional, Sequence, Union
 
@@ -33,8 +38,8 @@ from beets.autotag.hooks import AlbumInfo, TrackInfo
 from beetsplug import fetchart  # type: ignore[attr-defined]
 
 from .metaguru import Metaguru
-from .soundcloud import get_soundcloud_track
 from .search import search_bandcamp
+from .soundcloud import get_soundcloud_album, get_soundcloud_track
 
 JSONDict = Dict[str, Any]
 
@@ -232,7 +237,7 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
 
     def album_for_id(self, album_id: str) -> Optional[AlbumInfo]:
         """Fetch an album by its bandcamp ID."""
-        if not _from_bandcamp(album_id):
+        if not ("soundcloud" in album_id or _from_bandcamp(album_id)):
             self._info("Not a bandcamp URL, skipping")
             return None
 
@@ -255,10 +260,25 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         self._info("Not a bandcamp URL, skipping")
         return None
 
+    def handle(self, guru: Metaguru, attr: str, _id: str) -> Any:
+        try:
+            return getattr(guru, attr)
+        except (KeyError, ValueError, AttributeError, IndexError):
+            self._info("Failed obtaining {}", _id)
+        except Exception:  # pylint: disable=broad-except
+            url = "https://github.com/snejus/beetcamp/issues/new"
+            self._exc("Unexpected error obtaining {}, please report at {}", _id, url)
+        return None
+
     def get_album_info(self, url: str) -> Optional[List[AlbumInfo]]:
         """Return an AlbumInfo object for a bandcamp album page.
         If track url is given by mistake, find and fetch the album url instead.
         """
+        if "soundcloud" in url:
+            album = self._get_soundcloud_data(url)
+            if album:
+                return [album]
+
         html = self._get(url)
         if html and "/track/" in url:
             m = ALBUM_URL_IN_TRACK.search(html)
@@ -266,15 +286,23 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
                 url = re.sub(r"/track/.*", m.expand(r"\1"), url)
         return self.guru(url, "albums")
 
-    def _get_soundcloud_data(self, url: str) -> Optional[TrackInfo]:
-        self._info("Fetching data from soundcloud url {} as a track", url)
-        data = re.search(r"\[\{[^<]+[^;<)]", self._get(url))
-        if data:
-            jdata = json.loads(data.group())
-            track = next(filter(lambda x: x.get("hydratable") == "sound", jdata))
-            return get_soundcloud_track(track["data"], self.config["genre"].flatten())
+    def _get_soundcloud_data(self, url: str) -> AlbumInfo | TrackInfo | None:
+        if "/sets/" in url:
+            _type = "an album"
+            sc_data_key = "playlist"
+            method = get_soundcloud_album
+        else:
+            _type = "a track"
+            sc_data_key = "sound"
+            method = get_soundcloud_track
 
-        return None
+        self._info("Fetching data from soundcloud url {} as {}", url, _type)
+        data = re.search(r"\[\{[^<]+[^;<)]", self._get(url))
+        if not data:
+            return None
+
+        jdata = {i["hydratable"]: i["data"] for i in json.loads(data.group())}
+        return method(jdata[sc_data_key], self.config["genre"].flatten())
 
     def get_track_info(self, url: str) -> Optional[TrackInfo]:
         """Returns a TrackInfo object for a bandcamp track page."""
@@ -283,7 +311,7 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
             if track:
                 return track
 
-        guru = self.guru(url)
+        guru = self.guru(url, "singleton")
         return self.handle(guru, "singleton", url) if guru else None
 
     def _search(self, data: JSONDict) -> Iterable[JSONDict]:
