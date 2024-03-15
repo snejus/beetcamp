@@ -20,7 +20,7 @@ def test_parse_catalognum_from_track_name(
         "catalognum": initial_catalognum,
     }
 
-    track = Track.from_json(json_track, "-", "Label")
+    track = Track.from_json(json_track, "Label")
     assert track.title == expected_title, print(track)
     assert track.catalognum == expected_catalognum, print(track)
 

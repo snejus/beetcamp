@@ -68,7 +68,7 @@ class Track:
     track_alt: Optional[str] = None
 
     @classmethod
-    def from_json(cls, json: JSONDict, delim: str, label: str) -> "Track":
+    def from_json(cls, json: JSONDict, label: str) -> "Track":
         try:
             artist = json["inAlbum"]["byArtist"]["name"]
         except KeyError:
@@ -81,7 +81,7 @@ class Track:
             "index": json.get("position"),
             "catalognum": json.get("catalognum"),
         }
-        return cls(**cls.parse_name(data, json["name"], delim, label))
+        return cls(**cls.parse_name(data, json["name"], label))
 
     @staticmethod
     def clean_digi_name(name: str) -> Tuple[str, bool]:
@@ -113,9 +113,7 @@ class Track:
         return data
 
     @staticmethod
-    def parse_name(data: JSONDict, name: str, delim: str, label: str) -> JSONDict:
-        name = name.replace(f" {delim} ", " - ")
-
+    def parse_name(data: JSONDict, name: str, label: str) -> JSONDict:
         # remove label from the end of the track name
         # see https://gutterfunkuk.bandcamp.com/album/gutterfunk-all-subject-to-vibes-various-artists-lp  # noqa
         if name.endswith(label):

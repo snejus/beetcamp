@@ -1,4 +1,5 @@
 """Module with tracks parsing functionality."""
+
 import itertools as it
 import operator as op
 import re
@@ -40,7 +41,7 @@ class Tracks:
         return names
 
     @staticmethod
-    def track_delimiter(names: List[str]) -> str:
+    def find_common_track_delimiter(names: List[str]) -> str:
         """Return the track parts delimiter that is in effect in the current release.
         In some (rare) situations track parts are delimited by a pipe character
         or some UTF-8 equivalent of a dash.
@@ -99,6 +100,13 @@ class Tracks:
         return tracks
 
     @classmethod
+    def normalize_delimiter(cls, names: List[str]) -> List[str]:
+        delim = cls.find_common_track_delimiter(names)
+        return (
+            names if delim == "-" else [n.replace(f" {delim} ", " - ") for n in names]
+        )
+
+    @classmethod
     def from_json(cls, meta: JSONDict) -> "Tracks":
         try:
             tracks = [{**t, **t["item"]} for t in meta["track"]["itemListElement"]]
@@ -108,13 +116,12 @@ class Tracks:
         names = [i.get("name", "") for i in tracks]
         names = cls.split_quoted_titles(names)
         names = cls.remove_number_prefix(names)
+        names = cls.normalize_delimiter(names)
         for track, name in zip(tracks, names):
             track["name"] = name
 
         tracks = cls.common_name_parts(tracks, names)
-
-        delim = cls.track_delimiter(names)
-        return cls([Track.from_json(t, delim, Helpers.get_label(meta)) for t in tracks])
+        return cls([Track.from_json(t, Helpers.get_label(meta)) for t in tracks])
 
     @cached_property
     def first(self) -> Track:
