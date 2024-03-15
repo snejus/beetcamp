@@ -58,7 +58,7 @@ class Track:
     index: Optional[int] = None
     json_artist: str = ""
 
-    _name: str = ""
+    name: str = ""
     ft: str = ""
     album: str = ""
     catalognum: str = ""
@@ -101,7 +101,7 @@ class Track:
         do not consider it as a featuring artist.
         Otherwise, strip brackets and spaces and save it in the 'ft' field.
         """
-        for _field in "_name", "json_artist":
+        for _field in "name", "json_artist":
             m = PATTERNS["ft"].search(data[_field])
             if m:
                 ft = m.groups()[-1].strip()
@@ -152,7 +152,7 @@ class Track:
             data["album"] = m.group(1).replace('"', "")
             name = name.replace(m.group(), "")
 
-        data["_name"] = name
+        data["name"] = name
         data = Track.find_featuring(data)
         return data
 
@@ -175,42 +175,42 @@ class Track:
             return text.replace("\r", "")
 
     @cached_property
-    def name(self) -> str:
-        name = self._name
+    def full_name(self) -> str:
+        name = self.name
         if self.json_artist and " - " not in name:
             name = f"{self.json_artist} - {name}"
         return name.strip()
 
     @cached_property
-    def main_title(self) -> str:
+    def title_without_remix(self) -> str:
         """Split the track name, deduce the title and return it.
         The extra complexity here is to ensure that it does not cut off a title
         that ends with ' - -', like in '(DJ) NICK JERSEY - 202memo - - -'.
         """
-        parts = re.split(r" - (?![^\[(]+[])])", self.name)
+        parts = re.split(r" - (?![^\[(]+[])])", self.full_name)
         if len(parts) == 1:
-            parts = self.name.split(" - ")
-        main_title = parts[-1]
+            parts = self.full_name.split(" - ")
+        title_without_remix = parts[-1]
         for idx, maybe in enumerate(reversed(parts)):
             if not maybe.strip(" -"):
-                main_title = " - ".join(parts[-idx - 2 :])
+                title_without_remix = " - ".join(parts[-idx - 2 :])
                 break
-        return main_title
+        return title_without_remix
 
     @cached_property
     def title(self) -> str:
         """Return the main title with the full remixer part appended to it."""
         if self.remix:
-            return f"{self.main_title} {self.remix.delimited}"
-        return self.main_title
+            return f"{self.title_without_remix} {self.remix.delimited}"
+        return self.title_without_remix
 
     @cached_property
     def artist(self) -> str:
         """Take the name, remove the title, ensure it does not duplicate any remixers
         and return the resulting artist.
         """
-        artist = self.name[: self.name.rfind(self.main_title)].strip(", -")
-        artist = Remix.PATTERN.sub("", artist)
+        title_start_idx = self.full_name.rfind(self.title_without_remix)
+        artist = Remix.PATTERN.sub("", self.full_name[:title_start_idx].strip(", -"))
         if self.remix:
             artist = artist.replace(self.remix.remixer, "").strip(" ,")
         return artist.strip(" -")
