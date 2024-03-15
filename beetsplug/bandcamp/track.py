@@ -79,9 +79,9 @@ class Track:
             "json_artist": artist,
             "track_id": json["@id"],
             "index": json.get("position"),
-            "catalognum": json["name_parts"].get("catalognum", ""),
+            "catalognum": json.get("catalognum"),
         }
-        return cls(**cls.parse_name(data, json["name_parts"]["clean"], delim, label))
+        return cls(**cls.parse_name(data, json["name"], delim, label))
 
     @staticmethod
     def clean_digi_name(name: str) -> Tuple[str, bool]:

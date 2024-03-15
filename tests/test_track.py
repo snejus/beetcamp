@@ -17,7 +17,7 @@ def test_parse_catalognum_from_track_name(
         **json_track["item"],
         "position": json_track["position"],
         "name": name,
-        "name_parts": {"catalognum": initial_catalognum, "clean": name},
+        "catalognum": initial_catalognum,
     }
 
     track = Track.from_json(json_track, "-", "Label")

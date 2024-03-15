@@ -85,18 +85,16 @@ class Tracks:
             pass
         else:
             for track in tracks:
-                track["name_parts"].update(
-                    catalognum=cat,
-                    clean=track["name_parts"]["clean"].replace(word, "").strip(),
-                )
+                track["catalognum"] = cat
+                track["name"] = track["name"].replace(word, "").strip()
 
         joined = " ".join(common_words)
         if joined in names:  # it is one of the track names (root title)
             for track in tracks:
-                leftover = track["name_parts"]["clean"].replace(joined, "").lstrip()
+                leftover = track["name"].replace(joined, "").lstrip()
                 # looking for a remix without brackets
                 if re.fullmatch(_remix_pat, leftover, re.I):
-                    track["name_parts"]["clean"] = f"{joined} ({leftover})"
+                    track["name"] = f"{joined} ({leftover})"
 
         return tracks
 
@@ -110,11 +108,12 @@ class Tracks:
         names = [i.get("name", "") for i in tracks]
         names = cls.split_quoted_titles(names)
         names = cls.remove_number_prefix(names)
-        delim = cls.track_delimiter(names)
         for track, name in zip(tracks, names):
-            track["name_parts"] = {"clean": name}
-            track["delim"] = delim
+            track["name"] = name
+
         tracks = cls.common_name_parts(tracks, names)
+
+        delim = cls.track_delimiter(names)
         return cls([Track.from_json(t, delim, Helpers.get_label(meta)) for t in tracks])
 
     @cached_property
