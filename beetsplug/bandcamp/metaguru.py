@@ -1,12 +1,12 @@
 """Module for parsing bandcamp metadata."""
+
 import itertools as it
 import json
 import operator as op
 import re
-import sys
 from collections import Counter
 from datetime import date, datetime
-from functools import partial
+from functools import cached_property, partial
 from typing import Any, Dict, Iterable, List, Optional, Set
 from unicodedata import normalize
 
@@ -15,14 +15,9 @@ from beets import config as beets_config
 from beets.autotag.hooks import AlbumInfo, TrackInfo
 from pycountry import countries, subdivisions
 
+from .album import AlbumName
 from .helpers import PATTERNS, Helpers, MediaInfo
 from .tracks import Track, Tracks
-from .album import AlbumName
-
-if sys.version_info.minor > 7:
-    from functools import cached_property  # pylint: disable=ungrouped-imports
-else:
-    from cached_property import cached_property  # type: ignore # pylint: disable=import-error # noqa
 
 NEW_BEETS = int(beets_version.split(".")[1]) > 4
 
@@ -34,6 +29,7 @@ COUNTRY_OVERRIDES = {
     "UK": "GB",  # pycountry: Great Britain
     "D.C.": "US",
     "South Korea": "KR",  # pycountry: Korea, Republic of
+    "Turkey": "TR",  # pycountry: only handles Türkiye
 }
 DATA_SOURCE = "bandcamp"
 WORLDWIDE = "XW"

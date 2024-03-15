@@ -1,16 +1,11 @@
 """Module with album parsing logic."""
 
 import re
-import sys
 from dataclasses import dataclass
+from functools import cached_property
 from typing import Any, Dict, List, Set
 
 from .helpers import PATTERNS, Helpers
-
-if sys.version_info.minor > 7:
-    from functools import cached_property  # pylint: disable=ungrouped-imports
-else:
-    from cached_property import cached_property  # type: ignore # pylint: disable=import-error # noqa
 
 JSONDict = Dict[str, Any]
 
