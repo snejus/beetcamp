@@ -2,21 +2,15 @@
 import itertools as it
 import operator as op
 import re
-import sys
 from collections import Counter
 from dataclasses import dataclass
-from functools import reduce
+from functools import cached_property, reduce
 from typing import Iterator, List, Optional, Set
 
 from ordered_set import OrderedSet
 
 from .helpers import CATNUM_PAT, Helpers, JSONDict, _remix_pat
 from .track import Track
-
-if sys.version_info.minor > 7:
-    from functools import cached_property  # pylint: disable=ungrouped-imports
-else:
-    from cached_property import cached_property  # type: ignore
 
 DELIMITER_PAT = re.compile(r" ([^\w&()+/[\] ]) ")
 TITLE_IN_QUOTES = re.compile(r'^(.+[^ -])[ -]+"([^"]+)"$')

@@ -1,5 +1,8 @@
 ## Unreleased
 
+### Removed
+- Dropped support for `python 3.7`.
+
 ### Fixed
 
 - (#52) genre: do not fail parsing a release without any keywords, for example

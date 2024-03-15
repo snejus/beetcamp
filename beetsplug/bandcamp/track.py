@@ -1,16 +1,10 @@
 """Module with a single track parsing functionality."""
 import re
-import sys
 from dataclasses import dataclass, field
+from functools import cached_property
 from typing import List, Optional, Tuple
 
-
 from .helpers import CATNUM_PAT, PATTERNS, Helpers, JSONDict, _remix_pat
-
-if sys.version_info.minor > 7:
-    from functools import cached_property  # pylint: disable=ungrouped-imports
-else:
-    from cached_property import cached_property  # type: ignore # pylint: disable=import-error # noqa
 
 digiwords = r"""
     # must contain at least one of

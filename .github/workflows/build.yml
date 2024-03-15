@@ -7,7 +7,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python: ["3.7", "3.8", "3.9", "3.10", "3.11"]
+        python: ["3.8", "3.9", "3.10", "3.11", "3.12"]
         beets: ["1.4.9", "1.5.0", "1.6.0"]
     steps:
       - uses: actions/checkout@v3
@@ -59,7 +59,7 @@ jobs:
             -Dsonar.python.flake8.reportPaths=flake.log
             -Dsonar.python.pylint.reportPaths=pylint.log
             -Dsonar.python.mypy.reportPaths=mypy.log
-            -Dsonar.python.version=${{ matrix.python }}
+            -Dsonar.python.version=3.8
             -Dsonar.python.xunit.reportPath=.reports/test-report.xml
             -Dsonar.sources=beetsplug/bandcamp
             -Dsonar.tests=tests
