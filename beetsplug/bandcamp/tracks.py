@@ -197,10 +197,10 @@ class Tracks:
             elif len(artists) == len(self) - 1:  # only 1 missing artist
                 # if this is a remix and the parsed title is part of the albumartist or
                 # is one of the track artists, we made a mistake parsing the remix:
-                #  it is most probably the edge case where the `main_title` is a
+                #  it is most probably the edge case where the `title_without_remix` is a
                 #  legitimate artist and the track title is something like 'Hello Remix'
-                if t.remix and (t.main_title in albumartist):
-                    t.artist, t.title = t.main_title, t.remix.remix
+                if t.remix and (t.title_without_remix in albumartist):
+                    t.artist, t.title = t.title_without_remix, t.remix.remix
                 # this is the only artist that didn't get parsed - relax the rule
                 # and try splitting with '-' without spaces
                 split = t.title.split("-")

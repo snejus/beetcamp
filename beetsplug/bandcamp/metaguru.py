@@ -284,7 +284,7 @@ class Metaguru(Helpers):
     def is_single_album(self) -> bool:
         return (
             self._singleton
-            or len({t.main_title for t in self.tracks}) == 1
+            or len({t.title_without_remix for t in self.tracks}) == 1
             or len(self._tracks.raw_names) == 1
         )
 
