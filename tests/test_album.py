@@ -45,7 +45,8 @@ from beetsplug.bandcamp.album import AlbumName
         ("Diva (Incl. some sort of Remixes)", [], "Diva"),
         ("HWEP010 - MEZZ - COLOR OF WAR", ["HWEP010", "MEZZ"], "COLOR OF WAR"),
         ("O)))Bow 1", [], "O)))Bow 1"),
-        ("hi'Hello", ["hi"], "'Hello"),
+        ("hi'Hello", ["hi"], "hi'Hello"),
+        ("fjern's stuff and such", [], "fjern's stuff and such"),
         # only remove VA if album name starts or ends with it
         ("Album VA", [], "Album"),
         ("VA Album", [], "Album"),

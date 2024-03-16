@@ -12,6 +12,7 @@
     the album
   - do not remove artist or label when it is preceded by **` x `** or followed by characters
     **`'`**, **`_`** and **`&`**, or words **EP**, **LP** and **deluxe**
+  - handle apostrophes more reliably
 
 - `catalognum`:
   - allow catalogue numbers like **Dystopian LP01**
