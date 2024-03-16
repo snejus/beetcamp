@@ -153,14 +153,14 @@ class AlbumName:
         for w in escaped:
             name = re.sub(rf" *(?i:(compiled )?by|vs|\W*split w) {w}", "", name)
             if not re.search(
-                rf"\w {w} \w|(of|&) {w}|{w}([\d]| (deluxe|[el]p\b|&))", name, re.I
+                rf"\w {w} \w|(of|&) {w}|{w}(['_\d]| (deluxe|[el]p\b|&))", name, re.I
             ):
                 name = re.sub(
                     rf"""
     (?<! x )
-    (^|[^'\])\w])+
+    (^|[^\])\w])+
     (?i:{w})
-    ([^'(\[\w]| _|(\d+$))*
+    ([^(\[\w]| _|(\d+$))*
                     """,
                     " ",
                     name,
