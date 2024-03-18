@@ -1,125 +1,26 @@
 """Module with tracks parsing functionality."""
 
 import itertools as it
-import operator as op
-import re
-from collections import Counter
 from dataclasses import dataclass
-from functools import cached_property, reduce
-from typing import Iterator, List, Optional, Set, Tuple
+from functools import cached_property
+from itertools import starmap
+from typing import Iterator, List, Optional, Set
 
-from ordered_set import OrderedSet
-
-from .helpers import CATNUM_PAT, Helpers, JSONDict, _remix_pat
+from .helpers import Helpers, JSONDict
 from .track import Track
-
-DELIMITER_PAT = re.compile(r" ([^\w&()+/[\] ]) ")
-TITLE_IN_QUOTES = re.compile(r'^(.+[^ -])[ -]+"([^"]+)"$')
-NUMBER_PREFIX = re.compile(r"(^|- )\d{2,}\W* ")
+from .track_names import TrackNames
 
 
 @dataclass
 class Tracks:
-    # Title [Some Album EP]
-    ALBUM_IN_TITLE = re.compile(r"[- ]*\[([^\]]+ [EL]P)\]+", re.I)
-
     tracks: List[Track]
-    album: Optional[str] = None
+    names: TrackNames
 
     def __iter__(self) -> Iterator[Track]:
         return iter(self.tracks)
 
     def __len__(self) -> int:
         return len(self.tracks)
-
-    @staticmethod
-    def split_quoted_titles(names: List[str]) -> List[str]:
-        if len(names) > 1 and all(TITLE_IN_QUOTES.match(n) for n in names):
-            return [TITLE_IN_QUOTES.sub(r"\1 - \2", n) for n in names]
-        return names
-
-    @staticmethod
-    def remove_number_prefix(names: List[str]) -> List[str]:
-        if len(names) > 1 and all(NUMBER_PREFIX.search(n) for n in names):
-            return [NUMBER_PREFIX.sub(r"\1", n) for n in names]
-        return names
-
-    @staticmethod
-    def find_common_track_delimiter(names: List[str]) -> str:
-        """Return the track parts delimiter that is in effect in the current release.
-        In some (rare) situations track parts are delimited by a pipe character
-        or some UTF-8 equivalent of a dash.
-
-        This checks every track for the first character (see the regex for exclusions)
-        that splits it. The character that splits the most and at least half of
-        the tracks is the character we need.
-
-        If no such character is found, or if we have just one track, return a dash '-'.
-        """
-
-        def get_delim(string: str) -> str:
-            m = DELIMITER_PAT.search(string)
-            return m.group(1) if m else "-"
-
-        delim, count = Counter(map(get_delim, names)).most_common(1).pop()
-        return delim if (len(names) == 1 or count > len(names) / 2) else "-"
-
-    @staticmethod
-    def common_name_parts(tracks, names):
-        # type: (List[JSONDict], List[str]) -> List[JSONDict]
-        """Parse track names for parts that require knowledge of the other names.
-
-        1. Split each track name into words
-        2. Find the list of words that are common to all tracks
-           a. check the *first* and the *last* word for the catalog number
-              1. If found, remove it from every track name
-           b. check whether tracks start the same way. This indicates an album with
-              one unique root title and a couple of its remixes. This is especially
-              relevant when the remix is not delimited appropriately.
-        Return the catalog number and the new list of names.
-        """
-        names_tokens = map(str.split, names)
-        common_words = reduce(op.and_, [OrderedSet(x) for x in names_tokens])
-        if not common_words:
-            return tracks
-
-        matches = (CATNUM_PAT["anywhere"].search(common_words[i]) for i in [0, -1])
-        try:
-            cat, word = next(((m.group(1), m.string) for m in matches if m))
-        except StopIteration:
-            pass
-        else:
-            for track in tracks:
-                track["catalognum"] = cat
-                track["name"] = track["name"].replace(word, "").strip()
-
-        joined = " ".join(common_words)
-        if joined in names:  # it is one of the track names (root title)
-            for track in tracks:
-                leftover = track["name"].replace(joined, "").lstrip()
-                # looking for a remix without brackets
-                if re.fullmatch(_remix_pat, leftover, re.I):
-                    track["name"] = f"{joined} ({leftover})"
-
-        return tracks
-
-    @classmethod
-    def normalize_delimiter(cls, names: List[str]) -> List[str]:
-        delim = cls.find_common_track_delimiter(names)
-        return (
-            names if delim == "-" else [n.replace(f" {delim} ", " - ") for n in names]
-        )
-
-    @classmethod
-    def extract_album_name(cls, names: List[str]) -> Tuple[Optional[str], List[str]]:
-        matches = list(map(cls.ALBUM_IN_TITLE.search, names))
-        albums = {m.group(1).replace('"', "") for m in matches if m}
-        if len(albums) != 1:
-            return None, names
-
-        return albums.pop(), [
-            (n.replace(m.group(), "") if m else n) for m, n in zip(matches, names)
-        ]
 
     @classmethod
     def from_json(cls, meta: JSONDict) -> "Tracks":
@@ -128,18 +29,18 @@ class Tracks:
         except (TypeError, KeyError):
             tracks = [meta]
 
-        names = [i.get("name", "") for i in tracks]
-        names = cls.split_quoted_titles(names)
-        names = cls.remove_number_prefix(names)
-        names = cls.normalize_delimiter(names)
-        album, names = cls.extract_album_name(names)
-        for track, name in zip(tracks, names):
-            track["name"] = name
-
-        tracks = cls.common_name_parts(tracks, names)
-        return cls(
-            [Track.from_json(t, Helpers.get_label(meta)) for t in tracks], album=album
+        names = TrackNames.make(
+            [i.get("name", "") for i in tracks], Helpers.get_label(meta)
         )
+        return cls(list(starmap(Track.make, zip(tracks, names))), names)
+
+    @property
+    def album(self) -> Optional[str]:
+        return self.names.album
+
+    @property
+    def catalognum(self) -> Optional[str]:
+        return self.names.catalognum
 
     @cached_property
     def first(self) -> Track:
@@ -187,14 +88,6 @@ class Tracks:
         """Returned artists and titles joined into one long string."""
         return " ".join(it.chain(self.raw_names, self.all_artists)).lower()
 
-    @cached_property
-    def single_catalognum(self) -> Optional[str]:
-        """Return catalognum if every track contains the same one."""
-        cats = [t.catalognum for t in self if t.catalognum]
-        if len(cats) == len(self) and len(set(cats)) == 1:
-            return cats[0]
-        return None
-
     def adjust_artists(self, albumartist: str) -> None:
         """Handle some track artist edge cases.
 
@@ -227,7 +120,9 @@ class Tracks:
                 if len(split) == 1:
                     # attempt to split by another ' ? ' where '?' may be some utf-8
                     # alternative of a dash
-                    split = [s for s in DELIMITER_PAT.split(t.title) if len(s) > 1]
+                    split = [
+                        s for s in TrackNames.DELIMITER_PAT.split(t.title) if len(s) > 1
+                    ]
                 if len(split) > 1:
                     t.artist, t.title = split
             if not t.artist:

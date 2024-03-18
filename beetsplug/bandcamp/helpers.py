@@ -1,7 +1,5 @@
 """Module with a Helpers class that contains various static, independent functions."""
 
-from __future__ import annotations
-
 import itertools as it
 import operator as op
 import re
@@ -109,7 +107,9 @@ rm_strings = [
     r"CD ?\d+",
 ]
 
-_remix_pat = r"(?P<remix>((?P<remixer>[^])]+) )?\b((re)?mix|edit|bootleg)\b[^])]*)"
+REMIX = re.compile(
+    r"(?P<remix>((?P<remixer>[^])]+) )?\b((re)?mix|edit|bootleg)\b[^])]*)", re.I
+)
 CAMELCASE = re.compile(r"(?<=[a-z])(?=[A-Z])")
 
 
@@ -134,8 +134,8 @@ CLEAN_PATTERNS = [
     (re.compile(r"(- )?\( *"), "("),                      # hi - ( bye)      -> hi (bye)
     (re.compile(r" \)+|(\)+$)"), ")"),                    # hi (bye ))       -> hi (bye)
     (re.compile(r"- Reworked"), "(Reworked)"),            # bye - Reworked   -> bye (Reworked)    # noqa
-    (re.compile(rf"(\({_remix_pat})$", re.I), r"\1)"),    # bye - (Some Mix  -> bye - (Some Mix)  # noqa
-    (re.compile(rf"- *({_remix_pat})$", re.I), r"(\1)"),  # bye - Some Mix   -> bye (Some Mix)    # noqa
+    (re.compile(rf"(\({REMIX.pattern})$", re.I), r"\1)"),    # bye - (Some Mix  -> bye - (Some Mix)  # noqa
+    (re.compile(rf"- *({REMIX.pattern})$", re.I), r"(\1)"),  # bye - Some Mix   -> bye (Some Mix)    # noqa
     (re.compile(r'(^|- )[“"]([^”"]+)[”"]( \(|$)'), r"\1\2\3"),   # "bye" -> bye; hi - "bye" -> hi - bye  # noqa
     (re.compile(r"\((the )?(remixes)\)", re.I), r"\2"),   # Album (Remixes)  -> Album Remixes     # noqa
     (re.compile(r"examine-.+CD\d+_([^_-]+)[_-](.*)"), split_artist_title),  # See https://examine-archive.bandcamp.com/album/va-examine-archive-international-sampler-xmn01 # noqa
