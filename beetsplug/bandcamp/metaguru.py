@@ -17,7 +17,8 @@ from pycountry import countries, subdivisions
 
 from .album import AlbumName
 from .helpers import PATTERNS, Helpers, MediaInfo
-from .tracks import Track, Tracks
+from .track import Track
+from .tracks import Tracks
 
 NEW_BEETS = int(beets_version.split(".")[1]) > 4
 
@@ -184,7 +185,7 @@ class Metaguru(Helpers):
     @cached_property
     def general_catalognum(self) -> str:
         """Find catalog number in the media-agnostic release metadata and cache it."""
-        return self._tracks.single_catalognum or self.parse_catalognum(
+        return self._tracks.catalognum or self.parse_catalognum(
             album=self.meta["name"],
             description=self.comments,
             label=self.label if not self._singleton else "",

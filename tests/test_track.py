@@ -1,28 +1,22 @@
 import pytest
-from beetsplug.bandcamp.tracks import Track
+from beetsplug.bandcamp.track import Track
 
 
 @pytest.mark.parametrize(
-    ("name", "initial_catalognum", "expected_title", "expected_catalognum"),
+    ("name", "expected_title", "expected_catalognum"),
     [
-        ("Artist - Title CAT001", "", "Title CAT001", ""),
-        ("Artist - Title [CAT001]", "INIT001", "Title [CAT001]", "INIT001"),
-        ("Artist - Title [CAT001]", "", "Title", "CAT001"),
+        ("Artist - Title CAT001", "Title CAT001", None),
+        ("Artist - Title [CAT001]", "Title", "CAT001"),
     ],
 )
 def test_parse_catalognum_from_track_name(
-    name, initial_catalognum, expected_title, expected_catalognum, json_track
+    name, expected_title, expected_catalognum, json_track
 ):
-    json_track = {
-        **json_track["item"],
-        "position": json_track["position"],
-        "name": name,
-        "catalognum": initial_catalognum,
-    }
+    json_track = {**json_track["item"], "position": json_track["position"]}
 
-    track = Track.from_json(json_track, "Label")
-    assert track.title == expected_title, print(track)
-    assert track.catalognum == expected_catalognum, print(track)
+    track = Track.make(json_track, name)
+    assert track.title == expected_title, track
+    assert track.catalognum == expected_catalognum, track
 
 
 @pytest.mark.parametrize(

@@ -5,7 +5,7 @@ from dataclasses import dataclass, field
 from functools import cached_property
 from typing import List, Optional, Tuple
 
-from .helpers import CATNUM_PAT, PATTERNS, Helpers, JSONDict, _remix_pat
+from .helpers import CATNUM_PAT, PATTERNS, REMIX, Helpers, JSONDict
 
 digiwords = r"""
     # must contain at least one of
@@ -33,7 +33,7 @@ DIGI_ONLY_PATTERN = re.compile(
 
 @dataclass
 class Remix:
-    PATTERN = re.compile(rf" *[\[(] *{_remix_pat}[])]", re.I)
+    PATTERN = re.compile(rf" *[\[(] *{REMIX.pattern}[])]", re.I)
 
     delimited: str
     remixer: str
@@ -60,27 +60,11 @@ class Track:
 
     name: str = ""
     ft: str = ""
-    catalognum: str = ""
+    catalognum: Optional[str] = None
     remix: Optional[Remix] = None
 
     digi_only: bool = False
     track_alt: Optional[str] = None
-
-    @classmethod
-    def from_json(cls, json: JSONDict, label: str) -> "Track":
-        try:
-            artist = json["inAlbum"]["byArtist"]["name"]
-        except KeyError:
-            artist = ""
-        artist = artist or json.get("byArtist", {}).get("name", "")
-        data = {
-            "json_item": json,
-            "json_artist": artist,
-            "track_id": json["@id"],
-            "index": json.get("position"),
-            "catalognum": json.get("catalognum"),
-        }
-        return cls(**cls.parse_name(data, json["name"], label))
 
     @staticmethod
     def clean_digi_name(name: str) -> Tuple[str, bool]:
@@ -111,43 +95,59 @@ class Track:
                     break
         return data
 
-    @staticmethod
-    def parse_name(data: JSONDict, name: str, label: str) -> JSONDict:
-        # remove label from the end of the track name
-        # see https://gutterfunkuk.bandcamp.com/album/gutterfunk-all-subject-to-vibes-various-artists-lp  # noqa
-        if name.endswith(label):
-            name = name.replace(label, "").strip(" -")
+    @classmethod
+    def parse_name(cls, name: str, artist: str, index: Optional[int]) -> JSONDict:
+        result: JSONDict = {}
+        artist, artist_digi_only = cls.clean_digi_name(artist)
+        name, name_digi_only = cls.clean_digi_name(name)
+        result["digi_only"] = name_digi_only or artist_digi_only
 
-        json_artist, artist_digi_only = Track.clean_digi_name(data["json_artist"])
-        name, name_digi_only = Track.clean_digi_name(name)
-        data["digi_only"] = name_digi_only or artist_digi_only
-
-        data["json_artist"] = Helpers.clean_name(json_artist) if json_artist else ""
+        if artist:
+            artist = Helpers.clean_name(artist)
         name = Helpers.clean_name(name).strip().lstrip("-")
 
+        # find the track_alt and remove it from the name
         m = PATTERNS["track_alt"].search(name)
         if m:
-            data["track_alt"] = m.group(1).replace(".", "").upper()
+            result["track_alt"] = m.group(1).replace(".", "").upper()
             name = name.replace(m.group(), "")
 
-        if not data.get("catalognum"):
-            # check whether track name contains the catalog number within parens
-            # or square brackets
-            # see https://objection999x.bandcamp.com/album/eruption-va-obj012
-            m = CATNUM_PAT["delimited"].search(name)
-            if m:
-                data["catalognum"] = m.group(1)
-                name = name.replace(m.group(), "").strip()
-        name = re.sub(rf"^0*{data.get('index', 0)}(?!\W\d)\W+", "", name)
+        # check whether track name contains the catalog number within parens
+        # or square brackets
+        # see https://objection999x.bandcamp.com/album/eruption-va-obj012
+        m = CATNUM_PAT["delimited"].search(name)
+        if m:
+            result["catalognum"] = m.group(1)
+            name = name.replace(m.group(), "").strip()
 
+        # Remove leading index
+        if index:
+            name = re.sub(rf"^0*{index}(?!\W\d)\W+", "", name)
+
+        # find the remixer and remove it from the name
         remix = Remix.from_name(name)
         if remix:
-            data.update(remix=remix)
+            result["remix"] = remix
             name = name.replace(remix.delimited, "").rstrip()
 
-        data["name"] = name
-        data = Track.find_featuring(data)
-        return data
+        result["name"] = name
+        return Track.find_featuring({**result, "json_artist": artist})
+
+    @classmethod
+    def make(cls, json: JSONDict, name: str) -> "Track":
+        try:
+            artist = json["inAlbum"]["byArtist"]["name"]
+        except KeyError:
+            artist = json.get("byArtist", {}).get("name", "")
+
+        index = json.get("position")
+        data = {
+            "json_item": json,
+            "track_id": json["@id"],
+            "index": index,
+            **cls.parse_name(name, artist, index),
+        }
+        return cls(**data)
 
     @cached_property
     def duration(self) -> Optional[int]:
@@ -177,6 +177,7 @@ class Track:
     @cached_property
     def title_without_remix(self) -> str:
         """Split the track name, deduce the title and return it.
+
         The extra complexity here is to ensure that it does not cut off a title
         that ends with ' - -', like in '(DJ) NICK JERSEY - 202memo - - -'.
         """
@@ -199,9 +200,7 @@ class Track:
 
     @cached_property
     def artist(self) -> str:
-        """Take the name, remove the title, ensure it does not duplicate any remixers
-        and return the resulting artist.
-        """
+        """Return name without the title and the remixer."""
         title_start_idx = self.full_name.rfind(self.title_without_remix)
         artist = Remix.PATTERN.sub("", self.full_name[:title_start_idx].strip(", -"))
         if self.remix:
