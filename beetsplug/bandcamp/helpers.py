@@ -114,7 +114,7 @@ _remix_pat = r"(?P<remix>((?P<remixer>[^])]+) )?\b((re)?mix|edit|bootleg)\b[^])]
 CAMELCASE = re.compile(r"(?<=[a-z])(?=[A-Z])")
 
 
-def split_artist_title(m: re.Match[str]) -> str:
+def split_artist_title(m: re.Match) -> str:
     """See for yourself.
 
     https://examine-archive.bandcamp.com/album/va-examine-archive-international-sampler-xmn01
