@@ -63,7 +63,7 @@ CATNUM_PAT = {
     # enclosed by parens or square brackets, but not ending with MIX
     "delimited": re.compile(rf"(?:[\[(])(?!.*MIX){_cat_pat}(?:[])]|$)", re.VERBOSE),
     # can possibly be followed up by a second catalogue number
-    "anywhere": re.compile(rf"({_cat_pat}(\ /\ {_cat_pat})?)", re.VERBOSE),
+    "anywhere": re.compile(rf"({_cat_pat}(\ [/-]\ {_cat_pat})?)", re.VERBOSE),
 }
 
 PATTERNS: Dict[str, Pattern[str]] = {
@@ -199,7 +199,9 @@ class Helpers:
             cases.append((pat, "\n".join((album, disctitle, description))))
 
         def find(pat: Pattern[str], string: str) -> str:
-            """Return the match if it is
+            """Return the match.
+
+            It is legitimate if it is
             * not found in any of the track artists or titles
             * made of the label name when it has a space and is shorter than 6 chars
             """

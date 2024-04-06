@@ -24,6 +24,8 @@
 
 - `catalognum`:
   - allow catalogue numbers like **Dystopian LP01**
+  - parse a _range_ of catalogue numbers when it is present, for example
+    **TFT013SR - TFT-016SR**
 
 - `title`:
   - consider **with** and **w/** as markers for collaborating artists

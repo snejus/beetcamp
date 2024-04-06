@@ -208,7 +208,9 @@ def new(
         else next((a for a in guru.albums if a.media == "Vinyl"), guru.albums[0])
     )
 
-    new.catalognum = " / ".join(x.catalognum for x in guru.albums if x.catalognum)
+    new.catalognum = " / ".join(
+        sorted({x.catalognum for x in guru.albums if x.catalognum})
+    )
 
     if not target or new not in (base, target):
         with target_filepath.open("w") as f:
