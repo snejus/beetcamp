@@ -134,10 +134,10 @@
           }
         ],
         "availability": "InStock",
-        "price": 28,
+        "price": 28.0,
         "priceCurrency": "EUR",
         "priceSpecification": {
-          "minPrice": 28
+          "minPrice": 28.0
         },
         "url": "https://dominikeulberg.bandcamp.com/album/mannigfaltig#p3952929687-buy"
       }
@@ -203,10 +203,10 @@
           }
         ],
         "availability": "InStock",
-        "price": 12,
+        "price": 12.0,
         "priceCurrency": "EUR",
         "priceSpecification": {
-          "minPrice": 12
+          "minPrice": 12.0
         },
         "url": "https://dominikeulberg.bandcamp.com/album/mannigfaltig#p2900502284-buy"
       }
@@ -327,52 +327,85 @@
         "@type": "MusicEvent",
         "location": {
           "@type": "MusicVenue",
-          "address": "Villiersdorp, South Africa",
-          "name": "Elandskloof Farm"
-        },
-        "name": "Elandskloof Farm, Villiersdorp, South Africa",
-        "startDate": "10 Mar 2023 00:00:00 GMT",
-        "url": "https://www.songkick.com/festivals/91431-timeless/id/40573162-timeless-festival-2023?utm_source=1471&utm_medium=partner"
-      },
-      {
-        "@type": "MusicEvent",
-        "location": {
-          "@type": "MusicVenue",
           "address": "Berlin, Germany",
           "name": "Ritter Butzke"
         },
         "name": "Ritter Butzke, Berlin, Germany",
-        "startDate": "29 Apr 2023 00:00:00 GMT",
-        "url": "https://www.songkick.com/concerts/40812733-dominik-eulberg-at-ritter-butzke?utm_source=1471&utm_medium=partner"
+        "startDate": "27 Apr 2024 00:00:00 GMT",
+        "url": "https://www.songkick.com/concerts/41600025-dominik-eulberg-at-ritter-butzke?utm_source=1471&utm_medium=partner"
       },
       {
         "@type": "MusicEvent",
         "location": {
           "@type": "MusicVenue",
-          "address": "Amsterdam, Netherlands",
-          "name": "Komm schon Alter Festival"
+          "address": "Memmingen, Germany",
+          "name": "Militärflugplatz"
         },
-        "name": "Komm schon Alter Festival, Amsterdam, Netherlands",
-        "startDate": "27 May 2023 00:00:00 GMT",
-        "url": "https://www.songkick.com/festivals/2357334-komm-schon-alter/id/40780548-komm-schon-alter-festival-2023?utm_source=1471&utm_medium=partner"
+        "name": "Militärflugplatz, Memmingen, Germany",
+        "startDate": "17 May 2024 00:00:00 GMT",
+        "url": "https://www.songkick.com/festivals/1319688-ikarus/id/41573733-ikarus-festival-2024?utm_source=1471&utm_medium=partner"
       },
       {
         "@type": "MusicEvent",
         "location": {
           "@type": "MusicVenue",
-          "address": "Berlin, Germany",
-          "name": "Ritter Butzke"
+          "address": "Dresden, Germany",
+          "name": "Puschkin Club"
         },
-        "name": "Ritter Butzke, Berlin, Germany",
-        "startDate": "07 Aug 2023 00:00:00 GMT",
-        "url": "https://www.songkick.com/concerts/40813746-dominik-eulberg-at-ritter-butzke?utm_source=1471&utm_medium=partner"
+        "name": "Puschkin Club, Dresden, Germany",
+        "startDate": "19 May 2024 00:00:00 GMT",
+        "url": "https://www.songkick.com/concerts/41896607-miura-at-puschkin-club?utm_source=1471&utm_medium=partner"
+      },
+      {
+        "@type": "MusicEvent",
+        "location": {
+          "@type": "MusicVenue",
+          "address": "Würzburg, Germany",
+          "name": "exit:steinburg"
+        },
+        "name": "exit:steinburg, Würzburg, Germany",
+        "startDate": "26 May 2024 00:00:00 GMT",
+        "url": "https://www.songkick.com/festivals/3653886-exitsteinburg/id/41822978-exitsteinburg-2024?utm_source=1471&utm_medium=partner"
+      },
+      {
+        "@type": "MusicEvent",
+        "location": {
+          "@type": "MusicVenue",
+          "address": "Munich, Germany",
+          "name": "Olympia Reitanlage Riem"
+        },
+        "name": "Olympia Reitanlage Riem, Munich, Germany",
+        "startDate": "15 Jun 2024 00:00:00 GMT",
+        "url": "https://www.songkick.com/festivals/476694-isle-of-summer/id/41670121-isle-of-summer-2024?utm_source=1471&utm_medium=partner"
+      },
+      {
+        "@type": "MusicEvent",
+        "location": {
+          "@type": "MusicVenue",
+          "address": "Hamburg, Germany",
+          "name": "Ms Dockville Gelände"
+        },
+        "name": "Ms Dockville Gelände, Hamburg, Germany",
+        "startDate": "16 Aug 2024 00:00:00 GMT",
+        "url": "https://www.songkick.com/festivals/222781-ms-dockville/id/41563495-ms-dockville-2024?utm_source=1471&utm_medium=partner"
+      },
+      {
+        "@type": "MusicEvent",
+        "location": {
+          "@type": "MusicVenue",
+          "address": "Bad Aibling, Germany",
+          "name": "Echelon Festival"
+        },
+        "name": "Echelon Festival, Bad Aibling, Germany",
+        "startDate": "16 Aug 2024 00:00:00 GMT",
+        "url": "https://www.songkick.com/festivals/1623139-echelon/id/41645400-echelon-festival-2024?utm_source=1471&utm_medium=partner"
       }
     ],
     "foundingLocation": {
       "@type": "Place",
       "name": "Montabaur, Germany"
     },
-    "genre": "https://bandcamp.com/tag/electronic",
+    "genre": "https://bandcamp.com/discover/electronic",
     "image": "https://f4.bcbits.com/img/0014226291_10.jpg",
     "name": "Dominik Eulberg",
     "subjectOf": [

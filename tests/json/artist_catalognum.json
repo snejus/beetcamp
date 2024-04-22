@@ -61,7 +61,7 @@
       "name": "PROCESS 404 'Cybernetic Punk Unit'"
     },
     {
-      "@id": "https://blvckplvgue.bandcamp.com/album/process-404-cybernetic-punk-unit#b51380968",
+      "@id": "https://blvckplvgue.bandcamp.com/album/process-404-cybernetic-punk-unit#b54684199",
       "@type": [
         "MusicRelease",
         "Product"
@@ -70,7 +70,7 @@
         {
           "@type": "PropertyValue",
           "name": "item_id",
-          "value": 51380968
+          "value": 54684199
         },
         {
           "@type": "PropertyValue",
@@ -90,7 +90,7 @@
         {
           "@type": "PropertyValue",
           "name": "art_id",
-          "value": 219819829
+          "value": 257256293
         },
         {
           "@type": "PropertyValue",
@@ -99,17 +99,17 @@
         }
       ],
       "image": [
-        "https://f4.bcbits.com/img/a0219819829_10.jpg"
+        "https://f4.bcbits.com/img/a0257256293_10.jpg"
       ],
       "musicReleaseFormat": "DigitalFormat",
-      "name": "full digital discography (28 releases)",
+      "name": "full digital discography (29 releases)",
       "offers": {
         "@type": "Offer",
         "additionalProperty": [
           {
             "@type": "PropertyValue",
             "name": "bundle_size",
-            "value": 28
+            "value": 29
           },
           {
             "@type": "PropertyValue",
@@ -118,12 +118,12 @@
           }
         ],
         "availability": "OnlineOnly",
-        "price": 88.08,
+        "price": 91.08,
         "priceCurrency": "EUR",
         "priceSpecification": {
-          "minPrice": 88.08
+          "minPrice": 91.08
         },
-        "url": "https://blvckplvgue.bandcamp.com/album/process-404-cybernetic-punk-unit#b51380968-buy"
+        "url": "https://blvckplvgue.bandcamp.com/album/process-404-cybernetic-punk-unit#b54684199-buy"
       }
     },
     {
@@ -204,7 +204,7 @@
       "@type": "Place",
       "name": "Paris, France"
     },
-    "genre": "https://bandcamp.com/tag/electronic",
+    "genre": "https://bandcamp.com/discover/electronic",
     "image": "https://f4.bcbits.com/img/0012129458_10.jpg",
     "mainEntityOfPage": [
       {

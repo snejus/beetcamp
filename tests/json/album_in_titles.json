@@ -61,7 +61,7 @@
       "name": "GutterFunk: All Subject To Vibes [Various Artists LP]"
     },
     {
-      "@id": "https://gutterfunkuk.bandcamp.com/album/gutterfunk-all-subject-to-vibes-various-artists-lp#b46313789",
+      "@id": "https://gutterfunkuk.bandcamp.com/album/gutterfunk-all-subject-to-vibes-various-artists-lp#b56755260",
       "@type": [
         "MusicRelease",
         "Product"
@@ -70,7 +70,7 @@
         {
           "@type": "PropertyValue",
           "name": "item_id",
-          "value": 46313789
+          "value": 56755260
         },
         {
           "@type": "PropertyValue",
@@ -90,7 +90,7 @@
         {
           "@type": "PropertyValue",
           "name": "art_id",
-          "value": 4103233153
+          "value": 4294573575
         },
         {
           "@type": "PropertyValue",
@@ -99,17 +99,17 @@
         }
       ],
       "image": [
-        "https://f4.bcbits.com/img/a4103233153_10.jpg"
+        "https://f4.bcbits.com/img/a4294573575_10.jpg"
       ],
       "musicReleaseFormat": "DigitalFormat",
-      "name": "full digital discography (44 releases)",
+      "name": "full digital discography (49 releases)",
       "offers": {
         "@type": "Offer",
         "additionalProperty": [
           {
             "@type": "PropertyValue",
             "name": "bundle_size",
-            "value": 44
+            "value": 49
           },
           {
             "@type": "PropertyValue",
@@ -118,12 +118,12 @@
           }
         ],
         "availability": "OnlineOnly",
-        "price": 92.3,
+        "price": 102.05,
         "priceCurrency": "GBP",
         "priceSpecification": {
-          "minPrice": 92.3
+          "minPrice": 102.05
         },
-        "url": "https://gutterfunkuk.bandcamp.com/album/gutterfunk-all-subject-to-vibes-various-artists-lp#b46313789-buy"
+        "url": "https://gutterfunkuk.bandcamp.com/album/gutterfunk-all-subject-to-vibes-various-artists-lp#b56755260-buy"
       }
     },
     {
@@ -237,7 +237,7 @@
       "@type": "Place",
       "name": "Bristol, UK"
     },
-    "genre": "https://bandcamp.com/tag/electronic",
+    "genre": "https://bandcamp.com/discover/electronic",
     "image": "https://f4.bcbits.com/img/0010127893_10.jpg",
     "mainEntityOfPage": [
       {

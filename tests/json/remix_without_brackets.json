@@ -61,7 +61,7 @@
       "name": "Aluphobia x Astatine - Problem Child EP"
     },
     {
-      "@id": "https://purehate000.bandcamp.com/album/aluphobia-x-astatine-problem-child-ep#b51768982",
+      "@id": "https://purehate000.bandcamp.com/album/aluphobia-x-astatine-problem-child-ep#b57237545",
       "@type": [
         "MusicRelease",
         "Product"
@@ -70,7 +70,7 @@
         {
           "@type": "PropertyValue",
           "name": "item_id",
-          "value": 51768982
+          "value": 57237545
         },
         {
           "@type": "PropertyValue",
@@ -90,7 +90,7 @@
         {
           "@type": "PropertyValue",
           "name": "art_id",
-          "value": 3978758765
+          "value": 3901033007
         },
         {
           "@type": "PropertyValue",
@@ -99,17 +99,17 @@
         }
       ],
       "image": [
-        "https://f4.bcbits.com/img/a3978758765_10.jpg"
+        "https://f4.bcbits.com/img/a3901033007_10.jpg"
       ],
       "musicReleaseFormat": "DigitalFormat",
-      "name": "full digital discography (56 releases)",
+      "name": "full digital discography (63 releases)",
       "offers": {
         "@type": "Offer",
         "additionalProperty": [
           {
             "@type": "PropertyValue",
             "name": "bundle_size",
-            "value": 56
+            "value": 63
           },
           {
             "@type": "PropertyValue",
@@ -118,12 +118,12 @@
           }
         ],
         "availability": "OnlineOnly",
-        "price": 66,
+        "price": 74.4,
         "priceCurrency": "EUR",
         "priceSpecification": {
-          "minPrice": 66
+          "minPrice": 74.4
         },
-        "url": "https://purehate000.bandcamp.com/album/aluphobia-x-astatine-problem-child-ep#b51768982-buy"
+        "url": "https://purehate000.bandcamp.com/album/aluphobia-x-astatine-problem-child-ep#b57237545-buy"
       }
     },
     {
@@ -194,7 +194,7 @@
       "@type": "Place",
       "name": "Budapest, Hungary"
     },
-    "genre": "https://bandcamp.com/tag/electronic",
+    "genre": "https://bandcamp.com/discover/electronic",
     "image": "https://f4.bcbits.com/img/0020591482_10.jpg",
     "mainEntityOfPage": [
       {

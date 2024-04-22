@@ -132,10 +132,10 @@
           }
         ],
         "availability": "SoldOut",
-        "price": 12,
+        "price": 12.0,
         "priceCurrency": "GBP",
         "priceSpecification": {
-          "minPrice": 12
+          "minPrice": 12.0
         },
         "url": "https://foldrecords.bandcamp.com/album/fld001-gareth-wild-common-assault-ep#p2171282163-buy"
       }

@@ -119,7 +119,7 @@
       }
     },
     {
-      "@id": "https://diffusereality.bandcamp.com/album/francois-dillinger-icosahedrone-lp#b51811323",
+      "@id": "https://diffusereality.bandcamp.com/album/francois-dillinger-icosahedrone-lp#b59852101",
       "@type": [
         "MusicRelease",
         "Product"
@@ -128,7 +128,7 @@
         {
           "@type": "PropertyValue",
           "name": "item_id",
-          "value": 51811323
+          "value": 59852101
         },
         {
           "@type": "PropertyValue",
@@ -148,7 +148,7 @@
         {
           "@type": "PropertyValue",
           "name": "art_id",
-          "value": 468202331
+          "value": 1620809228
         },
         {
           "@type": "PropertyValue",
@@ -157,31 +157,31 @@
         }
       ],
       "image": [
-        "https://f4.bcbits.com/img/a0468202331_10.jpg"
+        "https://f4.bcbits.com/img/a1620809228_10.jpg"
       ],
       "musicReleaseFormat": "DigitalFormat",
-      "name": "full digital discography (729 releases)",
+      "name": "full digital discography (1014 releases)",
       "offers": {
         "@type": "Offer",
         "additionalProperty": [
           {
             "@type": "PropertyValue",
             "name": "bundle_size",
-            "value": 729
+            "value": 1014
           },
           {
             "@type": "PropertyValue",
             "name": "discount",
-            "value": 0.85
+            "value": 0.9
           }
         ],
         "availability": "OnlineOnly",
-        "price": 850.21,
+        "price": 772.5,
         "priceCurrency": "EUR",
         "priceSpecification": {
-          "minPrice": 850.21
+          "minPrice": 772.5
         },
-        "url": "https://diffusereality.bandcamp.com/album/francois-dillinger-icosahedrone-lp#b51811323-buy"
+        "url": "https://diffusereality.bandcamp.com/album/francois-dillinger-icosahedrone-lp#b59852101-buy"
       }
     },
     {
@@ -270,30 +270,14 @@
         "@type": "PropertyValue",
         "name": "has_policies",
         "value": true
-      },
-      {
-        "@type": "PropertyValue",
-        "name": "image_height",
-        "value": 2917
-      },
-      {
-        "@type": "PropertyValue",
-        "name": "image_id",
-        "value": 29960568
-      },
-      {
-        "@type": "PropertyValue",
-        "name": "image_width",
-        "value": 2917
       }
     ],
-    "description": "Independent Record Label founded in 2013.\nArts Festival: Teorema\nSublabel: Periphylla\n۩ Send a private message to visit our Record shop in Barcelona 💌\n→ https://linktr.ee/diffusereality",
+    "description": "Independent Record Label founded in 2013.\nArts Festival: Teorema\nSublabel: Periphylla\nSublabel: APS : A Psychomagic Story\nhttps://linktr.ee/diffusereality",
     "foundingLocation": {
       "@type": "Place",
       "name": "Portugal"
     },
-    "genre": "https://bandcamp.com/tag/electronic",
-    "image": "https://f4.bcbits.com/img/0029960568_10.jpg",
+    "genre": "https://bandcamp.com/discover/electronic",
     "mainEntityOfPage": [
       {
         "@type": "WebPage",

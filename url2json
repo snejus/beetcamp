@@ -52,7 +52,7 @@ get_json() {
 }
 
 update_test_jsons() {
-  files=(./tests/json/{,issues/}*.json)
+  files=(./tests/json/*.json)
   for file in "${files[@]}"; do
     url=$(jq -r '.["@id"]' "$file")
     printf '%-50s' "$file"

@@ -133,10 +133,10 @@
           }
         ],
         "availability": "InStock",
-        "price": 105,
+        "price": 105.0,
         "priceCurrency": "DKK",
         "priceSpecification": {
-          "minPrice": 105
+          "minPrice": 105.0
         },
         "url": "https://reececox.bandcamp.com/album/emotion-1-kul-r-008#p1985399228-buy"
       }
@@ -224,7 +224,7 @@
       "@type": "Place",
       "name": "Berlin, Germany"
     },
-    "genre": "https://bandcamp.com/tag/electronic",
+    "genre": "https://bandcamp.com/discover/electronic",
     "image": "https://f4.bcbits.com/img/0028280113_10.jpg",
     "mainEntityOfPage": [
       {
