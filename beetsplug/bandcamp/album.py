@@ -156,7 +156,6 @@ class AlbumName:
 
         Catalogue number and artists to be removed are provided as 'to_clean'.
         """
-        name = PATTERNS["ft"].sub(" ", name)
         name = re.sub(r"^\[(.*)\]$", r"\1", name)
 
         for w in map(re.escape, filter(None, to_clean)):
@@ -176,6 +175,7 @@ class AlbumName:
                     flags=re.VERBOSE,
                 ).strip()
 
+        name = PATTERNS["ft"].sub("", name)
         name = cls.remove_va(name)
         name = cls.remove_label(Helpers.clean_name(name), label)
         name = cls.REMIX_IN_TITLE.sub("", name).strip("- ")

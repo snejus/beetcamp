@@ -71,20 +71,18 @@ PATTERNS: Dict[str, Pattern[str]] = {
     "meta": re.compile(r'.*"@id".*'),
     "ft": re.compile(
         r"""
-        [ ]*                        # all preceding space
-        ((?P<br>[\[(])|\b)          # bracket or word boundary
-        (ft|feat|featuring|(?<=\()with|w/(?![ ]you))[. ]  # any ft variation
-        (
-            # when it does not start with a bracket, do not allow " - " in it, otherwise
-            # we may match full track name
-            (?(br)|(?!.*[ ]-[ ].*))
-            # anything but brackets or a slash, except for a slash preceded
-            # by a non-space (can be part of artist or title)
-            (?:[^]\[()/]|\S/)+
+        [ ]*                            # all preceding space
+        ((?P<br>[([{])|\b)              # bracket or word boundary
+        (?P<ft>
+            (ft|feat|featuring|(?<=\()with|w/(?![ ]you))[. ]+ # any ft variation
+            (?P<ft_artist>.+?)
+            (?<!mix)                    # does not end with "mix"
+            (\b|['"])                   # ends with a word boundary or quote
         )
-        (?<!mix)\b    # does not end with "mix"
-        (?(br)[]\)])  # if it started with a bracket, it must end with a closing bracket
-        [ ]*          # trailing space
+        (?(br)                          # if started with a bracket
+              [])}]                     # must end with a closing bracket
+            | (?=\ -\ |\ *[][)(/]|$)    # otherwise ends with of these combinations
+        )
     """,
         re.I | re.VERBOSE,
     ),
