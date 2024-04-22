@@ -3,7 +3,7 @@
 import re
 from dataclasses import dataclass, field
 from functools import cached_property
-from typing import List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple
 
 from .helpers import CATNUM_PAT, PATTERNS, REMIX, Helpers, JSONDict
 
@@ -61,6 +61,7 @@ class Track:
     name: str = ""
     ft: str = ""
     catalognum: Optional[str] = None
+    ft_artist: str = ""
     remix: Optional[Remix] = None
 
     digi_only: bool = False
@@ -76,7 +77,16 @@ class Track:
         return clean_name, clean_name != name
 
     @staticmethod
-    def find_featuring(data: JSONDict) -> JSONDict:
+    def split_ft(value: str) -> Tuple[str, str, str]:
+        """Return ft artist, full ft string, and the value without the ft string."""
+        if m := PATTERNS["ft"].search(value):
+            grp = m.groupdict()
+            return grp["ft_artist"], grp["ft"], value.replace(m.group(), "")
+
+        return "", "", value
+
+    @classmethod
+    def get_featuring_artist(cls, name: str, artist: str) -> Dict[str, str]:
         """Find featuring artist in the track name.
 
         If the found artist is contained within the remixer, do not do anything.
@@ -84,16 +94,12 @@ class Track:
         do not consider it as a featuring artist.
         Otherwise, strip brackets and spaces and save it in the 'ft' field.
         """
-        for _field in "name", "json_artist":
-            m = PATTERNS["ft"].search(data[_field])
-            if m:
-                ft = m.groups()[-1].strip()
-                if ft not in data.get("remixer", ""):
-                    data[_field] = data[_field].replace(m.group().rstrip(), "")
-                    if ft not in data["json_artist"]:
-                        data["ft"] = m.group().strip(" ([])")
-                    break
-        return data
+        ft_artist, ft, name = cls.split_ft(name)
+
+        if not ft_artist:
+            ft_artist, ft, artist = cls.split_ft(artist)
+
+        return {"name": name, "json_artist": artist, "ft": ft, "ft_artist": ft_artist}
 
     @classmethod
     def parse_name(cls, name: str, artist: str, index: Optional[int]) -> JSONDict:
@@ -130,8 +136,7 @@ class Track:
             result["remix"] = remix
             name = name.replace(remix.delimited, "").rstrip()
 
-        result["name"] = name
-        return Track.find_featuring({**result, "json_artist": artist})
+        return {**result, **cls.get_featuring_artist(name, artist)}
 
     @classmethod
     def make(cls, json: JSONDict, name: str) -> "Track":
@@ -218,7 +223,11 @@ class Track:
             "medium_index": self.index,
             "medium": None,
             "track_id": self.track_id,
-            "artist": self.artist + (f" {self.ft}" if self.ft else ""),
+            "artist": (
+                f"{self.artist} {self.ft}"
+                if self.ft_artist not in self.artist + self.title
+                else self.artist
+            ),
             "title": self.title,
             "length": self.duration,
             "track_alt": self.track_alt,
