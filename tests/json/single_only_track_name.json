@@ -11,7 +11,7 @@
     {
       "@type": "PropertyValue",
       "name": "art_id",
-      "value": 2158518281
+      "value": 3989527092
     },
     {
       "@type": "PropertyValue",
@@ -25,10 +25,11 @@
     "name": "GUTKEIN"
   },
   "copyrightNotice": "All Rights Reserved",
-  "dateModified": "11 Sep 2022 04:14:58 GMT",
+  "dateModified": "04 Mar 2023 01:32:43 GMT",
   "datePublished": "10 Jan 2021 00:00:00 GMT",
+  "description": "little distorted",
   "duration": "P00H05M55S",
-  "image": "https://f4.bcbits.com/img/a2158518281_10.jpg",
+  "image": "https://f4.bcbits.com/img/a3989527092_10.jpg",
   "inAlbum": {
     "@type": "MusicAlbum",
     "albumRelease": [
@@ -62,29 +63,95 @@
           {
             "@type": "PropertyValue",
             "name": "art_id",
-            "value": 2158518281
+            "value": 3989527092
           }
         ],
         "description": "Includes high-quality download in MP3, FLAC and more. Paying supporters also get unlimited streaming via the free Bandcamp app.",
         "image": [
-          "https://f4.bcbits.com/img/a2158518281_10.jpg"
+          "https://f4.bcbits.com/img/a3989527092_10.jpg"
         ],
         "musicReleaseFormat": "DigitalFormat",
-        "name": "oenera",
+        "name": "OENERA",
         "offers": {
           "@type": "Offer",
           "availability": "OnlineOnly",
-          "price": 1,
+          "price": 1.0,
           "priceCurrency": "EUR",
           "priceSpecification": {
-            "minPrice": 1
+            "minPrice": 1.0
           },
           "url": "https://gutkeinforu.bandcamp.com/track/oenera#t793629957-buy"
+        }
+      },
+      {
+        "@id": "https://gutkeinforu.bandcamp.com/track/oenera#b58688871",
+        "@type": [
+          "MusicRelease",
+          "Product"
+        ],
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "item_id",
+            "value": 58688871
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "item_type",
+            "value": "b"
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "selling_band_id",
+            "value": 1309392494
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "type_name",
+            "value": "Digital"
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "art_id",
+            "value": 1922551329
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "is_bfd",
+            "value": true
+          }
+        ],
+        "image": [
+          "https://f4.bcbits.com/img/a1922551329_10.jpg"
+        ],
+        "musicReleaseFormat": "DigitalFormat",
+        "name": "full digital discography (41 releases)",
+        "offers": {
+          "@type": "Offer",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "bundle_size",
+              "value": 41
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "discount",
+              "value": 0.35
+            }
+          ],
+          "availability": "OnlineOnly",
+          "price": 54.64,
+          "priceCurrency": "EUR",
+          "priceSpecification": {
+            "minPrice": 54.64
+          },
+          "url": "https://gutkeinforu.bandcamp.com/track/oenera#b58688871-buy"
         }
       }
     ],
     "albumReleaseType": "SingleRelease",
-    "name": "oenera",
+    "name": "OENERA",
     "numTracks": 1
   },
   "keywords": [
@@ -95,7 +162,7 @@
     "trance"
   ],
   "mainEntityOfPage": "https://gutkeinforu.bandcamp.com/track/oenera",
-  "name": "oenera",
+  "name": "OENERA",
   "publisher": {
     "@id": "https://gutkeinforu.bandcamp.com",
     "@type": "MusicGroup",
@@ -112,23 +179,28 @@
       },
       {
         "@type": "PropertyValue",
+        "name": "has_download_codes",
+        "value": true
+      },
+      {
+        "@type": "PropertyValue",
         "name": "image_height",
-        "value": 3158
+        "value": 1364
       },
       {
         "@type": "PropertyValue",
         "name": "image_id",
-        "value": 31082756
+        "value": 33148176
       },
       {
         "@type": "PropertyValue",
         "name": "image_width",
-        "value": 3158
+        "value": 1365
       }
     ],
     "description": "support a tiny acquarium on the tip of a K-hall ~)",
-    "genre": "https://bandcamp.com/tag/electronic",
-    "image": "https://f4.bcbits.com/img/0031082756_10.jpg",
+    "genre": "https://bandcamp.com/discover/electronic",
+    "image": "https://f4.bcbits.com/img/0033148176_10.jpg",
     "mainEntityOfPage": [
       {
         "@type": "WebPage",
@@ -154,6 +226,18 @@
         ],
         "name": "music",
         "url": "https://gutkeinforu.bandcamp.com/music"
+      },
+      {
+        "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "c"
+          }
+        ],
+        "name": "community",
+        "url": "https://gutkeinforu.bandcamp.com/community"
       }
     ]
   }

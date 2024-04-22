@@ -24,7 +24,7 @@
     "name": "Matriark"
   },
   "copyrightNotice": "All Rights Reserved",
-  "dateModified": "05 Feb 2023 11:59:40 GMT",
+  "dateModified": "01 Jun 2023 17:03:15 GMT",
   "datePublished": "09 Nov 2020 00:00:00 GMT",
   "description": "mt004\n\nmastering by alexander salomonsen\n\n\nI'm very happy to announce Andrea's debut track. <3\n\nhttps://soundcloud.com/matriarkcph\nhttps://www.instagram.com/andreaapettersen/",
   "duration": "P00H07M01S",
@@ -74,10 +74,10 @@
         "offers": {
           "@type": "Offer",
           "availability": "OnlineOnly",
-          "price": 7.85,
-          "priceCurrency": "DKK",
+          "price": 2.0,
+          "priceCurrency": "EUR",
           "priceSpecification": {
-            "minPrice": 7.85
+            "minPrice": 2.0
           },
           "url": "https://mega-tech.bandcamp.com/track/arangel#t2868806546-buy"
         }
@@ -87,6 +87,9 @@
     "name": "Arangel",
     "numTracks": 1
   },
+  "keywords": [
+    "Malmö"
+  ],
   "mainEntityOfPage": "https://mega-tech.bandcamp.com/track/arangel",
   "name": "Arangel",
   "publisher": {
@@ -107,6 +110,21 @@
         "@type": "PropertyValue",
         "name": "has_policies",
         "value": true
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_height",
+        "value": 364
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_id",
+        "value": 32474138
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_width",
+        "value": 640
       }
     ],
     "description": "Malmø/Cph label run by Megatech and Matriark",
@@ -114,6 +132,7 @@
       "@type": "Place",
       "name": "Malmö, Sweden"
     },
+    "image": "https://f4.bcbits.com/img/0032474138_10.jpg",
     "name": "Megatech Industries",
     "subjectOf": [
       {

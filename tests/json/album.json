@@ -122,10 +122,10 @@
           }
         ],
         "availability": "SoldOut",
-        "price": 12,
+        "price": 12.0,
         "priceCurrency": "EUR",
         "priceSpecification": {
-          "minPrice": 12
+          "minPrice": 12.0
         },
         "url": "https://ute-rec.bandcamp.com/album/ute004#p122109000-buy"
       }
@@ -154,7 +154,7 @@
   },
   "copyrightNotice": "All Rights Reserved",
   "creditText": "Production: Mikkel Haraldstad\r\nMaster: Joel Krozer, 6bitdeep\r\nGraphics: Haider Ahmed",
-  "dateModified": "22 Feb 2021 10:59:51 GMT",
+  "dateModified": "19 Feb 2023 14:55:18 GMT",
   "datePublished": "17 Jul 2020 00:00:00 GMT",
   "description": "Our dear Mikkel serving four emotional and warm trancers focused on the journey within.",
   "image": "https://f4.bcbits.com/img/a1035657740_10.jpg",
@@ -199,7 +199,7 @@
         "value": 2048
       }
     ],
-    "description": "✣ Label\n✣ Club nights\n✣ Forest raves",
+    "description": "✣ Record label\n✣ Club nights\n✣ Forest gatherings",
     "foundingLocation": {
       "@type": "Place",
       "name": "Oslo, Norway"
