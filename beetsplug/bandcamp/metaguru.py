@@ -77,7 +77,7 @@ class Metaguru(Helpers):
         return set(self.config.get("excluded_fields") or [])
 
     @property
-    def comments(self) -> str:
+    def comments(self) -> Optional[str]:
         """Return release, media descriptions and credits separated by
         the configured separator string.
         """
@@ -88,11 +88,13 @@ class Metaguru(Helpers):
 
         parts.append(self.meta.get("creditText") or "")
         sep: str = self.config["comments_separator"]
-        return sep.join(filter(op.truth, parts)).replace("\r", "")
+        return sep.join(filter(op.truth, parts)).replace("\r", "") or None
 
     @cached_property
     def all_media_comments(self) -> str:
-        return "\n".join([*[m.description for m in self.media_formats], self.comments])
+        return "\n".join(
+            [*[m.description for m in self.media_formats], self.comments or ""]
+        )
 
     @cached_property
     def label(self) -> str:
@@ -187,7 +189,7 @@ class Metaguru(Helpers):
         """Find catalog number in the media-agnostic release metadata and cache it."""
         return self._tracks.catalognum or self.parse_catalognum(
             album=self.meta["name"],
-            description=self.comments,
+            description=self.comments or "",
             label=self.label if not self._singleton else "",
             artistitles=self._tracks.artistitles,
         )
@@ -482,7 +484,7 @@ class Metaguru(Helpers):
             setattr(album_info, key, val)
         album_info.album_id = self.media.album_id
         if self.media.name == "Vinyl":
-            album_info = self.add_track_alts(album_info, self.comments)
+            album_info = self.add_track_alts(album_info, self.comments or "")
         return album_info
 
     @cached_property

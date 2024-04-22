@@ -27,6 +27,10 @@
   - parse a _range_ of catalogue numbers when it is present, for example
     **TFT013SR - TFT-016SR**
 
+- `comments`: use value `None` when there are no comments. In contrast to returning an
+  empty string, this way during beets import the previous comment on the track will be
+  kept if the Bandcamp release does not have a description.
+
 - `title`:
   - consider **with** and **w/** as markers for collaborating artists
   - remove **`bonus -`**

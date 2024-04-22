@@ -1,4 +1,5 @@
 """Module the Metaguru class functionality."""
+
 from copy import deepcopy
 from datetime import date
 
@@ -13,7 +14,7 @@ _p = pytest.param
 @pytest.mark.parametrize(
     ("descr", "disctitle", "creds", "expected"),
     [
-        _p("", "", "", "", id="empty"),
+        _p("", "", "", None, id="empty"),
         _p("hello", "", "", "hello", id="only main desc"),
         _p("", "sick vinyl", "", "sick vinyl", id="only media desc"),
         _p("", "", "credit", "credit", id="only credits"),
