@@ -31,6 +31,8 @@
   empty string, this way during beets import the previous comment on the track will be
   kept if the Bandcamp release does not have a description.
 
+- `label`: label is now correctly obtained for single releases when it is available.
+
 - `title`:
   - consider **with** and **w/** as markers for collaborating artists
   - remove **`bonus -`**
