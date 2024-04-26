@@ -88,7 +88,7 @@ class Metaguru(Helpers):
 
         parts.append(self.meta.get("creditText") or "")
         sep: str = self.config["comments_separator"]
-        return sep.join(filter(op.truth, parts)).replace("\r", "") or None
+        return sep.join(filter(None, parts)).replace("\r", "") or None
 
     @cached_property
     def all_media_comments(self) -> str:
