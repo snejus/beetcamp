@@ -145,7 +145,7 @@ class Helpers:
     @staticmethod
     def get_label(meta: JSONDict) -> str:
         try:
-            item = meta["albumRelease"][0]["recordLabel"]
+            item = meta.get("inAlbum", meta)["albumRelease"][0]["recordLabel"]
         except (KeyError, IndexError):
             item = meta["publisher"]
         return item.get("name") or ""
