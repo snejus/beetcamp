@@ -1,4 +1,5 @@
 """Tests for any logic found in the main plugin module."""
+
 import json
 from itertools import zip_longest
 
@@ -49,7 +50,7 @@ def check_album(actual, expected):
 def test_find_url(mb_albumid, comments, album, expected_url):
     """URLs in `mb_albumid` and `comments` fields must be found."""
     item = Item(mb_albumid=mb_albumid, comments=comments)
-    assert BandcampPlugin()._find_url(item, album, "album") == expected_url
+    assert BandcampPlugin()._find_url_in_item(item, album, "album") == expected_url
 
 
 @pytest.mark.parametrize(

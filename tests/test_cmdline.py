@@ -1,4 +1,7 @@
 """Module for command line functionality tests."""
+
+import sys
+
 import pytest
 from beetsplug.bandcamp import get_args
 
@@ -26,11 +29,14 @@ from beetsplug.bandcamp import get_args
     ],
 )
 def test_cmdline_flags(cmdline, args):
-    assert vars(get_args(cmdline)) == args
+    sys.argv = ["beetcamp", *cmdline]
+    assert vars(get_args()) == args
 
 
-def test_help_is_shown(capsys):
+def test_required_parameter(capsys):
+    sys.argv = ["beetcamp"]
     with pytest.raises(SystemExit):
-        get_args([])
-        capture = capsys.readouterr()
-        assert "options:" in capture.out
+        get_args()
+
+    capture = capsys.readouterr()
+    assert "error: one of the arguments" in capture.err
