@@ -1,9 +1,9 @@
 """Module with a Helpers class that contains various static, independent functions."""
 
-import itertools as it
-import operator as op
 import re
 from functools import lru_cache, partial
+from itertools import chain, starmap
+from operator import contains
 from typing import Any, Dict, Iterable, List, NamedTuple, Pattern
 
 from beets.autotag.hooks import AlbumInfo
@@ -165,7 +165,7 @@ class Helpers:
         """
         no_ft_artists = (PATTERNS["ft"].sub("", a) for a in artists)
         split = map(PATTERNS["split_artists"].split, ordset(no_ft_artists))
-        split_artists = ordset(map(str.strip, it.chain(*split))) - {"", "more"}
+        split_artists = ordset(map(str.strip, chain(*split))) - {"", "more"}
 
         for artist in list(split_artists):
             # ' & ' or ' X ' may be part of single artist name, so we need to be careful
@@ -214,7 +214,7 @@ class Helpers:
             return ""
 
         try:
-            return next(filter(None, it.starmap(find, cases)))
+            return next(filter(None, starmap(find, cases)))
         except StopIteration:
             return ""
 
@@ -226,28 +226,31 @@ class Helpers:
         return name
 
     @staticmethod
-    def get_genre(keywords, config, label):
-        # type: (Iterable[str], JSONDict, str) -> Iterable[str]
+    def get_genre(
+        keywords: Iterable[str], config: JSONDict, label: str
+    ) -> Iterable[str]:
         """Return a comma-delimited list of valid genres, using MB genres for reference.
 
-        Initially, exclude keywords that are label names (unless they are valid MB genres)
+        1. Exclude keywords that are label names, unless they are a valid MB genre
 
-        Verify each keyword's (potential genre) validity w.r.t. the configured `mode`:
+        2. Verify each keyword's (potential genre) validity w.r.t. the configured `mode`
           * classical: valid only if the _entire keyword_ matches a MB genre in the list
-          * progressive: either above or if each of the words matches MB genre - since it
-            is effectively a subgenre.
-          * psychedelic: either one of the above or if the last word is a valid MB genre.
+          * progressive: either above or if each of the words matches MB genre - since
+            it is effectively a subgenre.
+          * psychedelic: one of the above or if the last word is a valid MB genre.
             This allows to be flexible regarding the variety of potential genres while
             keeping away from spammy ones.
 
-        Once we have the list of keywords that make it through the mode filters,
-        an additional filter is executed:
-          * if a keyword is _part of another keyword_ (genre within a sub-genre),
-            the more generic option gets excluded, for example,
-            >>> get_genre(['house', 'garage house', 'glitch'], "classical")
-            'garage house, glitch'
+        3. Once we have the list of keywords that coming out of the mode filters,
+           an additional filter is executed:
+           * if a keyword is _part of another keyword_ (genre within a sub-genre),
+             we keep the more specific genre, for example
+             >>> get_genre(["house", "garage house", "glitch"], "classical")
+             ["garage house", "glitch"]
+
+             "garage house" is preferred over "house".
         """
-        valid_mb_genre = partial(op.contains, GENRES)
+        valid_mb_genre = partial(contains, GENRES)
         label_name = label.lower().replace(" ", "")
 
         def is_label_name(kw: str) -> bool:
@@ -260,7 +263,7 @@ class Helpers:
             if config["mode"] == "classical":
                 return valid_mb_genre(kw)
 
-            words = map(str.strip, kw.split(" "))
+            words = map(str.strip, re.split("[ -]", kw))
             if config["mode"] == "progressive":
                 return valid_mb_genre(kw) or all(map(valid_mb_genre, words))
 
@@ -269,23 +272,26 @@ class Helpers:
         unique_genres: ordset[str] = ordset()
         # expand badly delimited keywords
         split_kw = partial(re.split, r"[.] | #| - ")
-        for kw in it.chain.from_iterable(map(split_kw, keywords)):
+        for kw in chain.from_iterable(map(split_kw, keywords)):
             # remove full stops and hashes and ensure the expected form of 'and'
-            kw = re.sub("[.#]", "", str(kw)).replace("&", "and")
-            if not is_label_name(kw) and (is_included(kw) or valid_for_mode(kw)):
-                unique_genres.add(kw)
+            _kw = re.sub("[.#]", "", str(kw)).replace("&", "and")
+            if not is_label_name(_kw) and (is_included(_kw) or valid_for_mode(_kw)):
+                unique_genres.add(_kw)
 
-        def duplicate(genre: str) -> bool:
-            """Return True if genre is contained within another genre or if,
-            having removed spaces from every other, there is a duplicate found.
-            It is done this way so that 'dark folk' is kept while 'darkfolk' is removed,
-            and not the other way around.
+        def within_another_genre(genre: str) -> bool:
+            """Check if this genre is part of another genre.
+
+            Remove spaces and dashes from the rest of genres and check if any of them
+            contain the given genre.
+
+            This is so that 'dark folk' is kept while 'darkfolk' is removed, and not
+            the other way around.
             """
             others = unique_genres - {genre}
-            others = others.union(x.replace(" ", "").replace("-", "") for x in others)  # type: ignore[attr-defined] # noqa
+            others |= {x.replace(" ", "").replace("-", "") for x in others}
             return any(genre in x for x in others)
 
-        return it.filterfalse(duplicate, unique_genres)
+        return (g for g in unique_genres if not within_another_genre(g))
 
     @staticmethod
     def unpack_props(obj: JSONDict) -> JSONDict:
