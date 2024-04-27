@@ -41,6 +41,7 @@ _cat_pat = CATALOGNUM_CONSTRAINT.format(
     | [A-Z]{2,}[A-Z.$-]*\d{2,}   # HS11, USE202, HEY-101, LI$INGLE025
     | (?<!\w\W)[A-Z.]{2,}[ ]\d+  # OBS.CUR 9
     | [A-z]+-[A-z]+[ ]?\d+       # o-ton 119
+    | [A-z]+[ ]?(?:[EL]P)\d+     # Dystopian LP01
     | \w+[A-z]0\d+               # 1ØPILLS018, fa036
     | [a-z]+(?:cd|lp|:)\d+       # ostgutlp45, reni:7
     | [A-z]+\d+-\d+              # P90-003

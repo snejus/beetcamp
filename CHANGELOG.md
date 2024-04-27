@@ -7,6 +7,9 @@
 
 ### Updated
 
+- `catalognum`:
+  - allow catalogue numbers like **Dystopian LP01**
+
 - `title`: consider **with** and **w/** as markers for collaborating artists
 
 ## [0.17.2] 2023-08-09
