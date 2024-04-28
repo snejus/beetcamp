@@ -29,8 +29,9 @@ python = ">=3.8, <4"
 
 requests = ">=2.27"
 pycountry = ">=20.7.3"
-beets = ">=1.4"
+beets = ">=1.4,<=1.6.0"
 ordered-set = ">=4.0"
+packaging = ">=24.0"
 
 [tool.poetry.dev-dependencies]
 flake8 = ">=3.8.4"

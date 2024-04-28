@@ -11,6 +11,7 @@ from os import path
 import pytest
 from beets.autotag.hooks import AlbumInfo, TrackInfo
 from beetsplug.bandcamp import DEFAULT_CONFIG
+from beetsplug.bandcamp.metaguru import ALBUMTYPES_LIST_SUPPORT
 from rich.console import Console
 
 
@@ -131,6 +132,9 @@ def release(request):
         expected_output = json.load(out_f)
     if isinstance(expected_output, dict):
         expected_output = [expected_output]
+    if ALBUMTYPES_LIST_SUPPORT:
+        for release in expected_output:
+            release["albumtypes"] = release["albumtypes"].split("; ")
 
     return input_json, expected_output
 
