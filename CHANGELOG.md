@@ -10,6 +10,8 @@
 - `album`:
   - handle some edge cases when string **EP** or **LP** is followed with data relevant to
     the album
+  - do not remove artist or label when it is preceded by **` x `** or followed by characters
+    **`'`**, **`_`** and **`&`**, or words **EP**, **LP** and **deluxe**
 
 - `catalognum`:
   - allow catalogue numbers like **Dystopian LP01**
