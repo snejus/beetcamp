@@ -58,6 +58,8 @@ from beetsplug.bandcamp.album import AlbumName
         ("Label-Album", [], "Label-Album"),
         # and remove brackets
         ("Album", [], "Album"),
+        ("Artist EP", ["Artist"], "Artist EP"),
+        ("Artist & Another EP", ["Artist", "Another"], "Artist & Another EP"),
     ],
 )
 def test_clean_name(name, extras, expected):

@@ -1,8 +1,9 @@
 """Module with album parsing logic."""
+
+import re
 import sys
 from dataclasses import dataclass
-import re
-from typing import List, Set, Dict, Any
+from typing import Any, Dict, List, Set
 
 from ._helpers import PATTERNS, Helpers
 
@@ -130,7 +131,7 @@ class AlbumName:
             \W*               # pick up any punctuation
             (?<!\w[ ])        # cannot be preceded by a simple word
             \b{re.escape(label)}\b
-            (?![ -][A-Za-z])  # cannot be followed by a word
+            (?!'|[ -][A-Za-z])  # cannot be followed by a word
             ([^[\]\w]|\d)*    # pick up any digits and punctuation
         """,
             flags=re.VERBOSE | re.IGNORECASE,
@@ -146,14 +147,24 @@ class AlbumName:
         name = PATTERNS["ft"].sub(" ", name)
         name = re.sub(r"^\[(.*)\]$", r"\1", name)
 
-        escaped = [re.escape(x) for x in filter(None, to_clean)] + [
-            r"Various Artists?\b(?! [A-z])( \d+)?"
+        escaped = [re.escape(x) for x in to_clean] + [
+            r"Various[ ]Artists?\b(?![ ][A-z])([ ]\d+)?"
         ]
-        for arg in escaped:
-            name = re.sub(rf" *(?i:(compiled )?by|vs|\W*split w) {arg}", "", name)
-            if not re.search(rf"\w {arg} \w|of {arg}", name, re.I):
+        for w in escaped:
+            name = re.sub(rf" *(?i:(compiled )?by|vs|\W*split w) {w}", "", name)
+            if not re.search(
+                rf"\w {w} \w|(of|&) {w}|{w}([\d]| (deluxe|[el]p\b|&))", name, re.I
+            ):
                 name = re.sub(
-                    rf"(^|[^'\])\w]|_|\b)+(?i:{arg})([^'(\[\w]|_|(\d+$))*", " ", name
+                    rf"""
+    (?<! x )
+    (^|[^'\])\w])+
+    (?i:{w})
+    ([^'(\[\w]| _|(\d+$))*
+                    """,
+                    " ",
+                    name,
+                    flags=re.VERBOSE,
                 ).strip()
 
         name = cls.remove_label(Helpers.clean_name(name), label)
@@ -174,7 +185,7 @@ class AlbumName:
         else:
             look_for = r"((?!The|This)\b[A-Z][^ \n]+\b )+"
 
-        m = re.search(rf"{look_for}[EL]P", self.description)
+        m = re.search(rf"{look_for}[EL]P\b", self.description)
         return m.group() if m else album
 
     def get(
@@ -188,8 +199,9 @@ class AlbumName:
         to_clean = [catalognum]
         if self.remove_artists:
             to_clean.extend(original_artists + artists)
+        to_clean = sorted(filter(None, set(to_clean)), key=len, reverse=True)
 
-        album = self.clean(album, sorted(to_clean, key=len, reverse=True), label)
+        album = self.clean(album, to_clean, label)
         if album.startswith("("):
             album = self.name
 
