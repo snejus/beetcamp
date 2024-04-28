@@ -76,4 +76,4 @@ def test_clean_name(name, extras, expected):
     ],
 )
 def test_parse_title(original, expected):
-    assert AlbumName(original).from_title == expected
+    assert AlbumName(original, "", "").from_title == expected
