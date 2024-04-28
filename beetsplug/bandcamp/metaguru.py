@@ -13,6 +13,7 @@ from unicodedata import normalize
 from beets import __version__ as beets_version
 from beets import config as beets_config
 from beets.autotag.hooks import AlbumInfo, TrackInfo
+from packaging import version
 from pycountry import countries, subdivisions
 
 from .album import AlbumName
@@ -20,7 +21,9 @@ from .helpers import PATTERNS, Helpers, MediaInfo
 from .track import Track
 from .tracks import Tracks
 
-NEW_BEETS = int(beets_version.split(".")[1]) > 4
+BEETS_VERSION = version.parse(beets_version)
+EXTENDED_FIELDS_SUPPORT = version.Version("1.5.0") <= BEETS_VERSION
+ALBUMTYPES_LIST_SUPPORT = version.Version("1.6.0") < BEETS_VERSION
 
 JSONDict = Dict[str, Any]
 
@@ -92,9 +95,10 @@ class Metaguru(Helpers):
 
     @cached_property
     def all_media_comments(self) -> str:
-        return "\n".join(
-            [*[m.description for m in self.media_formats], self.comments or ""]
-        )
+        return "\n".join([
+            *[m.description for m in self.media_formats],
+            self.comments or "",
+        ])
 
     @cached_property
     def label(self) -> str:
@@ -347,7 +351,7 @@ class Metaguru(Helpers):
         return "album"
 
     @cached_property
-    def albumtypes(self) -> str:
+    def albumtypes(self) -> List[str]:
         albumtypes = {self.albumtype}
         if self.is_comp:
             if self.albumtype == "ep":
@@ -364,7 +368,7 @@ class Metaguru(Helpers):
         if len(self.tracks.remixers) == len(self.tracks):
             albumtypes.add("remix")
 
-        return "; ".join(sorted(albumtypes))
+        return sorted(albumtypes)
 
     @cached_property
     def va(self) -> bool:
@@ -419,9 +423,11 @@ class Metaguru(Helpers):
     def _common_album(self) -> JSONDict:
         common_data: JSONDict = {"album": self.album_name}
         fields = ["label", "catalognum", "albumtype", "country"]
-        if NEW_BEETS:
+        if EXTENDED_FIELDS_SUPPORT:
             fields.extend(["genre", "style", "comments", "albumtypes"])
         common_data.update(self.get_fields(fields))
+        if EXTENDED_FIELDS_SUPPORT and not ALBUMTYPES_LIST_SUPPORT:
+            common_data["albumtypes"] = "; ".join(common_data["albumtypes"])
         reldate = self.release_date
         if reldate:
             common_data.update(self.get_fields(["year", "month", "day"], reldate))
@@ -437,7 +443,7 @@ class Metaguru(Helpers):
             data.pop("catalognum", None)
         if not data["lyrics"]:
             data.pop("lyrics", None)
-        if not NEW_BEETS:
+        if not EXTENDED_FIELDS_SUPPORT:
             data.pop("catalognum", None)
             data.pop("lyrics", None)
         for field in set(data.keys()) & self.excluded_fields:
@@ -450,7 +456,7 @@ class Metaguru(Helpers):
         self._singleton = True
         self.media = self.media_formats[0]
         track = self._trackinfo(self.tracks.first)
-        if NEW_BEETS:
+        if EXTENDED_FIELDS_SUPPORT:
             track.update(self._common_album)
             track.pop("album", None)
         track.track_id = track.data_url

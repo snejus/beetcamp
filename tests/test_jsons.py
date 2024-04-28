@@ -1,14 +1,15 @@
 """Tests that compare beetcamp outputs against expected JSON outputs."""
+
 from operator import itemgetter
 
 import pytest
-from beetsplug.bandcamp.metaguru import NEW_BEETS, Metaguru
+from beetsplug.bandcamp.metaguru import EXTENDED_FIELDS_SUPPORT, Metaguru
 
 pytestmark = pytest.mark.jsons
 
 
 def check(actual, expected) -> None:
-    if NEW_BEETS:
+    if EXTENDED_FIELDS_SUPPORT:
         assert dict(actual) == expected
     else:
         actual = vars(actual)
