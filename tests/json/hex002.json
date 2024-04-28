@@ -1,0 +1,472 @@
+{
+  "@context": "https://schema.org",
+  "@id": "https://hexbarcelona.bandcamp.com/album/hex002-from-the-depths",
+  "@type": "MusicAlbum",
+  "additionalProperty": [
+    {
+      "@type": "PropertyValue",
+      "name": "art_id",
+      "value": 3115894657
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "featured_track_num",
+      "value": 1
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "license_name",
+      "value": "all_rights_reserved"
+    }
+  ],
+  "albumRelease": [
+    {
+      "@id": "https://hexbarcelona.bandcamp.com/album/hex002-from-the-depths",
+      "@type": [
+        "MusicRelease",
+        "Product"
+      ],
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "item_id",
+          "value": 2521852486
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "item_type",
+          "value": "a"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "selling_band_id",
+          "value": 1252439829
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_name",
+          "value": "Digital"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "art_id",
+          "value": 3115894657
+        }
+      ],
+      "description": "Includes high-quality download in MP3, FLAC and more. Paying supporters also get unlimited streaming via the free Bandcamp app.",
+      "image": [
+        "https://f4.bcbits.com/img/a3115894657_10.jpg"
+      ],
+      "musicReleaseFormat": "DigitalFormat",
+      "name": "HEX002 | From The Depths"
+    },
+    {
+      "@id": "https://hexbarcelona.bandcamp.com/album/hex002-from-the-depths#b59258785",
+      "@type": [
+        "MusicRelease",
+        "Product"
+      ],
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "item_id",
+          "value": 59258785
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "item_type",
+          "value": "b"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "selling_band_id",
+          "value": 1252439829
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_name",
+          "value": "Digital"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "art_id",
+          "value": 464287237
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "is_bfd",
+          "value": true
+        }
+      ],
+      "image": [
+        "https://f4.bcbits.com/img/a0464287237_10.jpg"
+      ],
+      "musicReleaseFormat": "DigitalFormat",
+      "name": "full digital discography (48 releases)",
+      "offers": {
+        "@type": "Offer",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "bundle_size",
+            "value": 48
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "discount",
+            "value": 0.5
+          }
+        ],
+        "availability": "OnlineOnly",
+        "price": 154.7,
+        "priceCurrency": "EUR",
+        "priceSpecification": {
+          "minPrice": 154.7
+        },
+        "url": "https://hexbarcelona.bandcamp.com/album/hex002-from-the-depths#b59258785-buy"
+      }
+    },
+    {
+      "@id": "https://hexbarcelona.bandcamp.com/album/hex002-from-the-depths#p1459084917",
+      "@type": [
+        "MusicRelease",
+        "Product"
+      ],
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "item_id",
+          "value": 1459084917
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "item_type",
+          "value": "p"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "selling_band_id",
+          "value": 1252439829
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_name",
+          "value": "Vinyl LP"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "image_ids",
+          "value": [
+            19283270,
+            19283333
+          ]
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "is_music_merch",
+          "value": true
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_id",
+          "value": 2
+        }
+      ],
+      "description": "HEX002 - From The Depths\n1x12\"\n180 grams\n\nA1 - Conflict\nA2 - Arise\nA3 - Conflict (NX1 Remix)\nB1 - Timeless\nB2 - END",
+      "image": [
+        "https://f4.bcbits.com/img/0019283270_10.jpg",
+        "https://f4.bcbits.com/img/0019283333_10.jpg"
+      ],
+      "musicReleaseFormat": "VinylFormat",
+      "name": "Limited 12\" Vinyl",
+      "offers": {
+        "@type": "Offer",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "includes_digital_download",
+            "value": true
+          }
+        ],
+        "availability": "SoldOut",
+        "price": 11.95,
+        "priceCurrency": "EUR",
+        "priceSpecification": {
+          "minPrice": 11.95
+        },
+        "url": "https://hexbarcelona.bandcamp.com/album/hex002-from-the-depths#p1459084917-buy"
+      }
+    },
+    {
+      "@id": "https://hexbarcelona.bandcamp.com/track/conflict",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://hexbarcelona.bandcamp.com/track/arise",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://hexbarcelona.bandcamp.com/track/timeless",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://hexbarcelona.bandcamp.com/track/end",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://hexbarcelona.bandcamp.com/track/conflict-nx1-remix",
+      "@type": "MusicRelease"
+    }
+  ],
+  "albumReleaseType": "AlbumRelease",
+  "byArtist": {
+    "@type": "MusicGroup",
+    "name": "VII Circle, NX1"
+  },
+  "copyrightNotice": "All Rights Reserved",
+  "dateModified": "19 Nov 2022 22:42:50 GMT",
+  "datePublished": "04 Oct 2019 00:00:00 GMT",
+  "description": "‘Conflict’ opens the release with fast paced percussion, sustained atmospherics and frenzied high hats before ‘Arise’ weaves acid dipped synths into metallic clashes and hard hitting stabs. ’Timeless’ is next, painting haunting textures with stormy effects, leading into ‘END’ which swiftly builds into a powerful cut complete with growling bass. Tying everything together, Nexe Records founders NX1 remix ‘Conflict’, incorporating warped frequencies and a murky low-end.\r\n\r\nFeedbacks about the EP:\r\n► Rebekah - killer industrial vibes here, love all tracks and remix\r\n► Gary Beck - These are huge, especially the timeless one\r\n► Dasha Rush - like most of the tracks, thanks\r\n► Under Black Helmet - The whole EP is great!\r\n► Randomer - great tracks\r\n► Remco Beekwilder - Conflict is a belter, thanks!!\r\n► Raffaele Attanasio - I'll play for sure!!!\r\n► Henning Baer - TOP!\r\n► Stephanie Sykes - Yaaaaaasssss.... loving this release!! <3\r\n► Insolate - Arise super cool!\r\n► Joe Farr - NX1 remix is great. I also like Timeless a lot. Thanks.\r\n► Nur Jaber - VII <3\r\n► Cleric - Nice EP will play thanks\r\n\r\nand many more...\r\n\r\nMastered at The Bass Valley Studios by Alan Lockwood",
+  "image": "https://f4.bcbits.com/img/a3115894657_10.jpg",
+  "keywords": [
+    "Electronic",
+    "Techno",
+    "techno",
+    "Barcelona"
+  ],
+  "mainEntityOfPage": "https://hexbarcelona.bandcamp.com/album/hex002-from-the-depths",
+  "name": "HEX002 | From The Depths",
+  "numTracks": 5,
+  "publisher": {
+    "@id": "https://hexbarcelona.bandcamp.com",
+    "@type": "MusicGroup",
+    "additionalProperty": [
+      {
+        "@type": "PropertyValue",
+        "name": "band_id",
+        "value": 1252439829
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "has_any_downloads",
+        "value": true
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "has_download_codes",
+        "value": true
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "has_policies",
+        "value": true
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_height",
+        "value": 1200
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_id",
+        "value": 23279504
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_width",
+        "value": 1200
+      }
+    ],
+    "description": "TechnoMetal label founded in 2019 by Lorenzo Raganzini and Paolo Ferrara.\n\nIt is related to HEX Techno movement.\n\nDEMOS\ndemos@hex-technomovement.com",
+    "foundingLocation": {
+      "@type": "Place",
+      "name": "Barcelona, Spain"
+    },
+    "genre": "https://bandcamp.com/discover/electronic",
+    "image": "https://f4.bcbits.com/img/0023279504_10.jpg",
+    "mainEntityOfPage": [
+      {
+        "@type": "WebSite",
+        "name": "hex-technomovement.com",
+        "url": "http://www.hex-technomovement.com"
+      }
+    ],
+    "name": "HEX Recordings - Techno movement",
+    "subjectOf": [
+      {
+        "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "m"
+          }
+        ],
+        "name": "Digital Music",
+        "url": "https://hexbarcelona.bandcamp.com/music"
+      },
+      {
+        "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "p"
+          }
+        ],
+        "name": "Vinyl Store & Merch",
+        "url": "https://hexbarcelona.bandcamp.com/merch"
+      },
+      {
+        "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "v"
+          }
+        ],
+        "name": "Videoclips",
+        "url": "https://hexbarcelona.bandcamp.com/video"
+      },
+      {
+        "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "c"
+          }
+        ],
+        "name": "Community",
+        "url": "https://hexbarcelona.bandcamp.com/community"
+      }
+    ]
+  },
+  "track": {
+    "@type": "ItemList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://hexbarcelona.bandcamp.com/track/conflict",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 3484674383
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H05M28S",
+          "mainEntityOfPage": "https://hexbarcelona.bandcamp.com/track/conflict",
+          "name": "Conflict"
+        },
+        "position": 1
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://hexbarcelona.bandcamp.com/track/arise",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 3249169829
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H04M58S",
+          "mainEntityOfPage": "https://hexbarcelona.bandcamp.com/track/arise",
+          "name": "Arise"
+        },
+        "position": 2
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://hexbarcelona.bandcamp.com/track/timeless",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 2481022120
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H07M25S",
+          "mainEntityOfPage": "https://hexbarcelona.bandcamp.com/track/timeless",
+          "name": "Timeless"
+        },
+        "position": 3
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://hexbarcelona.bandcamp.com/track/end",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 3006487739
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H05M12S",
+          "mainEntityOfPage": "https://hexbarcelona.bandcamp.com/track/end",
+          "name": "END"
+        },
+        "position": 4
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://hexbarcelona.bandcamp.com/track/conflict-nx1-remix",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 2051893236
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H05M31S",
+          "mainEntityOfPage": "https://hexbarcelona.bandcamp.com/track/conflict-nx1-remix",
+          "name": "Conflict (NX1 Remix)"
+        },
+        "position": 5
+      }
+    ],
+    "numberOfItems": 5
+  }
+}

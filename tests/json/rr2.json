@@ -1,0 +1,205 @@
+{
+  "@context": "https://schema.org",
+  "@id": "https://44labelgroup.bandcamp.com/album/rr2",
+  "@type": "MusicAlbum",
+  "additionalProperty": [
+    {
+      "@type": "PropertyValue",
+      "name": "art_id",
+      "value": 4051683054
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "featured_track_num",
+      "value": 1
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "license_name",
+      "value": "all_rights_reserved"
+    }
+  ],
+  "albumRelease": [
+    {
+      "@id": "https://44labelgroup.bandcamp.com/album/rr2",
+      "@type": [
+        "MusicRelease",
+        "Product"
+      ],
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "item_id",
+          "value": 1512284701
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "item_type",
+          "value": "a"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "selling_band_id",
+          "value": 855335734
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_name",
+          "value": "Digital"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "art_id",
+          "value": 4051683054
+        }
+      ],
+      "description": "Includes high-quality download in MP3, FLAC and more. Paying supporters also get unlimited streaming via the free Bandcamp app.",
+      "image": [
+        "https://f4.bcbits.com/img/a4051683054_10.jpg"
+      ],
+      "musicReleaseFormat": "DigitalFormat",
+      "name": "RR2"
+    },
+    {
+      "@id": "https://44labelgroup.bandcamp.com/track/here-comes-the-storm-kobosil-44-terror-mix",
+      "@type": "MusicRelease"
+    }
+  ],
+  "albumReleaseType": "SingleRelease",
+  "byArtist": {
+    "@type": "MusicGroup",
+    "name": "RADICAL G & THE HORRORIST // KOBOSIL"
+  },
+  "copyrightNotice": "All Rights Reserved",
+  "dateModified": "13 May 2019 20:40:29 GMT",
+  "datePublished": "28 Jan 2019 00:00:00 GMT",
+  "image": "https://f4.bcbits.com/img/a4051683054_10.jpg",
+  "keywords": [
+    "Berlin"
+  ],
+  "mainEntityOfPage": "https://44labelgroup.bandcamp.com/album/rr2",
+  "name": "RR2",
+  "numTracks": 1,
+  "publisher": {
+    "@id": "https://44labelgroup.bandcamp.com",
+    "@type": "MusicGroup",
+    "additionalProperty": [
+      {
+        "@type": "PropertyValue",
+        "name": "band_id",
+        "value": 855335734
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "has_any_downloads",
+        "value": true
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "has_download_codes",
+        "value": true
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "has_policies",
+        "value": true
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_height",
+        "value": 1500
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_id",
+        "value": 35240397
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_width",
+        "value": 1500
+      }
+    ],
+    "foundingLocation": {
+      "@type": "Place",
+      "name": "Berlin, Germany"
+    },
+    "image": "https://f4.bcbits.com/img/0035240397_10.jpg",
+    "mainEntityOfPage": [
+      {
+        "@type": "WebSite",
+        "name": "r-label.group",
+        "url": "http://r-label.group"
+      }
+    ],
+    "name": "44 LABEL GROUP",
+    "subjectOf": [
+      {
+        "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "a"
+          }
+        ],
+        "name": "// 44 //",
+        "url": "https://44labelgroup.bandcamp.com/artists"
+      },
+      {
+        "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "m"
+          }
+        ],
+        "name": "// MUSIC //",
+        "url": "https://44labelgroup.bandcamp.com/music"
+      },
+      {
+        "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "c"
+          }
+        ],
+        "name": "community",
+        "url": "https://44labelgroup.bandcamp.com/community"
+      }
+    ]
+  },
+  "track": {
+    "@type": "ItemList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://44labelgroup.bandcamp.com/track/here-comes-the-storm-kobosil-44-terror-mix",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 551832148
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H06M10S",
+          "mainEntityOfPage": "https://44labelgroup.bandcamp.com/track/here-comes-the-storm-kobosil-44-terror-mix",
+          "name": "Here Comes The Storm (Kobosil 44 Terror Mix)"
+        },
+        "position": 1
+      }
+    ],
+    "numberOfItems": 1
+  }
+}

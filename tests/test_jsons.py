@@ -44,6 +44,9 @@ def test_parse_single_track_release(release, beets_config):
         "artist_catalognum",
         "album_in_titles",
         "remix_without_brackets",
+        "rr2",
+        "hex008",
+        "hex002",
     ],
     indirect=["release"],
 )

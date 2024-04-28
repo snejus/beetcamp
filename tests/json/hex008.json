@@ -1,0 +1,756 @@
+{
+  "@context": "https://schema.org",
+  "@id": "https://hexbarcelona.bandcamp.com/album/hex008-angels-from-hell-various-artists",
+  "@type": "MusicAlbum",
+  "additionalProperty": [
+    {
+      "@type": "PropertyValue",
+      "name": "art_id",
+      "value": 1834646812
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "featured_track_num",
+      "value": 1
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "license_name",
+      "value": "all_rights_reserved"
+    }
+  ],
+  "albumRelease": [
+    {
+      "@id": "https://hexbarcelona.bandcamp.com/album/hex008-angels-from-hell-various-artists",
+      "@type": [
+        "MusicRelease",
+        "Product"
+      ],
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "item_id",
+          "value": 4192984768
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "item_type",
+          "value": "a"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "selling_band_id",
+          "value": 1252439829
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_name",
+          "value": "Digital"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "art_id",
+          "value": 1834646812
+        }
+      ],
+      "description": "Includes high-quality download in MP3, FLAC and more. Paying supporters also get unlimited streaming via the free Bandcamp app.",
+      "image": [
+        "https://f4.bcbits.com/img/a1834646812_10.jpg"
+      ],
+      "musicReleaseFormat": "DigitalFormat",
+      "name": "HEX008 | Angels From Hell (Various Artists)"
+    },
+    {
+      "@id": "https://hexbarcelona.bandcamp.com/album/hex008-angels-from-hell-various-artists#p3220875979",
+      "@type": [
+        "MusicRelease",
+        "Product"
+      ],
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "item_id",
+          "value": 3220875979
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "item_type",
+          "value": "p"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "selling_band_id",
+          "value": 1252439829
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_name",
+          "value": "Vinyl LP"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "image_ids",
+          "value": [
+            25073911,
+            25073924,
+            25073937
+          ]
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "is_music_merch",
+          "value": true
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_id",
+          "value": 2
+        }
+      ],
+      "description": "Triple-Red Flamed-Vinyl\n(only 300 copies)\n\nNo black version\n\nXXX008 | Angels From Hell\n3x12\" special red edition",
+      "image": [
+        "https://f4.bcbits.com/img/0025073911_10.jpg",
+        "https://f4.bcbits.com/img/0025073924_10.jpg",
+        "https://f4.bcbits.com/img/0025073937_10.jpg"
+      ],
+      "musicReleaseFormat": "VinylFormat",
+      "name": "XXX008 | Angels From Hell (Various Artists) Triple-Vinyl",
+      "offers": {
+        "@type": "Offer",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "includes_digital_download",
+            "value": true
+          }
+        ],
+        "availability": "InStock",
+        "price": 37.95,
+        "priceCurrency": "EUR",
+        "priceSpecification": {
+          "minPrice": 37.95
+        },
+        "url": "https://hexbarcelona.bandcamp.com/album/hex008-angels-from-hell-various-artists#p3220875979-buy"
+      }
+    },
+    {
+      "@id": "https://hexbarcelona.bandcamp.com/album/hex008-angels-from-hell-various-artists#p3583995757",
+      "@type": [
+        "MusicRelease",
+        "Product"
+      ],
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "item_id",
+          "value": 3583995757
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "item_type",
+          "value": "p"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "selling_band_id",
+          "value": 1252439829
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_name",
+          "value": "T-Shirt/Apparel"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "image_ids",
+          "value": [
+            25073641
+          ]
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_id",
+          "value": 11
+        }
+      ],
+      "description": "THIS IS A PRE-ORDER\nSHIPPING AT BEGIN OF SEPTEMBER\n\ndesigned by Giambrone Studio\n80% cotton, 20% polyester (280 g/m²)\nhandmade serigraphy in Barcelona\n\nFitting examples (size: Large)\nLorenzo (180cm, 65kg)\nMollie (170cm, 50kg)\n\n*wash inside out at 30°\n\n** If the product (or size) wanted is not available here, you might want to check also on www.hex-clothing.com **",
+      "image": [
+        "https://f4.bcbits.com/img/0025073641_10.jpg"
+      ],
+      "name": "HEX008 Hoodie",
+      "offers": {
+        "@type": "Offer",
+        "availability": "InStock",
+        "price": 49.0,
+        "priceCurrency": "EUR",
+        "priceSpecification": {
+          "minPrice": 49.0
+        },
+        "url": "https://hexbarcelona.bandcamp.com/album/hex008-angels-from-hell-various-artists#p3583995757-buy"
+      }
+    },
+    {
+      "@id": "https://hexbarcelona.bandcamp.com/album/hex008-angels-from-hell-various-artists#b59258785",
+      "@type": [
+        "MusicRelease",
+        "Product"
+      ],
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "item_id",
+          "value": 59258785
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "item_type",
+          "value": "b"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "selling_band_id",
+          "value": 1252439829
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_name",
+          "value": "Digital"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "art_id",
+          "value": 464287237
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "is_bfd",
+          "value": true
+        }
+      ],
+      "image": [
+        "https://f4.bcbits.com/img/a0464287237_10.jpg"
+      ],
+      "musicReleaseFormat": "DigitalFormat",
+      "name": "full digital discography (48 releases)",
+      "offers": {
+        "@type": "Offer",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "bundle_size",
+            "value": 48
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "discount",
+            "value": 0.5
+          }
+        ],
+        "availability": "OnlineOnly",
+        "price": 154.7,
+        "priceCurrency": "EUR",
+        "priceSpecification": {
+          "minPrice": 154.7
+        },
+        "url": "https://hexbarcelona.bandcamp.com/album/hex008-angels-from-hell-various-artists#b59258785-buy"
+      }
+    },
+    {
+      "@id": "https://hexbarcelona.bandcamp.com/track/a1-rebekah-you-be-the-leader",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://hexbarcelona.bandcamp.com/track/a2-paolo-ferrara-lorenzo-raganzini-sanitary-dictature",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://hexbarcelona.bandcamp.com/track/a3-aeit-12-gauge",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://hexbarcelona.bandcamp.com/track/b1-vii-circle-demons",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://hexbarcelona.bandcamp.com/track/b2-rommek-mezcal-worm",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://hexbarcelona.bandcamp.com/track/c1-cleric-the-puppet-master",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://hexbarcelona.bandcamp.com/track/c2-remco-beekwilder-air-of-the-90s",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://hexbarcelona.bandcamp.com/track/d1-and-fearless",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://hexbarcelona.bandcamp.com/track/d2-benjamin-damage-matriachy",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://hexbarcelona.bandcamp.com/track/e1-under-black-helmet-the-purist",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://hexbarcelona.bandcamp.com/track/e2-maere-6siss-organisms",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://hexbarcelona.bandcamp.com/track/f1-imperial-black-unit-broken-tools",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://hexbarcelona.bandcamp.com/track/f2-end-train-ctrl-alt-delete-the-system",
+      "@type": "MusicRelease"
+    }
+  ],
+  "albumReleaseType": "AlbumRelease",
+  "byArtist": {
+    "@type": "MusicGroup",
+    "name": "Rebekah, Cleric, Under Black Helmet, Paolo Ferrara, Lorenzo Raganzini..."
+  },
+  "copyrightNotice": "All Rights Reserved",
+  "dateModified": "19 Nov 2022 22:39:37 GMT",
+  "datePublished": "01 Sep 2021 00:00:00 GMT",
+  "description": "HEX008 | Angels From Hell (Various Artists)\r\nTriple-Red-Vinyl\r\n\r\n---\r\n\r\nSome feedback on the release:\r\n\r\n► Quail - HUGE pack, absolute killers all round. Thanks!\r\n► Essan - Thank you very much for sending me your promo, the tracks sound amazing, I love!!!!\r\n► JC Laurent - Super Solid VA! Thanks a lot :) Rommek & Cleric are my favs\r\n► boyd schidt - sick release thanks for the promo\r\n► Downwell - Great tracks ! Fav: Imperial Black Unit - Broken Tools\r\n► Jay Clarke - Heavy Heavy selection of tunes here. Solid release chaps! Thx for sharing!\r\n► takaaki itoh - great v.a!\r\n► slam - nice collection\r\n► Henning Baer - Massive!\r\n► Cristian Varela - AWESOME!\r\n► Roll Dann - Crazy Tracks, muchas gracias!\r\n► Luca Agnelli - super pack\r\n► ENDLEC - Superb selections as usual!\r\n► Jerm - Cleric's & Benjamin's my top picks, great compilation overall guys :)\r\n► Tom Page - Loads here for me, fantastic compilation! Love the Rommek, Benjamin Damage, Cleric & Imperial Black Unit tracks, but its all top notch, thanks :)\r\n► Alex Guerra - Brutal,Friends! Congrats for 2nd Anniversary.Thanks again!\r\n\r\n---\r\n\r\nWe're very excited to celebrate the 2nd Anniversary of \"HEX Recordings\" so for the occasion, we decided to create the most powerful release so far, a Triple-Vinyl Various Artists, which includes the creations of some of the artists that are closest to the Movement but never released on the label until now like Rebekah, Cleric, Remco Beekwilder, together with new members like Benjamin Damage, AEIT, Imperial Black Unit, End Train, Rommek, Maere, 6Siss and of course some of the ambassadors of the label like Under Black Helmet, VII Circle and the two HEX Founders Paolo Ferrara and Lorenzo Raganzini.\r\n\r\nThe title of the release is \"Angels From Hell\" and it represents the most ambitious release ever created by HEX. 3 flaming Red colour Vinyl, together with some new T-shirts + Hoodie characterised by the VA's unique design.\r\n\r\n15 Artists will represent the unity under Techno of 7 different countries: France, England, Italy, Netherlands, Lithuania, Belgium and Israel.\r\n\r\n---\r\n\r\nVinyl 1\r\nA1 - Rebekah - You Be The Leader\r\nA2 - Paolo Ferrara & Lorenzo Raganzini - Sanitary Dictature\r\nA3 - AEIT - 12 Gauge\r\nB1 - VII Circle - Demons\r\nB2 - Rommek - Mezcal Worm\r\n\r\n\r\nVinyl 2\r\nC1 - Cleric - The Puppet Master \r\nC2 - Remco Beekwilder - Air Of The 90s\r\nD1 - AnD - Fearless\r\nD2 - Benjamin Damage - Matriachy\r\n\r\n\r\nVinyl 3 \r\nE1 - Under Black Helmet - The Purist\r\nE2 - MAERE & 6SISS - Organisms\r\nF1 - Imperial Black Unit - Broken Tools\r\nF2 - End Train - Ctrl+Alt+Delete The System\r\n\r\n\r\nMasters by Alain Paul (Germany)\r\nDesign by Giambrone Studio",
+  "image": "https://f4.bcbits.com/img/a1834646812_10.jpg",
+  "keywords": [
+    "Electronic",
+    "Hard Techno",
+    "Techno",
+    "Techno.",
+    "techno",
+    "Barcelona"
+  ],
+  "mainEntityOfPage": "https://hexbarcelona.bandcamp.com/album/hex008-angels-from-hell-various-artists",
+  "name": "HEX008 | Angels From Hell (Various Artists)",
+  "numTracks": 13,
+  "publisher": {
+    "@id": "https://hexbarcelona.bandcamp.com",
+    "@type": "MusicGroup",
+    "additionalProperty": [
+      {
+        "@type": "PropertyValue",
+        "name": "band_id",
+        "value": 1252439829
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "has_any_downloads",
+        "value": true
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "has_download_codes",
+        "value": true
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "has_policies",
+        "value": true
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_height",
+        "value": 1200
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_id",
+        "value": 23279504
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_width",
+        "value": 1200
+      }
+    ],
+    "description": "TechnoMetal label founded in 2019 by Lorenzo Raganzini and Paolo Ferrara.\n\nIt is related to HEX Techno movement.\n\nDEMOS\ndemos@hex-technomovement.com",
+    "foundingLocation": {
+      "@type": "Place",
+      "name": "Barcelona, Spain"
+    },
+    "genre": "https://bandcamp.com/discover/electronic",
+    "image": "https://f4.bcbits.com/img/0023279504_10.jpg",
+    "mainEntityOfPage": [
+      {
+        "@type": "WebSite",
+        "name": "hex-technomovement.com",
+        "url": "http://www.hex-technomovement.com"
+      }
+    ],
+    "name": "HEX Recordings - Techno movement",
+    "subjectOf": [
+      {
+        "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "m"
+          }
+        ],
+        "name": "Digital Music",
+        "url": "https://hexbarcelona.bandcamp.com/music"
+      },
+      {
+        "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "p"
+          }
+        ],
+        "name": "Vinyl Store & Merch",
+        "url": "https://hexbarcelona.bandcamp.com/merch"
+      },
+      {
+        "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "v"
+          }
+        ],
+        "name": "Videoclips",
+        "url": "https://hexbarcelona.bandcamp.com/video"
+      },
+      {
+        "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "c"
+          }
+        ],
+        "name": "Community",
+        "url": "https://hexbarcelona.bandcamp.com/community"
+      }
+    ]
+  },
+  "track": {
+    "@type": "ItemList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://hexbarcelona.bandcamp.com/track/a1-rebekah-you-be-the-leader",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 1213968039
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H05M02S",
+          "mainEntityOfPage": "https://hexbarcelona.bandcamp.com/track/a1-rebekah-you-be-the-leader",
+          "name": "A1 - Rebekah - You Be The Leader"
+        },
+        "position": 1
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://hexbarcelona.bandcamp.com/track/a2-paolo-ferrara-lorenzo-raganzini-sanitary-dictature",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 1087381028
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H06M37S",
+          "mainEntityOfPage": "https://hexbarcelona.bandcamp.com/track/a2-paolo-ferrara-lorenzo-raganzini-sanitary-dictature",
+          "name": "A2 - Paolo Ferrara & Lorenzo Raganzini - Sanitary Dictature"
+        },
+        "position": 2
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://hexbarcelona.bandcamp.com/track/a3-aeit-12-gauge",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 3576637059
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H05M07S",
+          "mainEntityOfPage": "https://hexbarcelona.bandcamp.com/track/a3-aeit-12-gauge",
+          "name": "A3 - AEIT - 12 Gauge"
+        },
+        "position": 3
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://hexbarcelona.bandcamp.com/track/b1-vii-circle-demons",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 2989732089
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H06M53S",
+          "mainEntityOfPage": "https://hexbarcelona.bandcamp.com/track/b1-vii-circle-demons",
+          "name": "B1 - VII Circle - Demons"
+        },
+        "position": 4
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://hexbarcelona.bandcamp.com/track/b2-rommek-mezcal-worm",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 4029467628
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H06M37S",
+          "mainEntityOfPage": "https://hexbarcelona.bandcamp.com/track/b2-rommek-mezcal-worm",
+          "name": "B2 - Rommek - Mezcal Worm"
+        },
+        "position": 5
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://hexbarcelona.bandcamp.com/track/c1-cleric-the-puppet-master",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 4186309778
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H06M07S",
+          "mainEntityOfPage": "https://hexbarcelona.bandcamp.com/track/c1-cleric-the-puppet-master",
+          "name": "C1 - Cleric - The Puppet Master "
+        },
+        "position": 6
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://hexbarcelona.bandcamp.com/track/c2-remco-beekwilder-air-of-the-90s",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 1985091181
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H06M39S",
+          "mainEntityOfPage": "https://hexbarcelona.bandcamp.com/track/c2-remco-beekwilder-air-of-the-90s",
+          "name": "C2 - Remco Beekwilder - Air Of The 90s"
+        },
+        "position": 7
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://hexbarcelona.bandcamp.com/track/d1-and-fearless",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 2851611795
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H07M16S",
+          "mainEntityOfPage": "https://hexbarcelona.bandcamp.com/track/d1-and-fearless",
+          "name": "D1 - AnD - Fearless"
+        },
+        "position": 8
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://hexbarcelona.bandcamp.com/track/d2-benjamin-damage-matriachy",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 3716620399
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H06M27S",
+          "mainEntityOfPage": "https://hexbarcelona.bandcamp.com/track/d2-benjamin-damage-matriachy",
+          "name": "D2 - Benjamin Damage - Matriachy"
+        },
+        "position": 9
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://hexbarcelona.bandcamp.com/track/e1-under-black-helmet-the-purist",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 2076756257
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H05M05S",
+          "mainEntityOfPage": "https://hexbarcelona.bandcamp.com/track/e1-under-black-helmet-the-purist",
+          "name": "E1 - Under Black Helmet - The Purist"
+        },
+        "position": 10
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://hexbarcelona.bandcamp.com/track/e2-maere-6siss-organisms",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 1307806951
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H06M16S",
+          "mainEntityOfPage": "https://hexbarcelona.bandcamp.com/track/e2-maere-6siss-organisms",
+          "name": "E2 - MAERE & 6SISS - Organisms"
+        },
+        "position": 11
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://hexbarcelona.bandcamp.com/track/f1-imperial-black-unit-broken-tools",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 1872080121
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H06M03S",
+          "mainEntityOfPage": "https://hexbarcelona.bandcamp.com/track/f1-imperial-black-unit-broken-tools",
+          "name": "F1 - Imperial Black Unit - Broken Tools"
+        },
+        "position": 12
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://hexbarcelona.bandcamp.com/track/f2-end-train-ctrl-alt-delete-the-system",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 2196935868
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H06M27S",
+          "mainEntityOfPage": "https://hexbarcelona.bandcamp.com/track/f2-end-train-ctrl-alt-delete-the-system",
+          "name": "F2 - End Train - Ctrl+Alt+Delete The System"
+        },
+        "position": 13
+      }
+    ],
+    "numberOfItems": 13
+  }
+}
