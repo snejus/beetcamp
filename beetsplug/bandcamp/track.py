@@ -1,4 +1,5 @@
 """Module with a single track parsing functionality."""
+
 import re
 from dataclasses import dataclass, field
 from functools import cached_property
@@ -28,7 +29,6 @@ DIGI_ONLY_PATTERN = re.compile(
     """,
     re.I | re.VERBOSE,
 )
-ELP_ALBUM_PAT = re.compile(r"[- ]*\[([^\]]+ [EL]P)\]+")  # Title [Some Album EP]
 
 
 @dataclass
@@ -60,7 +60,6 @@ class Track:
 
     name: str = ""
     ft: str = ""
-    album: str = ""
     catalognum: str = ""
     remix: Optional[Remix] = None
 
@@ -145,10 +144,6 @@ class Track:
         if remix:
             data.update(remix=remix)
             name = name.replace(remix.delimited, "").rstrip()
-
-        for m in ELP_ALBUM_PAT.finditer(name):
-            data["album"] = m.group(1).replace('"', "")
-            name = name.replace(m.group(), "")
 
         data["name"] = name
         data = Track.find_featuring(data)

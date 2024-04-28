@@ -33,7 +33,7 @@ class AlbumName:
 
     original: str
     description: str
-    albums_in_titles: Set[str]
+    from_track_titles: Optional[str]
 
     remove_artists = True
 

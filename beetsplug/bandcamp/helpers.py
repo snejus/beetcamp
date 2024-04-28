@@ -103,9 +103,8 @@ rm_strings = [
     r"\Wvinyl\W|vinyl-only",
     "compiled by.*",
     r"[\[(]presented by.*",
-    r"free download|\([^()]*free(?!.*mix)[^()]*\)",
+    r"free download|\([^()]*\bfree(?!.*mix)[^()]*\)",
     r"(\W|\W )bonus( \w+)*",
-    r"[+][\w ]+remix|\(with remixes\)",
     "Various -",
     r"CD ?\d+",
 ]

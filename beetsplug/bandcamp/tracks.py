@@ -6,7 +6,7 @@ import re
 from collections import Counter
 from dataclasses import dataclass
 from functools import cached_property, reduce
-from typing import Iterator, List, Optional, Set
+from typing import Iterator, List, Optional, Set, Tuple
 
 from ordered_set import OrderedSet
 
@@ -20,7 +20,11 @@ NUMBER_PREFIX = re.compile(r"(^|- )\d{2,}\W* ")
 
 @dataclass
 class Tracks:
+    # Title [Some Album EP]
+    ALBUM_IN_TITLE = re.compile(r"[- ]*\[([^\]]+ [EL]P)\]+", re.I)
+
     tracks: List[Track]
+    album: Optional[str] = None
 
     def __iter__(self) -> Iterator[Track]:
         return iter(self.tracks)
@@ -107,6 +111,17 @@ class Tracks:
         )
 
     @classmethod
+    def extract_album_name(cls, names: List[str]) -> Tuple[Optional[str], List[str]]:
+        matches = list(map(cls.ALBUM_IN_TITLE.search, names))
+        albums = {m.group(1).replace('"', "") for m in matches if m}
+        if len(albums) != 1:
+            return None, names
+
+        return albums.pop(), [
+            (n.replace(m.group(), "") if m else n) for m, n in zip(matches, names)
+        ]
+
+    @classmethod
     def from_json(cls, meta: JSONDict) -> "Tracks":
         try:
             tracks = [{**t, **t["item"]} for t in meta["track"]["itemListElement"]]
@@ -117,11 +132,14 @@ class Tracks:
         names = cls.split_quoted_titles(names)
         names = cls.remove_number_prefix(names)
         names = cls.normalize_delimiter(names)
+        album, names = cls.extract_album_name(names)
         for track, name in zip(tracks, names):
             track["name"] = name
 
         tracks = cls.common_name_parts(tracks, names)
-        return cls([Track.from_json(t, Helpers.get_label(meta)) for t in tracks])
+        return cls(
+            [Track.from_json(t, Helpers.get_label(meta)) for t in tracks], album=album
+        )
 
     @cached_property
     def first(self) -> Track:
@@ -176,10 +194,6 @@ class Tracks:
         if len(cats) == len(self) and len(set(cats)) == 1:
             return cats[0]
         return None
-
-    @cached_property
-    def albums_in_titles(self) -> Set[str]:
-        return {t.album for t in self if t.album}
 
     def adjust_artists(self, albumartist: str) -> None:
         """Handle some track artist edge cases.
