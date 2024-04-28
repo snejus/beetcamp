@@ -15,7 +15,7 @@ class AlbumName:
     _series = r"(?i:\b(part|volume|pt|vol)\b\.?)"
     SERIES = re.compile(rf"{_series}[ ]?[A-Z\d.-]+\b")
     SERIES_FMT = re.compile(rf"^(.+){_series} *0*")
-    REMIX_IN_TITLE = re.compile(r"[^][\w]*(with re|inc|\+)[^()]*mix[^()-]*\W?", re.I)
+    REMIX_IN_TITLE = re.compile(r"[\( :]+(with re|inc|\+).*mix(\)|(.*$))", re.I)
     CLEAN_EPLP = re.compile(r"(?:[([]|Double ){0,2}(\b[EL]P\b)\S?", re.I)
     EPLP_ALBUM = re.compile(
         r"\b((?:(?!VA|Various|-)[^: ]+ )+)([EL]P(?! *\d)(?: [\w#][^ ]+$)?)"
@@ -82,7 +82,7 @@ class AlbumName:
         return next(iter(self.album_names))
 
     @cached_property
-    def series(self) -> Optional[str]:
+    def series_part(self) -> Optional[str]:
         """Return series if it is found in any of the album names."""
         for name in self.album_names:
             if m := self.SERIES.search(name):
@@ -107,7 +107,7 @@ class AlbumName:
 
     def standardize_series(self, album: str) -> str:
         """Standardize 'Vol', 'Part' etc. format."""
-        series = self.series
+        series = self.series_part
         if not series:
             return album
 
@@ -178,7 +178,7 @@ class AlbumName:
         name = PATTERNS["ft"].sub("", name)
         name = cls.remove_va(name)
         name = cls.remove_label(Helpers.clean_name(name), label)
-        name = cls.REMIX_IN_TITLE.sub("", name).strip("- ")
+        name = cls.REMIX_IN_TITLE.sub(" ", name).strip("- ")
 
         # uppercase EP and LP, and remove surrounding parens / brackets
         name = cls.CLEAN_EPLP.sub(lambda x: x.group(1).upper(), name)
