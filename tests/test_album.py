@@ -75,5 +75,5 @@ def test_clean_name(name, extras, expected):
         ("Stone Techno Series - Tetragonal EP", "Tetragonal EP"),
     ],
 )
-def test_parsed_name(original, expected):
-    assert AlbumName(original).parsed == expected
+def test_parse_title(original, expected):
+    assert AlbumName(original).from_title == expected
