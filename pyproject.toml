@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "beetcamp"
-version = "0.18.0"
+version = "0.19.0"
 description = "Bandcamp autotagger source for beets (http://beets.io)."
 authors = ["Šarūnas Nejus <snejus@pm.me>"]
 readme = "README.md"
@@ -13,11 +13,11 @@ include = ["LICENSE", "README.md"]
 
 keywords = ["music", "bandcamp", "beets", "metadata"]
 classifiers = [
-    "Environment :: Console",
-    "Intended Audience :: End Users/Desktop",
-    "Operating System :: OS Independent",
-    "Topic :: Multimedia :: Sound/Audio",
-    "Topic :: Text Processing :: General",
+  "Environment :: Console",
+  "Intended Audience :: End Users/Desktop",
+  "Operating System :: OS Independent",
+  "Topic :: Multimedia :: Sound/Audio",
+  "Topic :: Text Processing :: General",
 ]
 
 [tool.poetry.urls]
