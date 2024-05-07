@@ -56,7 +56,7 @@ DEFAULT_CONFIG: JSONDict = {
 }
 
 ALBUM_URL_IN_TRACK = re.compile(r'<a id="buyAlbumLink" href="([^"]+)')
-LABEL_URL_IN_COMMENT = re.compile(r"Visit (https:[\w/.-]+com)")
+LABEL_URL_IN_COMMENT = re.compile(r"Visit (https:[\w/.-]+\.[a-z]+)")
 USER_AGENT = f"beets/{__version__} +http://beets.radbox.org/"
 
 
@@ -169,6 +169,13 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
                 plugin.sources = [bandcamp_fetchart, *plugin.sources]
                 break
 
+    @staticmethod
+    def parse_label_url(text: str) -> str | None:
+        if m := LABEL_URL_IN_COMMENT.match(text):
+            return m.group(1)
+
+        return None
+
     def _find_url_in_item(
         self, item: library.Item, name: str, _type: CandidateType
     ) -> str:
@@ -189,16 +196,14 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
               the number of previous releases that also did not have any valid
               alphanums. Therefore, we cannot make a reliable guess here.
         """
-        url = getattr(item, f"mb_{_type}id", "")
-        if _from_bandcamp(url):
+        if (url := getattr(item, f"mb_{_type}id", "")) and _from_bandcamp(url):
             self._info("Fetching the URL attached to the first item, {}", url)
             return url
 
-        if (m := LABEL_URL_IN_COMMENT.match(item.comments)) and (
+        if (label_url := self.parse_label_url(item.comments)) and (
             urlified_name := urlify(name)
         ):
-            label = m.group(1)
-            url = f"{label}/{_type}/{urlified_name}"
+            url = f"{label_url}/{_type}/{urlified_name}"
             self._info("Trying our guess {} before searching", url)
             return url
         return ""
@@ -207,15 +212,15 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         self, items: List[library.Item], artist: str, album: str, *_: Any, **__: Any
     ) -> Iterable[AlbumInfo]:
         """Return a sequence of album candidates matching given artist and album."""
+        item = items[0]
         label = ""
-        if items and album == items[0].album and artist == items[0].albumartist:
-            label = items[0].label
-            url = self._find_url_in_item(items[0], album, "album")
-            if url:
-                initial_guess = self.get_album_info(url)
-                if initial_guess:
-                    yield from initial_guess
-                    return
+        if items and album == item.album and artist == item.albumartist:
+            label = item.label
+            if (url := self._find_url_in_item(item, album, "album")) and (
+                initial_guess := self.get_album_info(url)
+            ):
+                yield from initial_guess
+                return
 
         if "various" in artist.lower():
             artist = ""
@@ -228,12 +233,12 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         self, item: library.Item, artist: str, title: str
     ) -> Iterable[TrackInfo]:
         """Return a sequence of singleton candidates matching given artist and title."""
-        url = self._find_url_in_item(item, title, "track")
         label = ""
         if item and title == item.title and artist == item.artist:
             label = item.label
-            initial_guess = self.get_track_info(url) if url else None
-            if initial_guess:
+            if (url := self._find_url_in_item(item, title, "track")) and (
+                initial_guess := self.get_track_info(url)
+            ):
                 yield initial_guess
                 return
 
