@@ -1,5 +1,11 @@
 ## Unreleased
 
+## [0.18.1] 2024-05-07
+
+### Fixed
+
+- (#56) Support parsing URLs that do not end with **.com** in item comments when importing
+  music that was bought on Bandcamp.
 
 ## [0.18.0] 2024-04-28
 
