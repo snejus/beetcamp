@@ -355,6 +355,15 @@ By default, all types are searched.
         type=int,
         help="Open search result indexed by INDEX in the browser",
     )
+    parser.add_argument(
+        "-p",
+        "--page",
+        action="store",
+        dest="page",
+        type=int,
+        default=1,
+        help="The results page to show, 1 by default",
+    )
 
     return parser.parse_args()
 

@@ -1,11 +1,16 @@
 ## Unreleased
 
-## [0.18.1] 2024-05-07
+## [0.19.0] 2024-05-07
 
 ### Fixed
 
 - (#56) Support parsing URLs that do not end with **.com** in item comments when importing
   music that was bought on Bandcamp.
+
+### Added
+
+- Add a new flag to the command line application for searching Bandcamp:
+  **`[-p PAGE, --page PAGE]`** to enable seeing further search results
 
 ## [0.18.0] 2024-04-28
 

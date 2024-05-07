@@ -1,4 +1,5 @@
 """Module with bandcamp search functionality."""
+
 import re
 from difflib import SequenceMatcher
 from html import unescape
@@ -8,7 +9,7 @@ from typing import Any, Callable, Dict, List
 import requests
 
 JSONDict = Dict[str, Any]
-SEARCH_URL = "https://bandcamp.com/search?q={}"
+SEARCH_URL = "https://bandcamp.com/search?page={}&q={}"
 
 
 def _f(field: str) -> str:
@@ -40,12 +41,14 @@ def to_ascii(string: str) -> str:
 
 def get_similarity(query: str, result: str) -> float:
     """Return the similarity between two strings normalized to [0, 1].
+
     We take into account how well the result matches the query, e.g.
-        query: "foo"
+        query: "foobar"
         result: "foo bar"
     Similarity is then:
-        (2 * (len("foo") / len("foo")) + len("foo") / len("foo bar")) / 3
-    2/3 of the result is how much of the query is found in the result,
+        (2 * (len("foo") / len("foobar")) + len("foo") / len("foo bar")) / 3
+
+    2/3 of the weight is how much of the query is found in the result,
     and 1/3 is a penalty for the non-matching part.
     """
     a, b = to_ascii(query), to_ascii(result)
@@ -70,8 +73,13 @@ def get_matches(text: str) -> JSONDict:
 
 
 def parse_and_sort_results(html: str, **kwargs: str) -> List[JSONDict]:
-    """Given the html string, parse metadata for each entity and sort them
-    by the field/value pairs given in kwargs.
+    """Extract search results from `html` and sort them by similarity to kwargs.
+
+    Bandcamp search may be unpredictable, therefore search results get sorted
+    regarding their similarity to what's being queried.
+
+    `kwargs` contains field and value pairs we compare the results with. Usually,
+    this has 'label', 'artist' and 'name' ('title' or 'album') fields.
     """
     results: List[JSONDict] = []
     for block in html.split("searchresult data-search")[1:]:
@@ -95,14 +103,12 @@ def get_url(url: str) -> str:
 def search_bandcamp(
     query: str = "",
     search_type: str = "",
+    page: int = 1,
     get: Callable[[str], str] = get_url,
     **kwargs: Any,
 ) -> List[JSONDict]:
-    """Return a list with item JSONs of type search_type matching the query.
-    Bandcamp search may be unpredictable, therefore search results get sorted
-    regarding their similarity to what's being queried.
-    """
-    url = SEARCH_URL.format(query)
+    """Return a list with item JSONs of type search_type matching the query."""
+    url = SEARCH_URL.format(page, query)
     if search_type:
         url += "&item_type=" + search_type
     kwargs["name"] = query

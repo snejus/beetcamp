@@ -54,7 +54,7 @@ Navigate to your `beets` virtual environment and install the plug-in with
 The plugin exposes some of its functionality through a command-line application `beetcamp`:
 
 ```xml
-usage: beetcamp [-h] [-a] [-l] [-t] [release_url | query]
+usage: beetcamp [-h] [-a] [-l] [-t] [-o INDEX] [-p PAGE] (release_url | query)
 
 Get bandcamp release metadata from the given <release-url> or perform
 bandcamp search with <query>. Anything that does not start with https://
@@ -65,13 +65,14 @@ positional arguments:
   release_url  Release URL, starting with https:// OR
   query        Search query
 
-options:
+optional arguments:
   -h, --help   show this help message and exit
   -a, --album  Search albums
   -l, --label  Search labels and artists
   -t, --track  Search tracks
   -o INDEX, --open INDEX
                         Open search result indexed by INDEX in the browser
+  -p PAGE, --page PAGE  The results page to show, 1 by default
 ```
 
 - Use `beetcamp <bandcamp-release-url>` to return release metadata in JSON format.
