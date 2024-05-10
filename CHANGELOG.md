@@ -1,5 +1,11 @@
 ## Unreleased
 
+## [0.19.1] 2024-05-10
+
+### Fixed
+
+- (#58) Relax `beets` dependency requirement.
+
 ## [0.19.0] 2024-05-07
 
 ### Fixed
