@@ -413,6 +413,17 @@ eradicate = ">=2.0,<3.0"
 flake8 = ">5"
 
 [[package]]
+name = "funcy"
+version = "2.0"
+description = "A fancy and practical functional tools"
+optional = false
+python-versions = "*"
+files = [
+    {file = "funcy-2.0-py2.py3-none-any.whl", hash = "sha256:53df23c8bb1651b12f095df764bfb057935d49537a56de211b098f4c79614bb0"},
+    {file = "funcy-2.0.tar.gz", hash = "sha256:3963315d59d41c6f30c04bc910e10ab50a3ac4a225868bfa96feed133df075cb"},
+]
+
+[[package]]
 name = "idna"
 version = "3.6"
 description = "Internationalized Domain Names in Applications (IDNA)"
@@ -1161,22 +1172,26 @@ jupyter = ["ipywidgets (>=7.5.1,<9)"]
 
 [[package]]
 name = "rich-tables"
-version = "0.3.0"
+version = "0.4.0a1"
 description = "Ready-made rich tables for various purposes"
 optional = false
-python-versions = ">=3.7,<4"
-files = [
-    {file = "rich_tables-0.3.0-py3-none-any.whl", hash = "sha256:364bbb1e8da7166aac675dfaad082be4b902534de9e1a35b39a1a907e3c62998"},
-    {file = "rich_tables-0.3.0.tar.gz", hash = "sha256:0dc5f08c82565fc3f59b29aac4fb49d727d2c062a90057f09d52ed23f3baafde"},
-]
+python-versions = ">=3.8,<4"
+files = []
+develop = true
 
 [package.dependencies]
+funcy = "^2.0"
 multimethod = "*"
 rich = ">=12.3.0"
+sqlparse = ">=0.4.4"
+typing-extensions = ">=4.7.1"
 
 [package.extras]
 hue = ["rgbxy (>=0.5)"]
-sql = ["sqlparse (>=0.4.4,<0.5.0)"]
+
+[package.source]
+type = "directory"
+url = "../rich-tables"
 
 [[package]]
 name = "six"
@@ -1188,6 +1203,22 @@ files = [
     {file = "six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"},
     {file = "six-1.16.0.tar.gz", hash = "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926"},
 ]
+
+[[package]]
+name = "sqlparse"
+version = "0.4.4"
+description = "A non-validating SQL parser."
+optional = false
+python-versions = ">=3.5"
+files = [
+    {file = "sqlparse-0.4.4-py3-none-any.whl", hash = "sha256:5430a4fe2ac7d0f93e66f1efc6e1338a41884b7ddf2a350cedd20ccc4d9d28f3"},
+    {file = "sqlparse-0.4.4.tar.gz", hash = "sha256:d446183e84b8349fa3061f0fe7f06ca94ba65b426946ffebe6e3e8295332420c"},
+]
+
+[package.extras]
+dev = ["build", "flake8"]
+doc = ["sphinx"]
+test = ["pytest", "pytest-cov"]
 
 [[package]]
 name = "tomli"
@@ -1304,4 +1335,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8, <4"
-content-hash = "c0b1ae9038b046ae9ada5bc35a6b0ebc0256012e16480b45beb60f907db2a8b2"
+content-hash = "0020c667742542a57cc7020cedc79433555c15757d1a3257379021af4d74d854"

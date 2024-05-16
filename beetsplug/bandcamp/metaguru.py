@@ -1,4 +1,5 @@
 """Module for parsing bandcamp metadata."""
+
 import itertools as it
 import json
 import operator as op
@@ -6,7 +7,7 @@ import re
 import sys
 from collections import Counter
 from datetime import date, datetime
-from functools import partial
+from functools import partial, singledispatch
 from typing import Any, Dict, Iterable, List, Optional, Set
 from unicodedata import normalize
 
@@ -15,9 +16,9 @@ from beets import config as beets_config
 from beets.autotag.hooks import AlbumInfo, TrackInfo
 from pycountry import countries, subdivisions
 
+from .album import AlbumName
 from .helpers import PATTERNS, Helpers, MediaInfo
 from .tracks import Track, Tracks
-from .album import AlbumName
 
 if sys.version_info.minor > 7:
     from functools import cached_property  # pylint: disable=ungrouped-imports
@@ -73,7 +74,7 @@ class Metaguru(Helpers):
         except AttributeError as exc:
             raise AttributeError("Could not find release metadata JSON") from exc
         else:
-            return cls(json.loads(meta), config)
+            return cls(cls.unpack_props(json.loads(meta)), config)
 
     @cached_property
     def excluded_fields(self) -> Set[str]:
@@ -322,11 +323,11 @@ class Metaguru(Helpers):
         def first_one(artist: str) -> str:
             return PATTERNS["split_artists"].split(artist.replace(" & ", ", "))[0]
 
-        truly_unique = set(map(first_one, self.tracks.artists))
-        return (
+        artist_count = len(set(map(first_one, self.tracks.artists)))
+        return artist_count > 1 and (
             self._album_name.mentions_compilation
             or self._search_albumtype("compilation")
-            or (len(truly_unique) > 3 and len(self.tracks) > 4)
+            or (artist_count > 3 and len(self.tracks) > 4)
         )
 
     @cached_property
@@ -348,7 +349,7 @@ class Metaguru(Helpers):
         return "album"
 
     @cached_property
-    def albumtypes(self) -> str:
+    def albumtypes(self) -> list[str]:
         albumtypes = {self.albumtype}
         if self.is_comp:
             if self.albumtype == "ep":
@@ -365,7 +366,7 @@ class Metaguru(Helpers):
         if len(self.tracks.remixers) == len(self.tracks):
             albumtypes.add("remix")
 
-        return "; ".join(sorted(albumtypes))
+        return sorted(albumtypes)
 
     @cached_property
     def va(self) -> bool:
@@ -416,16 +417,39 @@ class Metaguru(Helpers):
             return {field: getattr(self, field)}
         return dict(zip(fields, iter(op.attrgetter(*fields)(src or self))))
 
+    @cached_property
+    def parseable_meta(self) -> str:
+        @singledispatch
+        def to_text(x: Any, key: str = "") -> str:
+            return f"{key}: {x}".replace("\r", "") + "\r\n"
+
+        @to_text.register(dict)
+        def _(x: JSONDict, key: str = "") -> str:
+            return "".join([to_text(v, f"{key}.{k}") for k, v in x.items()])
+
+        @to_text.register(list)
+        def _(x: List[Any], key: str = "") -> str:
+            return "".join([to_text(v, f"{key}[{i}]") for i, v in enumerate(x)])
+
+        return to_text(self.meta)
+
     @property
     def _common_album(self) -> JSONDict:
         common_data: JSONDict = {"album": self.album_name}
         fields = ["label", "catalognum", "albumtype", "country"]
         if NEW_BEETS:
             fields.extend(["genre", "style", "comments", "albumtypes"])
+
         common_data.update(self.get_fields(fields))
         reldate = self.release_date
         if reldate:
             common_data.update(self.get_fields(["year", "month", "day"], reldate))
+        if "field_patterns" in self.config:
+            common_data.update(
+                self.parse_additional_fields(
+                    self.parseable_meta, self.config["field_patterns"]
+                )
+            )
 
         return common_data
 

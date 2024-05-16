@@ -6,6 +6,7 @@ from functools import lru_cache, partial
 from typing import Any, Dict, Iterable, List, NamedTuple, Pattern
 
 from beets.autotag.hooks import AlbumInfo
+from beets.ui import log
 from ordered_set import OrderedSet as ordset
 
 from .genres_lookup import GENRES
@@ -262,6 +263,10 @@ class Helpers:
             return valid_mb_genre(kw) or valid_mb_genre(list(words)[-1])
 
         unique_genres: ordset[str] = ordset()
+        keywords = set(keywords)
+        for kw in list(keywords):
+            keywords.add(kw.replace(" ", "-"))
+            keywords.add(kw.replace("-", " "))
         # expand badly delimited keywords
         split_kw = partial(re.split, r"[.] | #| - ")
         for kw in it.chain.from_iterable(map(split_kw, keywords)):
@@ -280,13 +285,17 @@ class Helpers:
             others = others.union(x.replace(" ", "").replace("-", "") for x in others)  # type: ignore[attr-defined] # noqa
             return any(genre in x for x in others)
 
-        return it.filterfalse(duplicate, unique_genres)
+        return list(it.filterfalse(duplicate, unique_genres))
 
     @staticmethod
-    def unpack_props(obj: JSONDict) -> JSONDict:
+    def unpack_props(obj: Any) -> Any:
         """Add all 'additionalProperty'-ies to the parent dictionary."""
-        for prop in obj.get("additionalProperty") or []:
-            obj[prop["name"]] = prop["value"]
+        if isinstance(obj, dict):
+            for prop in obj.pop("additionalProperty", []):
+                obj[prop["name"]] = prop["value"]
+            return {k: Helpers.unpack_props(v) for k, v in obj.items()}
+        if isinstance(obj, list):
+            return [Helpers.unpack_props(item) for item in obj]
         return obj
 
     @staticmethod
@@ -363,3 +372,33 @@ class Helpers:
                 else:
                     medium_index += 1
         return album
+
+    @staticmethod
+    def parse_additional_fields(meta: str, field_patterns: JSONDict) -> JSONDict:
+        additional_fields = {}
+        for field, pattern_item in field_patterns.items():
+            # log.debug("Parsing [b]{}[/]", field)
+            try:
+                pat = pattern_item["pattern"]
+                if len(pat.splitlines()) > 1:
+                    matches = list(re.finditer(pat, meta, re.VERBOSE))
+                else:
+                    matches = list(re.finditer(pat, meta))
+                # log.debug("\n".join(map(str, matches)))
+                if matches:
+                    if "replace" in pattern_item:
+                        log.info(str(matches[0].expand(pattern_item["replace"])))
+                        value = matches[0].expand(pattern_item["replace"])
+                    elif "replace_expr" in pattern_item:
+                        value = eval(
+                            pattern_item["replace_expr"],
+                            {"matches": matches, "match": matches[0]},
+                        )
+                    else:
+                        value = matches[0].group()
+                    if isinstance(value, str):
+                        value = value.replace("\r", "").strip()
+                    additional_fields[field] = value
+            except Exception:
+                log.error("Failed parsing {}", field, exc_info=True)
+        return additional_fields

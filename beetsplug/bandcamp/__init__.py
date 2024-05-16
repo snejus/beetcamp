@@ -26,9 +26,11 @@ from __future__ import (
 import json
 import logging
 import re
+from contextlib import suppress
 from functools import lru_cache, partial
 from itertools import chain
 from operator import itemgetter, truth
+from pathlib import Path
 from typing import TYPE_CHECKING, Any, Dict, Iterable, List, Optional, Sequence, Union
 
 import requests
@@ -198,6 +200,28 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         """Return a sequence of AlbumInfo objects that match the
         album whose items are provided or are being searched.
         """
+        from pprint import pprint
+
+        url = items[0].comments
+        parent_dir = Path(items[0].path.decode()).parent
+        with suppress(StopIteration):
+            playlist_info_path = next(parent_dir.glob("Playlist_*"))
+            with open(playlist_info_path) as f:
+                playlist_info = json.load(f)
+
+            playlist_info["tracks"] = []
+            for track_info_path in set(parent_dir.glob("*.info.json")) - {
+                playlist_info_path
+            }:
+                with open(track_info_path) as f:
+                    track_data = {**json.load(f), "path": str(track_info_path)}
+                playlist_info["tracks"].append(track_data)
+
+            pprint(playlist_info)
+
+        # if url.startswith("https://"):
+        #     yield from self.get_album_info(url)
+
         label = ""
         if items and album == items[0].album and artist == items[0].albumartist:
             label = items[0].label
@@ -260,16 +284,6 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         self._info("Not a bandcamp URL, skipping")
         return None
 
-    def handle(self, guru: Metaguru, attr: str, _id: str) -> Any:
-        try:
-            return getattr(guru, attr)
-        except (KeyError, ValueError, AttributeError, IndexError):
-            self._info("Failed obtaining {}", _id)
-        except Exception:  # pylint: disable=broad-except
-            url = "https://github.com/snejus/beetcamp/issues/new"
-            self._exc("Unexpected error obtaining {}, please report at {}", _id, url)
-        return None
-
     def get_album_info(self, url: str) -> Optional[List[AlbumInfo]]:
         """Return an AlbumInfo object for a bandcamp album page.
         If track url is given by mistake, find and fetch the album url instead.
@@ -296,8 +310,8 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
             sc_data_key = "sound"
             method = get_soundcloud_track
 
-        self._info("Fetching data from soundcloud url {} as {}", url, _type)
-        data = re.search(r"\[\{[^<]+[^;<)]", self._get(url))
+        self._info("Fetching data from soundcloud url {}", url)
+        data = re.search(r"\[.*hydratable.*\]", self._get(url))
         if not data:
             return None
 
@@ -311,8 +325,7 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
             if track:
                 return track
 
-        guru = self.guru(url, "singleton")
-        return self.handle(guru, "singleton", url) if guru else None
+        return self.guru(url, "singleton")
 
     def _search(self, data: JSONDict) -> Iterable[JSONDict]:
         """Return a list of track/album URLs of type search_type matching the query."""
