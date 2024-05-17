@@ -13,7 +13,9 @@
 - `album`:
   - remove **all** catalogue numbers from album name. Previously, we only removed the
     valid catalogue number found in the data
-  - keep remix artist in place within 'remix' parentheses, such as **Album (Artist Remix)**
+  - keep remix artist in place within 'remix' parentheses, such as **Album (Artist
+    Remix)**
+  - when a release has the same name as the album artist, use the name as it is
 
 ### Fixed
 
