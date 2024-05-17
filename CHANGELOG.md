@@ -8,6 +8,12 @@
 
 ## [0.19.0] 2024-05-07
 
+### Updated
+
+- `album`:
+  - remove **all** catalogue numbers from album name. Previously, we only removed the
+    valid catalogue number found in the data.
+
 ### Fixed
 
 - (#56) Support parsing URLs that do not end with **.com** in item comments when importing

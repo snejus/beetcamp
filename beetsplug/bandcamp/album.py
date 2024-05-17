@@ -31,6 +31,13 @@ class AlbumName:
         re.IGNORECASE + re.VERBOSE,
     )
     COMPILATION_IN_TITLE = re.compile(r"compilation|best of|anniversary", re.I)
+    CLEAN_CATALOGNUM = re.compile(
+        r"""
+          (^[A-Z]+\d+\ [|-]\ )
+        | [^\w)]*\[[A-Z]+\d+\]
+    """,
+        re.VERBOSE,
+    )
 
     original: str
     description: str
@@ -157,7 +164,7 @@ class AlbumName:
         Catalogue number and artists to be removed are provided as 'to_clean'.
         """
         name = re.sub(r"^\[(.*)\]$", r"\1", name)
-
+        name = cls.CLEAN_CATALOGNUM.sub("", name)
         for w in map(re.escape, filter(None, to_clean)):
             name = re.sub(rf" *(?i:(compiled )?by|vs|\W*split w) {w}", "", name)
             if not re.search(
