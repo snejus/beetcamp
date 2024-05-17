@@ -235,7 +235,7 @@ def desc(old: AttrDict, new: AttrDict, guru: Metaguru) -> str:
     else:
         artist, title = new["artist"], new["title"]
 
-    return f"{artist} - {guru.meta['name']}"
+    return f"{make_difftext(guru.original_albumartist, artist)} - {make_difftext(guru.original_album, title)}"
 
 
 @pytest.fixture
