@@ -7,5 +7,6 @@ dist
 htmls
 lib_tests
 reports
-jsons
+*jsons
 stubs
+singletons
