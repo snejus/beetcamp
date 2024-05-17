@@ -10,9 +10,10 @@ from os import path
 
 import pytest
 from beets.autotag.hooks import AlbumInfo, TrackInfo
+from rich.console import Console
+
 from beetsplug.bandcamp import DEFAULT_CONFIG
 from beetsplug.bandcamp.metaguru import ALBUMTYPES_LIST_SUPPORT
-from rich.console import Console
 
 
 def pytest_addoption(parser):

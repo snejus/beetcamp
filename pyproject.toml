@@ -35,6 +35,7 @@ packaging = ">=24.0"
 
 [tool.poetry.dev-dependencies]
 coveralls = { version = ">=4.0.1", python = ">=3.8,<3.13" }
+filelock = ">=3.16.1"
 flake8 = ">=3.8.4"
 flake8-bugbear = ">=22.7.1"
 flake8-comprehensions = ">=3.10.0"
@@ -53,3 +54,7 @@ beetcamp = "beetsplug.bandcamp:main"
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poe.tasks.test-files]
+help = "Run tests on local release data files"
+cmd = "pytest -k file -p no:randomly --no-cov -s"
