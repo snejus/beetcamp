@@ -215,6 +215,9 @@ class AlbumName:
         label: str,
     ) -> str:
         original_album = self.name
+        if artists and original_album.lower() == artists[0].lower():
+            # if album is named by the main artist, keep it as it is
+            return original_album
         to_clean = [catalognum]
         if self.remove_artists:
             to_clean.extend(original_artists + artists)
