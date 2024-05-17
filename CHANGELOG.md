@@ -7,6 +7,7 @@
     valid catalogue number found in the data.
   - Keep remix artist in place within 'remix' parentheses, such as **Album (Artist
     Remix)**.
+  - When a release has the same name as the album artist, do not clean/adjust it.
 
 ## [0.19.3] 2024-10-17
 
