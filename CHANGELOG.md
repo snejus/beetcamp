@@ -6,6 +6,9 @@
   to determine the artist from the titles, detect such release and use the given album
   artist.
 
+- `media`: ignore subscription type Bandcamp media format which returns a duplicate
+  digital media format
+
 ### Updated
 
 - `album`:
