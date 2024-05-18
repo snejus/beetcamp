@@ -12,9 +12,14 @@ from beetsplug.bandcamp.track import Track
 def test_parse_catalognum_from_track_name(
     name, expected_title, expected_catalognum, json_track
 ):
-    json_track = {**json_track["item"], "position": json_track["position"]}
+    json_track = {
+        **json_track["item"],
+        "position": json_track["position"],
+        "name": name,
+    }
 
-    track = Track.make(json_track, name)
+    track = Track.make(json_track)
+
     assert track.title == expected_title, track
     assert track.catalognum == expected_catalognum, track
 
