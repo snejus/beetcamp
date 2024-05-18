@@ -8,6 +8,12 @@
 
 ## [0.19.0] 2024-05-07
 
+### Fixed
+
+- `artist`: handle remix releases with a single title and its remixes. Instead of trying
+  to determine the artist from the titles, detect such release and use the given album
+  artist.
+
 ### Updated
 
 - `album`:
