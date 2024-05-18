@@ -20,6 +20,7 @@ class AlbumName:
     EPLP_ALBUM = re.compile(
         r"\b((?:(?!VA|Various|-)[^: ]+ )+)([EL]P(?! *\d)(?: [\w#][^ ]+$)?)"
     )
+    EPLP_ALBUM_LINE = re.compile(r"^[A-Z][\w ]+[EL]P$", re.M)
     QUOTED_ALBUM = re.compile(r"(['\"])([^'\"]+)\1( VA\d+)*( |$)")
     ALBUM_IN_DESC = re.compile(r"(?:Title: ?|Album(?::|/Single) )([^\n]+)")
     CLEAN_VA_EXCLUDE = re.compile(r"\w various artists \w", re.I)
@@ -200,12 +201,14 @@ class AlbumName:
         Otherwise, search for (Capital-case Album Name) (EP or LP) and return the match.
         """
         if album:
-            look_for = re.escape(f"{album} ")
+            m = re.search(rf"{re.escape(album)} [EL]P\b", self.description)
         else:
-            look_for = r"((?!The|This)\b[A-Z][^ \n]+\b )+"
+            m = self.EPLP_ALBUM_LINE.search(self.description)
 
-        m = re.search(rf"{look_for}[EL]P\b", self.description)
-        return m.group() if m else album
+        if m:
+            return m.group()
+
+        return album
 
     def get(
         self,

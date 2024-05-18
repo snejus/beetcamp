@@ -78,3 +78,17 @@ def test_clean_name(name, extras, expected):
 )
 def test_parse_title(original, expected):
     assert AlbumName(original, "", "").from_title == expected
+
+
+@pytest.mark.parametrize(
+    "original, comments, catalognum, artists, expected",
+    [
+        ("CAT001 - Artist", "Album EP", "CAT001", ["Artist"], "Album EP"),
+        ("CAT001 - Artist", "other Album EP", "CAT001", ["Artist"], "CAT001"),
+        ("CAT001 - Album", "this Album LP", "CAT001", ["Artist"], "Album LP"),
+    ],
+)
+def test_check_eplp(original, comments, catalognum, artists, expected):
+    assert (
+        AlbumName(original, comments, None).get(catalognum, artists, [], "") == expected
+    )
