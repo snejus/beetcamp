@@ -22,6 +22,23 @@
   - Support some new formats: **`UVB76-023`**, **`SOP 061-1233`**, **`a+w lp029`**.
   - Enable parsing catalogue numbers that contain label name for _single_ releases too.
   - Reduce the number of false positives, mostly to do with short catalogue numbers.
+  - When searching for a catalogue number which is prefixed by the label name
+    1. Take two versions of the label name
+       1. Original one
+       2. Without **Records**, **Recordings**, **Productions** endings
+    2. For each
+       1. Use it as the first prefix
+       2. If it has multiple words, take first letter of each word and concatenate them.
+          Then, use it a prefix too.
+    3. If the original label has multiple words, also try using the first word as a prefix
+
+    For example, for a label named **Diffuse Reality Records**, the plugin is able to
+    recognise the following catalogue numbers (case insensitively)
+    - **Diffuse Reality Records001**
+    - **DRR001**
+    - **Diffuse Reality001**
+    - **DR001**
+    - **Diffuse001**
 
 ## [0.19.3] 2024-10-17
 
@@ -43,11 +60,15 @@
   - properly escape query strings for better results with special characters
   - change HTTP client implementation to avoid Bandcamp "403 Forbidden" responses
 
+[0.19.2]: https://github.com/snejus/beetcamp/releases/tag/0.19.2
+
 ## [0.19.1] 2024-05-10
 
 ### Fixed
 
 - (#58) Relax `beets` dependency requirement.
+
+[0.19.1]: https://github.com/snejus/beetcamp/releases/tag/0.19.1
 
 ## [0.19.0] 2024-05-07
 
@@ -60,6 +81,8 @@
 
 - Add a new flag to the command line application for searching Bandcamp:
   **`[-p PAGE, --page PAGE]`** to enable seeing further search results
+
+[0.19.0]: https://github.com/snejus/beetcamp/releases/tag/0.19.0
 
 ## [0.18.0] 2024-04-28
 
@@ -107,6 +130,7 @@
   - remove **`bonus -`**
     - `Artist - Title (bonus - something)` -> **`Artist - Title (something)`**
 
+[0.18.0]: https://github.com/snejus/beetcamp/releases/tag/0.18.0
 [album sent to us by the devil himself]: https://examine-archive.bandcamp.com/album/va-examine-archive-international-sampler-xmn01
 
 ## [0.17.2] 2023-08-09
