@@ -1,7 +1,7 @@
 """Module for the helpers module tests."""
 
 import pytest
-from beetsplug.bandcamp.helpers import Helpers
+from beetsplug.bandcamp.helpers import Helpers, MediaInfo
 
 pytestmark = pytest.mark.parsing
 
@@ -67,7 +67,7 @@ def test_parse_catalognum(album, disctitle, description, label, expected):
 
 
 @pytest.mark.parametrize(
-    ("name", "expected"),
+    ("disctitle", "expected"),
     [
         ("2 x Vinyl LP - MTY003", 2),
         ('3 x 12" Vinyl LP - MTY003', 3),
@@ -77,8 +77,8 @@ def test_parse_catalognum(album, disctitle, description, label, expected):
         ("2LP Vinyl", 2),
     ],
 )
-def test_mediums_count(name, expected):
-    assert Helpers.get_vinyl_count(name) == expected
+def test_mediums_count(disctitle, expected):
+    assert MediaInfo("", "Vinyl", disctitle, "").medium_count == expected
 
 
 def test_unpack_props(vinyl_format):
@@ -93,7 +93,7 @@ def test_bundles_get_excluded(bundle_format, digital_format):
     result = Helpers.get_media_formats([bundle_format, bundle_album_name_format])
 
     assert len(result) == 1
-    assert result[0].title == album_name
+    assert result[0].album_id == digital_format["@id"]
 
 
 @pytest.mark.parametrize(

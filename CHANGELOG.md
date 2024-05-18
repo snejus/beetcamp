@@ -10,6 +10,8 @@
 - `artist`: handle remix releases with a single title and its remixes. Instead of trying
   to determine the artist from the titles, detect such release and use the given album
   artist.
+- `media`: ignore subscription type Bandcamp media format which returns a duplicate
+  digital media.
 
 ### Added
 
