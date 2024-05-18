@@ -6,6 +6,7 @@ from collections import Counter
 from contextlib import suppress
 from dataclasses import dataclass
 from functools import reduce
+from os.path import commonprefix
 from typing import Iterator, List, Optional, Tuple
 
 from ordered_set import OrderedSet
@@ -27,6 +28,10 @@ class TrackNames:
     names: List[str]
     album: Optional[str] = None
     catalognum: Optional[str] = None
+
+    @property
+    def common_prefix(self) -> str:
+        return commonprefix(self.names)
 
     def __iter__(self) -> Iterator[str]:
         return iter(self.names)

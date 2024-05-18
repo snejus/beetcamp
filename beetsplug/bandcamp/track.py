@@ -66,6 +66,7 @@ class Track:
 
     digi_only: bool = False
     track_alt: Optional[str] = None
+    album_artist: Optional[str] = None
 
     @staticmethod
     def clean_digi_name(name: str) -> Tuple[str, bool]:
@@ -139,7 +140,7 @@ class Track:
         return {**result, **cls.get_featuring_artist(name, artist)}
 
     @classmethod
-    def make(cls, json: JSONDict, name: str) -> "Track":
+    def make(cls, json: JSONDict) -> "Track":
         try:
             artist = json["inAlbum"]["byArtist"]["name"]
         except KeyError:
@@ -150,7 +151,8 @@ class Track:
             "json_item": json,
             "track_id": json["@id"],
             "index": index,
-            **cls.parse_name(name, artist, index),
+            "album_artist": json.get("album_artist"),
+            **cls.parse_name(json["name"], artist, index),
         }
         return cls(**data)
 
@@ -206,6 +208,9 @@ class Track:
     @cached_property
     def artist(self) -> str:
         """Return name without the title and the remixer."""
+        if self.album_artist:
+            return self.album_artist
+
         title_start_idx = self.full_name.rfind(self.title_without_remix)
         artist = Remix.PATTERN.sub("", self.full_name[:title_start_idx].strip(", -"))
         if self.remix:
