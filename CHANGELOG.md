@@ -26,6 +26,7 @@
   - extract catalogue numbers from URLs in the description, if present
   - support some new formats: **`UVB76-023`**, **`SOP 061-1233`**, **`a+w lp029`**
   - enable parsing catalogue numbers that contain label name in single releases
+  - reduce the number of false positives, mostly to do with short catalogue numbers
 
 ### Fixed
 
