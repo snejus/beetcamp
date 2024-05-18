@@ -37,7 +37,7 @@ get_json() {
       url=$1
       save_path=$(realpath "$0")
       save_path=$(dirname "$save_path")
-      save_path=$save_path/_jsons/${1//\//_}.json
+      save_path=$save_path/jsons/${1//\//_}.json
       jq -cM >"$save_path"
       [[ -s $save_path ]] || {
         rm "$save_path"
