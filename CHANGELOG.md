@@ -16,6 +16,9 @@
   - keep remix artist in place within 'remix' parentheses, such as **Album (Artist
     Remix)**
   - when a release has the same name as the album artist, use the name as it is
+- `catalognum`:
+  - extract catalogue numbers from URLs in the description, if present
+  - support some new formats: **`UVB76-023`**, **`SOP 061-1233`**, **`a+w lp029`**
 
 ### Fixed
 
