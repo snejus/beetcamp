@@ -19,6 +19,7 @@
 - `catalognum`:
   - extract catalogue numbers from URLs in the description, if present
   - support some new formats: **`UVB76-023`**, **`SOP 061-1233`**, **`a+w lp029`**
+  - enable parsing catalogue numbers that contain label name in single releases
 
 ### Fixed
 
