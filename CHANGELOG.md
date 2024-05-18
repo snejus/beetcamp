@@ -21,6 +21,8 @@
 - `catalognum`:
   - Add support for new formats: **`UVB76-023`**, **`SOP 061-1233`**, **`a+w lp029`**.
   - Parse label-like catalogue numbers for singletons too.
+  - Fix false positives:
+    - Exclude very short matches like **OP-1** and **SK-1**.
 
 ## [0.19.3] 2024-10-17
 

@@ -38,10 +38,10 @@ _cat_pat = CATALOGNUM_CONSTRAINT.format(
     r"""
 (
       [A-Z][A-Z .]+\d{3}         # HANDS D300, CC ATOM 101
-    | [A-Z-]{3,}\d+              # RIV4
+    | (?<!\w\ )[A-Z-]{3,}\d+     # RIV4
     | [A-Z]{2,}[A-Z.$-]*\d{2,}   # HS11, USE202, HEY-101, LI$INGLE025
     | (?<!\w\W)[A-Z.]{2,}[ ]\d+  # OBS.CUR 9
-    | [A-z]+-[A-z]+[ ]?\d+       # o-ton 119
+    | [A-z]+-[A-z]+[ ]?\d{2,}    # o-ton 119
     | [A-z+]+[ ]?(?:(?i:[EL]P))\d+  # Dystopian LP01, a+w lp036
     | \w+[A-z]0\d+               # 1ØPILLS018, fa036
     | [a-z]+(?:cd|lp|:)\d+       # ostgutlp45, reni:7
