@@ -27,12 +27,26 @@ class Tracks:
         try:
             tracks = [{**t, **t["item"]} for t in meta["track"]["itemListElement"]]
         except (TypeError, KeyError):
-            tracks = [meta]
+            tracks = [{**meta}]
 
-        names = TrackNames.make(
-            [i.get("name", "") for i in tracks], Helpers.get_label(meta)
-        )
-        return cls(list(starmap(Track.make, zip(tracks, names))), names)
+        label = Helpers.get_label(meta)
+        names = TrackNames.make([i.get("name", "") for i in tracks], label)
+
+        for track, name in zip(tracks, names):
+            track["name"] = name
+
+        album = meta["name"]
+        album_artist = meta["byArtist"]["name"]
+        if (
+            len(tracks) > 1
+            and album in names.common_prefix
+            and album_artist != label
+            and "," not in album_artist
+        ):
+            for track in tracks:
+                track["album_artist"] = album_artist
+
+        return cls(list(map(Track.make, tracks)), names)
 
     @property
     def album(self) -> Optional[str]:
