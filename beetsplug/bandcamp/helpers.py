@@ -84,7 +84,10 @@ _cat_pat = CATALOGNUM_CONSTRAINT.format(
 """
 )
 
-LABEL_CATNUM = CATALOGNUM_CONSTRAINT.format(r"(?i:{}[ -]?[A-Z]*\d+([A-Z]|\.\d+)*)")
+LABEL_CATNUM = CATALOGNUM_CONSTRAINT.format(
+    r"(?<!by\ )(?i:{}[ -]?[A-Z]*\d+([A-Z]|\.\d+)*)"
+)
+# LABEL_CATNUM = CATALOGNUM_CONSTRAINT.format(rf"(?i:{{}})({_cat_pat.replace('{', '{{').replace('}', '}}')}|\W?[A-Z]*\d+([A-Z]|\.\d+)*)")
 CATNUM_PAT = {
     # preceded by some variation of 'Catalogue number:'
     "header": re.compile(
