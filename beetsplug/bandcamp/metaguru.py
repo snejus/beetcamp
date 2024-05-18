@@ -194,7 +194,7 @@ class Metaguru(Helpers):
         return self._tracks.catalognum or self.parse_catalognum(
             album=self.meta["name"],
             description=self.comments or "",
-            label=self.label if not self._singleton else "",
+            label=self.label,
             artistitles=self._tracks.artistitles,
         )
 
@@ -208,7 +208,7 @@ class Metaguru(Helpers):
                 album=self.meta["name"],
                 disctitle=self.disctitle,
                 description=self.media.description,
-                label=self.label if not self._singleton else "",
+                label=self.label,
                 artistitles=self._tracks.artistitles,
             )
             or self.general_catalognum
