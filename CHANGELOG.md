@@ -1,18 +1,13 @@
 ## Unreleased
 
-## [0.19.1] 2024-05-10
-
-### Fixed
-
-- (#58) Relax `beets` dependency requirement.
-
-## [0.19.0] 2024-05-07
-
 ### Fixed
 
 - `artist`: handle remix releases with a single title and its remixes. Instead of trying
   to determine the artist from the titles, detect such release and use the given album
   artist.
+
+- `media`: ignore subscription type Bandcamp media format which returns a duplicate
+  digital media format
 
 ### Updated
 
@@ -27,6 +22,14 @@
   - support some new formats: **`UVB76-023`**, **`SOP 061-1233`**, **`a+w lp029`**
   - enable parsing catalogue numbers that contain label name in single releases
   - reduce the number of false positives, mostly to do with short catalogue numbers
+
+## [0.19.1] 2024-05-10
+
+### Fixed
+
+- (#58) Relax `beets` dependency requirement.
+
+## [0.19.0] 2024-05-07
 
 ### Fixed
 
