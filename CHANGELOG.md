@@ -12,6 +12,11 @@
 - Auto-Tagger: Wider search analogous to cli search query as a fallback for bad or missing
   meta data
 
+### Updated
+
+- `catalognum`:
+  - Add support for new formats: **`UVB76-023`**, **`SOP 061-1233`**, **`a+w lp029`**.
+
 ## [0.19.3] 2024-10-17
 
 ### Updated

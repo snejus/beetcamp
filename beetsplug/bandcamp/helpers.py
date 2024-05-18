@@ -31,9 +31,9 @@ class MediaInfo(NamedTuple):
 
 
 CATALOGNUM_CONSTRAINT = r"""(?<![]/@-])(\b
-(?!\W|LC[ ]|VA[\d ]+|[EL]P[\W\d]|[^\n.]+[ ](?:20\d\d|VA[ \d]+)|(?i:vol|disc|number|rd-9))
+(?!\W|LC[ ]|VA[\d ]+|(?i:[EL]P)[\W\d]|[^\n.]+[ ](?:20\d\d|VA[ \d]+)|(?i:vol|disc|number|rd-9))
 {}
-\b(?!["%]))"""
+\b(?!["%-]))"""
 _cat_pat = CATALOGNUM_CONSTRAINT.format(
     r"""
 (
@@ -42,14 +42,14 @@ _cat_pat = CATALOGNUM_CONSTRAINT.format(
     | [A-Z]{2,}[A-Z.$-]*\d{2,}   # HS11, USE202, HEY-101, LI$INGLE025
     | (?<!\w\W)[A-Z.]{2,}[ ]\d+  # OBS.CUR 9
     | [A-z]+-[A-z]+[ ]?\d+       # o-ton 119
-    | [A-z]+[ ]?(?:[EL]P)\d+     # Dystopian LP01
+    | [A-z+]+[ ]?(?:(?i:[EL]P))\d+  # Dystopian LP01, a+w lp036
     | \w+[A-z]0\d+               # 1ØPILLS018, fa036
     | [a-z]+(?:cd|lp|:)\d+       # ostgutlp45, reni:7
     | [A-z]+\d+-\d+              # P90-003
 )
 (?: # optionally followed by
       (?<=\d\d)-?[A-Z]+  # IBM001CD (needs at least two digits before the letter)
-    | [.]\d+             # ISMVA002.1
+    | [.-]\d+            # ISMVA002.1, SOP 063-1322
 )?
 """
 )
