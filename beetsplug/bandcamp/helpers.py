@@ -26,8 +26,38 @@ FORMAT_TO_MEDIA = {
 class MediaInfo(NamedTuple):
     album_id: str
     name: str
-    title: str
+    disctitle: str
     description: str
+
+    @classmethod
+    def from_format(cls, _format: JSONDict) -> "MediaInfo":
+        release_format = _format.get("musicReleaseFormat")
+
+        return cls(
+            _format["@id"],
+            FORMAT_TO_MEDIA[release_format or "DigitalFormat"],
+            "" if release_format == "DigitalFormat" else _format["name"],
+            (
+                ""
+                if release_format == "DigitalFormat"
+                else _format.get("description") or ""
+            ),
+        )
+
+    @property
+    def medium_count(self) -> int:
+        if self.name == "Vinyl" and (
+            m := re.search(
+                r"[1-5](?= ?(xLP|LP|x))|single|double|triple", self.disctitle, re.I
+            )
+        ):
+            count = m.group()
+            if count.isdigit():
+                return int(count)
+
+            return {"single": 1, "double": 2, "triple": 3}[count.lower()]
+
+        return 1
 
 
 CATALOGNUM_CONSTRAINT = r"""(?<![]/@-])(\b
@@ -89,7 +119,6 @@ PATTERNS: Dict[str, Pattern[str]] = {
     "track_alt": re.compile(
         r"^([A-J]{1,3}[12]?\.?\d|[AB]+(?=\W{2,}))(?:(?!-\w)[^\w(]|_)+", re.I + re.M
     ),
-    "vinyl_name": re.compile(r"[1-5](?= ?(xLP|LP|x))|single|double|triple", re.I),
 }
 rm_strings = [
     "limited edition",
@@ -150,14 +179,6 @@ class Helpers:
         except (KeyError, IndexError):
             item = meta["publisher"]
         return item.get("name") or ""
-
-    @staticmethod
-    def get_vinyl_count(name: str) -> int:
-        conv = {"single": 1, "double": 2, "triple": 3}
-        for m in PATTERNS["vinyl_name"].finditer(name):
-            count = m.group()
-            return int(count) if count.isdigit() else conv[count.lower()]
-        return 1
 
     @staticmethod
     def split_artists(artists: Iterable[str]) -> List[str]:
@@ -304,12 +325,13 @@ class Helpers:
     @staticmethod
     def get_media_formats(format_list: List[JSONDict]) -> List[MediaInfo]:
         """Return filtered Bandcamp media formats as a list of MediaInfo objects.
-        Formats are filtered using the following fields,
 
+        Formats are filtered using the following fields,
         type_id item_type  type_name          musicReleaseFormat
                 a          Digital            DigitalFormat   # digital album
                 b          Digital            DigitalFormat   # discography
                 t          Digital            DigitalFormat   # digital track
+                i          Digital            DigitalFormat   # subscription
         0       p          Other
         1       p          Compact Disc (CD)  CDFormat
         2       p          Vinyl LP           VinylFormat
@@ -331,25 +353,16 @@ class Helpers:
                 {"name", "item_type"} < set(obj)
                 # not a discography
                 and obj["item_type"] != "b"
+                # not a subscription
+                and obj["item_type"] != "i"
                 # musicReleaseFormat format is given or it is a USB
                 and ("musicReleaseFormat" in obj or obj["type_id"] == 5)
                 # it is not a vinyl bundle
                 and not (obj["item_type"] == "p" and "bundle" in obj["name"].lower())
             )
 
-        formats = []
-        for _format in filter(valid_format, map(Helpers.unpack_props, format_list)):
-            formats.append(
-                MediaInfo(
-                    _format["@id"],
-                    FORMAT_TO_MEDIA[
-                        _format.get("musicReleaseFormat") or "DigitalFormat"
-                    ],
-                    _format["name"],
-                    _format.get("description") or "",
-                )
-            )
-        return formats
+        valid_formats = filter(valid_format, map(Helpers.unpack_props, format_list))
+        return list(map(MediaInfo.from_format, valid_formats))
 
     @staticmethod
     def add_track_alts(album: AlbumInfo, comments: str) -> AlbumInfo:
