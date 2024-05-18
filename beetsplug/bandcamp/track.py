@@ -47,7 +47,7 @@ class Remix:
             remix = m.groupdict()
             remix["delimited"] = m.group().strip()
             remix["remixer"] = remix["remixer"] or ""
-            return cls(**remix, by_other_artist="Original" in remix["remix"])
+            return cls(**remix, by_other_artist="Original" not in remix["remix"])
         return None
 
 

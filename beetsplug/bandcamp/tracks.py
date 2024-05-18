@@ -67,9 +67,7 @@ class Tracks:
     def remixers(self) -> List[str]:
         """Return all remix artists."""
         return [
-            t.remix.remixer
-            for t in self.tracks
-            if t.remix and not t.remix.by_other_artist
+            t.remix.remixer for t in self.tracks if t.remix and t.remix.by_other_artist
         ]
 
     @property
