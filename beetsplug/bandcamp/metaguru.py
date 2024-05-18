@@ -81,16 +81,13 @@ class Metaguru(Helpers):
 
     @property
     def comments(self) -> Optional[str]:
-        """Return release, media descriptions and credits separated by
-        the configured separator string.
-        """
-        parts: List[str] = [self.meta.get("description") or ""]
-        media_desc = self.media.description
-        if media_desc and not media_desc.startswith("Includes high-quality"):
-            parts.append(media_desc)
-
-        parts.append(self.meta.get("creditText") or "")
-        sep: str = self.config["comments_separator"]
+        """Return concatenated release, media descriptions and credits."""
+        parts = [
+            self.meta.get("description") or "",
+            self.media.description,
+            self.meta.get("creditText") or "",
+        ]
+        sep = self.config["comments_separator"]
         return sep.join(filter(None, parts)).replace("\r", "") or None
 
     @cached_property
@@ -182,11 +179,11 @@ class Metaguru(Helpers):
     @property
     def disctitle(self) -> str:
         """Return medium's disc title if found."""
-        return "" if self.media.name == DIGI_MEDIA else self.media.title
+        return self.media.disctitle
 
     @property
     def mediums(self) -> int:
-        return self.get_vinyl_count(self.disctitle) if self.media.name == "Vinyl" else 1
+        return self.media.medium_count
 
     @cached_property
     def general_catalognum(self) -> str:
@@ -257,7 +254,7 @@ class Metaguru(Helpers):
 
     @cached_property
     def vinyl_disctitles(self) -> str:
-        return " ".join([m.title for m in self.media_formats if m.name == "Vinyl"])
+        return " ".join([m.disctitle for m in self.media_formats if m.name == "Vinyl"])
 
     @cached_property
     def album_name(self) -> str:
