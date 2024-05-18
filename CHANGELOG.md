@@ -25,6 +25,23 @@
   - Parse label-like catalogue numbers for singletons too.
   - Fix false positives:
     - Exclude very short matches like **OP-1** and **SK-1**.
+  - When searching for a catalogue number which is prefixed by the label name
+    1. Take two versions of the label name
+       1. Original one
+       2. Without **Records**, **Recordings**, **Productions** endings
+    2. For each
+       1. Use it as the first prefix
+       2. If it has multiple words, take first letter of each word and concatenate them.
+          Then, use it a prefix too.
+    3. If the original label has multiple words, also try using the first word as a prefix
+
+    For example, for a label named **Diffuse Reality Records**, the plugin is able to
+    recognise the following catalogue numbers (case insensitively)
+    - **Diffuse Reality Records001**
+    - **DRR001**
+    - **Diffuse Reality001**
+    - **DR001**
+    - **Diffuse001**
 
 ## [0.19.3] 2024-10-17
 
@@ -109,7 +126,6 @@
   - consider **with** and **w/** as markers for collaborating artists
   - remove **`bonus -`**
     - `Artist - Title (bonus - something)` -> **`Artist - Title (something)`**
-
 [album sent to us by the devil himself]: https://examine-archive.bandcamp.com/album/va-examine-archive-international-sampler-xmn01
 
 ## [0.17.2] 2023-08-09

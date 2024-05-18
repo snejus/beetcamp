@@ -187,16 +187,30 @@ class Metaguru(Helpers):
 
     @cached_property
     def label_prefix_catalognum(self) -> str:
-        pat = re.compile(LABEL_CATNUM.format(re.escape(self.label)), re.VERBOSE)
+        prefixes = {self.label}
+        endings = "Records", "Recordings", "Productions"
+        prefixes |= {self.label.replace(f" {e}", "") for e in endings}
+
+        for prefix in [p for p in prefixes if " " in p]:
+            # add concatenated first letters
+            prefixes.add("".join(word[0] for word in prefix.split()))
+
+        if " " in self.label:
+            # add the first word too
+            prefixes.add(self.label.split()[0])
+
+        str_pattern = f"(?:{'|'.join(map(re.escape, prefixes))})"
+
+        pattern = re.compile(LABEL_CATNUM.format(str_pattern), re.VERBOSE)
         return self.parse_catalognum(
             (
                 (
-                    pat,
+                    pattern,
                     "\n".join((
+                        *(m.disctitle for m in self.media_formats),
                         self.meta["name"],
-                        self.media.disctitle,
                         self.media.description,
-                        self.comments or ""
+                        self.comments or "",
                     )),
                 ),
             ),
