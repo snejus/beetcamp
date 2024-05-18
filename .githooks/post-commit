@@ -1,43 +1,68 @@
-#!/bin/bash
+#!/bin/zsh
+# Run tests across all test files, and report what has changed in a pretty way.
+# Test metadata files are stored in $TEST_FILES_DIR (./jsons) directory: those
+# are JSON files that contain Bandcamp release metadata.
+#
+# You can use 'url2json -s <release-url>' to create such testing file for your
+# release of choice.
+# It extracts the relevant metadata saves it in './jsons' directory under
+# the filename that resembles that release URL (where slashes are replaced by
+# underscores).
+
+setopt extendedglob nullglob
+zmodload zsh/mapfile
+autoload -Uz zmv
 
 TESTS_DIR=lib_tests
 
-[ "$(git branch --show-current)" = dev ] || exit
+[[ -d .git/rebase-merge ]] || [[ $(git branch --show-current) == dev ]] || exit
 
-commit=$(git rev-parse --short HEAD)
-previous_commit=$(git rev-parse --short HEAD~1)
-
-[[ -e $TESTS_DIR/$previous_commit ]] || exit
-
-git diff --quiet HEAD~1..HEAD ./beetsplug
-committed_source_code=$?
-git diff --quiet ./beetsplug
-dirty_worktree=$?
-
-if ((!committed_source_code)); then
-  cp -r "$TESTS_DIR/$previous_commit" "$TESTS_DIR/$commit"
-  cp "$TESTS_DIR/album-$previous_commit" "$TESTS_DIR/album-$commit"
-  cp "$TESTS_DIR/tracks-$previous_commit" "$TESTS_DIR/tracks-$commit"
+commit=$(git show --no-patch --format='%h %s')
+after=${${=commit}[1]}
+message=${commit#$after }
+if git diff --quiet HEAD~1..HEAD ./beetsplug; then
+  print "$after: Source code has not changed, bye: $message"
   exit
 fi
 
-cp -r "$TESTS_DIR/$previous_commit" "$TESTS_DIR/$commit"
-((dirty_worktree)) && git stash
-pytest -p no:randomly -k 'lib and file' -s -n 4 --base "$previous_commit" --target "$commit"
-((dirty_worktree)) && git stash pop
+if [[ -d .git/rebase-merge ]]; then
+  results=(${(f@)${mapfile[.git/rebase-merge/done]%$'\n'}})
+  current_commit=(${=results[-1]})
+  action=$current_commit[1]
+  rebase_head=${current_commit[2]:0:7}
 
-jq '[(input_filename | sub(".*/"; "")), if .name then {before: .} else {after: .} end]' jsons/* "$TESTS_DIR/$commit"/*.json |
-  jq -s '
-    group_by(.[0]) | 
-    map(
-      [.[][1]] | 
-      add | 
-      select(.after.album) | 
-      "\(.before.name) -> \(.after.album)"
-    ) | 
-    sort | 
-    unique[]' -r >"$TESTS_DIR/album-$commit"
-jq '(.tracks//[]) | map(if .track_alt then "\(.track_alt). " else "" end + .artist + " - " + .title)[]' "$TESTS_DIR/$commit"/*.json -r >"$TESTS_DIR/tracks-$commit"
+  if [[ $action =~ (fixup|squash) ]]; then
+    print "Skipping commit rewrite: $message"
+    exit
+  fi
+  if [[ -d $TESTS_DIR/$rebase_head ]]; then
+    if [[ ! -s .git/rebase-merge/git-rebase-todo ]] && ( (( ${#${(M)${results}:#*(edit|fixup|squash)*}} )) || (( ! ${#${(M)${results}:#*reword*}} )) ); then
+      print "Current (latest) commit, testing against REBASE_HEAD $rebase_head to synchronise results: $message"
+      before=$rebase_head
+    else
+      zmv $TESTS_DIR/'(*)'$rebase_head $TESTS_DIR/'${1}'$after
+      if git diff --quiet $rebase_head..$after ./beetsplug; then
+        print "No source code changes in comparison to $rebase_head: $message"
+        exit
+      else
+        print "Testing previous against new commit: $message"
+      fi
+    fi
+  else
+    print "Results from base commit $rebase_head do not exist, testing against last commit $before: $message"
+  fi
+else
+  print "Testing previous against new commit: $message"
+fi
 
-git diff --unified=0 --no-index --color-words "$TESTS_DIR/album-$previous_commit" "$TESTS_DIR/album-$commit"
-git diff --unified=0 --no-index --color-words "$TESTS_DIR/tracks-$previous_commit" "$TESTS_DIR/tracks-$commit"
+(( $#before )) || {
+  folders=(lib_tests/^[a-z]##(/:t))
+  pat="^(${(j:|:)folders})"
+  before=($(git log main~3..HEAD~ --format=%h ./beetsplug | grep -E $pat -m1))
+}
+
+git diff --quiet ./beetsplug
+dirty_worktree=$?
+(( dirty_worktree )) && git stash
+./test_lib $before $after
+(( dirty_worktree )) && git stash pop --quiet
