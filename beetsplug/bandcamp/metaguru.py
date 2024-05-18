@@ -205,6 +205,7 @@ class Metaguru(Helpers):
         """
         return (
             self.parse_catalognum(
+                album=self.meta["name"],
                 disctitle=self.disctitle,
                 description=self.media.description,
                 label=self.label if not self._singleton else "",
