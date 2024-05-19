@@ -90,7 +90,7 @@ LABEL_CATNUM = CATALOGNUM_CONSTRAINT.format(
 CATNUM_PAT = {
     # preceded by some variation of 'Catalogue number:'
     "header": re.compile(
-        r"^cat[\w .]+(?:(?:number|no)\b:?|:)[ ]*(\w.*?)( \W|$)", re.I | re.M
+        r"^cat[\w .#]*?(?:(?:number|no)\b:?|[:#])[ ]*(\w.*?)( \W|$)", re.I | re.M
     ),
     # beginning or end of line
     "start_end": re.compile(rf"(^{_cat_pat}|{_cat_pat}$)", re.M | re.VERBOSE),
