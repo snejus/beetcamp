@@ -9,6 +9,9 @@
 - `media`: ignore subscription type Bandcamp media format which returns a duplicate
   digital media format
 
+- search: remove character **&** from the search query which Bandcamp often fails to
+  handle
+
 ### Updated
 
 - `album`:

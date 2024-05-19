@@ -108,7 +108,7 @@ def search_bandcamp(
     **kwargs: Any,
 ) -> List[JSONDict]:
     """Return a list with item JSONs of type search_type matching the query."""
-    url = SEARCH_URL.format(page, query)
+    url = SEARCH_URL.format(page, query.replace("&", " "))
     if search_type:
         url += "&item_type=" + search_type
     kwargs["name"] = query
