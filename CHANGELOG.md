@@ -25,6 +25,8 @@
   - Parse label-like catalogue numbers for singletons too.
   - Fix false positives:
     - Exclude very short matches like **OP-1** and **SK-1**.
+    - Exclude matches followed by a comma. This excludes many artists from release
+      descriptions that happen to have names that look like catalogue numbers.
   - When searching for a catalogue number which is prefixed by the label name
     1. Take two versions of the label name
        1. Original one
