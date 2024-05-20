@@ -60,10 +60,22 @@ class MediaInfo(NamedTuple):
         return 1
 
 
-CATALOGNUM_CONSTRAINT = r"""(?<![]/@-])(\b
-(?!\W|LC[ ]|VA[\d ]+|(?i:[EL]P)[\W\d]|[^\n.]+[ ](?:20\d\d|VA[ \d]+)|(?i:vol|disc|number|rd-9))
-{}
-\b(?!["%-]))"""
+CATALOGNUM_CONSTRAINT = r"""
+(?<![]/@-])     # cannot be preceded by these characters
+(
+  \b
+  (?!           # excluded patterns
+      \W
+    | LC[ ]
+    | VA[\d ]+
+    | (?i:[EL]P)[\W\d]
+    | [^\n.]+[ ](?:20\d\d|VA[ \d]+)
+    | (?i:vol|disc|number|rd-9)
+  )
+  {}
+  \b
+  (?!["%,-])    # cannot be followed by these characters
+)"""
 _cat_pat = CATALOGNUM_CONSTRAINT.format(
     r"""
 (
