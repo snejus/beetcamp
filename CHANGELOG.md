@@ -44,6 +44,7 @@
     - **Diffuse001**
   - Parse catalogue number from the description when the header is followed by a hash
     symbol, like **CAT#: ABC-123**.
+  - Exclude label name, and label name without spaces.
 
 ## [0.19.3] 2024-10-17
 

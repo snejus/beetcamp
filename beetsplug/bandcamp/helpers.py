@@ -211,6 +211,8 @@ class Helpers:
     ) -> str:
         """Try getting the catalog number using supplied pattern/string pairs."""
 
+        label = label.lower()
+
         def find(pat: Pattern[str], string: str) -> str:
             """Return the match.
 
@@ -220,10 +222,13 @@ class Helpers:
             """
             for m in pat.finditer(string):
                 catnum = m.group(1).strip()
-                if catnum.lower() not in artistitles:
+                if (
+                    catnum.lower()
+                    not in f"{artistitles}{label}{label.replace(' ', '')}"
+                ):
                     if " " in catnum:
                         first = catnum.split()[0].lower()
-                        if len(catnum) <= 5 and first not in label.lower():
+                        if len(catnum) <= 5 and first not in label:
                             continue
                     return catnum
             return ""
