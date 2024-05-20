@@ -24,7 +24,7 @@
   - Add support for new formats: **`UVB76-023`**, **`SOP 061-1233`**, **`a+w lp029`**.
   - Parse label-like catalogue numbers for singletons too.
   - Fix false positives:
-    - Exclude very short matches like **OP-1** and **SK-1**.
+    - Exclude very short matches like **OP-1** and **SK-1** and **BBC6**.
     - Exclude matches followed by a comma. This excludes many artists from release
       descriptions that happen to have names that look like catalogue numbers.
   - When searching for a catalogue number which is prefixed by the label name
