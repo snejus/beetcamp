@@ -10,6 +10,7 @@ from os import path
 
 import pytest
 from beets.autotag.hooks import AlbumInfo, TrackInfo
+from git import Repo
 from rich.console import Console
 
 from beetsplug.bandcamp import DEFAULT_CONFIG
@@ -24,10 +25,19 @@ def pytest_addoption(parser):
     )
     all_names = [f.split(os.path.sep)[-2] for f in newest_folders]
     names = [n for n in all_names if n != "dev"]
+    names_set = set(names)
+
+    base_name = ""
+    for commit in Repo(".").iter_commits(paths=["./beetsplug"]):
+        short_commit = str(commit)[:7]
+        if short_commit in names_set:
+            base_name = short_commit
+            break
+
     parser.addoption(
         "--base",
         choices=all_names,
-        default=names[0] if names else "dev",
+        default=base_name or "dev",
         help="base directory / comparing against",
     )
     parser.addoption(
