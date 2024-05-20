@@ -41,7 +41,7 @@
   - Parse catalogue number from the description when the header is followed by a hash
     symbol, like **CAT#: ABC-123**.
   - Fix false positives:
-    - Exclude very short matches like **OP-1** and **SK-1**.
+    - Exclude very short matches like **OP-1**, **SK-1** and **BBC6**.
     - Exclude label name, and label name without spaces.
     - Exclude matches followed by a comma. This excludes many artists from release
       descriptions that happen to have names that look like catalogue numbers.
