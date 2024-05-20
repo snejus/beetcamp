@@ -25,7 +25,6 @@
   - Extract catalogue numbers from URLs in the description, if present
   - Support some new formats: **`UVB76-023`**, **`SOP 061-1233`**, **`a+w lp029`**
   - Enable parsing catalogue numbers that contain label name for _single_ releases
-  - Reduce the number of false positives, mostly to do with short catalogue numbers.
   - When searching for a catalogue number which is prefixed by the label name
     1. Take two versions of the label name
        1. Original one
@@ -46,7 +45,11 @@
 
   - Parse catalogue number from the description when the header is followed by a hash
     symbol, like **CAT#: ABC-123**.
-  - Exclude label name, and label name without spaces.
+  - Fix false positives:
+    - Exclude very short matches like **OP-1** and **SK-1**
+    - Exclude label name, and label name without spaces.
+    - Exclude matches followed by a comma. This excludes many artists from release
+      descriptions that happen to have names that look like catalogue numbers.
 
 ## [0.19.1] 2024-05-10
 
