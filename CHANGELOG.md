@@ -6,6 +6,15 @@
   to determine the artist from the titles, detect such release and use the given album
   artist.
 
+- `catalognum`:
+  - Fix false positives:
+    - Exclude very short matches like **OP-1**, **SK-1** and **BBC6**.
+    - Exclude label name, and label name without spaces.
+    - Exclude matches followed by a comma. This excludes many artists from release
+      descriptions that happen to have names that look like catalogue numbers.
+    - Exclude matches followed by a single quote. This used to wrongly match vinyl disc
+      titles like **LABEL 12** here: `LABEL 12'' Black Vinyl`.
+
 - `media`: ignore subscription type Bandcamp media format which returns a duplicate
   digital media format
 
@@ -41,11 +50,6 @@
 
   - Parse catalogue number from the description when the header is followed by a hash
     symbol, like **CAT#: ABC-123**.
-  - Fix false positives:
-    - Exclude very short matches like **OP-1**, **SK-1** and **BBC6**.
-    - Exclude label name, and label name without spaces.
-    - Exclude matches followed by a comma. This excludes many artists from release
-      descriptions that happen to have names that look like catalogue numbers.
 
 ## [0.19.2] 2024-08-04
 
