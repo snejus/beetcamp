@@ -109,7 +109,7 @@ CATNUM_PAT = {
     # beginning or end of line
     "start_end": re.compile(rf"(^{_cat_pat}|{_cat_pat}$)", re.M | re.VERBOSE),
     # enclosed by parens or square brackets, but not ending with MIX
-    "delimited": re.compile(rf"(?:[\[(])(?!.*MIX){_cat_pat}(?:[])]|$)", re.VERBOSE),
+    "delimited": re.compile(rf"(?:[\[(])(?!.*MIX){_cat_pat}(?:[])]|)$", re.VERBOSE),
     # can possibly be followed up by a second catalogue number
     "anywhere": re.compile(rf"({_cat_pat}(\ [/-]\ {_cat_pat})?)", re.VERBOSE),
 }
@@ -184,6 +184,7 @@ CLEAN_PATTERNS = [
     (re.compile(rf"- *({REMIX.pattern})$", re.I), r"(\1)"),  # bye - Some Mix   -> bye (Some Mix)    # noqa
     (re.compile(r'(^|- )[“"]([^”"]+)[”"]( \(|$)'), r"\1\2\3"),   # "bye" -> bye; hi - "bye" -> hi - bye  # noqa
     (re.compile(r"\((the )?(remixes)\)", re.I), r"\2"),   # Album (Remixes)  -> Album Remixes     # noqa
+    (re.compile(r"^(\[[^]-]+\]) - (([^-]|-\w)+ - ([^-]|-\w)+)$"), r"\2 \1"),        # [Remixer] - hi - bye      -> hi - bye [Remixer]  # noqa
     (re.compile(r"examine-.+CD\d+_([^_-]+)[_-](.*)"), split_artist_title),  # See https://examine-archive.bandcamp.com/album/va-examine-archive-international-sampler-xmn01 # noqa
 ]
 # fmt: on
