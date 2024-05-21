@@ -73,7 +73,7 @@ _cat_pat = CATALOGNUM_CONSTRAINT.format(
     | (?<!\w\W)[A-Z.]{2,}[ ]\d+  # OBS.CUR 9
     | [A-z+]+[ ]?(?:(?i:[EL]P))\d+  # Dystopian LP01, a+w lp036
     | [A-z]+\d+-\d+              # P90-003
-    | [A-z]+-[A-z]+[ ]?\d+          # o-ton 119
+    | [A-z]+-[A-z]+[ ]?\d{2,}       # o-ton 119
     | \w+[A-z]0\d+                  # 1ØPILLS018, fa036
     | [a-z]+(?:cd|lp|:)\d+          # ostgutlp45, reni:7
 )
