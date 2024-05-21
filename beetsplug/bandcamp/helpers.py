@@ -109,7 +109,7 @@ CATNUM_PAT = {
     # beginning or end of line
     "start_end": re.compile(rf"(^{_cat_pat}|{_cat_pat}$)", re.M | re.VERBOSE),
     # enclosed by parens or square brackets, but not ending with MIX
-    "delimited": re.compile(rf"(?:[\[(])(?!.*MIX){_cat_pat}(?:[])]|$)", re.VERBOSE),
+    "delimited": re.compile(rf"(?:[\[(])(?!.*MIX){_cat_pat}(?:[])]|)$", re.VERBOSE),
     # can possibly be followed up by a second catalogue number
     "anywhere": re.compile(rf"({_cat_pat}(\ [/-]\ {_cat_pat})?)", re.VERBOSE),
 }
