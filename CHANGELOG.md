@@ -17,6 +17,7 @@
     - Prevent album artists becoming catalogue numbers.
     - Remove pattern responsible for many false positives that contain a space, like
       **DOOM 3**, **ONLY 1** and **NIGHT 3** etc.
+    - Do not any more assume that artist **[DRAKEN49]** is a catalogue number.
 
 - `media`: ignore subscription type Bandcamp media format which returns a duplicate
   digital media format
