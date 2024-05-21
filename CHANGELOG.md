@@ -22,6 +22,7 @@
     - Prevent album artists becoming catalogue numbers.
     - Remove pattern responsible for many false positives that contain a space, like
       **DOOM 3**, **ONLY 1** and **NIGHT 3** etc.
+    - Do not any more assume that artist **[DRAKEN49]** is a catalogue number.
 
 - `media`: ignore subscription type Bandcamp media format which returns a duplicate
   digital media.
@@ -55,6 +56,10 @@
     - **Diffuse001**
   - Parse catalogue number from the description when the header is followed by a hash
     symbol, like **CAT#: ABC-123**.
+
+- `track`:
+  - For tracks named like **[Remixer] - Artist - Title** move the remixer to the end:
+    **Artist - Title [Remixer]**.
 
 ## [0.19.3] 2024-10-17
 
