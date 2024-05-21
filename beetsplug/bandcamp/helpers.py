@@ -83,12 +83,18 @@ _cat_pat = CATALOGNUM_CONSTRAINT.format(
       (?<![A-Z].)[A-Z]{2,}\ 0\d{2}  # MNQ 049, SOP 063, SP 040
     | [A-Z]+[. ][A-Z]\d{3,}         # M.A025, HANDS D300
     | [A-Z]{4,}\d(?!\.)             # ROAD6, FREELAB9
-    | [A-Z]{2,}[A-Z.$-]*\d{2,}   # HS11, USE202, HEY-101, LI$INGLE025
+    | [A-Z$]{3,}[.-]?\d{3}          # EDLX.034, HEY-101, LI$INGLE025
+    | [A-Z][A-z]{2,}0\d{2}          # Fabrik038, GiBS027, PSRL_001
+    | [A-Z]{3,4}(CD)?\.?\d{2,}      # TAR30, NEN.39, ZENCD30
+    | [A-Z]{2}\d{5}                 # RM12012, DD13109
+    | [A-Z]{5}\d{2}                 # PNKMN18, LBRNM11
+    | [A-Z]{6,}0\d{1}               # BODYHI01, DYNMCSS01
+    | [A-z]{2,3}-?0\d{2,}           # SS-023, mt001, src002
     | [A-z+]+[ ]?(?:(?i:[EL]P))\d+  # Dystopian LP01, a+w lp036
-    | [A-z]+\d+-\d+              # P90-003
     | [A-z]+-[A-z]+[ ]?\d{2,}       # o-ton 119
-    | \w+[A-z]0\d+                  # 1ØPILLS018, fa036
     | [a-z]+(?:cd|lp|:)\d+          # ostgutlp45, reni:7
+    | [A-Z]+\d+[-_]\d{2,}           # P90-003, CC2_011
+    | [A-Z]+_[A-Z]\d{1,3}           # PRL_S03
 )
 (?: # optionally followed by
       (?<=\d\d)-?[A-Z]+  # IBM001CD (needs at least two digits before the letter)
@@ -104,7 +110,20 @@ LABEL_CATNUM = CATALOGNUM_CONSTRAINT.format(
 CATNUM_PAT = {
     # preceded by some variation of 'Catalogue number:'
     "header": re.compile(
-        r"^cat[\w .#]*?(?:(?:number|no)\b:?|[:#])[ ]*(\w.*?)( \W|$)", re.I | re.M
+        r"""
+        ^
+        (?i:cat(?:\W|a?l))  # ignore case, match 'Cat ', 'Catl' or 'Catal'
+        .*?                 # lazy anything
+        \W                  # some sort of space / punctuation
+        (               # catalogue number group
+          [A-Z\d]{2}    # must start with two capital letters/digits
+          .*?           # lazy anything
+          \w            # must end with an alphanumeric char
+        )
+        (\W\W|$)    # match as much as possible but stop before
+                    # something like ' - All right reserved'
+        """,
+        re.M | re.VERBOSE,
     ),
     # beginning or end of line
     "start_end": re.compile(rf"(^{_cat_pat}|{_cat_pat}$)", re.M | re.VERBOSE),
@@ -239,10 +258,6 @@ class Helpers:
                     catnum.lower()
                     not in f"{artistitles}{label}{label.replace(' ', '')}"
                 ):
-                    if " " in catnum:
-                        first = catnum.split()[0].lower()
-                        if len(catnum) <= 5 and first not in label:
-                            continue
                     return catnum
             return ""
 
