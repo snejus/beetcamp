@@ -10,6 +10,16 @@
 - `artist`: handle remix releases with a single title and its remixes. Instead of trying
   to determine the artist from the titles, detect such release and use the given album
   artist.
+
+- `catalognum`:
+  - Fix false positives:
+    - Exclude very short matches like **OP-1**, **SK-1** and **BBC6**.
+    - Exclude label name, and label name without spaces.
+    - Exclude matches followed by a comma. This excludes many artists from release
+      descriptions that happen to have names that look like catalogue numbers.
+    - Exclude matches followed by a single quote. This used to wrongly match vinyl disc
+      titles like **LABEL 12** here: `LABEL 12'' Black Vinyl`.
+
 - `media`: ignore subscription type Bandcamp media format which returns a duplicate
   digital media.
 
@@ -23,10 +33,6 @@
 - `catalognum`:
   - Add support for new formats: **`UVB76-023`**, **`SOP 061-1233`**, **`a+w lp029`**.
   - Parse label-like catalogue numbers for singletons too.
-  - Fix false positives:
-    - Exclude very short matches like **OP-1** and **SK-1** and **BBC6**.
-    - Exclude matches followed by a comma. This excludes many artists from release
-      descriptions that happen to have names that look like catalogue numbers.
   - When searching for a catalogue number which is prefixed by the label name
     1. Take two versions of the label name
        1. Original one
@@ -46,7 +52,6 @@
     - **Diffuse001**
   - Parse catalogue number from the description when the header is followed by a hash
     symbol, like **CAT#: ABC-123**.
-  - Exclude label name, and label name without spaces.
 
 ## [0.19.3] 2024-10-17
 

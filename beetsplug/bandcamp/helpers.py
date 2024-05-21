@@ -74,7 +74,7 @@ CATALOGNUM_CONSTRAINT = r"""
   )
   {}
   \b
-  (?!["%,-])    # cannot be followed by these characters
+  (?!["'%,-])   # cannot be followed by these characters
 )"""
 _cat_pat = CATALOGNUM_CONSTRAINT.format(
     r"""
