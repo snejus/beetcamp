@@ -20,6 +20,8 @@
     - Exclude matches followed by a single quote. This used to wrongly match vinyl disc
       titles like **LABEL 12** here: `LABEL 12'' Black Vinyl`.
     - Prevent album artists becoming catalogue numbers.
+    - Remove pattern responsible for many false positives that contain a space, like
+      **DOOM 3**, **ONLY 1** and **NIGHT 3** etc.
 
 - `media`: ignore subscription type Bandcamp media format which returns a duplicate
   digital media.
