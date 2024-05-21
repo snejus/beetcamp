@@ -80,7 +80,8 @@ CATALOGNUM_CONSTRAINT = r"""
 _cat_pat = CATALOGNUM_CONSTRAINT.format(
     r"""
 (
-      [A-Z][A-Z .]+\d{3}         # HANDS D300, CC ATOM 101
+      (?<![A-Z].)[A-Z]{2,}\ 0\d{2}  # MNQ 049, SOP 063, SP 040
+    | [A-Z]+[. ][A-Z]\d{3,}      # M.A025, HANDS D300
     | [A-Z]{4,}\d(?!\.)          # ROAD6, FREELAB9
     | [A-Z]{2,}[A-Z.$-]*\d{2,}   # HS11, USE202, HEY-101, LI$INGLE025
     | (?<!\w\W)[A-Z.]{2,}[ ]\d+  # OBS.CUR 9
