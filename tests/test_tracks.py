@@ -3,7 +3,6 @@
 from operator import attrgetter
 
 import pytest
-from beetsplug.bandcamp.track import Track
 from beetsplug.bandcamp.tracks import Tracks
 from rich.panel import Panel
 from rich.table import Table
@@ -123,7 +122,7 @@ def test_parse_track_name(name, expected, json_track, json_meta, console):
     if not expected["track_alt"]:
         expected["track_alt"] = None
 
-    tracks = Tracks.from_json(json_meta)
+    tracks = Tracks.from_json(json_meta, "")
     result_track = list(tracks)[0]
     result = dict(zip(fields, attrgetter(*fields)(result_track)))
     assert result == expected, print_result(console, name, expected, result)

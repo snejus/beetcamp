@@ -19,6 +19,7 @@
       descriptions that happen to have names that look like catalogue numbers.
     - Exclude matches followed by a single quote. This used to wrongly match vinyl disc
       titles like **LABEL 12** here: `LABEL 12'' Black Vinyl`.
+    - Prevent album artists becoming catalogue numbers.
 
 - `media`: ignore subscription type Bandcamp media format which returns a duplicate
   digital media.
