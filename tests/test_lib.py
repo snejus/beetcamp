@@ -52,12 +52,13 @@ IGNORE_FIELDS = {
     "city",
     "disctitle",
     "times_bought",
+    "original_name",
 }
 DO_NOT_COMPARE = {"album_id", "media", "mediums", "disctitle"}
 TRACK_FIELDS = ["track_alt", "artist", "title"]
 
 install(show_locals=True, extra_lines=8, width=int(os.environ.get("COLUMNS", 150)))
-console = make_console(stderr=True, record=True)
+console = make_console(stderr=True, record=True, highlighter=None)
 
 
 class FieldDiff(NamedTuple):
@@ -142,6 +143,11 @@ def guru(config: IncludeLazyConfig, test_filepath: Path) -> Metaguru:
     return Metaguru.from_html(test_data, config)
 
 
+@pytest.fixture
+def original_name(guru: Metaguru) -> str:
+    return guru.meta["name"]
+
+
 def escape(string: str) -> str:
     return str(string).replace("[", r"\[")
 
@@ -200,17 +206,23 @@ def old(base: JSONDict) -> AttrDict:
 
 @pytest.fixture
 def new(
-    guru: Metaguru, base: AttrDict, target: AttrDict, target_filepath: Path
+    guru: Metaguru,
+    base: AttrDict,
+    target: AttrDict,
+    target_filepath: Path,
+    original_name: str,
 ) -> AttrDict:
-    new = (
-        guru.singleton
-        if "_track_" in target_filepath.name
-        else next((a for a in guru.albums if a.media == "Vinyl"), guru.albums[0])
-    )
+    new: AttrDict
+    if "_track_" in target_filepath.name:
+        new = guru.singleton
+    else:
+        new = next((a for a in guru.albums if a.media == "Vinyl"), guru.albums[0])
+        new.album = " / ".join(dict.fromkeys(x.album for x in guru.albums))
 
     new.catalognum = " / ".join(
         sorted({x.catalognum for x in guru.albums if x.catalognum})
     )
+    new.original_name = original_name
 
     if not target or new not in (base, target):
         with target_filepath.open("w") as f:
