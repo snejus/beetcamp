@@ -23,6 +23,10 @@
     - Remove pattern responsible for many false positives that contain a space, like
       **DOOM 3**, **ONLY 1** and **NIGHT 3** etc.
     - Do not any more assume that artist **[DRAKEN49]** is a catalogue number.
+    - Instead of using a pattern like `[A-Z]+-[0-9]+` _(more than one capital letter —
+      dash — more than one number)_, explicitly specify how many letters and numbers are
+      expected for the most common variations, like **TAR30**, **RM12012**, **HEY-101**
+      etc.
 
 - `media`: ignore subscription type Bandcamp media format which returns a duplicate
   digital media.
