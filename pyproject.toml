@@ -48,6 +48,7 @@ pytest-randomly = ">=3.10"
 pytest-xdist = ">=3.5.0"
 rich-tables = "*"
 
+
 [tool.poetry.scripts]
 beetcamp = "beetsplug.bandcamp:main"
 
