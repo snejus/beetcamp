@@ -49,6 +49,7 @@ pytest-xdist = ">=3.5.0"
 rich-tables = "*"
 types-requests = ">=2.25.0"
 
+
 [tool.poetry.scripts]
 beetcamp = "beetsplug.bandcamp:main"
 
