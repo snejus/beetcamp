@@ -61,7 +61,7 @@ class Metaguru(Helpers):
             self.media = self.media_formats[0]
         self.config = config or {}
         self.va_name = beets_config["va_name"].as_str() or self.va_name
-        self._tracks = Tracks.from_json(meta)
+        self._tracks = Tracks.from_json(meta, self.original_albumartist)
         self._album_name = AlbumName(
             meta.get("name") or "", self.all_media_comments, self._tracks.album
         )

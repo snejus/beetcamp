@@ -3,7 +3,6 @@
 import itertools as it
 from dataclasses import dataclass
 from functools import cached_property
-from itertools import starmap
 from typing import Iterator, List, Optional, Set
 
 from .helpers import Helpers, JSONDict
@@ -23,14 +22,16 @@ class Tracks:
         return len(self.tracks)
 
     @classmethod
-    def from_json(cls, meta: JSONDict) -> "Tracks":
+    def from_json(cls, meta: JSONDict, album_artist: str) -> "Tracks":
         try:
             tracks = [{**t, **t["item"]} for t in meta["track"]["itemListElement"]]
         except (TypeError, KeyError):
             tracks = [{**meta}]
 
         label = Helpers.get_label(meta)
-        names = TrackNames.make([i.get("name", "") for i in tracks], label)
+        names = TrackNames.make(
+            [i.get("name", "") for i in tracks], label, album_artist
+        )
 
         for track, name in zip(tracks, names):
             track["name"] = name

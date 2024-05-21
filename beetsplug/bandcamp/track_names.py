@@ -3,7 +3,6 @@
 import operator as op
 import re
 from collections import Counter
-from contextlib import suppress
 from dataclasses import dataclass
 from functools import reduce
 from os.path import commonprefix
@@ -94,7 +93,9 @@ class TrackNames:
         ]
 
     @staticmethod
-    def eject_common_catalognum(names: List[str]) -> Tuple[Optional[str], List[str]]:
+    def eject_common_catalognum(
+        names: List[str], album_artist: str
+    ) -> Tuple[Optional[str], List[str]]:
         """Return catalognum found in every track title.
 
         1. Split each track name into words
@@ -107,10 +108,12 @@ class TrackNames:
         names_tokens = map(str.split, names)
         common_words = reduce(op.and_, [OrderedSet(x) for x in names_tokens])
         if common_words:
-            matches = (CATNUM_PAT["anywhere"].search(common_words[i]) for i in [0, -1])
-            with suppress(StopIteration):
-                catalognum, word = next((m.group(1), m.string) for m in matches if m)
-                names = [n.replace(word, "").strip() for n in names]
+            candidates = dict.fromkeys((common_words[0], common_words[-1]))
+            for m in map(CATNUM_PAT["anywhere"].search, candidates):
+                if m and (potential_catalognum := m.group(1)):
+                    if potential_catalognum != album_artist:
+                        catalognum = potential_catalognum
+                    names = [n.replace(m.string, "").strip("- ") for n in names]
 
         return catalognum, names
 
@@ -146,7 +149,7 @@ class TrackNames:
         ]
 
     @classmethod
-    def make(cls, original: List[str], label: str) -> "TrackNames":
+    def make(cls, original: List[str], label: str, album_artist: str) -> "TrackNames":
         names = cls.parenthesize_remixes(
             cls.remove_label(
                 cls.normalize_delimiter(
@@ -155,6 +158,6 @@ class TrackNames:
                 label,
             )
         )
-        catalognum, names = cls.eject_common_catalognum(names)
+        catalognum, names = cls.eject_common_catalognum(names, album_artist)
         album, names = cls.eject_album_name(names)
         return cls(original, names, album=album, catalognum=catalognum)
