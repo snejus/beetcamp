@@ -61,21 +61,18 @@ class MediaInfo(NamedTuple):
 
 
 CATALOGNUM_CONSTRAINT = r"""
-(?<![]/@-])     # cannot be preceded by these characters
+(?<![]/@-])         # cannot be preceded by these characters
 (?<!by\ )
 (
   \b
-  (?!           # excluded patterns
-      \W
-    | LC[ ]
-    | VA[\d ]+
-    | (?i:[EL]P)[\W\d]
-    | [^\n.]+[ ](?:20\d\d|VA[ \d]+)
-    | (?i:vol|disc|number|rd-9)
-  )
+  (?!(?i:vol|ep))   # exclude anything starting with 'vol' or 'ep'
   {}
+  (?<!\bVA\d)       # cannot end with VA1
+  (?<!\bVA\d\d)     # cannot end with VA01
+  (?<!\bVA\d\d\d)   # cannot end with VA001
+  (?<!\b20\d\d)     # cannot end with a year
   \b
-  (?!["'%,-])   # cannot be followed by these characters
+  (?!["'%,-])       # cannot be followed by these characters
 )"""
 _cat_pat = CATALOGNUM_CONSTRAINT.format(
     r"""
