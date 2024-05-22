@@ -16,7 +16,7 @@ from beets.autotag.hooks import AlbumInfo, TrackInfo
 from packaging import version
 from pycountry import countries, subdivisions
 
-from .album import AlbumName
+from .album_name import AlbumName
 from .helpers import CATNUM_PAT, LABEL_CATNUM, PATTERNS, Helpers, MediaInfo
 from .track import Track
 from .tracks import Tracks
