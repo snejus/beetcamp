@@ -5,7 +5,8 @@ from dataclasses import dataclass, field
 from functools import cached_property
 from typing import Dict, List, Optional, Tuple
 
-from .helpers import CATNUM_PAT, PATTERNS, REMIX, Helpers, JSONDict
+from .catalognum import Catalognum
+from .helpers import PATTERNS, REMIX, Helpers, JSONDict
 
 digiwords = r"""
     # must contain at least one of
@@ -122,7 +123,7 @@ class Track:
         # check whether track name contains the catalog number within parens
         # or square brackets
         # see https://objection999x.bandcamp.com/album/eruption-va-obj012
-        m = CATNUM_PAT["delimited"].search(name)
+        m = Catalognum.delimited.search(name)
         if m:
             result["catalognum"] = m.group(1)
             name = name.replace(m.group(), "").strip()
