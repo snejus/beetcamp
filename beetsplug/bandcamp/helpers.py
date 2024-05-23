@@ -2,9 +2,9 @@
 
 import re
 from functools import lru_cache, partial
-from itertools import chain, starmap
+from itertools import chain
 from operator import contains
-from typing import Any, Dict, Iterable, List, Match, NamedTuple, Pattern, Tuple
+from typing import Any, Dict, Iterable, List, Match, NamedTuple, Pattern
 
 from beets.autotag.hooks import AlbumInfo
 from ordered_set import OrderedSet as ordset
@@ -59,87 +59,6 @@ class MediaInfo(NamedTuple):
 
         return 1
 
-
-CATALOGNUM_CONSTRAINT = r"""
-(?<![]/@-])         # cannot be preceded by these characters
-(?<!by\ )
-(
-  \b
-  (?!(?i:vol|ep))   # exclude anything starting with 'vol' or 'ep'
-  {}
-  (?<!\bVA\d)       # cannot end with VA1
-  (?<!\bVA\d\d)     # cannot end with VA01
-  (?<!\bVA\d\d\d)   # cannot end with VA001
-  (?<!\b20\d\d)     # cannot end with a year
-  \b
-  (?!["'%,-])       # cannot be followed by these characters
-)"""
-_cat_pat = CATALOGNUM_CONSTRAINT.format(
-    r"""
-(
-      (?<![A-Z].)[A-Z]{2,}\ 0\d{2}  # MNQ 049, SOP 063, SP 040
-    | [A-Z]+[. ][A-Z]\d{3,}         # M.A025, HANDS D300
-    | [A-Z]{4,}\d(?!\.)             # ROAD6, FREELAB9
-    | \d*[A-Z$]{3,}[.-]?\d{3}          # EDLX.034, HEY-101, LI$INGLE025
-    | [A-Z][A-z]{2,}0\d{2}          # Fabrik038, GiBS027, PSRL_001
-    | [A-Z]{3,4}(CD)?\.?\d{2,}      # TAR30, NEN.39, ZENCD30
-    | [A-Z]{2}\d{5}                 # RM12012, DD13109
-    | [A-Z]{5}\d{2}                 # PNKMN18, LBRNM11
-    | [A-Z]{6,}0\d{1}               # BODYHI01, DYNMCSS01
-    | [A-z]+-[A-z]+[ ]?\d{2,}       # o-ton 119
-    | [A-z]{2,3}-?0\d{2,}           # SS-023, mt001, src002
-    | [A-z+]+[ ]?(?:(?i:[EL]P))\d+  # Dystopian LP01, a+w lp036
-    | [a-z]+(?:cd|lp|:)\d+          # ostgutlp45, reni:7
-    | [A-Z]+\d+[-_]\d{2,}           # P90-003, CC2_011
-    | [A-Z]+_[A-Z]\d{1,3}           # PRL_S03
-)
-(?: # optionally followed by
-    ([.-]\d+)?                      # .1 in RAWVA01.1RP, -1322 in SOP 063-1322
-    (
-        (?<=\d\d)-?[A-Z]+           # CD in IBM001CD (needs at least two preceding digits)
-      | RP                          # RP in RAWVA01.1RP
-    )?
-)?
-"""
-)
-
-LABEL_CATNUM = CATALOGNUM_CONSTRAINT.format(
-    r"(?<!by\ )(?i:{}[ -]?[A-Z]*\d+([A-Z]|\.\d+)*)"
-)
-CATNUM_PAT = {
-    # preceded by some variation of 'Catalogue number:'
-    "header": re.compile(
-        r"""
-        # Cat. Number: ABC123
-        # (a) 'Cat'
-        # (b) '. Number:'
-        # (c) ' '
-        # (1) 'ABC123'
-        ^
-        (?i:cat     # (a) starts with 'cat' (ignoring case)
-          (?:       # (b) optionally match '. Number:' or similar
-            (?:\W|a?l)  # punctuation or 'l' or 'al', like 'Cat ', 'Catl', 'Catal'
-            .*?         # anything
-          )?
-        )
-        \W          # (c) some sort of punctuation preceding the catalogue number
-        (           # (1) catalogue number group
-          [A-Z\d]{2}    # must start with two capital letters/digits
-          .*?           # lazy anything
-          \w            # must end with an alphanumeric char
-        )
-        (\W\W|$)    # match as much as possible but stop before
-                    # something like ' - All right reserved'
-        """,
-        re.M | re.VERBOSE,
-    ),
-    # beginning or end of line
-    "start_end": re.compile(rf"(^{_cat_pat}|{_cat_pat}$)", re.M | re.VERBOSE),
-    # enclosed by parens or square brackets, but not ending with MIX
-    "delimited": re.compile(rf"(?:[\[(])(?!.*MIX){_cat_pat}(?:[])]|)$", re.VERBOSE),
-    # can possibly be followed up by a second catalogue number
-    "anywhere": re.compile(rf"({_cat_pat}(\ [/-]\ {_cat_pat})?)", re.VERBOSE),
-}
 
 PATTERNS: Dict[str, Pattern[str]] = {
     "split_artists": re.compile(r", - |, | (?:[x+/-]|//|vs|and)[.]? "),
@@ -245,36 +164,6 @@ class Helpers:
                     split_artists.discard(artist)  # type: ignore[attr-defined]
                     split_artists.update(subartists)  # type: ignore[attr-defined]
         return list(split_artists)
-
-    @staticmethod
-    @lru_cache(maxsize=None)
-    def parse_catalognum(
-        cases: Tuple[Tuple[Pattern[str], str], ...], label: str, artistitles: str
-    ) -> str:
-        """Try getting the catalog number using supplied pattern/string pairs."""
-
-        label = label.lower()
-
-        def find(pat: Pattern[str], string: str) -> str:
-            """Return the match.
-
-            It is legitimate if it is
-            * not found in any of the track artists or titles
-            * made of the label name when it has a space and is shorter than 6 chars
-            """
-            for m in pat.finditer(string):
-                catnum = m.group(1).strip()
-                if (
-                    catnum.lower()
-                    not in f"{artistitles}{label}{label.replace(' ', '')}"
-                ):
-                    return catnum
-            return ""
-
-        try:
-            return next(filter(None, starmap(find, cases)))
-        except StopIteration:
-            return ""
 
     @staticmethod
     def clean_name(name: str) -> str:
