@@ -4,7 +4,7 @@ import re
 from functools import lru_cache, partial
 from itertools import chain, starmap
 from operator import contains
-from typing import Any, Dict, Iterable, List, NamedTuple, Pattern, Tuple
+from typing import Any, Dict, Iterable, List, Match, NamedTuple, Pattern, Tuple
 
 from beets.autotag.hooks import AlbumInfo
 from ordered_set import OrderedSet as ordset
@@ -186,7 +186,7 @@ REMIX = re.compile(
 CAMELCASE = re.compile(r"(?<=[a-z])(?=[A-Z])")
 
 
-def split_artist_title(m: re.Match) -> str:
+def split_artist_title(m: Match[str]) -> str:
     """See for yourself.
 
     https://examine-archive.bandcamp.com/album/va-examine-archive-international-sampler-xmn01
