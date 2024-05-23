@@ -94,8 +94,11 @@ _cat_pat = CATALOGNUM_CONSTRAINT.format(
     | [A-Z]+_[A-Z]\d{1,3}           # PRL_S03
 )
 (?: # optionally followed by
-      (?<=\d\d)-?[A-Z]+  # IBM001CD (needs at least two digits before the letter)
-    | [.-]\d+            # ISMVA002.1, SOP 063-1322
+    ([.-]\d+)?                      # .1 in RAWVA01.1RP, -1322 in SOP 063-1322
+    (
+        (?<=\d\d)-?[A-Z]+           # CD in IBM001CD (needs at least two preceding digits)
+      | RP                          # RP in RAWVA01.1RP
+    )?
 )?
 """
 )
