@@ -62,6 +62,7 @@
 
   - Parse catalogue number from the description when the header is followed by a hash
     symbol, like **CAT#: ABC-123**.
+  - Properly catch catalogue number suffix **RP**.
 
 ## [0.19.1] 2024-05-10
 
