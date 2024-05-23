@@ -3,7 +3,7 @@
 import re
 from dataclasses import dataclass
 from functools import cached_property
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Match, Optional
 
 from .helpers import PATTERNS, Helpers
 
@@ -92,7 +92,7 @@ class AlbumName:
         return None
 
     @staticmethod
-    def format_series(m: re.Match) -> str:  # type: ignore[type-arg]
+    def format_series(m: Match[str]) -> str:
         """Format the series part in an album.
 
         * Ensure 'Vol' or 'Pt' is suffixed by '.'
