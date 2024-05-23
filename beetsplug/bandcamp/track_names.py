@@ -10,7 +10,8 @@ from typing import Iterator, List, Optional, Tuple
 
 from ordered_set import OrderedSet
 
-from .helpers import CATNUM_PAT, REMIX
+from .catalognum import Catalognum
+from .helpers import REMIX
 
 
 @dataclass
@@ -109,7 +110,7 @@ class TrackNames:
         common_words = reduce(op.and_, [OrderedSet(x) for x in names_tokens])
         if common_words:
             candidates = dict.fromkeys((common_words[0], common_words[-1]))
-            for m in map(CATNUM_PAT["anywhere"].search, candidates):
+            for m in map(Catalognum.anywhere.search, candidates):
                 if m and (potential_catalognum := m.group(1)):
                     if potential_catalognum != album_artist:
                         catalognum = potential_catalognum

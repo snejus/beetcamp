@@ -17,7 +17,8 @@ from packaging import version
 from pycountry import countries, subdivisions
 
 from .album_name import AlbumName
-from .helpers import CATNUM_PAT, LABEL_CATNUM, PATTERNS, Helpers, MediaInfo
+from .catalognum import Catalognum
+from .helpers import PATTERNS, Helpers, MediaInfo
 from .track import Track
 from .tracks import Tracks
 
@@ -187,25 +188,10 @@ class Metaguru(Helpers):
 
     @cached_property
     def label_prefix_catalognum(self) -> str:
-        prefixes = {self.label}
-        endings = "Records", "Recordings", "Productions"
-        prefixes |= {self.label.replace(f" {e}", "") for e in endings}
-
-        for prefix in [p for p in prefixes if " " in p]:
-            # add concatenated first letters
-            prefixes.add("".join(word[0] for word in prefix.split()))
-
-        if " " in self.label:
-            # add the first word too
-            prefixes.add(self.label.split()[0])
-
-        str_pattern = f"(?:{'|'.join(map(re.escape, prefixes))})"
-
-        pattern = re.compile(LABEL_CATNUM.format(str_pattern), re.VERBOSE)
-        return self.parse_catalognum(
+        return Catalognum.find(
             (
                 (
-                    pattern,
+                    Catalognum.for_label(self.label),
                     "\n".join((
                         *(m.disctitle for m in self.media_formats),
                         self.meta["name"],
@@ -223,20 +209,20 @@ class Metaguru(Helpers):
         """Find catalog number in the media-agnostic release metadata and cache it."""
         description = self.comments or ""
         cases = (
-            (CATNUM_PAT["header"], description),
-            (CATNUM_PAT["start_end"], description),
-            (CATNUM_PAT["anywhere"], description),
+            (Catalognum.header, description),
+            (Catalognum.start_end, description),
+            (Catalognum.anywhere, description),
         )
-        return self.parse_catalognum(cases, self.label, self._tracks.artistitles)
+        return Catalognum.find(cases, self.label, self._tracks.artistitles)
 
     def get_media_catalognum(self, media: MediaInfo) -> str:
         cases = (
-            (CATNUM_PAT["header"], media.description),
-            (CATNUM_PAT["anywhere"], media.disctitle),
-            (CATNUM_PAT["anywhere"], self.original_album),
-            (CATNUM_PAT["anywhere"], media.description),
+            (Catalognum.header, media.description),
+            (Catalognum.anywhere, media.disctitle),
+            (Catalognum.anywhere, self.original_album),
+            (Catalognum.anywhere, media.description),
         )
-        return self.parse_catalognum(cases, self.label, self._tracks.artistitles)
+        return Catalognum.find(cases, self.label, self._tracks.artistitles)
 
     @property
     def catalognum(self) -> str:
