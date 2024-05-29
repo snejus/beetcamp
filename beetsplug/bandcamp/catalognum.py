@@ -33,7 +33,7 @@ class Catalognum:
     CONSTRAINT_TEMPLATE = r"""
     (?<![]/@-])         # cannot be preceded by these characters
     (?<!by\ )
-    (
+    (?:
       \b
       (?!(?i:vol|ep))   # exclude anything starting with 'vol' or 'ep'
       {}
@@ -47,13 +47,13 @@ class Catalognum:
     """
     MATCH = CONSTRAINT_TEMPLATE.format(
         r"""
-    (
+    (?:
           (?<![A-Z].)[A-Z]{2,}\ 0\d{2}  # MNQ 049, SOP 063, SP 040
         | [A-Z]+[. ][A-Z]\d{3,}         # M.A025, HANDS D300
         | [A-Z]{4,}\d(?!\.)             # ROAD6, FREELAB9
         | \d*[A-Z$]{3,}[.-]?\d{3}       # EDLX.034, HEY-101, LI$INGLE025
         | [A-Z][A-z]{2,}0\d{2}          # Fabrik038, GiBS027, PSRL_001
-        | [A-Z]{3,4}(CD)?\.?\d{2,}      # TAR30, NEN.39, ZENCD30
+        | [A-Z]{3,4}(?:CD)?\.?\d{2,}    # TAR30, NEN.39, ZENCD30
         | [A-Z]{2}\d{5}                 # RM12012, DD13109
         | [A-Z]{5}\d{2}                 # PNKMN18, LBRNM11
         | [A-Z]{6,}0\d{1}               # BODYHI01, DYNMCSS01
@@ -65,8 +65,9 @@ class Catalognum:
         | [A-Z]+_[A-Z]\d{1,3}           # PRL_S03
     )
     (?: # optionally followed by
-        ([.-]\d+)?                      # .1 in RAWVA01.1RP, -1322 in SOP 063-1322
-        (
+        (?:[.-]\d+)?                    # .1 in RAWVA01.1RP, -1322 in SOP 063-1322
+        (?:
+            (?!MIX)
             (?<=\d\d)-?[A-Z]+           # CD in IBM001CD (needs at least two preceding digits)
           | RP                          # RP in RAWVA01.1RP
         )?
@@ -74,7 +75,7 @@ class Catalognum:
     """
     )
     LABEL_MATCH_TEMPLATE = CONSTRAINT_TEMPLATE.format(
-        r"(?<!by\ )(?i:{}[ -]?[A-Z]*\d+([A-Z]|\.\d+)*)"
+        r"(?<!by\ )((?i:{}[ -]?[A-Z]*\d+([A-Z]|\.\d+)*))"
     )
 
     # Preceded by some variation of 'Catalogue number:'."""
@@ -106,9 +107,9 @@ class Catalognum:
     # beginning or end of line
     start_end = cached_patternprop(rf"((^{MATCH})|({MATCH}$))", re.M | re.VERBOSE)
     # enclosed by parens or square brackets, but not ending with MIX
-    delimited = cached_patternprop(rf"(?:[\[(])(?!.*MIX){MATCH}(?:[])]|)$", re.VERBOSE)
+    delimited = cached_patternprop(rf"(?:[\[(])({MATCH})(?:[])]|$)", re.VERBOSE)
     # can possibly be followed up by a second catalogue number
-    anywhere = cached_patternprop(rf"({MATCH}(\ [/-]\ {MATCH})?)", re.VERBOSE)
+    anywhere = cached_patternprop(rf"({MATCH}(?:\ [-/]\ {MATCH})?)", re.VERBOSE)
 
     @classmethod
     @lru_cache
