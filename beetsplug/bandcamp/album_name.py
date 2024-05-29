@@ -165,29 +165,30 @@ class AlbumName:
         Catalogue number and artists to be removed are provided as 'to_clean'.
         """
         name = cls.CLEAN_CATALOGNUM.sub("", name)
-        for w in map(re.escape, filter(None, to_clean)):
-            name = re.sub(rf" *(?i:(compiled )?by|vs|\W*split w) {w}", "", name)
-            if not re.search(
-                rf"\w {w} \w|(of|&) {w}|{w}(['_\d]| (deluxe|[el]p\b|&))", name, re.I
-            ):
-                name = re.sub(
-                    rf"""
-    (?<!\ [xX])                    # do not remove Artist2 from 'Artist1 x Artist2'
+        for word in map(re.escape, filter(None, to_clean)):
+            name = re.sub(
+                rf"""
     (
-        (?P<br>[([])        # match either a bracket/parens
-      | (^|[^[(\w])+            # or everything that is not bracket/parens/alphanum
+        (?P<br>[([])                # match either an opening bracket/parens
+      | (^|[^[(\w])+                # or everything that is not bracket/parens/alphanum
     )
-    (?i:{w})                    # match the word we want to remove
-    (?!\ [xX]\ )
-    (?(br)                      # if we had a bracket/parens match
-        [])]                    # then match closing bracket/parens
-      | ([^[(\w]|_|(\d+$))*    # otherwise remove any of these patterns
+    (?<!\ [x&]\ )                   # do not remove Artist2 from 'Artist1 x Artist2'
+    (?<!\ of\ )                     # keep artist in 'Best of Artist'
+    (((compiled\ )?by|vs)\ )?       # also remove these prefixes when they are present
+    (?i:{word})                     # match the word we want to remove
+    (?!
+        ['_\d]                      # cannot be followed by these characters
+      | [ ](deluxe|&|[el]p\b|x\b)   # cannot be followed by space and these patterns
     )
-                    """,
-                    " ",
-                    name,
-                    flags=re.VERBOSE,
-                ).strip()
+    (?(br)                          # if we had a bracket/parens match
+        [])]                        # then match closing bracket/parens
+      | ([^[(\w]|_|(\d+$))*         # otherwise remove any of these patterns
+    )
+                """,
+                " ",
+                name,
+                flags=re.VERBOSE | re.IGNORECASE,
+            ).strip()
 
         name = PATTERNS["ft"].sub("", name)
         name = cls.remove_va(name)
