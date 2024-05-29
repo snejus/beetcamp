@@ -38,6 +38,9 @@
 
 ### Updated
 
+- `album`:
+  - When album name is wrapped in brackets, **[ALBUM]**, keep the brackets in place.
+
 - `catalognum`:
   - Add support for new formats: **`UVB76-023`**, **`SOP 061-1233`**, **`a+w lp029`**.
   - Parse label-like catalogue numbers for singletons too.
