@@ -36,7 +36,8 @@
     valid catalogue number found in the data.
   - Keep remix artist in place within 'remix' parentheses, such as **Album (Artist
     Remix)**
-  - When a release has the same name as the album artist, use the name as it is.
+  - When a release has the same name as the album artist, do not clean/adjust it.
+  - When album name is wrapped in brackets, **[ALBUM]**, keep the brackets in place.
 
 - `catalognum`:
   - Extract catalogue numbers from URLs in the description, if present
