@@ -157,8 +157,6 @@ class AlbumName:
 
         Catalogue number and artists to be removed are provided as 'to_clean'.
         """
-        name = re.sub(r"^\[(.*)\]$", r"\1", name)
-
         allowed_chars = r"[*|,. \u2013\u2020]"
         for word in map(re.escape, filter(None, to_clean)):
             name = re.sub(
