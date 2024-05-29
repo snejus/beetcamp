@@ -64,6 +64,7 @@ from beetsplug.bandcamp.album_name import AlbumName
         ("CAT123 | Album", [], "Album"),
         ("Album [CAT123]", [], "Album"),
         ("Album (Artist Remix)", ["Artist"], "Album (Artist Remix)"),
+        ("[NITI-III]", [], "[NITI-III]"),
     ],
 )
 def test_clean_name(name, extras, expected):

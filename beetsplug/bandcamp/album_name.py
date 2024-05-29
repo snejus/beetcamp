@@ -164,7 +164,6 @@ class AlbumName:
 
         Catalogue number and artists to be removed are provided as 'to_clean'.
         """
-        name = re.sub(r"^\[(.*)\]$", r"\1", name)
         name = cls.CLEAN_CATALOGNUM.sub("", name)
         for w in map(re.escape, filter(None, to_clean)):
             name = re.sub(rf" *(?i:(compiled )?by|vs|\W*split w) {w}", "", name)
@@ -173,12 +172,13 @@ class AlbumName:
             ):
                 name = re.sub(
                     rf"""
-    (?<! x )                    # do not remove Artist2 from 'Artist1 x Artist2'
+    (?<!\ [xX])                    # do not remove Artist2 from 'Artist1 x Artist2'
     (
         (?P<br>[([])        # match either a bracket/parens
       | (^|[^[(\w])+            # or everything that is not bracket/parens/alphanum
     )
     (?i:{w})                    # match the word we want to remove
+    (?!\ [xX]\ )
     (?(br)                      # if we had a bracket/parens match
         [])]                    # then match closing bracket/parens
       | ([^[(\w]|_|(\d+$))*    # otherwise remove any of these patterns
