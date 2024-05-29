@@ -17,11 +17,9 @@ class AlbumName:
     SERIES_FMT = re.compile(rf"^(.+){_series} *0*")
     REMIX_IN_TITLE = re.compile(r"[\( :]+(with re|inc|\+).*mix(\)|(.*$))", re.I)
     CLEAN_EPLP = re.compile(r"(?:[([]|Double ){0,2}(\b[EL]P\b)\S?", re.I)
-    EPLP_ALBUM = re.compile(
-        r"\b((?:(?!VA|Various|-)[^: ]+ )+)([EL]P(?! *\d)(?: [\w#][^ ]+$)?)"
-    )
-    EPLP_ALBUM_LINE = re.compile(r"^[A-Z][\w ]+[EL]P$", re.M)
-    QUOTED_ALBUM = re.compile(r"(['\"])([^'\"]+)\1( VA\d+)*( |$)")
+    EPLP_ALBUM = re.compile(r"\b(?!VA|0\d|-)([^\s:]+\b|[&, ])+ [EL]P\b( [\w#][^ ]+$)?")
+    EPLP_ALBUM_LINE = re.compile(r"\b(?=[A-Z])(((?!Vinyl|VA|-)[^:\s]+ )+)[EL]P$", re.M)
+    QUOTED_ALBUM = re.compile(r"\B(['\"])([^'\"]+)\1\B( VA\d+| [EL]P)?", re.I)
     ALBUM_IN_DESC = re.compile(r"(?:Title: ?|Album(?::|/Single) )([^\n]+)")
     CLEAN_VA_EXCLUDE = re.compile(r"\w various artists \w", re.I)
     CLEAN_VA = re.compile(
@@ -60,11 +58,11 @@ class AlbumName:
         1. If 'EP' or 'LP' is in the original name, album name is what precedes it.
         2. If quotes are used in the title, they probably contain the album name.
         """
-        if m := self.EPLP_ALBUM.search(self.original):
-            return " ".join(i.strip(" '") for i in m.groups())
-
         if m := self.QUOTED_ALBUM.search(self.original):
             return m.expand(r"\2\3")
+
+        if m := self.EPLP_ALBUM.search(self.original):
+            return m.group()
 
         return None
 

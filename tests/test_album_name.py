@@ -84,8 +84,8 @@ def test_parse_title(original, expected):
 @pytest.mark.parametrize(
     "original, comments, catalognum, artists, expected",
     [
-        ("CAT001 - Artist", "Album EP", "CAT001", ["Artist"], "Album EP"),
-        ("CAT001 - Artist", "other Album EP", "CAT001", ["Artist"], "CAT001"),
+        ("CAT001 - Artist", "this Album EP", "CAT001", ["Artist"], "Album EP"),
+        ("CAT001 - Artist", "other Album EP something", "CAT001", ["Artist"], "CAT001"),
         ("CAT001 - Album", "this Album LP", "CAT001", ["Artist"], "Album LP"),
     ],
 )
