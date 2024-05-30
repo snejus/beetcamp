@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
-from functools import lru_cache
+from functools import cached_property
 from itertools import starmap
-from typing import Callable, Generic, Pattern, Tuple, TypeVar
+from typing import Callable, Generic, Iterable, Pattern, Tuple, TypeVar
 
 T = TypeVar("T")
 
@@ -111,51 +111,85 @@ class Catalognum:
     # can possibly be followed up by a second catalogue number
     anywhere = cached_patternprop(rf"({MATCH}(?:\ [-/]\ {MATCH})?)", re.VERBOSE)
 
-    @classmethod
-    @lru_cache
-    def for_label(cls, label: str) -> Pattern[str]:
-        prefixes = {label}
+    release_description: str
+    album: str
+    label: str
+    artists_and_titles: Iterable[str]
+
+    @cached_property
+    def excluded_text(self) -> str:
+        """Words that cannot be matched as a catalogue number."""
+        return " ".join([
+            *self.artists_and_titles,
+            self.label,
+            self.label.replace(" ", ""),
+        ]).lower()
+
+    @cached_property
+    def label_pattern(self) -> Pattern[str]:
+        prefixes = {self.label}
         endings = "Records", "Recordings", "Productions"
-        prefixes |= {label.replace(f" {e}", "") for e in endings}
+        prefixes |= {self.label.replace(f" {e}", "") for e in endings}
 
         for prefix in [p for p in prefixes if " " in p]:
             # add concatenated first letters
             prefixes.add("".join(word[0] for word in prefix.split()))
 
-        if " " in label:
+        if " " in self.label and len(first := self.label.split()[0]) > 1:
             # add the first word too
-            prefixes.add(label.split()[0])
+            prefixes.add(first)
 
         str_pattern = f"(?:{'|'.join(map(re.escape, prefixes))})"
 
-        return re.compile(cls.LABEL_MATCH_TEMPLATE.format(str_pattern), re.VERBOSE)
+        return re.compile(self.LABEL_MATCH_TEMPLATE.format(str_pattern), re.VERBOSE)
 
-    @staticmethod
-    @lru_cache(maxsize=None)
+    @cached_property
+    def in_album_or_release_description(self) -> str | None:
+        """Return the catalogue number found in the album name or release description.
+
+        This is defined as a cached property so that the search is performed once for
+        a certain release.
+        """
+        return self.find([
+            (self.anywhere, self.album),
+            (self.label_pattern, self.album),
+            (self.start_end, self.release_description),
+            (self.anywhere, self.release_description),
+            (self.label_pattern, self.release_description),
+        ])
+
+    def search(self, pat: Pattern[str], string: str) -> str | None:
+        """Search text with the given pattern and return matching catalogue number.
+
+        This returns the first match which is not in the excluded text.
+        """
+        if not string:
+            return None
+
+        for m in pat.finditer(string):
+            catnum = m.group(1).strip()
+            if catnum.lower() not in self.excluded_text:
+                return catnum
+
+        return None
+
     def find(
-        cases: Tuple[Tuple[Pattern[str], str], ...], label: str, artistitles: str
-    ) -> str:
+        self, patterns_and_texts: Iterable[Tuple[Pattern[str], str]]
+    ) -> str | None:
         """Try getting the catalog number using supplied pattern/string pairs."""
 
-        label = label.lower()
-
-        def find(pat: Pattern[str], string: str) -> str:
-            """Return the match.
-
-            It is legitimate if it is
-            * not found in any of the track artists or titles
-            * made of the label name when it has a space and is shorter than 6 chars
-            """
-            for m in pat.finditer(string):
-                catnum = m.group(1).strip()
-                if (
-                    catnum.lower()
-                    not in f"{artistitles}{label}{label.replace(' ', '')}"
-                ):
-                    return catnum
-            return ""
-
         try:
-            return next(filter(None, starmap(find, cases)))
+            return next(filter(None, starmap(self.search, patterns_and_texts)))
         except StopIteration:
-            return ""
+            return None
+
+    def get(self, media_description: str) -> str | None:
+        return (
+            self.find([
+                (self.header, media_description),
+                (self.header, self.release_description),
+                (self.anywhere, media_description),
+                (self.label_pattern, media_description),
+            ])
+            or self.in_album_or_release_description
+        )

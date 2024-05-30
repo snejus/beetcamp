@@ -80,14 +80,18 @@ class Metaguru(Helpers):
     def excluded_fields(self) -> Set[str]:
         return set(self.config.get("exclude_extra_fields") or [])
 
+    @cached_property
+    def description(self) -> str:
+        return self.meta.get("description") or ""
+
+    @cached_property
+    def credits(self) -> str:
+        return self.meta.get("creditText") or ""
+
     @property
     def comments(self) -> Optional[str]:
         """Return concatenated release, media descriptions and credits."""
-        parts = [
-            self.meta.get("description") or "",
-            self.media.description,
-            self.meta.get("creditText") or "",
-        ]
+        parts = [self.description, self.media.description, self.credits]
         sep = self.config["comments_separator"]
         return sep.join(filter(None, parts)).replace("\r", "") or None
 
@@ -188,52 +192,20 @@ class Metaguru(Helpers):
         return self.media.medium_count
 
     @cached_property
-    def label_prefix_catalognum(self) -> str:
-        return Catalognum.find(
-            (
-                (
-                    Catalognum.for_label(self.label),
-                    "\n".join((
-                        *(m.disctitle for m in self.media_formats),
-                        self.meta["name"],
-                        self.media.description,
-                        self.comments or "",
-                    )),
-                ),
-            ),
+    def _catalognum(self) -> Catalognum:
+        """Return catalogue number parser."""
+        return Catalognum(
+            f"{self.description}\n{self.credits}",
+            self.original_album,
             self.label,
-            self._tracks.artistitles,
+            self._tracks.artists_and_titles,
         )
-
-    @cached_property
-    def description_catalognum(self) -> str:
-        """Find catalog number in the media-agnostic release metadata and cache it."""
-        description = self.comments or ""
-        cases = (
-            (Catalognum.header, description),
-            (Catalognum.start_end, description),
-            (Catalognum.anywhere, description),
-        )
-        return Catalognum.find(cases, self.label, self._tracks.artistitles)
-
-    def get_media_catalognum(self, media: MediaInfo) -> str:
-        cases = (
-            (Catalognum.header, media.description),
-            (Catalognum.anywhere, media.disctitle),
-            (Catalognum.anywhere, self.original_album),
-            (Catalognum.anywhere, media.description),
-        )
-        return Catalognum.find(cases, self.label, self._tracks.artistitles)
 
     @property
     def catalognum(self) -> str:
         """Return the first found catalogue number."""
-        return (
-            self._tracks.catalognum
-            or self.get_media_catalognum(self.media)
-            or self.label_prefix_catalognum
-            or self.description_catalognum
-        )
+        media_description = f"{self.media.disctitle}\n{self.media.description}"
+        return self._tracks.catalognum or self._catalognum.get(media_description) or ""
 
     @cached_property
     def country(self) -> str:

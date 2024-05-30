@@ -1,5 +1,7 @@
 import pytest
+
 from beetsplug.bandcamp.metaguru import Metaguru
+
 
 @pytest.mark.parametrize(
     ("album", "disctitle", "description", "label", "expected"),
