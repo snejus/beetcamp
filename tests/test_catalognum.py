@@ -53,3 +53,26 @@ def test_anywhere_catalognum(text, expected):
     m = Catalognum.anywhere.search(text)
 
     assert (m.group(1) if m else "") == expected
+
+
+@pytest.mark.parametrize(
+    ("album, media_description, release_description, label, expected"),
+    [
+        ("Tracker-229 [PRH-002]", "", "", "", "PRH-002"),
+        ("Kulør 001", "", "", "Kulør", "Kulør 001"),
+        ("Emotion 1 - Kulør 008", "Emotion 1 Vinyl", "", "Kulør", "Kulør 008"),
+        ("UTC-003", "", "Catalogue Number: TE0029", "", "TE0029"),
+        ("Hope Works 003", "", "", "Hope Works", "Hope Works 003"),
+        ("Addax EP - WU55", "", "", "", "WU55"),
+        ("BAD001", "Life Without Friction (SSPB008)", "", "", "SSPB008"),
+        ("bad gOOD 001", "", "", "bad GOOD", "bad gOOD 001"),
+        ("", "", "Modularz 40", "Modularz", "Modularz 40"),
+    ],
+)
+def test_catalognum_sources(
+    album, media_description, release_description, label, expected
+):
+    assert (
+        Catalognum(release_description, album, label, []).get(media_description)
+        == expected
+    )

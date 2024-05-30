@@ -97,9 +97,9 @@ class Tracks:
         return self.other_artists | set(self.original_artists)
 
     @cached_property
-    def artistitles(self) -> str:
-        """Returned artists and titles joined into one long string."""
-        return " ".join(it.chain(self.raw_names, self.all_artists)).lower()
+    def artists_and_titles(self) -> Set[str]:
+        """Return a set with all artists and titles."""
+        return set(self.raw_names) | self.all_artists
 
     def adjust_artists(self, albumartist: str) -> None:
         """Handle some track artist edge cases.
