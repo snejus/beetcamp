@@ -96,9 +96,13 @@ class Metaguru(Helpers):
         return sep.join(filter(None, parts)).replace("\r", "") or None
 
     @cached_property
+    def disctitles(self) -> str:
+        return " ".join([m.disctitle for m in self.media_formats if m.disctitle])
+
+    @cached_property
     def all_media_comments(self) -> str:
         return "\n".join([
-            *[m.disctitle for m in self.media_formats],
+            self.disctitles,
             *[m.description for m in self.media_formats],
             self.comments or "",
         ])
@@ -249,10 +253,6 @@ class Metaguru(Helpers):
         return aartist
 
     @cached_property
-    def vinyl_disctitles(self) -> str:
-        return " ".join([m.disctitle for m in self.media_formats if m.name == "Vinyl"])
-
-    @cached_property
     def album_name(self) -> str:
         return self._album_name.get(
             self.catalognum,
@@ -263,20 +263,30 @@ class Metaguru(Helpers):
 
     def _search_albumtype(self, word: str) -> bool:
         """Return whether the given word (ep or lp) matches the release albumtype.
+
         True when one of the following conditions is met:
         * if {word}[0-9] is found in the catalognum
-        * if it's found in the original album name or any vinyl disctitle
-        * if it's found in the same sentence as 'this' or '{album_name}', where
-        sentences are read from release and media descriptions.
+        * if [0-9]?{word} is found in the album name or any disctitle
+        * if {word} is preceded by 'this ...' or 'the' in a sentence in the release or
+          or any media description, like 'this EP'
+        * if {word} and the album_name are found in the same sentence in the release or
+          any media description.
         """
-        sentences = re.split(r"[.]\s+|\n", self.all_media_comments)
-        word_pat = re.compile(rf"\b\d?{word}\b", re.I)
-        catnum_pat = re.compile(rf"{word}\d", re.I)
-        name_pat = re.compile(rf"\b(this|{re.escape(self.album_name)})\b", re.I)
+        text = " ".join(self.all_media_comments.splitlines())
+        sentences = re.split(r"[.]\s+", text.lower())
+
+        word_pat = re.compile(rf"(?<!-)\b\d?{word}\b", re.I)
+        in_catnum = re.compile(rf"{word}\d", re.I)
+        release_ref = re.compile(rf"\b(this[\w\s]*?|the) {word}\b", re.I)
+        album_name = self.album_name.lower()
         return bool(
-            catnum_pat.search(self.catalognum)
-            or word_pat.search(self.original_album + " " + self.vinyl_disctitles)
-            or any(word_pat.search(s) and name_pat.search(s) for s in sentences)
+            in_catnum.search(self.catalognum)
+            or word_pat.search(f"{album_name} {self.disctitles}")
+            or in_catnum.search(text)
+            or any(
+                release_ref.search(s) or (word_pat.search(s) and album_name in s)
+                for s in sentences
+            )
         )
 
     @cached_property
