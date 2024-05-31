@@ -7,6 +7,9 @@
     Remix)**.
   - When a release has the same name as the album artist, do not clean/adjust it.
 
+- `albumtype`:
+  - Identify **LP** release type when Bandcamp media contains a string **2LP** and alike.
+
 - `artist`: handle remix releases with a single title and its remixes. Instead of trying
   to determine the artist from the titles, detect such release and use the given album
   artist.

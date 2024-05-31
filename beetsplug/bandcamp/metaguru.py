@@ -270,7 +270,7 @@ class Metaguru(Helpers):
         sentences are read from release and media descriptions.
         """
         sentences = re.split(r"[.]\s+|\n", self.all_media_comments)
-        word_pat = re.compile(rf"\b{word}\b", re.I)
+        word_pat = re.compile(rf"\b\d?{word}\b", re.I)
         catnum_pat = re.compile(rf"{word}\d", re.I)
         name_pat = re.compile(rf"\b(this|{re.escape(self.album_name)})\b", re.I)
         return bool(
