@@ -41,6 +41,7 @@
 
 - `albumtype`:
   - Identify **LP** release type when Bandcamp media contains a string **2LP** and alike.
+  - Improve accuracy of identifying **EP** and **LP** release types from the description.
 
 - `catalognum`:
   - Extract catalogue numbers from URLs in the description, if present
