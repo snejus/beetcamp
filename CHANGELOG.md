@@ -36,6 +36,9 @@
   - When a release has the same name as the album artist, do not clean/adjust it.
   - When album name is wrapped in brackets, **[ALBUM]**, keep the brackets in place.
 
+- `albumtype`:
+  - Identify **LP** release type when Bandcamp media contains a string **2LP** and alike.
+
 - `catalognum`:
   - Extract catalogue numbers from URLs in the description, if present.
   - Support some new formats: **`UVB76-023`**, **`SOP 061-1233`**, **`a+w lp029`**.
