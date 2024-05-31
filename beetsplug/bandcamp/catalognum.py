@@ -31,7 +31,7 @@ def cached_patternprop(
 @dataclass
 class Catalognum:
     CONSTRAINT_TEMPLATE = r"""
-    (?<![]/@-])         # cannot be preceded by these characters
+    (?<![]/@.-])        # cannot be preceded by these characters
     (?<!by\ )
     (?:
       \b
