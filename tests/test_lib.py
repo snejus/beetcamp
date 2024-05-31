@@ -3,24 +3,22 @@ reference JSONs. Currently they are only executed locally and are based on
 the maintainer's beets library.
 """
 
+from __future__ import annotations
+
 import json
 import os
 from collections import Counter, defaultdict
-from functools import partial
+from dataclasses import dataclass
+from functools import cached_property, partial
 from itertools import groupby, starmap
 from operator import itemgetter
 from pathlib import Path
-from typing import Any, Callable, Dict, List, NamedTuple, Optional, Tuple
+from typing import TYPE_CHECKING, Any, Callable, Dict, Iterable, List, NamedTuple, Tuple
 
 import pytest
-from _pytest.config import Config
-from _pytest.fixtures import FixtureRequest
-from beets import IncludeLazyConfig
-from beets.autotag.hooks import AttrDict
 from beetsplug.bandcamp import BandcampPlugin
 from beetsplug.bandcamp.metaguru import Metaguru
 from rich.console import Group
-from rich.panel import Panel
 from rich.traceback import install
 from rich_tables.utils import (
     NewTable,
@@ -31,6 +29,13 @@ from rich_tables.utils import (
     simple_panel,
     wrap,
 )
+
+if TYPE_CHECKING:
+    from _pytest.config import Config
+    from _pytest.fixtures import FixtureRequest
+    from beets import IncludeLazyConfig
+    from beets.autotag.hooks import AttrDict
+    from rich.panel import Panel
 
 pytestmark = pytest.mark.lib
 
@@ -62,6 +67,7 @@ console = make_console(stderr=True, record=True, highlighter=None)
 
 
 class FieldDiff(NamedTuple):
+    field: str
     old: Any
     new: Any
 
@@ -70,19 +76,71 @@ class FieldDiff(NamedTuple):
         return str(make_difftext(str(self.old), str(self.new)))
 
 
+@dataclass
+class Field:
+    field: str
+    old: Any
+    new: Any
+    cached: Any
+
+    @cached_property
+    def fixed(self) -> bool:
+        return self.old == self.new
+
+    @property
+    def failed_new(self) -> bool:
+        return not self.fixed and self.cached is None
+
+    @cached_property
+    def all_diffs(self) -> List[List[FieldDiff]]:
+        old = self.cached if self.fixed else self.old
+
+        if self.field != "tracks":
+            return [[FieldDiff(self.field, str(old), str(self.new))]]
+
+        tracks_diff = []
+        for old_track, new_track in zip(old, self.new):
+            track_diff = []
+            for field, (old_val, new_val) in zip(
+                TRACK_FIELDS, zip(old_track, new_track)
+            ):
+                track_diff.append(FieldDiff(field, str(old_val), str(new_val)))
+            tracks_diff.append(track_diff)
+
+        return tracks_diff
+
+    @property
+    def diffs(self) -> Iterable[FieldDiff]:
+        for diff_list in self.all_diffs:
+            for diff in diff_list:
+                if diff.old != diff.new:
+                    yield diff
+
+    @property
+    def parts(self) -> List[Tuple[str, str]]:
+        color = "green" if self.fixed else "red" if self.failed_new else ""
+        field = wrap(self.field, f"b {color}")
+
+        return [
+            (field, " | ".join(d.diff for d in d_list)) for d_list in self.all_diffs
+        ]
+
+
 albums: List[Tuple[str, str]] = []
-fixed: List[Tuple[str, str]] = []
-new_fails: List[Tuple[str, str]] = []
+fixed: List[Tuple[str, str, str]] = []
+new_fails: List[Tuple[str, str, str]] = []
 
 
 @pytest.fixture(scope="module")
 def base_dir(pytestconfig: Config) -> Path:
-    return LIB_TESTS_DIR / pytestconfig.getoption("base")
+    base: str = pytestconfig.getoption("base")
+    return LIB_TESTS_DIR / base
 
 
 @pytest.fixture(scope="module")
 def target_dir(pytestconfig: Config) -> Path:
-    target_dir = LIB_TESTS_DIR / pytestconfig.getoption("target")
+    target: str = pytestconfig.getoption("target")
+    target_dir = LIB_TESTS_DIR / target
     target_dir.mkdir(exist_ok=True)
 
     return target_dir
@@ -93,14 +151,16 @@ def config() -> IncludeLazyConfig:
     return BandcampPlugin().config.flatten()
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="session")
 def oldnew() -> Dict[str, List[FieldDiff]]:
     return defaultdict(list)
 
 
 @pytest.fixture(params=sorted(JSONS_DIR.glob("*.json")), ids=str)
 def test_filepath(request: FixtureRequest) -> Path:
-    return request.param
+    path: Path = request.param
+
+    return path
 
 
 @pytest.fixture
@@ -118,19 +178,21 @@ def _fmt_old(s: str, times: int) -> str:
 
 
 @pytest.fixture
-def base(base_dir: Path, test_filepath: Path) -> AttrDict:
+def base(base_dir: Path, test_filepath: Path) -> JSONDict:
     try:
         with (base_dir / test_filepath.name).open() as f:
-            return json.load(f)
+            data: JSONDict = json.load(f)
+            return data
     except FileNotFoundError:
         return {}
 
 
 @pytest.fixture
-def target(target_filepath: Path) -> AttrDict:
+def target(target_filepath: Path) -> JSONDict:
     try:
         with target_filepath.open() as f:
-            return json.load(f)
+            data: JSONDict = json.load(f)
+            return data
     except FileNotFoundError:
         return {}
 
@@ -152,7 +214,7 @@ def escape(string: str) -> str:
     return str(string).replace("[", r"\[")
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="session")
 def _report(oldnew) -> None:
     yield
     cols = []
@@ -176,28 +238,22 @@ def _report(oldnew) -> None:
         console.print("")
         console.print(border_panel(Group(*cols), title="Field diffs"))
 
-    fails = [(wrap(x[0], "red"), x[1]) for x in new_fails if x]
-    fix = [(wrap(x[0], "green"), x[1]) for x in fixed if x]
-    tables = [("Fixed", fix), ("Failed", fails)]
+    fails = [x for x in new_fails if x]
+    fix = [x for x in fixed if x]
+    result_rows = [
+        border_panel(new_table(rows=rows), title=t)
+        for t, rows in [("Fixed", fix), ("Failed", fails)]
+        if rows
+    ]
     if albums:
-        tables.insert(0, ("Albums", albums))
-
+        console.print(border_panel(new_table(rows=albums), title="Albums"))
     console.print("")
-    console.print(
-        new_table(
-            rows=[
-                [
-                    border_panel(new_table(rows=rows), title=t)
-                    for t, rows in tables
-                    if rows
-                ]
-            ]
-        )
-    )
+    if result_rows:
+        console.print(new_table(rows=[result_rows]))
 
 
 @pytest.fixture
-def old(base: JSONDict) -> AttrDict:
+def old(base: JSONDict) -> JSONDict:
     for key in IGNORE_FIELDS:
         base.pop(key, None)
 
@@ -207,8 +263,8 @@ def old(base: JSONDict) -> AttrDict:
 @pytest.fixture
 def new(
     guru: Metaguru,
-    base: AttrDict,
-    target: AttrDict,
+    base: JSONDict,
+    target: JSONDict,
     target_filepath: Path,
     original_name: str,
 ) -> AttrDict:
@@ -224,7 +280,7 @@ def new(
     )
     new.original_name = original_name
 
-    if not target or new not in (base, target):
+    if not target or new != target:
         with target_filepath.open("w") as f:
             json.dump(new, f, indent=2, sort_keys=True)
 
@@ -255,53 +311,24 @@ def entity_id(new: AttrDict) -> str:
     return new["album_id"] if "/album/" in new["data_url"] else new["track_id"]
 
 
-@pytest.fixture(scope="module")
-def do_field(oldnew):
-    def do(
-        table: NewTable,
-        field: str,
-        before: Any,
-        after: Any,
-        cached_value: Optional[Any] = None,
-    ) -> None:
-        if before == after and cached_value is None:
-            return None
+@pytest.fixture
+def do_field(oldnew: Dict[str, List[FieldDiff]], entity_id: str):
+    url = wrap(entity_id, "dim")
 
-        key_fixed = False
-        if before == after:
-            key_fixed = True
-            before = cached_value
+    def do(table: NewTable, field: Field) -> None:
+        if not field.fixed:
+            for diff in field.diffs:
+                oldnew[diff.field].append(diff)
 
-        parts: List[Tuple[str, str]] = []
-        if field == "tracks":
-            for old_track, new_track in [
-                (dict(zip(TRACK_FIELDS, a)), dict(zip(TRACK_FIELDS, b)))
-                for a, b in zip(before, after)
-            ]:
-                field_diffs: List[str] = []
-                for tfield in TRACK_FIELDS:
-                    old, new = old_track[tfield], new_track[tfield]
-                    diff = FieldDiff(str(old), str(new))
-                    field_diffs.append(diff.diff)
-                    if old != new:
-                        oldnew[tfield].append(diff)
-                if field_diffs:
-                    parts.append(("tracks", " | ".join(field_diffs)))
+        parts = field.parts
+        if field.fixed:
+            fixed.extend((*p, url) for p in parts)
         else:
-            diff = FieldDiff(str(before), str(after))
-            parts = [(wrap(field, "b"), diff.diff)]
-            if diff.old != diff.new:
-                oldnew[field].append(diff)
-
-        if key_fixed:
-            fixed.extend(parts)
-            return
-
-        table.add_rows(parts)
-        if cached_value is None:
-            new_fails.extend(parts)
-        else:
-            albums.extend(parts)
+            table.add_rows(parts)
+            if field.failed_new:
+                new_fails.extend((*p, url) for p in parts)
+            else:
+                albums.extend(parts)
 
     return do
 
@@ -326,7 +353,11 @@ def difference(
             continue
 
         cache_key = f"{entity_id}_{field}"
-        compare_field(field, old_val, new_val, cached_value=cache.get(cache_key, None))
+        cached_value = cache.get(cache_key, None)
+        if old_val == new_val and cached_value is None:
+            continue
+
+        compare_field(Field(field, old_val, new_val, cached_value))
         if old_val != new_val:
             backup = new_val or ""
             fail = True
