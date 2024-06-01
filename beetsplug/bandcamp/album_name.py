@@ -1,9 +1,11 @@
 """Module with album parsing logic."""
 
+from __future__ import annotations
+
 import re
 from dataclasses import dataclass
 from functools import cached_property
-from typing import Any, Dict, List, Match, Optional
+from typing import Any, Dict, Match
 
 from .helpers import PATTERNS, Helpers
 
@@ -33,19 +35,19 @@ class AlbumName:
     CLEAN_CATALOGNUM = re.compile(
         r"""
           (^[A-Z]+\d+\ [|-]\ )
-        | [^\w)]*\[[A-Z]+\d+\]
+        | [^[\w)]*?\[[A-Z]+\d+\]
     """,
         re.VERBOSE,
     )
 
     original: str
     description: str
-    from_track_titles: Optional[str]
+    from_track_titles: str | None
 
     remove_artists = True
 
     @cached_property
-    def from_description(self) -> Optional[str]:
+    def from_description(self) -> str | None:
         """Try finding album name in the release description."""
         if m := self.ALBUM_IN_DESC.search(self.description):
             self.remove_artists = False
@@ -58,7 +60,7 @@ class AlbumName:
         return bool(self.COMPILATION_IN_TITLE.search(self.original))
 
     @cached_property
-    def from_title(self) -> Optional[str]:
+    def from_title(self) -> str | None:
         """Try to guess album name from the original title.
 
         Return the first match from below, defaulting to None:
@@ -74,7 +76,7 @@ class AlbumName:
         return None
 
     @cached_property
-    def album_names(self) -> List[str]:
+    def album_names(self) -> list[str]:
         priority_list = [
             self.from_track_titles,
             self.from_description,
@@ -88,7 +90,7 @@ class AlbumName:
         return next(iter(self.album_names))
 
     @cached_property
-    def series_part(self) -> Optional[str]:
+    def series_part(self) -> str | None:
         """Return series if it is found in any of the album names."""
         for name in self.album_names:
             if m := self.SERIES.search(name):
@@ -157,7 +159,7 @@ class AlbumName:
         return name
 
     @classmethod
-    def clean(cls, name: str, to_clean: List[str], label: str = "") -> str:
+    def clean(cls, name: str, to_clean: list[str], label: str = "") -> str:
         """Return clean album name.
 
         Catalogue number and artists to be removed are provided as 'to_clean'.
@@ -216,8 +218,8 @@ class AlbumName:
     def get(
         self,
         catalognum: str,
-        original_artists: List[str],
-        artists: List[str],
+        original_artists: list[str],
+        artists: list[str],
         label: str,
     ) -> str:
         original_album = self.name
