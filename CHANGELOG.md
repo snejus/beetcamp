@@ -49,7 +49,8 @@
   - Improve accuracy of identifying **EP** and **LP** release types from the description.
 
 - `catalognum`:
-  - Add support for new formats: **`UVB76-023`**, **`SOP 061-1233`**, **`a+w lp029`**.
+  - Add support for new formats: **`UVB76-023`**, **`SOP 061-1233`**, **`a+w lp029`**,
+    **`SK11X015`**.
   - Parse label-like catalogue numbers for singletons too.
   - When searching for a catalogue number which is prefixed by the label name
     1. Take two versions of the label name
