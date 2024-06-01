@@ -332,7 +332,7 @@ class Metaguru(Helpers):
         truly_unique = set(map(first_one, self.tracks.artists))
         return (
             self._album_name.mentions_compilation
-            or self._search_albumtype("compilation")
+            or (len(truly_unique) > 1 and self._search_albumtype("compilation"))
             or (len(truly_unique) > 3 and len(self.tracks) > 4)
         )
 
