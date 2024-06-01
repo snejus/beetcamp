@@ -2,6 +2,16 @@
 
 ### Fixed
 
+- `album`:
+  - Keep remix artist in place within 'remix' parentheses, such as **Album (Artist
+    Remix)**
+  - When a release has the same name as the album artist, do not clean/adjust it.
+  - Do not remove **EP** or **LP** from the beginning of the album name.
+
+- `albumtype`:
+  - Identify **LP** release type when Bandcamp media contains a string **2LP** and alike.
+  - Do not include **compilation** albumtype if there is only one track in the release.
+
 - `artist`: handle remix releases with a single title and its remixes. Instead of trying
   to determine the artist from the titles, detect such release and use the given album
   artist.
@@ -34,20 +44,15 @@
 - `album`:
   - Remove **all** catalogue numbers from album name. Previously, we only removed the
     valid catalogue number found in the data.
-  - Keep remix artist in place within 'remix' parentheses, such as **Album (Artist
-    Remix)**
-  - When a release has the same name as the album artist, do not clean/adjust it.
   - When album name is wrapped in brackets, **[ALBUM]**, keep the brackets in place.
 
 - `albumtype`:
-  - Identify **LP** release type when Bandcamp media contains a string **2LP** and alike.
   - Improve accuracy of identifying **EP** and **LP** release types from the description.
-  - Do not include **compilation** albumtype if there is only one track in the release.
 
 - `catalognum`:
   - Extract catalogue numbers from URLs in the description, if present
   - Support some new formats: **`UVB76-023`**, **`SOP 061-1233`**, **`a+w lp029`**
-  - Enable parsing catalogue numbers that contain label name for _single_ releases
+  - Enable parsing catalogue numbers that contain label name for _single_ releases too
   - When searching for a catalogue number which is prefixed by the label name
     1. Take two versions of the label name
        1. Original one
