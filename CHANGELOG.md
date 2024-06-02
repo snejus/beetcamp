@@ -11,7 +11,8 @@
     **`VA`**.
 
 - cleanup:
-  - Remove **`(... preview)`**, **`free dl`** from album and track names.
+  - Remove **`(... preview)`**, **`free dl`**, **`Name Your Price:`** from album and track
+    names.
 
 - `albumtype`:
   - Identify **LP** release type when Bandcamp media contains a string **2LP** and alike.
