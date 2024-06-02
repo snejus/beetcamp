@@ -10,6 +10,9 @@
   - Remove **`V.A`** from the beginning of the album name, in the same way we remove
     **`VA`**.
 
+- cleanup:
+  - Remove **`(... preview)`**, **`free dl`** from album and track names.
+
 - `albumtype`:
   - Identify **LP** release type when Bandcamp media contains a string **2LP** and alike.
 
