@@ -7,6 +7,8 @@
     Remix)**.
   - When a release has the same name as the album artist, do not clean/adjust it.
   - Do not remove **EP** or **LP** from the beginning of the album name.
+  - Remove **`V.A`** from the beginning of the album name, in the same way we remove
+    **`VA`**.
 
 - `albumtype`:
   - Identify **LP** release type when Bandcamp media contains a string **2LP** and alike.

@@ -24,7 +24,7 @@ class AlbumName:
     CLEAN_VA_EXCLUDE = re.compile(r"\w various artists \w", re.I)
     CLEAN_VA = re.compile(
         r"""
-          (?<=^)v/?a\b(?!\ \w)[^A-z(]*
+          (?<=^)v[./]?a\b(?!\ \w)[^A-z(]*
         | \W*Various\ Artists?\b(?!\ [A-z])[^A-z(]*
     """,
         re.IGNORECASE + re.VERBOSE,
