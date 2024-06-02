@@ -11,7 +11,7 @@
     and now it also includes the dot.
 
 - `album` / `title`:
-  - Remove **`(... preview)`**, **`free dl`** from album and track names.
+  - Remove **`(... preview)`**, **`free dl`**, **`Name Your Price:`**
 
 - `albumtype`:
   - Identify **LP** release type when Bandcamp media contains a string **2LP** and alike.
