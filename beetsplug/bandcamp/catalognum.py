@@ -112,29 +112,44 @@ class Catalognum:
     # can possibly be followed up by a second catalogue number
     anywhere = cached_patternprop(rf"({MATCH}(?:\ [-/]\ {MATCH})?)", re.VERBOSE)
 
+    label_suffix = cached_patternprop(
+        r" (?:Records|Recordings|Productions|Music)$", re.I
+    )
+    punctuation = cached_patternprop(r"\W")
+
     release_description: str
     album: str
     label: str
     artists_and_titles: Iterable[str]
 
     @cached_property
+    def label_variations(self) -> set[str]:
+        """Return variations of the label name.
+
+        This includes the label name without any punctuation and suffixes.
+        """
+        variations = {self.label, self.label_suffix.sub("", self.label)}
+        variations |= {self.punctuation.sub("", v) for v in variations}
+
+        return variations
+
+    @cached_property
     def excluded_text(self) -> str:
         """Words that cannot be matched as a catalogue number."""
-        return " ".join([
-            *self.artists_and_titles,
-            self.label,
-            self.label.replace(" ", ""),
-        ]).lower()
+        return " ".join([*self.artists_and_titles, *self.label_variations]).lower()
 
     @cached_property
     def label_pattern(self) -> Pattern[str]:
-        prefixes = {self.label}
-        endings = "Records", "Recordings", "Productions"
-        prefixes |= {self.label.replace(f" {e}", "") for e in endings}
+        """Pattern to match catalogue numbers prefixed by the label name.
+
+        Extend label variations with acronyms and the first word of the label.
+        Return the pattern where each variation is OR'ed together.
+        """
+        prefixes = self.label_variations
 
         for prefix in [p for p in prefixes if " " in p]:
-            # add concatenated first letters
-            prefixes.add("".join(word[0] for word in prefix.split()))
+            acronym = "".join(word[0] for word in prefix.split())
+            prefixes.add(acronym)
 
         if " " in self.label and len(first := self.label.split()[0]) > 1:
             # add the first word too

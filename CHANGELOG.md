@@ -53,22 +53,26 @@
     **`SK11X015`**.
   - Parse label-like catalogue numbers for singletons too.
   - When searching for a catalogue number which is prefixed by the label name
-    1. Take two versions of the label name
+    1. Take two variations of the label name
        1. Original one
-       2. Without **Records**, **Recordings**, **Productions** endings
-    2. For each
-       1. Use it as the first prefix
-       2. If it has multiple words, take first letter of each word and concatenate them.
-          Then, use it a prefix too.
-    3. If the original label has multiple words, also try using the first word as a prefix
+       2. Without **Records**, **Recordings**, **Productions**, **Music** endings
+    2. Form prefixes from each variation
+       1. The original variation
+       2. With punctuation and spaces removed
+       3. Its acronym when it has multiple words
+    3. Lastly, if the original label has multiple words, use the first word as another
+       possible prefix.
 
     For example, for a label named **Diffuse Reality Records**, the plugin is able to
-    recognise the following catalogue numbers (case insensitively)
-    - **Diffuse Reality Records001**
-    - **DRR001**
-    - **Diffuse Reality001**
-    - **DR001**
-    - **Diffuse001**
+    recognize the following catalogue numbers (case insensitively)
+    - **Diffuse Reality Records**001
+    - **DiffuseRealityRecords**001
+    - **DRR**001
+    - **Diffuse Reality**001
+    - **DiffuseReality**001
+    - **DR**001
+    - **Diffuse**001
+
   - Parse catalogue number from the description when the header is followed by a hash
     symbol, like **CAT#: ABC-123**.
   - Properly catch catalogue number suffix **RP**.
