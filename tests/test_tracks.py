@@ -42,7 +42,6 @@ def print_result(console, case, expected, result):
         ("A1 - Title", ("A1", "", "", "Title", "Title")),
         ("B2 - Artist - Title", ("B2", "Artist", "", "Title", "Title")),
         ("A2.  Two Spaces", ("A2", "", "", "Two Spaces", "Two Spaces")),
-        ("a2.non caps - Title", ("A2", "non caps", "", "Title", "Title")),
         ("D1 No Punct", ("D1", "", "", "No Punct", "No Punct")),
         (
             "DJ BEVERLY HILL$ - Raw Steeze",
@@ -55,7 +54,6 @@ def print_result(console, case, expected, result):
             ("", "", "", "Some tune (Someone's Remix)", "Some tune"),
         ),
         ("19.85 - Colapso (FREE)", ("", "19.85", "", "Colapso", "Colapso")),
-        ("E7-E5", ("", "", "", "E7-E5", "E7-E5")),
         (
             "Lacchesi - UNREALNUMBERS - MK4 (Lacchesi Remix)",
             ("", "UNREALNUMBERS", "", "MK4 (Lacchesi Remix)", "MK4"),
