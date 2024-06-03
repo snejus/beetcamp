@@ -101,43 +101,58 @@ class Tracks:
         """Return a set with all artists and titles."""
         return set(self.raw_names) | self.all_artists
 
-    def adjust_artists(self, albumartist: str) -> None:
-        """Handle some track artist edge cases.
+    def allocate_track_alt(self, track_alt: str) -> None:
+        """Move the track_alt back to artist or title for the tracks that have it.
 
-        These checks require knowledge of the entire release, therefore cannot be
-        performed within the context of a single track.
-
-        * When artist name is mistaken for the track_alt
-        * When artist and title are delimited by '-' without spaces
-        * When artist and title are delimited by a UTF-8 dash equivalent
-        * Defaulting to the album artist
+        Loop across tracks that have track_alt and:
+        1. Make it the artist if track does not already have it, and (at least one
+           other artist was found or the same track_alt ended up on each track).
+        2. Return it to the beginning of the title otherwise
         """
-        track_alts = {t.track_alt for t in self.tracks if t.track_alt}
-        artists = [t.artist for t in self.tracks if t.artist]
+        track_alt_tracks = [t for t in self.tracks if t.track_alt]
 
-        for t in [track for track in self.tracks if not track.artist]:
-            if t.track_alt and len(track_alts) == 1:  # only one track_alt
-                # the only track that parsed a track alt - it's most likely a mistake
-                # one artist was confused for a track alt, like 'B2', - reverse this
-                t.artist, t.track_alt = t.track_alt, None
-            elif len(artists) == len(self) - 1:  # only 1 missing artist
-                # if this is a remix and the parsed title is part of the albumartist or
-                # is one of the track artists, we made a mistake parsing the remix:
-                #  it is most probably the edge case where the `title_without_remix` is a
-                #  legitimate artist and the track title is something like 'Hello Remix'
-                if t.remix and (t.title_without_remix in albumartist):
-                    t.artist, t.title = t.title_without_remix, t.remix.remix
-                # this is the only artist that didn't get parsed - relax the rule
-                # and try splitting with '-' without spaces
-                split = t.title.split("-")
-                if len(split) == 1:
-                    # attempt to split by another ' ? ' where '?' may be some utf-8
-                    # alternative of a dash
-                    split = [
-                        s for s in TrackNames.DELIMITER_PAT.split(t.title) if len(s) > 1
-                    ]
-                if len(split) > 1:
+        same_track_alt_on_all = len(track_alt_tracks) == len(self)
+        parsed_any_artists = any(t for t in self.tracks if t.artist)
+
+        may_set_artist = parsed_any_artists or same_track_alt_on_all
+        for t in track_alt_tracks:
+            if not t.artist and may_set_artist:
+                t.artist = track_alt
+            else:
+                t.title = t.json_item["name"]
+            t.track_alt = None
+
+    def set_missing_artists(self, missing_count: int, albumartist: str) -> None:
+        """Set artist for tracks that do not have it.
+
+        If only one artist is missing, check whether the title can be split by '-'
+        without spaces or some other UTF-8 equivalent (most likely an alternative
+        representation of a dash).
+
+        Otherwise, use the albumartist as the default.
+        """
+        tracks_without_artist = [t for t in self.tracks if not t.artist]
+        if missing_count < len(self) / 2:
+            for t in tracks_without_artist:
+                # split the title by '-' (without spaces) or something unknown in ' ? '
+                if (
+                    len(split := t.title.split("-")) > 1
+                    or len(split := TrackNames.SEPARATOR_PAT.split(t.title)) > 1
+                ):
                     t.artist, t.title = split
-            if not t.artist:
-                # default to the albumartist
-                t.artist = albumartist
+
+        for t in (t for t in self.tracks if not t.artist):
+            # default to the albumartist
+            t.artist = albumartist
+
+    def post_process(self, albumartist: str) -> None:
+        """Perform adjustments that require knowledge of all parsed tracks.
+
+        Context of a single track is not enough to handle these edge cases.
+        """
+        unique_track_alts = {t.track_alt for t in self.tracks if t.track_alt}
+        if len(unique_track_alts) == 1 and len(self) > 1:
+            self.allocate_track_alt(unique_track_alts.pop())
+
+        if missing_artist_count := sum(1 for t in self.tracks if not t.artist):
+            self.set_missing_artists(missing_artist_count, albumartist)
