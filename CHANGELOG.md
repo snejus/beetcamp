@@ -43,6 +43,12 @@
 
 - `title`: Remove track number from the beginning of the title more reliably.
 
+- `track`:
+  - `artist` / `title` / `track_alt`: Handle edge cases where `track_alt` is followed by a
+    single dash. Some instances were previously ignored.
+  - `artist` / `title` / `track_alt`: fix several artists and titles which had pieces
+    incorrectly identified as `track_alt`.
+
 ### Added
 
 - Auto-Tagger: Wider search analogous to cli search query as a fallback for bad or missing

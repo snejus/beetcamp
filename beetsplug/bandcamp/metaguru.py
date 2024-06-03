@@ -228,7 +228,7 @@ class Metaguru(Helpers):
 
     @cached_property
     def tracks(self) -> Tracks:
-        self._tracks.adjust_artists(self.bandcamp_albumartist)
+        self._tracks.post_process(self.bandcamp_albumartist)
         return self._tracks
 
     @cached_property

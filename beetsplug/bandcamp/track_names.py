@@ -20,7 +20,7 @@ class TrackNames:
 
     # Title [Some Album EP]
     ALBUM_IN_TITLE = re.compile(r"[- ]*\[([^\]]+ [EL]P)\]+", re.I)
-    DELIMITER_PAT = re.compile(r" ([^\w&()+/[\] ]) ")
+    SEPARATOR_PAT = re.compile(r" [^\w&()+/[\]] ")
     TITLE_IN_QUOTES = re.compile(r'^(.+[^ -])[ -]+"([^"]+)"$')
     NUMBER_PREFIX = re.compile(r"((?<=^)|(?<=- ))\d{1,2}[\W\s]+(?=\D)")
 
@@ -79,8 +79,8 @@ class TrackNames:
         """
 
         def get_delim(string: str) -> str:
-            m = cls.DELIMITER_PAT.search(string)
-            return m.group(1) if m else "-"
+            m = cls.SEPARATOR_PAT.search(string)
+            return m.group().strip() if m else "-"
 
         delim, count = Counter(map(get_delim, names)).most_common(1).pop()
         return delim if (len(names) == 1 or count > len(names) / 2) else "-"

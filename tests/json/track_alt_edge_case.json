@@ -1,0 +1,367 @@
+{
+  "@context": "https://schema.org",
+  "@id": "https://sambarker.bandcamp.com/album/barker002",
+  "@type": "MusicAlbum",
+  "additionalProperty": [
+    {
+      "@type": "PropertyValue",
+      "name": "art_id",
+      "value": 2212440627
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "featured_track_num",
+      "value": 1
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "license_name",
+      "value": "all_rights_reserved"
+    }
+  ],
+  "albumRelease": [
+    {
+      "@id": "https://sambarker.bandcamp.com/album/barker002",
+      "@type": [
+        "MusicRelease",
+        "Product"
+      ],
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "item_id",
+          "value": 3883442523
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "item_type",
+          "value": "a"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "selling_band_id",
+          "value": 2920024821
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_name",
+          "value": "Digital"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "art_id",
+          "value": 2212440627
+        }
+      ],
+      "description": "Includes high-quality download in MP3, FLAC and more. Paying supporters also get unlimited streaming via the free Bandcamp app.",
+      "identifier": "4250101429316",
+      "image": [
+        "https://f4.bcbits.com/img/a2212440627_10.jpg"
+      ],
+      "musicReleaseFormat": "DigitalFormat",
+      "name": "BARKER002",
+      "recordLabel": {
+        "@id": "https://ostgut.bandcamp.com",
+        "@type": "MusicGroup",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "url_suffix",
+            "value": "?from=btl"
+          }
+        ],
+        "name": "Ostgut Ton"
+      }
+    },
+    {
+      "@id": "https://sambarker.bandcamp.com/album/barker002#p3602645633",
+      "@type": [
+        "MusicRelease",
+        "Product"
+      ],
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "item_id",
+          "value": 3602645633
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "item_type",
+          "value": "p"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "selling_band_id",
+          "value": 2920024821
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_name",
+          "value": "Vinyl LP"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "image_ids",
+          "value": [
+            25441286
+          ]
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "is_music_merch",
+          "value": true
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "type_id",
+          "value": 2
+        }
+      ],
+      "description": "Hand-stamped vinyl.\n\nTracklisting:\nA1. E7-E5\nA2. Bent\nB. Polytely",
+      "image": [
+        "https://f4.bcbits.com/img/0025441286_10.jpg"
+      ],
+      "musicReleaseFormat": "VinylFormat",
+      "name": "12\" | stamped white-label",
+      "offers": {
+        "@type": "Offer",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "includes_digital_download",
+            "value": true
+          }
+        ],
+        "availability": "SoldOut",
+        "price": 10.0,
+        "priceCurrency": "EUR",
+        "priceSpecification": {
+          "minPrice": 10.0
+        },
+        "url": "https://sambarker.bandcamp.com/album/barker002#p3602645633-buy"
+      }
+    },
+    {
+      "@id": "https://sambarker.bandcamp.com/track/e7-e5",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://sambarker.bandcamp.com/track/bent",
+      "@type": "MusicRelease"
+    },
+    {
+      "@id": "https://sambarker.bandcamp.com/track/polytely",
+      "@type": "MusicRelease"
+    }
+  ],
+  "albumReleaseType": "AlbumRelease",
+  "byArtist": {
+    "@id": "https://sambarker.bandcamp.com",
+    "@type": "MusicGroup",
+    "name": "Barker"
+  },
+  "copyrightNotice": "All Rights Reserved",
+  "creditText": "Written and produced by Sam Barker\r\nPublished by Ostgut Verlag\r\nMastering Stefan Betke at Scape Mastering, Berlin",
+  "dateModified": "07 Jul 2021 22:39:35 GMT",
+  "datePublished": "07 May 2021 00:00:00 GMT",
+  "description": "Follow-up to 2019’s BARKER001.\r\n\r\nAvailable now for digital download and hand-stamped 12\" vinyl in all shops.",
+  "image": "https://f4.bcbits.com/img/a2212440627_10.jpg",
+  "keywords": [
+    "Barker",
+    "Barker & Baumecker",
+    "Berghain",
+    "Electronic",
+    "Leisure System",
+    "Ostgut Ton",
+    "Sam Barker",
+    "Techno",
+    "Berlin"
+  ],
+  "mainEntityOfPage": "https://sambarker.bandcamp.com/album/barker002",
+  "name": "BARKER002",
+  "numTracks": 3,
+  "publisher": {
+    "@id": "https://sambarker.bandcamp.com",
+    "@type": "MusicGroup",
+    "additionalProperty": [
+      {
+        "@type": "PropertyValue",
+        "name": "band_id",
+        "value": 124210634
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "has_any_downloads",
+        "value": true
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "has_download_codes",
+        "value": true
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_height",
+        "value": 1200
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_id",
+        "value": 24780487
+      },
+      {
+        "@type": "PropertyValue",
+        "name": "image_width",
+        "value": 1800
+      }
+    ],
+    "event": [
+      {
+        "@type": "MusicEvent",
+        "location": {
+          "@type": "MusicVenue",
+          "address": "Brussels, Belgium",
+          "name": "Paradise City Festival"
+        },
+        "name": "Paradise City Festival, Brussels, Belgium",
+        "startDate": "28 Jun 2024 00:00:00 GMT",
+        "url": "https://www.songkick.com/festivals/1310373-paradise-city/id/41679626-paradise-city-festival-2024?utm_source=1471&utm_medium=partner"
+      },
+      {
+        "@type": "MusicEvent",
+        "location": {
+          "@type": "MusicVenue",
+          "address": "Chicago, IL",
+          "name": "North Avenue Beach"
+        },
+        "name": "North Avenue Beach, Chicago, IL",
+        "startDate": "29 Jun 2024 00:00:00 GMT",
+        "url": "https://www.songkick.com/festivals/3348074-beach-house/id/41984834-beach-house-2024?utm_source=1471&utm_medium=partner"
+      }
+    ],
+    "foundingLocation": {
+      "@type": "Place",
+      "name": "Berlin, Germany"
+    },
+    "genre": "https://bandcamp.com/discover/electronic",
+    "image": "https://f4.bcbits.com/img/0024780487_10.jpg",
+    "name": "Barker",
+    "subjectOf": [
+      {
+        "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "m"
+          }
+        ],
+        "name": "music",
+        "url": "https://sambarker.bandcamp.com/music"
+      },
+      {
+        "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "p"
+          }
+        ],
+        "name": "merch",
+        "url": "https://sambarker.bandcamp.com/merch"
+      },
+      {
+        "@type": "WebPage",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "nav_type",
+            "value": "c"
+          }
+        ],
+        "name": "community",
+        "url": "https://sambarker.bandcamp.com/community"
+      }
+    ]
+  },
+  "track": {
+    "@type": "ItemList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://sambarker.bandcamp.com/track/e7-e5",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 2395076030
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H06M01S",
+          "mainEntityOfPage": "https://sambarker.bandcamp.com/track/e7-e5",
+          "name": "E7-E5"
+        },
+        "position": 1
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://sambarker.bandcamp.com/track/bent",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 3512243087
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H07M08S",
+          "mainEntityOfPage": "https://sambarker.bandcamp.com/track/bent",
+          "name": "Bent"
+        },
+        "position": 2
+      },
+      {
+        "@type": "ListItem",
+        "item": {
+          "@id": "https://sambarker.bandcamp.com/track/polytely",
+          "@type": "MusicRecording",
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "track_id",
+              "value": 3496746148
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "license_name",
+              "value": "all_rights_reserved"
+            }
+          ],
+          "copyrightNotice": "All Rights Reserved",
+          "duration": "P00H06M28S",
+          "mainEntityOfPage": "https://sambarker.bandcamp.com/track/polytely",
+          "name": "Polytely"
+        },
+        "position": 3
+      }
+    ],
+    "numberOfItems": 3
+  }
+}
