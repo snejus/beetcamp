@@ -41,6 +41,8 @@
 - `media`: ignore subscription type Bandcamp media format which returns a duplicate
   digital media.
 
+- `title`: Remove track number from the beginning of the title more reliably.
+
 ### Added
 
 - Auto-Tagger: Wider search analogous to cli search query as a fallback for bad or missing
