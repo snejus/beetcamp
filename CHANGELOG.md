@@ -41,6 +41,8 @@
 - `media`: ignore subscription type Bandcamp media format which returns a duplicate
   digital media format
 
+- `title`: Remove track number from the beginning of the title more reliably.
+
 - search: remove character **&** from the search query which Bandcamp often fails to
   handle
 

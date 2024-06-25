@@ -130,7 +130,7 @@ class Track:
 
         # Remove leading index
         if index:
-            name = re.sub(rf"^0*{index}(?!\W\d)\W+", "", name)
+            name = re.sub(rf"^0?{index}\W\W+", "", name)
 
         # find the remixer and remove it from the name
         remix = Remix.from_name(name)
