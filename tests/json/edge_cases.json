@@ -61,7 +61,7 @@
       "name": "NYH244 Less Weird Parallel Universe  - Nearly 20 Years of Erikoisdance"
     },
     {
-      "@id": "https://newyorkhaunted.bandcamp.com/album/nyh244-less-weird-parallel-universe-nearly-20-years-of-erikoisdance#b59859656",
+      "@id": "https://newyorkhaunted.bandcamp.com/album/nyh244-less-weird-parallel-universe-nearly-20-years-of-erikoisdance#b64008957",
       "@type": [
         "MusicRelease",
         "Product"
@@ -70,7 +70,7 @@
         {
           "@type": "PropertyValue",
           "name": "item_id",
-          "value": 59859656
+          "value": 64008957
         },
         {
           "@type": "PropertyValue",
@@ -90,7 +90,7 @@
         {
           "@type": "PropertyValue",
           "name": "art_id",
-          "value": 4281703832
+          "value": 3123383167
         },
         {
           "@type": "PropertyValue",
@@ -99,17 +99,17 @@
         }
       ],
       "image": [
-        "https://f4.bcbits.com/img/a4281703832_10.jpg"
+        "https://f4.bcbits.com/img/a3123383167_10.jpg"
       ],
       "musicReleaseFormat": "DigitalFormat",
-      "name": "full digital discography (383 releases)",
+      "name": "full digital discography (389 releases)",
       "offers": {
         "@type": "Offer",
         "additionalProperty": [
           {
             "@type": "PropertyValue",
             "name": "bundle_size",
-            "value": 383
+            "value": 389
           },
           {
             "@type": "PropertyValue",
@@ -118,12 +118,12 @@
           }
         ],
         "availability": "OnlineOnly",
-        "price": 183.07,
+        "price": 184.88,
         "priceCurrency": "EUR",
         "priceSpecification": {
-          "minPrice": 183.07
+          "minPrice": 184.88
         },
-        "url": "https://newyorkhaunted.bandcamp.com/album/nyh244-less-weird-parallel-universe-nearly-20-years-of-erikoisdance#b59859656-buy"
+        "url": "https://newyorkhaunted.bandcamp.com/album/nyh244-less-weird-parallel-universe-nearly-20-years-of-erikoisdance#b64008957-buy"
       }
     },
     {
