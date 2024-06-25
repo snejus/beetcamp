@@ -61,7 +61,7 @@
       "name": "HEX002 | From The Depths"
     },
     {
-      "@id": "https://hexbarcelona.bandcamp.com/album/hex002-from-the-depths#b59258785",
+      "@id": "https://hexbarcelona.bandcamp.com/album/hex002-from-the-depths#b62135872",
       "@type": [
         "MusicRelease",
         "Product"
@@ -70,7 +70,7 @@
         {
           "@type": "PropertyValue",
           "name": "item_id",
-          "value": 59258785
+          "value": 62135872
         },
         {
           "@type": "PropertyValue",
@@ -90,7 +90,7 @@
         {
           "@type": "PropertyValue",
           "name": "art_id",
-          "value": 464287237
+          "value": 1478320212
         },
         {
           "@type": "PropertyValue",
@@ -99,17 +99,17 @@
         }
       ],
       "image": [
-        "https://f4.bcbits.com/img/a0464287237_10.jpg"
+        "https://f4.bcbits.com/img/a1478320212_10.jpg"
       ],
       "musicReleaseFormat": "DigitalFormat",
-      "name": "full digital discography (48 releases)",
+      "name": "full digital discography (56 releases)",
       "offers": {
         "@type": "Offer",
         "additionalProperty": [
           {
             "@type": "PropertyValue",
             "name": "bundle_size",
-            "value": 48
+            "value": 56
           },
           {
             "@type": "PropertyValue",
@@ -118,12 +118,12 @@
           }
         ],
         "availability": "OnlineOnly",
-        "price": 154.7,
+        "price": 164.7,
         "priceCurrency": "EUR",
         "priceSpecification": {
-          "minPrice": 154.7
+          "minPrice": 164.7
         },
-        "url": "https://hexbarcelona.bandcamp.com/album/hex002-from-the-depths#b59258785-buy"
+        "url": "https://hexbarcelona.bandcamp.com/album/hex002-from-the-depths#b62135872-buy"
       }
     },
     {

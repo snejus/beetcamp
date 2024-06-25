@@ -61,7 +61,7 @@
       "name": "UNREALNUMBERS - Unseen EP (Varya Karpova & Lacchesi Remixes)"
     },
     {
-      "@id": "https://maisoncloserecords.bandcamp.com/album/unrealnumbers-unseen-ep-varya-karpova-lacchesi-remixes#b58770622",
+      "@id": "https://maisoncloserecords.bandcamp.com/album/unrealnumbers-unseen-ep-varya-karpova-lacchesi-remixes#b60031766",
       "@type": [
         "MusicRelease",
         "Product"
@@ -70,7 +70,7 @@
         {
           "@type": "PropertyValue",
           "name": "item_id",
-          "value": 58770622
+          "value": 60031766
         },
         {
           "@type": "PropertyValue",
@@ -90,7 +90,7 @@
         {
           "@type": "PropertyValue",
           "name": "art_id",
-          "value": 1045504419
+          "value": 1929969803
         },
         {
           "@type": "PropertyValue",
@@ -99,17 +99,17 @@
         }
       ],
       "image": [
-        "https://f4.bcbits.com/img/a1045504419_10.jpg"
+        "https://f4.bcbits.com/img/a1929969803_10.jpg"
       ],
       "musicReleaseFormat": "DigitalFormat",
-      "name": "full digital discography (21 releases)",
+      "name": "full digital discography (22 releases)",
       "offers": {
         "@type": "Offer",
         "additionalProperty": [
           {
             "@type": "PropertyValue",
             "name": "bundle_size",
-            "value": 21
+            "value": 22
           },
           {
             "@type": "PropertyValue",
@@ -118,12 +118,12 @@
           }
         ],
         "availability": "OnlineOnly",
-        "price": 106.2,
+        "price": 118.2,
         "priceCurrency": "EUR",
         "priceSpecification": {
-          "minPrice": 106.2
+          "minPrice": 118.2
         },
-        "url": "https://maisoncloserecords.bandcamp.com/album/unrealnumbers-unseen-ep-varya-karpova-lacchesi-remixes#b58770622-buy"
+        "url": "https://maisoncloserecords.bandcamp.com/album/unrealnumbers-unseen-ep-varya-karpova-lacchesi-remixes#b60031766-buy"
       }
     },
     {
@@ -192,7 +192,7 @@
       {
         "@type": "PropertyValue",
         "name": "image_id",
-        "value": 31964905
+        "value": 35867146
       },
       {
         "@type": "PropertyValue",
@@ -205,7 +205,7 @@
       "name": "Paris, France"
     },
     "genre": "https://bandcamp.com/discover/electronic",
-    "image": "https://f4.bcbits.com/img/0031964905_10.jpg",
+    "image": "https://f4.bcbits.com/img/0035867146_10.jpg",
     "mainEntityOfPage": [
       {
         "@type": "WebPage",

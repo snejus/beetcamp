@@ -327,56 +327,12 @@
         "@type": "MusicEvent",
         "location": {
           "@type": "MusicVenue",
-          "address": "Berlin, Germany",
-          "name": "Ritter Butzke"
+          "address": "St. Gallen, Switzerland",
+          "name": "Kulturmuseum St.Gallen"
         },
-        "name": "Ritter Butzke, Berlin, Germany",
-        "startDate": "27 Apr 2024 00:00:00 GMT",
-        "url": "https://www.songkick.com/concerts/41600025-dominik-eulberg-at-ritter-butzke?utm_source=1471&utm_medium=partner"
-      },
-      {
-        "@type": "MusicEvent",
-        "location": {
-          "@type": "MusicVenue",
-          "address": "Memmingen, Germany",
-          "name": "Militärflugplatz"
-        },
-        "name": "Militärflugplatz, Memmingen, Germany",
-        "startDate": "17 May 2024 00:00:00 GMT",
-        "url": "https://www.songkick.com/festivals/1319688-ikarus/id/41573733-ikarus-festival-2024?utm_source=1471&utm_medium=partner"
-      },
-      {
-        "@type": "MusicEvent",
-        "location": {
-          "@type": "MusicVenue",
-          "address": "Dresden, Germany",
-          "name": "Puschkin Club"
-        },
-        "name": "Puschkin Club, Dresden, Germany",
-        "startDate": "19 May 2024 00:00:00 GMT",
-        "url": "https://www.songkick.com/concerts/41896607-miura-at-puschkin-club?utm_source=1471&utm_medium=partner"
-      },
-      {
-        "@type": "MusicEvent",
-        "location": {
-          "@type": "MusicVenue",
-          "address": "Würzburg, Germany",
-          "name": "exit:steinburg"
-        },
-        "name": "exit:steinburg, Würzburg, Germany",
-        "startDate": "26 May 2024 00:00:00 GMT",
-        "url": "https://www.songkick.com/festivals/3653886-exitsteinburg/id/41822978-exitsteinburg-2024?utm_source=1471&utm_medium=partner"
-      },
-      {
-        "@type": "MusicEvent",
-        "location": {
-          "@type": "MusicVenue",
-          "address": "Munich, Germany",
-          "name": "Olympia Reitanlage Riem"
-        },
-        "name": "Olympia Reitanlage Riem, Munich, Germany",
-        "startDate": "15 Jun 2024 00:00:00 GMT",
-        "url": "https://www.songkick.com/festivals/476694-isle-of-summer/id/41670121-isle-of-summer-2024?utm_source=1471&utm_medium=partner"
+        "name": "Kulturmuseum St.Gallen, St. Gallen, Switzerland",
+        "startDate": "02 Jul 2024 00:00:00 GMT",
+        "url": "https://www.songkick.com/festivals/1844359-kulturfestival-stgallen/id/41806633-kulturfestival-stgallen-2024?utm_source=1471&utm_medium=partner"
       },
       {
         "@type": "MusicEvent",
@@ -399,6 +355,17 @@
         "name": "Echelon Festival, Bad Aibling, Germany",
         "startDate": "16 Aug 2024 00:00:00 GMT",
         "url": "https://www.songkick.com/festivals/1623139-echelon/id/41645400-echelon-festival-2024?utm_source=1471&utm_medium=partner"
+      },
+      {
+        "@type": "MusicEvent",
+        "location": {
+          "@type": "MusicVenue",
+          "address": "Berlin, Germany",
+          "name": "Ritter Butzke"
+        },
+        "name": "Ritter Butzke, Berlin, Germany",
+        "startDate": "21 Sep 2024 00:00:00 GMT",
+        "url": "https://www.songkick.com/concerts/41948421-dominik-eulberg-at-ritter-butzke?utm_source=1471&utm_medium=partner"
       }
     ],
     "foundingLocation": {
