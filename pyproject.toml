@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "beetcamp"
-version = "0.20.0a0"
+version = "0.20.0"
 description = "Bandcamp autotagger source for beets (http://beets.io)."
 authors = ["Šarūnas Nejus <snejus@pm.me>"]
 readme = "README.md"
@@ -47,7 +47,6 @@ pytest-cov = ">=2.10.1"
 pytest-randomly = ">=3.10"
 pytest-xdist = ">=3.5.0"
 rich-tables = "*"
-
 
 [tool.poetry.scripts]
 beetcamp = "beetsplug.bandcamp:main"
