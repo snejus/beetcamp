@@ -22,7 +22,7 @@ class TrackNames:
     ALBUM_IN_TITLE = re.compile(r"[- ]*\[([^\]]+ [EL]P)\]+", re.I)
     DELIMITER_PAT = re.compile(r" ([^\w&()+/[\] ]) ")
     TITLE_IN_QUOTES = re.compile(r'^(.+[^ -])[ -]+"([^"]+)"$')
-    NUMBER_PREFIX = re.compile(r"((?<=^)|(?<=- ))\d{2,}\W* ")
+    NUMBER_PREFIX = re.compile(r"((?<=^)|(?<=- ))\d{1,2}[\W\s]+(?=\D)")
 
     original: List[str]
     names: List[str]
@@ -47,11 +47,20 @@ class TrackNames:
 
     @classmethod
     def remove_number_prefix(cls, names: List[str]) -> List[str]:
+        """Remove track number prefix from the track names.
+
+        If there is more than one track and at least half of the track names have
+        a number prefix remove it from the names.
+        """
+        if len(names) == 1:
+            return names
+
         prefix_matches = [cls.NUMBER_PREFIX.search(n) for n in names]
-        if all(prefix_matches):
-            prefixes = [m.group() for m in prefix_matches]  # type: ignore[union-attr]
-            if len(set(prefixes)) > 1:
-                return [n.replace(p, "") for n, p in zip(names, prefixes)]
+        if len([p for p in prefix_matches if p]) > len(names) / 2:
+            return [
+                n.replace(p.group() if p else "", "")
+                for n, p in zip(names, prefix_matches)
+            ]
 
         return names
 
@@ -151,14 +160,12 @@ class TrackNames:
 
     @classmethod
     def make(cls, original: List[str], label: str, album_artist: str) -> "TrackNames":
+        names = cls.split_quoted_titles(original)
+        catalognum, names = cls.eject_common_catalognum(names, album_artist)
         names = cls.parenthesize_remixes(
             cls.remove_label(
-                cls.normalize_delimiter(
-                    cls.remove_number_prefix(cls.split_quoted_titles(original))
-                ),
-                label,
+                cls.normalize_delimiter(cls.remove_number_prefix(names)), label
             )
         )
-        catalognum, names = cls.eject_common_catalognum(names, album_artist)
         album, names = cls.eject_album_name(names)
         return cls(original, names, album=album, catalognum=catalognum)
