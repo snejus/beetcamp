@@ -5,6 +5,7 @@ from difflib import SequenceMatcher
 from html import unescape
 from operator import itemgetter
 from typing import Any, Callable, Dict, List
+from urllib.parse import quote_plus
 
 import requests
 
@@ -108,7 +109,7 @@ def search_bandcamp(
     **kwargs: Any,
 ) -> List[JSONDict]:
     """Return a list with item JSONs of type search_type matching the query."""
-    url = SEARCH_URL.format(page, query)
+    url = SEARCH_URL.format(page, quote_plus(query))
     if search_type:
         url += "&item_type=" + search_type
     kwargs["name"] = query
