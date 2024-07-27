@@ -1,5 +1,11 @@
 ## Unreleased
 
+## [0.19.2] 2024-08-04
+
+### Fixed
+
+- `search`: properly escape query strings for better results with special characters
+
 ## [0.19.1] 2024-05-10
 
 ### Fixed
