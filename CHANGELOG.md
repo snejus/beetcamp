@@ -4,7 +4,9 @@
 
 ### Fixed
 
-- `search`: properly escape query strings for better results with special characters
+- `search`:
+  - properly escape query strings for better results with special characters
+  - change HTTP client implementation to avoid Bandcamp "403 Forbidden" responses
 
 ## [0.19.1] 2024-05-10
 
