@@ -22,16 +22,15 @@ import logging
 import re
 from contextlib import contextmanager
 from functools import lru_cache, partial
-from html import unescape
 from itertools import chain
 from operator import itemgetter
 from typing import TYPE_CHECKING, Any, Dict, Iterable, Iterator, List, Literal, Sequence
 
-import requests
-from beets import IncludeLazyConfig, __version__, config, library, plugins
+from beets import IncludeLazyConfig, config, library, plugins
 
 from beetsplug import fetchart  # type: ignore[attr-defined]
 
+from .http import HTTPError, http_get_text
 from .metaguru import Metaguru
 from .search import search_bandcamp
 
@@ -57,12 +56,6 @@ DEFAULT_CONFIG: JSONDict = {
 
 ALBUM_URL_IN_TRACK = re.compile(r'<a id="buyAlbumLink" href="([^"]+)')
 LABEL_URL_IN_COMMENT = re.compile(r"Visit (https:[\w/.-]+\.[a-z]+)")
-USER_AGENT = f"beets/{__version__} +http://beets.radbox.org/"
-
-
-@lru_cache(maxsize=None)
-def get_response(url: str) -> requests.Response:
-    return requests.get(url, headers={"User-Agent": USER_AGENT})
 
 
 class BandcampRequestsHandler:
@@ -79,13 +72,11 @@ class BandcampRequestsHandler:
 
     def _get(self, url: str) -> str:
         """Return text contents of the url response."""
-        response = get_response(url)
         try:
-            response.raise_for_status()
-        except requests.HTTPError as e:
+            return http_get_text(url)
+        except HTTPError as e:
             self._info("{}", e)
             return ""
-        return unescape(response.text)
 
     def guru(self, url: str) -> Metaguru:
         return Metaguru.from_html(self._get(url), config=self.config.flatten())

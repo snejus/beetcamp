@@ -7,7 +7,7 @@ from operator import itemgetter
 from typing import Any, Callable, Dict, List
 from urllib.parse import quote_plus
 
-import requests
+from .http import http_get_text
 
 JSONDict = Dict[str, Any]
 SEARCH_URL = "https://bandcamp.com/search?page={}&q={}"
@@ -95,17 +95,11 @@ def parse_and_sort_results(html: str, **kwargs: str) -> List[JSONDict]:
     return [{"index": i + 1, **r} for i, r in enumerate(results)]
 
 
-def get_url(url: str) -> str:
-    response = requests.get(url)
-    response.raise_for_status()
-    return unescape(response.text)
-
-
 def search_bandcamp(
     query: str = "",
     search_type: str = "",
     page: int = 1,
-    get: Callable[[str], str] = get_url,
+    get: Callable[[str], str] = http_get_text,
     **kwargs: Any,
 ) -> List[JSONDict]:
     """Return a list with item JSONs of type search_type matching the query."""
