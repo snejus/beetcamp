@@ -21,10 +21,11 @@ from __future__ import annotations
 import json
 import logging
 import re
-from contextlib import contextmanager
+from contextlib import contextmanager, suppress
 from functools import partial
 from operator import itemgetter
-from typing import TYPE_CHECKING, Any, Iterable, Iterator, Literal, Optional
+from pathlib import Path
+from typing import TYPE_CHECKING, Any, Iterable, Iterator, Literal
 
 from beets import IncludeLazyConfig, config, plugins
 
@@ -223,6 +224,18 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         self, items: list[Item], artist: str, album: str, *_: Any, **__: Any
     ) -> Iterable[AlbumInfo]:
         """Return a sequence of album candidates matching given artist and album."""
+        url = items[0].comments
+        parent_dir = Path(items[0].path.decode()).parent
+        with suppress(StopIteration):
+            playlist_info_path = next(parent_dir.glob("Playlist_*"))
+            playlist_info = json.loads(playlist_info_path.read_text())
+
+            playlist_info["tracks"] = []
+            for track_info_path in set(parent_dir.glob("*.info.json")) - {
+                playlist_info_path
+            }:
+                playlist_info["tracks"].append(json.loads(track_info_path.read_text()))
+
         item = items[0]
         label = ""
         if items and album == item.album and artist == item.albumartist:
@@ -324,8 +337,8 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
             sc_data_key = "sound"
             method = get_soundcloud_track
 
-        self._info("Fetching data from soundcloud url {} as {}", url, _type)
-        data = re.search(r"\[\{[^<]+[^;<)]", self._get(url))
+        self._info("Fetching data from soundcloud url {}", url)
+        data = re.search(r"\[.*hydratable.*\]", self._get(url))
         if not data:
             return None
 

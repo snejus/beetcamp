@@ -292,10 +292,14 @@ class Helpers:
         return (g for g in unique_genres if not within_another_genre(g))
 
     @staticmethod
-    def unpack_props(obj: JSONDict) -> JSONDict:
+    def unpack_props(obj: Any) -> Any:
         """Add all 'additionalProperty'-ies to the parent dictionary."""
-        for prop in obj.get("additionalProperty") or []:
-            obj[prop["name"]] = prop["value"]
+        if isinstance(obj, dict):
+            for prop in obj.pop("additionalProperty", []):
+                obj[prop["name"]] = prop["value"]
+            return {k: Helpers.unpack_props(v) for k, v in obj.items()}
+        if isinstance(obj, list):
+            return [Helpers.unpack_props(item) for item in obj]
         return obj
 
     @staticmethod

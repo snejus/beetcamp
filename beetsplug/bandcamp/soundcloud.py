@@ -3,10 +3,9 @@ from __future__ import annotations
 import re
 from datetime import datetime
 from functools import cached_property
-from typing import Any, ClassVar, Final, Literal
+from typing import TYPE_CHECKING, Any, ClassVar, Final, Literal
 from unicodedata import normalize
 
-from beets import IncludeLazyConfig
 from beets.autotag.hooks import AlbumInfo, TrackInfo
 from pycountry import countries, subdivisions
 from pydantic import BaseModel, Field, OnErrorOmit
@@ -14,6 +13,9 @@ from pydantic import BaseModel, Field, OnErrorOmit
 from .helpers import Helpers
 from .metaguru import COUNTRY_OVERRIDES, DIGI_MEDIA
 from .track import Track
+
+if TYPE_CHECKING:
+    from beets import IncludeLazyConfig
 
 JSONDict = dict[str, Any]
 
@@ -43,7 +45,7 @@ class ParsedTrack(BaseModel):
 
     @cached_property
     def data(self) -> JSONDict:
-        return {k: v for k, v in self.dict().items() if k != "live" and v}
+        return {k: v for k, v in self.dict().items() if k != "live"}
 
 
 def parse_title(source: str, title: str, artist: str) -> ParsedTrack:
@@ -56,9 +58,8 @@ def parse_title(source: str, title: str, artist: str) -> ParsedTrack:
     label_pat = r"(?P<full_label> \[(?P<label>[^\]]+)\])"
 
     data: JSONDict = {"artist": source, "title": title}
-    m = re.search(r" [^ ]*live[^ ]*", data["title"], re.I)
-    if m:
-        data["title"] = data["title"].replace(m.group(0), "")
+    if m := re.search(r" [^ ]*live[^ ]*", data["title"], re.I):
+        title = data["title"] = data["title"].replace(m.group(0), "")
         data["live"] = True
     for pat in (
         # discast
@@ -76,6 +77,8 @@ def parse_title(source: str, title: str, artist: str) -> ParsedTrack:
         rf"^{album_pat} {index_pat}{_delim}{artist_pat}$",
         # SACHSENTRANCE PODCAST
         rf"^{artist_pat}{_delim}{album_pat} {index_pat}$",
+        # PURE Guest
+        rf"^{album_pat} Guest[.]{index_pat} {artist_pat}$",
     ):
         # print(pat)
         m = re.search(pat, title)
@@ -92,7 +95,7 @@ def parse_title(source: str, title: str, artist: str) -> ParsedTrack:
             break
     else:
         data = {"@id": "", "name": title, "byArtist": {"name": artist}}
-        track = Track.from_json(data, "-", "")
+        track = Track.make(data)
         return ParsedTrack(**{**track.info, "album": ""})
 
     index = data.pop("index", "")
@@ -135,8 +138,8 @@ class Visuals(BaseModel):
 class BasicUser(SCEntity):
     avatar_url: str  # "https://i1.sndcdn.com/avatars-VdiyiKIAvTrN0eFz-bPJOIg-large.jpg"
     badges: dict[str, bool]  # {"pro": false, "pro_unlimited": true, "verified": false}
-    city: str  # "Berlin"
-    country_code: str  # "DE"
+    city: str | None  # "Berlin"
+    country_code: str | None  # "DE"
     first_name: str  # ""
     followers_count: int  # 5982
     full_name: str  # ""
@@ -168,19 +171,20 @@ class User(BasicUser):
         JSONDict
     ]  # [{"product": {"id": "creator-pro-unlimited"}}]
     creator_subscription: JSONDict  # {"product": {"id": "creator-pro-unlimited"}}
-    description: str  # "✧ ☆ H<3core-Poet ☆ ✧ \n\n🌎booking via paolo@moonagency.xyz\n\nSYNDIKAET\nASYLUM \nDEESTRICTED \nENIGMA \nEHRENKLUB\nPARA//E/ \nPUBLIC ENERGY\n240KMH\n\n\n\nHigh in the ethereal skies, a majestic crystal castle stands, its translucent walls reflecting a kaleidoscope of colors. Within its walls, a hidden realm of enchantment unfolds, where whimsical fairies dance on shimmering petals, weaving dreams with their delicate wings.\nThis fairy world sparkles with magic, where laughter and wonder embrace every corner, and imagination reigns supreme.\n\nAexhy has been a long time in the scene as a dj which motivated him to push further and start his career as a producer. In his Productions and in his sets you can clearly notice what Aexhy is made of. Playfully guiding you through all styles which inspire him, aexhy pushes boundaries and combines everything in a playful style to suprise you each minute. Constantly rising energy and letting it drop just to change to another style to capture your emotions and make you feel something.\n__________________________________✘✘✘_________________\nalso performing as:\n\"Space Cowboys\" with Trancemaster Krause\n\"SAEXHY\" with SACID"
+    # "✧ ☆ H<3core-Poet ☆ ✧ \n\n🌎booking via paolo@moonagency.xyz\n\nSYNDIKAET\nASYLUM \nDEESTRICTED \nENIGMA \nEHRENKLUB\nPARA//E/ \nPUBLIC ENERGY\n240KMH\n\n\n\nHigh in the ethereal skies, a majestic crystal castle stands, its translucent walls reflecting a kaleidoscope of colors. Within its walls, a hidden realm of enchantment unfolds, where whimsical fairies dance on shimmering petals, weaving dreams with their delicate wings.\nThis fairy world sparkles with magic, where laughter and wonder embrace every corner, and imagination reigns supreme.\n\nAexhy has been a long time in the scene as a dj which motivated him to push further and start his career as a producer. In his Productions and in his sets you can clearly notice what Aexhy is made of. Playfully guiding you through all styles which inspire him, aexhy pushes boundaries and combines everything in a playful style to suprise you each minute. Constantly rising energy and letting it drop just to change to another style to capture your emotions and make you feel something.\n__________________________________✘✘✘_________________\nalso performing as:\n\"Space Cowboys\" with Trancemaster Krause\n\"SAEXHY\" with SACID"
+    description: str | None
     followings_count: int  # 524
     groups_count: int  # 0
-    likes_count: int  # 1472
+    likes_count: int | None  # 1472
     playlist_likes_count: int  # 91
     playlist_count: int  # 12
     reposts_count: int | None  # null
     track_count: int  # 83
-    visuals: Visuals
+    visuals: Visuals | None
 
     @property
-    def visual_url(self) -> str:
-        return self.visuals.visuals[0].visual_url
+    def visual_url(self) -> str | None:
+        return self.visuals.visuals[0].visual_url if self.visuals else None
 
 
 class SCMedia(SCEntity):
@@ -189,7 +193,7 @@ class SCMedia(SCEntity):
     info_type: ClassVar[type[TrackInfo | AlbumInfo]]
 
     artwork_url: (
-        str  # "https://i1.sndcdn.com/artworks-1JYcoqeTzmZQOzYk-5ZSI7g-large.jpg"
+        str | None  # "https://i1.sndcdn.com/artworks-1JYcoqeTzmZQOzYk-5ZSI7g-large.jpg"
     )
     created_at: datetime  # "2022-09-09T22:09:09Z"
     description: str  # ""
@@ -198,7 +202,7 @@ class SCMedia(SCEntity):
     embeddable_by: str  # "all"
     label_name: str | None  # null
     license: str  # "all-rights-reserved"
-    likes_count: int  # 115
+    likes_count: int | None  # 115
     permalink: str  # "02-aexhy-x-dj-traytex-glasversteck-fallen-shrine-nxc"
     public: bool  # true
     purchase_title: str | None  # null
@@ -223,11 +227,10 @@ class SCMedia(SCEntity):
     @property
     def data(self) -> JSONDict:
         return {
-            "albumstatus": "Official",
             "artist": self.artist,
             "artist_id": self.user.urn,
-            "artwork_url": self.artwork_url.replace("-large", "-t500x500"),
-            "comments": self.description or None,
+            "artwork_url": (self.artwork_url or "").replace("-large", "-t500x500"),
+            "comments": self.description if self.description else None,
             "country": self.user.country,
             "data_source": self.DATA_SOURCE,
             "day": self.display_date.day,
@@ -248,22 +251,24 @@ class PlaylistTrack(SCMedia):
 
     caption: str | None  # null
     commentable: bool  # true
-    comment_count: int  # 4
+    comment_count: int | None  # 4
     downloadable: bool  # false
-    download_count: int  # 0
+    download_count: int | None  # 0
     full_duration: int  # 173610
     has_downloads_left: bool  # false
     media: JSONDict
     monetization_model: str  # "NOT_APPLICABLE"
-    playback_count: int  # 5202
+    playback_count: int | None  # 5202
     policy: str  # "ALLOW"
-    publisher_metadata: JSONDict  # {"id": int  # 1341013456, "urn": str  # "soundcloud:tracks:1341013456", "contains_music": bool  # true}
+    publisher_metadata: (
+        JSONDict | None
+    )  # {"id": int  # 1341013456, "urn": str  # "soundcloud:tracks:1341013456", "contains_music": bool  # true}
     state: str  # "finished"
     station_permalink: str  # "track-stations:1341013456"
     station_urn: str  # "soundcloud:system-playlists:track-stations:1341013456"
     streamable: bool  # true
     track_authorization: str  # "eyJ0eXAiOiJKV1QiLCJ..."
-    track_format: str  # "single-track"
+    # track_format: str | None  # "single-track"
     urn: str  # "soundcloud:tracks:1341013438"
     visuals: Visuals | None  # null
     waveform_url: str  # "https://wave.sndcdn.com/6FiJyRHgHJQ1_m.json"
@@ -289,19 +294,29 @@ class PlaylistTrack(SCMedia):
 
 
 class ReleaseMixin(BaseModel):
-
     original_genre: str = Field(validation_alias="genre")  # ""
     config: JSONDict
 
     @cached_property
+    def albumtypes(self) -> list[str]:
+        return [self.albumtype]
+
+    @cached_property
     def genre(self) -> str:
-        keywords = list(map(str.casefold, re.split(r" ?[-,/] ", self.original_genre)))
+        keywords = [
+            item.casefold().replace("\\", "")
+            for item in re.split(r" ?[-,/&] ", self.original_genre)
+        ]
         return ", ".join(Helpers.get_genre(keywords, self.config, ""))
 
     @property
     def data(self) -> JSONDict:
         return {
             **super().data,
+            "albumstatus": "Official",
+            "albumtype": self.albumtype,
+            "albumtypes": self.albumtypes,
+            "city": self.user.city,
             "genre": self.genre,
         }
 
@@ -315,7 +330,7 @@ class MainTrack(ReleaseMixin, PlaylistTrack):
 
     @cached_property
     def albumtypes(self) -> list[str]:
-        albumtypes = [self.albumtype]
+        albumtypes = super().albumtypes
         if self.albumtype == "broadcast":
             albumtypes.append("dj-mix")
 
@@ -335,9 +350,8 @@ class MainTrack(ReleaseMixin, PlaylistTrack):
     def data(self) -> JSONDict:
         return {
             **super().data,
+            "album": self.parsed_track.album,
             "albumartist": self.albumartist,
-            "albumtype": self.albumtype,
-            "albumtypes": self.albumtypes,
             "visual_url": self.user.visual_url,
         }
 
@@ -347,20 +361,40 @@ class Playlist(ReleaseMixin, SCMedia):
 
     is_album: bool  # true
     managed_by_feeds: bool  # false
-    published_at: datetime  # "2022-09-09T22:10:03Z"
-    set_type: str  # "album"
+    published_at: datetime | None  # "2022-09-09T22:10:03Z"
+    set_type: Literal["album", "compilation"]  # "album"
     tracks: list[OnErrorOmit[PlaylistTrack]]
     track_count: int  # 5
     url: str  # "/aexhy/sets/fallen-shrine-s-bday-present-4"
     user: User
 
+    @cached_property
+    def album(self) -> str:
+        return self.title
+
+    @cached_property
+    def album_id(self) -> str:
+        return self.permalink_url
+
+    @cached_property
+    def albumtype(self) -> str:
+        return "album" if len({t.artist for t in self.tracks}) == 1 else self.set_type
+
     @property
     def data(self) -> JSONDict:
+        tracks = [t.info for t in self.tracks]
+        for idx, track in enumerate(tracks, 1):
+            track.index = track.medium_index = idx
+            track.medium_total = self.track_count
+            track.album = self.album
+            track.album_id = self.album_id
+
         return {
             **super().data,
-            "album": self.title,
-            "album_id": self.permalink_url,
-            "tracks": [t.info for t in self.tracks],
+            "album": self.album,
+            "album_id": self.album_id,
+            "tracks": tracks,
+            "medium_total": self.track_count,
         }
 
 
@@ -369,7 +403,4 @@ def get_soundcloud_track(data: JSONDict, config: IncludeLazyConfig) -> TrackInfo
 
 
 def get_soundcloud_album(data: JSONDict, config: IncludeLazyConfig) -> AlbumInfo:
-    playlist = Playlist(**data, config=config)
-    from pprint import pprint
-    pprint(playlist.dict())
-    return playlist.info
+    return Playlist(**data, config=config).info
