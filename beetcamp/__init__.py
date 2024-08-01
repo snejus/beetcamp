@@ -105,8 +105,8 @@ class GuruMixin:
             sc_data_key = "sound"
             method = get_soundcloud_track
 
-        self._info("Fetching data from soundcloud url {} as {}", url, _type)
-        data = re.search(r"\[\{[^<]+[^;<)]", self._get(url))
+        self._info("Fetching data from soundcloud url {}", url)
+        data = re.search(r"\[.*hydratable.*\]", self._get(url))
         if not data:
             return None
 

@@ -18,7 +18,10 @@
 
 from __future__ import annotations
 
+import json
+from contextlib import suppress
 from operator import itemgetter
+from pathlib import Path
 from typing import TYPE_CHECKING, Any, Literal
 
 from beets import config, plugins
@@ -178,6 +181,18 @@ class BandcampPlugin(BandcampRequestsHandler, MetadataSourcePlugin):
         **__: Any,
     ) -> Iterable[AlbumInfo]:
         """Return a sequence of album candidates matching given artist and album."""
+        url = items[0].comments
+        parent_dir = Path(items[0].path.decode()).parent
+        with suppress(StopIteration):
+            playlist_info_path = next(parent_dir.glob("Playlist_*"))
+            playlist_info = json.loads(playlist_info_path.read_text())
+
+            playlist_info["tracks"] = []
+            for track_info_path in set(parent_dir.glob("*.info.json")) - {
+                playlist_info_path
+            }:
+                playlist_info["tracks"].append(json.loads(track_info_path.read_text()))
+
         item = items[0]
         if (
             items
