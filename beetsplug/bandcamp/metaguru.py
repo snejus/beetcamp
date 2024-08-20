@@ -13,7 +13,7 @@ from unicodedata import normalize
 from beets import __version__ as beets_version
 from beets import config as beets_config
 from beets.autotag.hooks import AlbumInfo, TrackInfo
-from packaging import version
+from packaging.version import Version
 from pycountry import countries, subdivisions
 
 from .album_name import AlbumName
@@ -22,9 +22,9 @@ from .helpers import PATTERNS, Helpers, MediaInfo
 from .track import Track
 from .tracks import Tracks
 
-BEETS_VERSION = version.parse(beets_version)
-EXTENDED_FIELDS_SUPPORT = version.Version("1.5.0") <= BEETS_VERSION
-ALBUMTYPES_LIST_SUPPORT = version.Version("1.6.0") < BEETS_VERSION
+BEETS_VERSION = Version(beets_version)
+EXTENDED_FIELDS_SUPPORT = BEETS_VERSION > Version("1.5.0")
+ALBUMTYPES_LIST_SUPPORT = BEETS_VERSION >= Version("1.6.0")
 
 JSONDict = Dict[str, Any]
 
