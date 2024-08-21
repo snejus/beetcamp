@@ -1,29 +1,39 @@
 """Pytest fixtures for tests."""
 
+from __future__ import annotations
+
 import json
-import os
-import re
 from copy import deepcopy
-from glob import glob
 from operator import itemgetter
-from os import path
+from pathlib import Path
+from typing import TYPE_CHECKING, Any
 
 import pytest
 from beets.autotag.hooks import AlbumInfo, TrackInfo
 from git import Repo
 from rich.console import Console
+from typing_extensions import TypeAlias
 
 from beetsplug.bandcamp import DEFAULT_CONFIG
-from beetsplug.bandcamp.metaguru import ALBUMTYPES_LIST_SUPPORT
+from beetsplug.bandcamp.metaguru import ALBUMTYPES_LIST_SUPPORT, EXTENDED_FIELDS_SUPPORT
+
+if TYPE_CHECKING:
+    from _pytest.config import Config
+    from _pytest.config.argparsing import Parser
+    from _pytest.fixtures import SubRequest
+    from _pytest.terminal import TerminalReporter
 
 
-def pytest_addoption(parser):
+JSONDict: TypeAlias = "dict[str, Any]"
+
+
+def pytest_addoption(parser: Parser) -> None:
     newest_folders = sorted(
-        glob(os.path.join("lib_tests", f"*{os.path.sep}")),
-        key=os.path.getctime,
+        (p for p in Path("lib_tests").glob("*") if p.is_dir()),
+        key=lambda p: p.stat().st_ctime,
         reverse=True,
     )
-    all_names = [f.split(os.path.sep)[-2] for f in newest_folders]
+    all_names = [f.name for f in newest_folders]
     names = [n for n in all_names if n != "dev"]
     names_set = set(names)
 
@@ -53,24 +63,26 @@ def pytest_addoption(parser):
     )
 
 
-def pytest_terminal_summary(terminalreporter, exitstatus, config):
+def pytest_terminal_summary(
+    terminalreporter: TerminalReporter, exitstatus: int, config: Config
+) -> None:
     base = config.getoption("base")
     target = config.getoption("target")
     terminalreporter.write(f"--- Compared {target} against {base} ---\n")
 
 
 @pytest.fixture(scope="session")
-def console():
+def console() -> Console:
     return Console(force_terminal=True, force_interactive=True)
 
 
 @pytest.fixture
-def beets_config():
+def beets_config() -> JSONDict:
     return deepcopy(DEFAULT_CONFIG)
 
 
 @pytest.fixture
-def digital_format():
+def digital_format() -> JSONDict:
     return {
         "@id": "https://bandcamp.com/album/hello",
         "musicReleaseFormat": "DigitalFormat",
@@ -84,7 +96,7 @@ def digital_format():
 
 
 @pytest.fixture
-def vinyl_format():
+def vinyl_format() -> JSONDict:
     return {
         "@id": "https://bandcamp.com/album/hello",
         "musicReleaseFormat": "VinylFormat",
@@ -98,7 +110,7 @@ def vinyl_format():
 
 
 @pytest.fixture
-def bundle_format():
+def bundle_format() -> JSONDict:
     return {
         "@id": "https://bandcamp.com/album/bye",
         "name": "Vinyl Bundle",
@@ -108,12 +120,14 @@ def bundle_format():
 
 
 @pytest.fixture
-def json_track():
+def json_track() -> JSONDict:
     return {"item": {"@id": "track_url", "name": "Artist - Title"}, "position": 1}
 
 
 @pytest.fixture
-def json_meta(digital_format, vinyl_format, json_track):
+def json_meta(
+    digital_format: JSONDict, vinyl_format: JSONDict, json_track: JSONDict
+) -> JSONDict:
     return {
         "@id": "album_id",
         "name": "Album",
@@ -131,7 +145,9 @@ def json_meta(digital_format, vinyl_format, json_track):
 
 
 @pytest.fixture
-def release(request):
+def release(
+    pytestconfig: pytest.Config, request: SubRequest
+) -> tuple[str, list[JSONDict | None]]:
     """Find the requested testing fixture and get:
     1. Input JSON data and return it as a single-line string (same like in htmls).
     2. Expected output JSON data (found in the 'expected' folder) as a dictionary.
@@ -139,13 +155,13 @@ def release(request):
     if not request.param:
         return "gibberish", [None]
 
-    filename = request.param + ".json"
-    input_folder = path.join("tests", "json")
+    json_folder = pytestconfig.rootpath / "tests" / "json"
+    filename = f"{request.param}.json"
 
-    with open(path.join(input_folder, filename), encoding="utf-8") as in_f:
-        input_json = re.sub(r"\n *", "", in_f.read())
-    with open(path.join(input_folder, "expected", filename), encoding="utf-8") as out_f:
-        expected_output = json.load(out_f)
+    # remove newlines and spaces
+    input_json = json.dumps(json.loads((json_folder / filename).read_text()))
+    expected_output = json.loads((json_folder / "expected" / filename).read_text())
+
     if isinstance(expected_output, dict):
         expected_output = [expected_output]
     if ALBUMTYPES_LIST_SUPPORT:
@@ -156,34 +172,41 @@ def release(request):
 
 
 @pytest.fixture
-def albuminfos(release):
+def albuminfos(
+    release: tuple[str, list[JSONDict]],
+) -> list[AlbumInfo | TrackInfo | None]:
     """Return each album and track as 'AlbumInfo' and 'TrackInfo' objects.
 
     Objects in beets>=1.5.0 have additional fields, therefore for compatibility ensure
     that only available fields are being used.
     """
-    t_fields = list(TrackInfo(None, None).__dict__ or TrackInfo())
-    a_fields = list(AlbumInfo(None, None, None, None, None).__dict__ or AlbumInfo([]))
+    if EXTENDED_FIELDS_SUPPORT:
+        t_fields = set(TrackInfo())
+        a_fields = set(AlbumInfo([]))
+    else:
+        t_fields = set(TrackInfo(None, None).__dict__)
+        a_fields = set(AlbumInfo(None, None, None, None, None).__dict__)
 
-    def _trackinfo(track):
+    def _trackinfo(track: JSONDict) -> TrackInfo:
         return TrackInfo(**dict(zip(t_fields, itemgetter(*t_fields)(track))))
 
-    def _albuminfo(album):
+    def _albuminfo(album: JSONDict) -> AlbumInfo | TrackInfo | None:
         if not album:
             return None
-        if album.get("album"):
-            albuminfo = AlbumInfo(**dict(zip(a_fields, itemgetter(*a_fields)(album))))
-            albuminfo.tracks = list(map(_trackinfo, album["tracks"]))
-        else:
-            albuminfo = _trackinfo(album)
+        if not album.get("album"):
+            return _trackinfo(album)
+
+        albuminfo = AlbumInfo(**dict(zip(a_fields, itemgetter(*a_fields)(album))))
+        albuminfo.tracks = list(map(_trackinfo, album["tracks"]))
         return albuminfo
 
     return list(map(_albuminfo, release[1]))
 
 
 @pytest.fixture
-def album_for_media(albuminfos, preferred_media):
+def album_for_media(albuminfos: list[AlbumInfo], preferred_media: str) -> AlbumInfo:
     """Pick the album that matches the requested 'preferred_media'.
+
     If none of the albums match the 'preferred_media', pick the first one from the list.
     """
     try:
