@@ -23,7 +23,7 @@ from .track import Track
 from .tracks import Tracks
 
 BEETS_VERSION = Version(beets_version)
-EXTENDED_FIELDS_SUPPORT = BEETS_VERSION > Version("1.5.0")
+EXTENDED_FIELDS_SUPPORT = BEETS_VERSION >= Version("1.5.0")
 ALBUMTYPES_LIST_SUPPORT = BEETS_VERSION >= Version("1.6.0")
 
 JSONDict = Dict[str, Any]

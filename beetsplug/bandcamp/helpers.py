@@ -1,11 +1,10 @@
 """Module with a Helpers class that contains various static, independent functions."""
 
 import re
-from functools import lru_cache, partial
+from functools import lru_cache, partial, singledispatch
 from itertools import chain
 from operator import contains
 from typing import (
-    TYPE_CHECKING,
     Any,
     Callable,
     Dict,
@@ -18,12 +17,10 @@ from typing import (
     Union,
 )
 
+from beets.autotag.hooks import AlbumInfo, TrackInfo
 from ordered_set import OrderedSet as ordset  # noqa: N813
 
 from .genres_lookup import GENRES
-
-if TYPE_CHECKING:
-    from beets.autotag.hooks import AlbumInfo
 
 JSONDict = Dict[str, Any]
 DIGI_MEDIA = "Digital Media"
@@ -342,3 +339,31 @@ class Helpers:
                 else:
                     medium_index += 1
         return album
+
+
+@singledispatch
+def to_dict(info: Any) -> Any:
+    """Convert TrackInfo and AlbumInfo objects to JSON-compatible dictionaries.
+
+    Before beets 1.5.0 TrackInfo and AlbumInfo subclassed 'object' and required 'vars'
+    call to extract the data, while in later versions they subclassed 'dict'.
+    """
+    return info
+
+
+@to_dict.register
+def _(info: TrackInfo) -> JSONDict:
+    return info if isinstance(info, dict) else vars(info)
+
+
+@to_dict.register
+def _(info: AlbumInfo) -> JSONDict:
+    if isinstance(info, dict):
+        return info
+
+    return {**vars(info), "tracks": to_dict(info.tracks)}
+
+
+@to_dict.register(list)
+def _(info: Union[List[AlbumInfo], List[TrackInfo]]) -> List[JSONDict]:
+    return [to_dict(x) for x in info]
