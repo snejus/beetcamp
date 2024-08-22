@@ -1,13 +1,13 @@
 """Tests for any logic found in the main plugin module."""
 
 import json
-from itertools import zip_longest
 
 import pytest
-from beets.autotag.hooks import AlbumInfo
 from beets.library import Item
 from beets.plugins import log
+
 from beetsplug.bandcamp import DEFAULT_CONFIG, BandcampAlbumArt, BandcampPlugin, urlify
+from beetsplug.bandcamp.helpers import to_dict
 
 LABEL_URL = "https://label.bandcamp.com"
 ALBUM_URL = f"{LABEL_URL}/album/release"
@@ -78,9 +78,8 @@ def test_urlify(title, expected):
 
 
 @pytest.fixture
-def plugin(monkeypatch, release):
-    html, _ = release
-    monkeypatch.setattr(BandcampPlugin, "_get", lambda *args: html)
+def plugin(monkeypatch, bandcamp_html):
+    monkeypatch.setattr(BandcampPlugin, "_get", lambda *args: bandcamp_html)
     pl = BandcampPlugin()
     pl.config.set(DEFAULT_CONFIG)
     return pl
@@ -92,7 +91,6 @@ def test_handle_non_bandcamp_url(method):
     assert getattr(BandcampPlugin(), method)("https://www.some-random-url") is None
 
 
-@pytest.mark.usefixtures("release")
 @pytest.mark.parametrize(
     ["release", "preferred_media", "expected_media"],
     [
@@ -101,7 +99,6 @@ def test_handle_non_bandcamp_url(method):
         ("album", "", "Digital Media"),
         (None, None, None),
     ],
-    indirect=["release"],
 )
 def test_album_for_id(plugin, album_for_media, preferred_media, expected_media):
     """Check that when given an album id, the plugin returns a _single_ album in the
@@ -116,41 +113,28 @@ def test_album_for_id(plugin, album_for_media, preferred_media, expected_media):
 
     album = plugin.album_for_id(album_id)
 
-    if expected_album:
-        assert isinstance(album, AlbumInfo)
-        assert album.media == expected_media
-        check_album(album, expected_album)
-    else:
-        assert album is None
+    assert to_dict(album) == to_dict(expected_album)
 
 
-@pytest.mark.usefixtures("release")
-@pytest.mark.parametrize("release", ["album"], indirect=["release"])
-def test_candidates(plugin, albuminfos):
-    first = albuminfos[0]
+@pytest.mark.parametrize("release", ["album"])
+def test_candidates(plugin, expected_release):
+    first = expected_release[0]
     artist, album = first.artist, first.album
     item = Item(albumartist=artist, album=album, mb_albumid=first.album_id)
 
     candidates = list(plugin.candidates([item], artist, album, False))
 
-    assert len(candidates) == len(albuminfos)
-    for actual, expected in zip(candidates, albuminfos):
-        check_album(actual, expected)
+    assert to_dict(candidates) == to_dict(expected_release)
 
 
-@pytest.mark.usefixtures("release")
-@pytest.mark.parametrize("release", ["single_track_release"], indirect=["release"])
-def test_singleton_candidates(plugin, albuminfos):
-    first = albuminfos[0]
-    artist, title = first.artist, first.title
-    item = Item(artist=artist, title=title, mb_trackid=first.track_id)
+@pytest.mark.parametrize("release", ["single_track_release"])
+def test_singleton_candidates(plugin, expected_release):
+    artist, title = expected_release.artist, expected_release.title
+    item = Item(artist=artist, title=title, mb_trackid=expected_release.track_id)
 
     candidates = list(plugin.item_candidates(item, artist, title))
 
-    assert len(candidates) == len(albuminfos)
-    for actual, expected in zip_longest(candidates, albuminfos):
-        assert vars(actual) == vars(expected)
-
+    assert to_dict(candidates) == [to_dict(expected_release)]
 
 def test_bandcamp_plugin_name():
     assert BandcampPlugin().data_source == "bandcamp"

@@ -48,7 +48,9 @@ if [[ -d .git/rebase-merge ]]; then
   fi
 fi
 
-before=$(git log main..$after\^ -1 --format=%h -- lib_tests/^[a-z]##(/:t) ./beetsplug)
+folders=(lib_tests/^[a-z]##(/:t))
+pat="^(${(j:|:)folders})"
+before=$(git log main..$after\^ --format=%h ./beetsplug | grep -E $pat -m1)
 print "Comparing with previous commit $before"
 
 git diff --quiet ./beetsplug

@@ -450,6 +450,17 @@ eradicate = ">=2.0,<3.0"
 flake8 = ">5"
 
 [[package]]
+name = "funcy"
+version = "2.0"
+description = "A fancy and practical functional tools"
+optional = false
+python-versions = "*"
+files = [
+    {file = "funcy-2.0-py2.py3-none-any.whl", hash = "sha256:53df23c8bb1651b12f095df764bfb057935d49537a56de211b098f4c79614bb0"},
+    {file = "funcy-2.0.tar.gz", hash = "sha256:3963315d59d41c6f30c04bc910e10ab50a3ac4a225868bfa96feed133df075cb"},
+]
+
+[[package]]
 name = "gitdb"
 version = "4.0.11"
 description = "Git Object Database"
@@ -1163,22 +1174,25 @@ jupyter = ["ipywidgets (>=7.5.1,<9)"]
 
 [[package]]
 name = "rich-tables"
-version = "0.3.0"
+version = "0.6.0"
 description = "Ready-made rich tables for various purposes"
 optional = false
-python-versions = ">=3.7,<4"
+python-versions = "<4,>=3.8"
 files = [
-    {file = "rich_tables-0.3.0-py3-none-any.whl", hash = "sha256:364bbb1e8da7166aac675dfaad082be4b902534de9e1a35b39a1a907e3c62998"},
-    {file = "rich_tables-0.3.0.tar.gz", hash = "sha256:0dc5f08c82565fc3f59b29aac4fb49d727d2c062a90057f09d52ed23f3baafde"},
+    {file = "rich_tables-0.6.0-py3-none-any.whl", hash = "sha256:9246ffcdd5a17b0b1d0d784983520dba66fdf73db79c1fb60e809f0048770abf"},
+    {file = "rich_tables-0.6.0.tar.gz", hash = "sha256:0ba6743af8a05ecfee65d568c68ce92dfb4e069d97b9d1760d162a8506b1c264"},
 ]
 
 [package.dependencies]
+funcy = ">=2.0"
 multimethod = "*"
+platformdirs = ">=4.2.0"
 rich = ">=12.3.0"
+sqlparse = ">=0.4.4"
+typing-extensions = ">=4.7.1"
 
 [package.extras]
 hue = ["rgbxy (>=0.5)"]
-sql = ["sqlparse (>=0.4.4,<0.5.0)"]
 
 [[package]]
 name = "six"
@@ -1212,6 +1226,21 @@ files = [
     {file = "sniffio-1.3.1-py3-none-any.whl", hash = "sha256:2f6da418d1f1e0fddd844478f41680e794e6051915791a034ff65e5f100525a2"},
     {file = "sniffio-1.3.1.tar.gz", hash = "sha256:f4324edc670a0f49750a81b895f35c3adb843cca46f0530f79fc1babb23789dc"},
 ]
+
+[[package]]
+name = "sqlparse"
+version = "0.5.1"
+description = "A non-validating SQL parser."
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "sqlparse-0.5.1-py3-none-any.whl", hash = "sha256:773dcbf9a5ab44a090f3441e2180efe2560220203dc2f8c0b0fa141e18b505e4"},
+    {file = "sqlparse-0.5.1.tar.gz", hash = "sha256:bb6b4df465655ef332548e24f08e205afc81b9ab86cb1c45657a7ff173a3a00e"},
+]
+
+[package.extras]
+dev = ["build", "hatch"]
+doc = ["sphinx"]
 
 [[package]]
 name = "tomli"
