@@ -4,14 +4,14 @@ from __future__ import annotations
 
 import json
 from copy import deepcopy
-from operator import itemgetter
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Dict, List, Union
 
 import pytest
 from beets.autotag.hooks import AlbumInfo, TrackInfo
 from git import Repo
 from rich.console import Console
+from rich_tables.utils import make_console, pretty_diff
 from typing_extensions import TypeAlias
 
 from beetsplug.bandcamp import DEFAULT_CONFIG
@@ -25,6 +25,7 @@ if TYPE_CHECKING:
 
 
 JSONDict: TypeAlias = "dict[str, Any]"
+console = make_console()
 
 
 def pytest_addoption(parser: Parser) -> None:
@@ -71,9 +72,22 @@ def pytest_terminal_summary(
     terminalreporter.write(f"--- Compared {target} against {base} ---\n")
 
 
-@pytest.fixture(scope="session")
-def console() -> Console:
-    return Console(force_terminal=True, force_interactive=True)
+def pytest_assertrepr_compare(op: str, left, right):
+    """Pretty print the difference between dict objects."""
+    actual, expected = left, right
+
+    if isinstance(actual, (list, dict)) and isinstance(expected, (list, dict)):
+        with console.capture() as cap:
+            console.print(pretty_diff(expected, actual))
+
+        return ["\n", *cap.get().splitlines()]
+
+    return None
+
+
+@pytest.fixture(scope="session", name="console")
+def fixture_console() -> Console:
+    return console
 
 
 @pytest.fixture
@@ -144,72 +158,97 @@ def json_meta(
     }
 
 
+JSON_DIR = Path("tests") / "json"
+RELEASES = [p.stem for p in JSON_DIR.glob("*.json")]
+
+
+@pytest.fixture(params=RELEASES)
+def release(request: SubRequest) -> str:
+    """Return the name of the release test case."""
+    return request.param
+
+
 @pytest.fixture
-def release(
-    pytestconfig: pytest.Config, request: SubRequest
-) -> tuple[str, list[JSONDict | None]]:
-    """Find the requested testing fixture and get:
-    1. Input JSON data and return it as a single-line string (same like in htmls).
-    2. Expected output JSON data (found in the 'expected' folder) as a dictionary.
+def bandcamp_data_path(release: str) -> Path:
+    """Return path to the Bandcamp JSON data file."""
+    return JSON_DIR / f"{release}.json"
+
+
+@pytest.fixture
+def bandcamp_html(bandcamp_data_path: Path) -> str:
+    """Return Bandcamp JSON data in a single line as like it's found in HTML."""
+    try:
+        contents = bandcamp_data_path.read_text()
+    except FileNotFoundError:
+        return ""
+
+    # load and dump the data to remove newlines and spaces
+    return json.dumps(json.loads(contents))
+
+
+JSONDictOrList = Union[Dict[str, Any], List[Dict[str, Any]]]
+
+
+def remove_extra_fields(data: JSONDictOrList) -> JSONDictOrList:
+    """Remove extra fields from the JSON data."""
+    t_fields = set(TrackInfo(None, None).__dict__)
+    a_fields = set(AlbumInfo(None, None, None, None, None).__dict__)
+
+    def keep_fields(data: JSONDict, fields: set[str]) -> JSONDict:
+        return {k: v for k, v in data.items() if k in fields}
+
+    def album(album_data: JSONDict) -> JSONDict:
+        return {
+            **keep_fields(album_data, a_fields),
+            "tracks": [keep_fields(t, t_fields) for t in album_data["tracks"]],
+        }
+
+    if isinstance(data, dict):
+        return keep_fields(data, t_fields)
+
+    return [album(a) for a in data]
+
+
+@pytest.fixture
+def expected_release(bandcamp_data_path: Path) -> list[AlbumInfo] | TrackInfo | None:
+    """Return corresponding expected release JSON data.
+
+    Until beets 1.5.0, TrackInfo and AlbumInfo objects only supported a limited set
+    of fields, thus drop the extra fields from the expected data.
     """
-    if not request.param:
-        return "gibberish", [None]
+    path = bandcamp_data_path.parent / "expected" / bandcamp_data_path.name
+    try:
+        release_datastr = path.read_text()
+    except FileNotFoundError:
+        return None
 
-    json_folder = pytestconfig.rootpath / "tests" / "json"
-    filename = f"{request.param}.json"
+    release_data = json.loads(release_datastr)
 
-    # remove newlines and spaces
-    input_json = json.dumps(json.loads((json_folder / filename).read_text()))
-    expected_output = json.loads((json_folder / "expected" / filename).read_text())
+    if not EXTENDED_FIELDS_SUPPORT:
+        release_data = remove_extra_fields(release_data)
 
-    if isinstance(expected_output, dict):
-        expected_output = [expected_output]
+    if isinstance(release_data, dict):
+        if ALBUMTYPES_LIST_SUPPORT:
+            release_data["albumtypes"] = release_data["albumtypes"].split("; ")
+        return TrackInfo(**release_data)
+
     if ALBUMTYPES_LIST_SUPPORT:
-        for release in expected_output:
+        for release in release_data:
             release["albumtypes"] = release["albumtypes"].split("; ")
 
-    return input_json, expected_output
+    return [AlbumInfo(**r) for r in release_data]
 
 
 @pytest.fixture
-def albuminfos(
-    release: tuple[str, list[JSONDict]],
-) -> list[AlbumInfo | TrackInfo | None]:
-    """Return each album and track as 'AlbumInfo' and 'TrackInfo' objects.
-
-    Objects in beets>=1.5.0 have additional fields, therefore for compatibility ensure
-    that only available fields are being used.
-    """
-    if EXTENDED_FIELDS_SUPPORT:
-        t_fields = set(TrackInfo())
-        a_fields = set(AlbumInfo([]))
-    else:
-        t_fields = set(TrackInfo(None, None).__dict__)
-        a_fields = set(AlbumInfo(None, None, None, None, None).__dict__)
-
-    def _trackinfo(track: JSONDict) -> TrackInfo:
-        return TrackInfo(**dict(zip(t_fields, itemgetter(*t_fields)(track))))
-
-    def _albuminfo(album: JSONDict) -> AlbumInfo | TrackInfo | None:
-        if not album:
-            return None
-        if not album.get("album"):
-            return _trackinfo(album)
-
-        albuminfo = AlbumInfo(**dict(zip(a_fields, itemgetter(*a_fields)(album))))
-        albuminfo.tracks = list(map(_trackinfo, album["tracks"]))
-        return albuminfo
-
-    return list(map(_albuminfo, release[1]))
-
-
-@pytest.fixture
-def album_for_media(albuminfos: list[AlbumInfo], preferred_media: str) -> AlbumInfo:
+def album_for_media(
+    expected_release: list[AlbumInfo] | None, preferred_media: str
+) -> AlbumInfo | None:
     """Pick the album that matches the requested 'preferred_media'.
 
     If none of the albums match the 'preferred_media', pick the first one from the list.
     """
-    try:
-        return next(filter(lambda x: x and x.media == preferred_media, albuminfos))
-    except StopIteration:
-        return albuminfos[0]
+    if expected_release is None:
+        return None
+
+    albums = expected_release
+    return next(filter(lambda x: x.media == preferred_media, albums), albums[0])
