@@ -15,7 +15,7 @@ from rich_tables.utils import make_console, pretty_diff
 from typing_extensions import TypeAlias
 
 from beetsplug.bandcamp import DEFAULT_CONFIG
-from beetsplug.bandcamp.metaguru import ALBUMTYPES_LIST_SUPPORT, EXTENDED_FIELDS_SUPPORT
+from beetsplug.bandcamp.metaguru import ALBUMTYPES_LIST_SUPPORT
 
 if TYPE_CHECKING:
     from _pytest.config import Config
@@ -189,26 +189,6 @@ def bandcamp_html(bandcamp_data_path: Path) -> str:
 JSONDictOrList = Union[Dict[str, Any], List[Dict[str, Any]]]
 
 
-def remove_extra_fields(data: JSONDictOrList) -> JSONDictOrList:
-    """Remove extra fields from the JSON data."""
-    t_fields = set(TrackInfo(None, None).__dict__)
-    a_fields = set(AlbumInfo(None, None, None, None, None).__dict__)
-
-    def keep_fields(data: JSONDict, fields: set[str]) -> JSONDict:
-        return {k: v for k, v in data.items() if k in fields}
-
-    def album(album_data: JSONDict) -> JSONDict:
-        return {
-            **keep_fields(album_data, a_fields),
-            "tracks": [keep_fields(t, t_fields) for t in album_data["tracks"]],
-        }
-
-    if isinstance(data, dict):
-        return keep_fields(data, t_fields)
-
-    return [album(a) for a in data]
-
-
 @pytest.fixture
 def expected_release(bandcamp_data_path: Path) -> list[AlbumInfo] | TrackInfo | None:
     """Return corresponding expected release JSON data.
@@ -223,9 +203,6 @@ def expected_release(bandcamp_data_path: Path) -> list[AlbumInfo] | TrackInfo | 
         return None
 
     release_data = json.loads(release_datastr)
-
-    if not EXTENDED_FIELDS_SUPPORT:
-        release_data = remove_extra_fields(release_data)
 
     if isinstance(release_data, dict):
         if ALBUMTYPES_LIST_SUPPORT:

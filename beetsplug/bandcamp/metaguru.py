@@ -23,7 +23,6 @@ from .track import Track
 from .tracks import Tracks
 
 BEETS_VERSION = Version(beets_version)
-EXTENDED_FIELDS_SUPPORT = BEETS_VERSION >= Version("1.5.0")
 ALBUMTYPES_LIST_SUPPORT = BEETS_VERSION >= Version("1.6.0")
 
 JSONDict = Dict[str, Any]
@@ -426,11 +425,18 @@ class Metaguru(Helpers):
     @property
     def _common_album(self) -> JSONDict:
         common_data: JSONDict = {"album": self.album_name}
-        fields = ["label", "catalognum", "albumtype", "country"]
-        if EXTENDED_FIELDS_SUPPORT:
-            fields.extend(["genre", "style", "comments", "albumtypes"])
+        fields = [
+            "albumtype",
+            "albumtypes",
+            "catalognum",
+            "comments",
+            "country",
+            "genre",
+            "label",
+            "style",
+        ]
         common_data.update(self.get_fields(fields))
-        if EXTENDED_FIELDS_SUPPORT and not ALBUMTYPES_LIST_SUPPORT:
+        if not ALBUMTYPES_LIST_SUPPORT:
             common_data["albumtypes"] = "; ".join(common_data["albumtypes"])
         reldate = self.release_date
         if reldate:
@@ -447,9 +453,6 @@ class Metaguru(Helpers):
             data.pop("catalognum", None)
         if not data["lyrics"]:
             data.pop("lyrics", None)
-        if not EXTENDED_FIELDS_SUPPORT:
-            data.pop("catalognum", None)
-            data.pop("lyrics", None)
         for field in set(data.keys()) & self.excluded_fields:
             data.pop(field)
 
@@ -460,9 +463,8 @@ class Metaguru(Helpers):
         self._singleton = True
         self.media = self.media_formats[0]
         track = self._trackinfo(self.tracks.first)
-        if EXTENDED_FIELDS_SUPPORT:
-            track.update(self._common_album)
-            track.pop("album", None)
+        track.update(self._common_album)
+        track.pop("album", None)
         track.track_id = track.data_url
         return track
 
