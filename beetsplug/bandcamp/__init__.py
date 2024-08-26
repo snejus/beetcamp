@@ -30,7 +30,6 @@ from beets import IncludeLazyConfig, config, library, plugins
 
 from beetsplug import fetchart  # type: ignore[attr-defined]
 
-from .helpers import to_dict
 from .http import HTTPError, http_get_text
 from .metaguru import Metaguru
 from .search import search_bandcamp
@@ -403,7 +402,7 @@ def main() -> None:
         if not result:
             raise AssertionError("Failed to find a release under the given url")
 
-        print(json.dumps(to_dict(result)))
+        print(json.dumps(result))
 
 
 if __name__ == "__main__":

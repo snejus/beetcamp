@@ -1,5 +1,9 @@
 ## Unreleased
 
+### Removed
+
+- Drop support for `beets<1.5`.
+
 ### Fixed
 
 - `album`:

@@ -7,7 +7,6 @@ from beets.library import Item
 from beets.plugins import log
 
 from beetsplug.bandcamp import DEFAULT_CONFIG, BandcampAlbumArt, BandcampPlugin, urlify
-from beetsplug.bandcamp.helpers import to_dict
 
 LABEL_URL = "https://label.bandcamp.com"
 ALBUM_URL = f"{LABEL_URL}/album/release"
@@ -113,7 +112,7 @@ def test_album_for_id(plugin, album_for_media, preferred_media, expected_media):
 
     album = plugin.album_for_id(album_id)
 
-    assert to_dict(album) == to_dict(expected_album)
+    assert album == expected_album
 
 
 @pytest.mark.parametrize("release", ["album"])
@@ -124,7 +123,7 @@ def test_candidates(plugin, expected_release):
 
     candidates = list(plugin.candidates([item], artist, album, False))
 
-    assert to_dict(candidates) == to_dict(expected_release)
+    assert candidates == expected_release
 
 
 @pytest.mark.parametrize("release", ["single_track_release"])
@@ -134,7 +133,7 @@ def test_singleton_candidates(plugin, expected_release):
 
     candidates = list(plugin.item_candidates(item, artist, title))
 
-    assert to_dict(candidates) == [to_dict(expected_release)]
+    assert candidates == [expected_release]
 
 def test_bandcamp_plugin_name():
     assert BandcampPlugin().data_source == "bandcamp"
