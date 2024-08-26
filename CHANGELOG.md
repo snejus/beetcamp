@@ -1,5 +1,9 @@
 ## [0.20.0] 2024-06-25
 
+### Removed
+
+- Drop support for `beets<1.5`.
+
 ### Fixed
 
 - `album`:
