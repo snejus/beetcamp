@@ -33,16 +33,10 @@ Thanks to [unrblt] for [beets-bandcamp] providing the idea and initial implement
 pipx install beets
 ```
 
-2. Inject `beetcamp` and other dependencies that you need
+2. Inject `beetcamp` and other dependencies that you need. The `--include-apps` flag is required to make sure that `beetcamp` is made available in your command line.
 
 ```bash
-pipx inject beets beetcamp [python-mpd2 ...]
-```
-
-If the CLI is not available after injecting, uninject and try again using the `--include-apps` flag.
-
-```bash
-pipx inject --include-apps beets beetcamp
+pipx inject --include-apps beets beetcamp [python-mpd2 ...]
 ```
 
 3. Add `bandcamp` to the `plugins` list to your beets configuration file.
