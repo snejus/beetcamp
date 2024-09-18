@@ -39,6 +39,12 @@ pipx install beets
 pipx inject beets beetcamp [python-mpd2 ...]
 ```
 
+If the CLI is not available after injecting, uninject and try again using the `--include-apps` flag.
+
+```bash
+pipx inject --include-apps beets beetcamp
+```
+
 3. Add `bandcamp` to the `plugins` list to your beets configuration file.
 
 ## Otherwise
@@ -46,7 +52,7 @@ pipx inject beets beetcamp [python-mpd2 ...]
 Navigate to your `beets` virtual environment and install the plug-in with
 
 ```bash
-   pip install beetcamp
+pip install beetcamp
 ```
 
 # CLI
@@ -77,7 +83,7 @@ optional arguments:
 
 - Use `beetcamp <bandcamp-release-url>` to return release metadata in JSON format.
 - Use `beetcamp [-alt] <query>` to search albums, labels and tracks on Bandcamp and return
-  results in JSON. 
+  results in JSON.
 - Search results are indexed - add `-o <index>` in order to open the chosen URL in the browser.
 
 You can see how the data looks below (the output is prettified with [rich-tables]).
