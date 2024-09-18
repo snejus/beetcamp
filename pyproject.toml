@@ -32,6 +32,7 @@ beets = ">=1.4,<=2"
 httpx = ">=0.27.0"
 ordered-set = ">=4.0"
 packaging = ">=24.0"
+requests = "^2.32.3"
 
 [tool.poetry.dev-dependencies]
 flake8 = ">=3.8.4"
