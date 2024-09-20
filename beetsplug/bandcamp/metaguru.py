@@ -77,7 +77,7 @@ class Metaguru(Helpers):
 
     @cached_property
     def excluded_fields(self) -> Set[str]:
-        return set(self.config.get("excluded_fields") or [])
+        return set(self.config.get("exclude_extra_fields") or [])
 
     @property
     def comments(self) -> Optional[str]:
@@ -95,10 +95,12 @@ class Metaguru(Helpers):
 
     @cached_property
     def all_media_comments(self) -> str:
-        return "\n".join([
-            *[m.description for m in self.media_formats],
-            self.comments or "",
-        ])
+        return "\n".join(
+            [
+                *[m.description for m in self.media_formats],
+                self.comments or "",
+            ]
+        )
 
     @cached_property
     def label(self) -> str:
