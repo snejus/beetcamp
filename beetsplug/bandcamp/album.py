@@ -172,10 +172,16 @@ class AlbumName:
             ):
                 name = re.sub(
                     rf"""
-    (?<! x )
-    (^|[^\])\w])+
-    (?i:{w})
-    ([^(\[\w]| _|(\d+$))*
+    (?<! x )                    # do not remove Artist2 from 'Artist1 x Artist2'
+    (
+        (?P<br>[([])        # match either a bracket/parens
+      | (^|[^[(\w])+            # or everything that is not bracket/parens/alphanum
+    )
+    (?i:{w})                    # match the word we want to remove
+    (?(br)                      # if we had a bracket/parens match
+        [])]                    # then match closing bracket/parens
+      | ([^[(\w]|_|(\d+$))*    # otherwise remove any of these patterns
+    )
                     """,
                     " ",
                     name,
