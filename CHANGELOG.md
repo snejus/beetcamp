@@ -1,5 +1,11 @@
 ## Unreleased
 
+### Updated
+
+- `album`:
+  - remove **all** catalogue numbers from album name. Previously, we only removed the
+    valid catalogue number found in the data.
+
 ## [0.19.3] 2024-10-17
 
 ### Updated
@@ -9,7 +15,8 @@
 
 ### Fixed
 
-- `exclude_extra_fields`: A typo that prevented exclude configurations from being applied correctly
+- `exclude_extra_fields`: A typo that prevented exclude configurations from being applied
+  correctly
 
 ## [0.19.2] 2024-08-04
 
