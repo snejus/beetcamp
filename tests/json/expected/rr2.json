@@ -5,12 +5,25 @@
     "albumdisambig": null,
     "albumstatus": "Official",
     "albumtype": "album",
-    "albumtypes": "album; remix; single",
+    "albumtypes": [
+      "album",
+      "remix",
+      "single"
+    ],
     "artist": "RADICAL G & THE HORRORIST",
     "artist_credit": null,
     "artist_id": "https://44labelgroup.bandcamp.com",
     "artist_sort": null,
+    "artists": [
+      "RADICAL G & THE HORRORIST"
+    ],
+    "artists_credit": [],
+    "artists_ids": [
+      "https://44labelgroup.bandcamp.com"
+    ],
+    "artists_sort": [],
     "asin": null,
+    "barcode": null,
     "catalognum": "",
     "comments": null,
     "country": "DE",
@@ -29,17 +42,27 @@
     "original_day": null,
     "original_month": null,
     "original_year": null,
+    "release_group_title": null,
     "releasegroup_id": null,
     "releasegroupdisambig": null,
     "script": null,
     "style": null,
     "tracks": [
       {
+        "album": "RR2",
         "arranger": null,
         "artist": "RADICAL G & THE HORRORIST",
         "artist_credit": null,
         "artist_id": "https://44labelgroup.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "RADICAL G & THE HORRORIST"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://44labelgroup.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,

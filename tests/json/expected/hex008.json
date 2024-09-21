@@ -5,12 +5,24 @@
     "albumdisambig": null,
     "albumstatus": "Official",
     "albumtype": "compilation",
-    "albumtypes": "album; compilation",
+    "albumtypes": [
+      "album",
+      "compilation"
+    ],
     "artist": "Various Artists",
     "artist_credit": null,
     "artist_id": "https://hexbarcelona.bandcamp.com",
     "artist_sort": null,
+    "artists": [
+      "Various Artists"
+    ],
+    "artists_credit": [],
+    "artists_ids": [
+      "https://hexbarcelona.bandcamp.com"
+    ],
+    "artists_sort": [],
     "asin": null,
+    "barcode": null,
     "catalognum": "HEX008",
     "comments": "HEX008 | Angels From Hell (Various Artists)\nTriple-Red-Vinyl\n\n---\n\nSome feedback on the release:\n\n► Quail - HUGE pack, absolute killers all round. Thanks!\n► Essan - Thank you very much for sending me your promo, the tracks sound amazing, I love!!!!\n► JC Laurent - Super Solid VA! Thanks a lot :) Rommek & Cleric are my favs\n► boyd schidt - sick release thanks for the promo\n► Downwell - Great tracks ! Fav: Imperial Black Unit - Broken Tools\n► Jay Clarke - Heavy Heavy selection of tunes here. Solid release chaps! Thx for sharing!\n► takaaki itoh - great v.a!\n► slam - nice collection\n► Henning Baer - Massive!\n► Cristian Varela - AWESOME!\n► Roll Dann - Crazy Tracks, muchas gracias!\n► Luca Agnelli - super pack\n► ENDLEC - Superb selections as usual!\n► Jerm - Cleric's & Benjamin's my top picks, great compilation overall guys :)\n► Tom Page - Loads here for me, fantastic compilation! Love the Rommek, Benjamin Damage, Cleric & Imperial Black Unit tracks, but its all top notch, thanks :)\n► Alex Guerra - Brutal,Friends! Congrats for 2nd Anniversary.Thanks again!\n\n---\n\nWe're very excited to celebrate the 2nd Anniversary of \"HEX Recordings\" so for the occasion, we decided to create the most powerful release so far, a Triple-Vinyl Various Artists, which includes the creations of some of the artists that are closest to the Movement but never released on the label until now like Rebekah, Cleric, Remco Beekwilder, together with new members like Benjamin Damage, AEIT, Imperial Black Unit, End Train, Rommek, Maere, 6Siss and of course some of the ambassadors of the label like Under Black Helmet, VII Circle and the two HEX Founders Paolo Ferrara and Lorenzo Raganzini.\n\nThe title of the release is \"Angels From Hell\" and it represents the most ambitious release ever created by HEX. 3 flaming Red colour Vinyl, together with some new T-shirts + Hoodie characterised by the VA's unique design.\n\n15 Artists will represent the unity under Techno of 7 different countries: France, England, Italy, Netherlands, Lithuania, Belgium and Israel.\n\n---\n\nVinyl 1\nA1 - Rebekah - You Be The Leader\nA2 - Paolo Ferrara & Lorenzo Raganzini - Sanitary Dictature\nA3 - AEIT - 12 Gauge\nB1 - VII Circle - Demons\nB2 - Rommek - Mezcal Worm\n\n\nVinyl 2\nC1 - Cleric - The Puppet Master \nC2 - Remco Beekwilder - Air Of The 90s\nD1 - AnD - Fearless\nD2 - Benjamin Damage - Matriachy\n\n\nVinyl 3 \nE1 - Under Black Helmet - The Purist\nE2 - MAERE & 6SISS - Organisms\nF1 - Imperial Black Unit - Broken Tools\nF2 - End Train - Ctrl+Alt+Delete The System\n\n\nMasters by Alain Paul (Germany)\nDesign by Giambrone Studio",
     "country": "ES",
@@ -29,17 +41,27 @@
     "original_day": null,
     "original_month": null,
     "original_year": null,
+    "release_group_title": null,
     "releasegroup_id": null,
     "releasegroupdisambig": null,
     "script": null,
     "style": "electronic",
     "tracks": [
       {
+        "album": "Angels From Hell",
         "arranger": null,
         "artist": "Rebekah",
         "artist_credit": null,
         "artist_id": "https://hexbarcelona.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Rebekah"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://hexbarcelona.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -64,11 +86,20 @@
         "work_disambig": null
       },
       {
+        "album": "Angels From Hell",
         "arranger": null,
         "artist": "Paolo Ferrara & Lorenzo Raganzini",
         "artist_credit": null,
         "artist_id": "https://hexbarcelona.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Paolo Ferrara & Lorenzo Raganzini"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://hexbarcelona.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -93,11 +124,20 @@
         "work_disambig": null
       },
       {
+        "album": "Angels From Hell",
         "arranger": null,
         "artist": "AEIT",
         "artist_credit": null,
         "artist_id": "https://hexbarcelona.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "AEIT"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://hexbarcelona.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -122,11 +162,20 @@
         "work_disambig": null
       },
       {
+        "album": "Angels From Hell",
         "arranger": null,
         "artist": "VII Circle",
         "artist_credit": null,
         "artist_id": "https://hexbarcelona.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "VII Circle"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://hexbarcelona.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -151,11 +200,20 @@
         "work_disambig": null
       },
       {
+        "album": "Angels From Hell",
         "arranger": null,
         "artist": "Rommek",
         "artist_credit": null,
         "artist_id": "https://hexbarcelona.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Rommek"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://hexbarcelona.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -180,11 +238,20 @@
         "work_disambig": null
       },
       {
+        "album": "Angels From Hell",
         "arranger": null,
         "artist": "Cleric",
         "artist_credit": null,
         "artist_id": "https://hexbarcelona.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Cleric"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://hexbarcelona.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -209,11 +276,20 @@
         "work_disambig": null
       },
       {
+        "album": "Angels From Hell",
         "arranger": null,
         "artist": "Remco Beekwilder",
         "artist_credit": null,
         "artist_id": "https://hexbarcelona.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Remco Beekwilder"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://hexbarcelona.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -238,11 +314,20 @@
         "work_disambig": null
       },
       {
+        "album": "Angels From Hell",
         "arranger": null,
         "artist": "AnD",
         "artist_credit": null,
         "artist_id": "https://hexbarcelona.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "AnD"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://hexbarcelona.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -267,11 +352,20 @@
         "work_disambig": null
       },
       {
+        "album": "Angels From Hell",
         "arranger": null,
         "artist": "Benjamin Damage",
         "artist_credit": null,
         "artist_id": "https://hexbarcelona.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Benjamin Damage"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://hexbarcelona.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -296,11 +390,20 @@
         "work_disambig": null
       },
       {
+        "album": "Angels From Hell",
         "arranger": null,
         "artist": "Under Black Helmet ",
         "artist_credit": null,
         "artist_id": "https://hexbarcelona.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Under Black Helmet"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://hexbarcelona.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -325,11 +428,20 @@
         "work_disambig": null
       },
       {
+        "album": "Angels From Hell",
         "arranger": null,
         "artist": "MAERE & 6SISS",
         "artist_credit": null,
         "artist_id": "https://hexbarcelona.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "MAERE & 6SISS"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://hexbarcelona.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -354,11 +466,20 @@
         "work_disambig": null
       },
       {
+        "album": "Angels From Hell",
         "arranger": null,
         "artist": "Imperial Black Unit",
         "artist_credit": null,
         "artist_id": "https://hexbarcelona.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Imperial Black Unit"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://hexbarcelona.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -383,11 +504,20 @@
         "work_disambig": null
       },
       {
+        "album": "Angels From Hell",
         "arranger": null,
         "artist": "End Train",
         "artist_credit": null,
         "artist_id": "https://hexbarcelona.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "End Train"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://hexbarcelona.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -421,12 +551,24 @@
     "albumdisambig": null,
     "albumstatus": "Official",
     "albumtype": "compilation",
-    "albumtypes": "album; compilation",
+    "albumtypes": [
+      "album",
+      "compilation"
+    ],
     "artist": "Various Artists",
     "artist_credit": null,
     "artist_id": "https://hexbarcelona.bandcamp.com",
     "artist_sort": null,
+    "artists": [
+      "Various Artists"
+    ],
+    "artists_credit": [],
+    "artists_ids": [
+      "https://hexbarcelona.bandcamp.com"
+    ],
+    "artists_sort": [],
     "asin": null,
+    "barcode": null,
     "catalognum": "HEX008",
     "comments": "HEX008 | Angels From Hell (Various Artists)\nTriple-Red-Vinyl\n\n---\n\nSome feedback on the release:\n\n► Quail - HUGE pack, absolute killers all round. Thanks!\n► Essan - Thank you very much for sending me your promo, the tracks sound amazing, I love!!!!\n► JC Laurent - Super Solid VA! Thanks a lot :) Rommek & Cleric are my favs\n► boyd schidt - sick release thanks for the promo\n► Downwell - Great tracks ! Fav: Imperial Black Unit - Broken Tools\n► Jay Clarke - Heavy Heavy selection of tunes here. Solid release chaps! Thx for sharing!\n► takaaki itoh - great v.a!\n► slam - nice collection\n► Henning Baer - Massive!\n► Cristian Varela - AWESOME!\n► Roll Dann - Crazy Tracks, muchas gracias!\n► Luca Agnelli - super pack\n► ENDLEC - Superb selections as usual!\n► Jerm - Cleric's & Benjamin's my top picks, great compilation overall guys :)\n► Tom Page - Loads here for me, fantastic compilation! Love the Rommek, Benjamin Damage, Cleric & Imperial Black Unit tracks, but its all top notch, thanks :)\n► Alex Guerra - Brutal,Friends! Congrats for 2nd Anniversary.Thanks again!\n\n---\n\nWe're very excited to celebrate the 2nd Anniversary of \"HEX Recordings\" so for the occasion, we decided to create the most powerful release so far, a Triple-Vinyl Various Artists, which includes the creations of some of the artists that are closest to the Movement but never released on the label until now like Rebekah, Cleric, Remco Beekwilder, together with new members like Benjamin Damage, AEIT, Imperial Black Unit, End Train, Rommek, Maere, 6Siss and of course some of the ambassadors of the label like Under Black Helmet, VII Circle and the two HEX Founders Paolo Ferrara and Lorenzo Raganzini.\n\nThe title of the release is \"Angels From Hell\" and it represents the most ambitious release ever created by HEX. 3 flaming Red colour Vinyl, together with some new T-shirts + Hoodie characterised by the VA's unique design.\n\n15 Artists will represent the unity under Techno of 7 different countries: France, England, Italy, Netherlands, Lithuania, Belgium and Israel.\n\n---\n\nVinyl 1\nA1 - Rebekah - You Be The Leader\nA2 - Paolo Ferrara & Lorenzo Raganzini - Sanitary Dictature\nA3 - AEIT - 12 Gauge\nB1 - VII Circle - Demons\nB2 - Rommek - Mezcal Worm\n\n\nVinyl 2\nC1 - Cleric - The Puppet Master \nC2 - Remco Beekwilder - Air Of The 90s\nD1 - AnD - Fearless\nD2 - Benjamin Damage - Matriachy\n\n\nVinyl 3 \nE1 - Under Black Helmet - The Purist\nE2 - MAERE & 6SISS - Organisms\nF1 - Imperial Black Unit - Broken Tools\nF2 - End Train - Ctrl+Alt+Delete The System\n\n\nMasters by Alain Paul (Germany)\nDesign by Giambrone Studio\n---\nTriple-Red Flamed-Vinyl\n(only 300 copies)\n\nNo black version\n\nXXX008 | Angels From Hell\n3x12\" special red edition",
     "country": "ES",
@@ -445,17 +587,27 @@
     "original_day": null,
     "original_month": null,
     "original_year": null,
+    "release_group_title": null,
     "releasegroup_id": null,
     "releasegroupdisambig": null,
     "script": null,
     "style": "electronic",
     "tracks": [
       {
+        "album": "Angels From Hell",
         "arranger": null,
         "artist": "Rebekah",
         "artist_credit": null,
         "artist_id": "https://hexbarcelona.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Rebekah"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://hexbarcelona.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -480,11 +632,20 @@
         "work_disambig": null
       },
       {
+        "album": "Angels From Hell",
         "arranger": null,
         "artist": "Paolo Ferrara & Lorenzo Raganzini",
         "artist_credit": null,
         "artist_id": "https://hexbarcelona.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Paolo Ferrara & Lorenzo Raganzini"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://hexbarcelona.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -509,11 +670,20 @@
         "work_disambig": null
       },
       {
+        "album": "Angels From Hell",
         "arranger": null,
         "artist": "AEIT",
         "artist_credit": null,
         "artist_id": "https://hexbarcelona.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "AEIT"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://hexbarcelona.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -538,11 +708,20 @@
         "work_disambig": null
       },
       {
+        "album": "Angels From Hell",
         "arranger": null,
         "artist": "VII Circle",
         "artist_credit": null,
         "artist_id": "https://hexbarcelona.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "VII Circle"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://hexbarcelona.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -567,11 +746,20 @@
         "work_disambig": null
       },
       {
+        "album": "Angels From Hell",
         "arranger": null,
         "artist": "Rommek",
         "artist_credit": null,
         "artist_id": "https://hexbarcelona.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Rommek"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://hexbarcelona.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -596,11 +784,20 @@
         "work_disambig": null
       },
       {
+        "album": "Angels From Hell",
         "arranger": null,
         "artist": "Cleric",
         "artist_credit": null,
         "artist_id": "https://hexbarcelona.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Cleric"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://hexbarcelona.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -625,11 +822,20 @@
         "work_disambig": null
       },
       {
+        "album": "Angels From Hell",
         "arranger": null,
         "artist": "Remco Beekwilder",
         "artist_credit": null,
         "artist_id": "https://hexbarcelona.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Remco Beekwilder"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://hexbarcelona.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -654,11 +860,20 @@
         "work_disambig": null
       },
       {
+        "album": "Angels From Hell",
         "arranger": null,
         "artist": "AnD",
         "artist_credit": null,
         "artist_id": "https://hexbarcelona.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "AnD"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://hexbarcelona.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -683,11 +898,20 @@
         "work_disambig": null
       },
       {
+        "album": "Angels From Hell",
         "arranger": null,
         "artist": "Benjamin Damage",
         "artist_credit": null,
         "artist_id": "https://hexbarcelona.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Benjamin Damage"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://hexbarcelona.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -712,11 +936,20 @@
         "work_disambig": null
       },
       {
+        "album": "Angels From Hell",
         "arranger": null,
         "artist": "Under Black Helmet ",
         "artist_credit": null,
         "artist_id": "https://hexbarcelona.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Under Black Helmet"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://hexbarcelona.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -741,11 +974,20 @@
         "work_disambig": null
       },
       {
+        "album": "Angels From Hell",
         "arranger": null,
         "artist": "MAERE & 6SISS",
         "artist_credit": null,
         "artist_id": "https://hexbarcelona.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "MAERE & 6SISS"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://hexbarcelona.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -770,11 +1012,20 @@
         "work_disambig": null
       },
       {
+        "album": "Angels From Hell",
         "arranger": null,
         "artist": "Imperial Black Unit",
         "artist_credit": null,
         "artist_id": "https://hexbarcelona.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Imperial Black Unit"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://hexbarcelona.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -799,11 +1050,20 @@
         "work_disambig": null
       },
       {
+        "album": "Angels From Hell",
         "arranger": null,
         "artist": "End Train",
         "artist_credit": null,
         "artist_id": "https://hexbarcelona.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "End Train"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://hexbarcelona.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,

@@ -5,12 +5,24 @@
     "albumdisambig": null,
     "albumstatus": "Official",
     "albumtype": "album",
-    "albumtypes": "album; single",
+    "albumtypes": [
+      "album",
+      "single"
+    ],
     "artist": "Reece Cox",
     "artist_credit": null,
     "artist_id": "https://reececox.bandcamp.com",
     "artist_sort": null,
+    "artists": [
+      "Reece Cox"
+    ],
+    "artists_credit": [],
+    "artists_ids": [
+      "https://reececox.bandcamp.com"
+    ],
+    "artists_sort": [],
     "asin": null,
+    "barcode": null,
     "catalognum": "Kulør 008",
     "comments": "W/P by Reece Cox \nMastered by Joel Krozer, Six Bit Deep\nCreative direction: Najaaraq Vestbirk \nArtwork: Holler in the Green by Miriam Kongstad \nGraphic design: Spine Studio \n\nA1 Reece Cox - Emotion 1 (4:55) \nWritten and produced by Reece Cox. \n\nA2 Reece Cox - Emotion 1 (Ibon's Dizzy Stomp Mix) (8:44) \nRemix by DJ Ibon.\n\nB1 Reece Cox - Emotion 1 (Parris Remix) (5:40) \nRemix by Dwayne Parris-Robinson, mixed by Call Super. \n\nB2 Reece Cox - Emotion 1 (Call Super Remix) (6.40) \nRemix by Call Super. \n\nB3 Reece Cox - Emotion 1 (Upsammy Remix) (4:26) \nRemix by Thessa Torsing.",
     "country": "DE",
@@ -29,17 +41,27 @@
     "original_day": null,
     "original_month": null,
     "original_year": null,
+    "release_group_title": null,
     "releasegroup_id": null,
     "releasegroupdisambig": null,
     "script": null,
     "style": "electronic",
     "tracks": [
       {
+        "album": "Emotion 1",
         "arranger": null,
         "artist": "Reece Cox",
         "artist_credit": null,
         "artist_id": "https://reececox.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Reece Cox"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://reececox.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -64,11 +86,20 @@
         "work_disambig": null
       },
       {
+        "album": "Emotion 1",
         "arranger": null,
         "artist": "Reece Cox",
         "artist_credit": null,
         "artist_id": "https://reececox.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Reece Cox"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://reececox.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -93,11 +124,20 @@
         "work_disambig": null
       },
       {
+        "album": "Emotion 1",
         "arranger": null,
         "artist": "Reece Cox",
         "artist_credit": null,
         "artist_id": "https://reececox.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Reece Cox"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://reececox.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -122,11 +162,20 @@
         "work_disambig": null
       },
       {
+        "album": "Emotion 1",
         "arranger": null,
         "artist": "Reece Cox",
         "artist_credit": null,
         "artist_id": "https://reececox.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Reece Cox"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://reececox.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -151,11 +200,20 @@
         "work_disambig": null
       },
       {
+        "album": "Emotion 1",
         "arranger": null,
         "artist": "Reece Cox",
         "artist_credit": null,
         "artist_id": "https://reececox.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Reece Cox"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://reececox.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -189,12 +247,24 @@
     "albumdisambig": null,
     "albumstatus": "Official",
     "albumtype": "album",
-    "albumtypes": "album; single",
+    "albumtypes": [
+      "album",
+      "single"
+    ],
     "artist": "Reece Cox",
     "artist_credit": null,
     "artist_id": "https://reececox.bandcamp.com",
     "artist_sort": null,
+    "artists": [
+      "Reece Cox"
+    ],
+    "artists_credit": [],
+    "artists_ids": [
+      "https://reececox.bandcamp.com"
+    ],
+    "artists_sort": [],
     "asin": null,
+    "barcode": null,
     "catalognum": "Kulør 008",
     "comments": "Vinyl is expected later in March.\nPostage price includes tracking\n\nPlease be aware that we are still experiencing covid related issues with shipping companies. The package might therefore take longer than usual to arrive\n---\nW/P by Reece Cox \nMastered by Joel Krozer, Six Bit Deep\nCreative direction: Najaaraq Vestbirk \nArtwork: Holler in the Green by Miriam Kongstad \nGraphic design: Spine Studio \n\nA1 Reece Cox - Emotion 1 (4:55) \nWritten and produced by Reece Cox. \n\nA2 Reece Cox - Emotion 1 (Ibon's Dizzy Stomp Mix) (8:44) \nRemix by DJ Ibon.\n\nB1 Reece Cox - Emotion 1 (Parris Remix) (5:40) \nRemix by Dwayne Parris-Robinson, mixed by Call Super. \n\nB2 Reece Cox - Emotion 1 (Call Super Remix) (6.40) \nRemix by Call Super. \n\nB3 Reece Cox - Emotion 1 (Upsammy Remix) (4:26) \nRemix by Thessa Torsing.",
     "country": "DE",
@@ -213,17 +283,27 @@
     "original_day": null,
     "original_month": null,
     "original_year": null,
+    "release_group_title": null,
     "releasegroup_id": null,
     "releasegroupdisambig": null,
     "script": null,
     "style": "electronic",
     "tracks": [
       {
+        "album": "Emotion 1",
         "arranger": null,
         "artist": "Reece Cox",
         "artist_credit": null,
         "artist_id": "https://reececox.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Reece Cox"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://reececox.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -248,11 +328,20 @@
         "work_disambig": null
       },
       {
+        "album": "Emotion 1",
         "arranger": null,
         "artist": "Reece Cox",
         "artist_credit": null,
         "artist_id": "https://reececox.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Reece Cox"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://reececox.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -277,11 +366,20 @@
         "work_disambig": null
       },
       {
+        "album": "Emotion 1",
         "arranger": null,
         "artist": "Reece Cox",
         "artist_credit": null,
         "artist_id": "https://reececox.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Reece Cox"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://reececox.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -306,11 +404,20 @@
         "work_disambig": null
       },
       {
+        "album": "Emotion 1",
         "arranger": null,
         "artist": "Reece Cox",
         "artist_credit": null,
         "artist_id": "https://reececox.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Reece Cox"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://reececox.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -335,11 +442,20 @@
         "work_disambig": null
       },
       {
+        "album": "Emotion 1",
         "arranger": null,
         "artist": "Reece Cox",
         "artist_credit": null,
         "artist_id": "https://reececox.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Reece Cox"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://reececox.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,

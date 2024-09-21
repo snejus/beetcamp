@@ -14,13 +14,20 @@ from typing import (
     NamedTuple,
     Pattern,
     Tuple,
+    TypeVar,
     Union,
 )
 
+from beets import __version__ as beets_version
 from beets.autotag.hooks import AlbumInfo
 from ordered_set import OrderedSet as ordset  # noqa: N813
+from packaging.version import Version
 
 from .genres_lookup import GENRES
+
+BEETS_VERSION = Version(beets_version)
+ALBUMTYPES_LIST_SUPPORT = BEETS_VERSION >= Version("1.6.0")
+ARTIST_LIST_FIELDS_SUPPORT = BEETS_VERSION >= Version("2.0.0")
 
 JSONDict = Dict[str, Any]
 DIGI_MEDIA = "Digital Media"
@@ -33,6 +40,8 @@ FORMAT_TO_MEDIA = {
     "DVDFormat": "DVD",
     "USB Flash Drive": DIGI_MEDIA,
 }
+
+T = TypeVar("T", bound=JSONDict)
 
 
 class MediaInfo(NamedTuple):
@@ -339,3 +348,18 @@ class Helpers:
                 else:
                     medium_index += 1
         return album
+
+    @staticmethod
+    def check_list_fields(data: T) -> T:
+        if "albumtypes" in data and not ALBUMTYPES_LIST_SUPPORT:
+            data["albumtypes"] = "; ".join(data["albumtypes"])
+
+        if not ARTIST_LIST_FIELDS_SUPPORT:
+            fields = ["artists", "artists_ids", "artists_credit", "artists_sort"]
+            for f in fields:
+                data.pop(f)
+
+        if "tracks" in data:
+            data["tracks"] = [Helpers.check_list_fields(t) for t in data["tracks"]]
+
+        return data

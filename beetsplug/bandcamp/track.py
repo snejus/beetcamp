@@ -224,6 +224,10 @@ class Track:
 
     @property
     def info(self) -> JSONDict:
+        artists = self.artists
+        if self.ft_artist:
+            artists.append(self.ft_artist)
+
         return {
             "index": self.index,
             "medium_index": self.index,
@@ -234,6 +238,7 @@ class Track:
                 if self.ft_artist not in self.artist + self.title
                 else self.artist
             ),
+            "artists": artists,
             "title": self.title,
             "length": self.duration,
             "track_alt": self.track_alt,
