@@ -15,7 +15,7 @@ from rich_tables.utils import make_console, pretty_diff
 from typing_extensions import TypeAlias
 
 from beetsplug.bandcamp import DEFAULT_CONFIG
-from beetsplug.bandcamp.metaguru import ALBUMTYPES_LIST_SUPPORT
+from beetsplug.bandcamp.helpers import Helpers
 
 if TYPE_CHECKING:
     from _pytest.config import Config
@@ -205,15 +205,9 @@ def expected_release(bandcamp_data_path: Path) -> list[AlbumInfo] | TrackInfo | 
     release_data = json.loads(release_datastr)
 
     if isinstance(release_data, dict):
-        if ALBUMTYPES_LIST_SUPPORT:
-            release_data["albumtypes"] = release_data["albumtypes"].split("; ")
-        return TrackInfo(**release_data)
+        return Helpers.check_list_fields(TrackInfo(**release_data))
 
-    if ALBUMTYPES_LIST_SUPPORT:
-        for release in release_data:
-            release["albumtypes"] = release["albumtypes"].split("; ")
-
-    return [AlbumInfo(**r) for r in release_data]
+    return [Helpers.check_list_fields(AlbumInfo(**r)) for r in release_data]
 
 
 @pytest.fixture

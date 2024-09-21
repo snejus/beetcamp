@@ -5,12 +5,24 @@
     "albumdisambig": null,
     "albumstatus": "Official",
     "albumtype": "compilation",
-    "albumtypes": "album; compilation",
+    "albumtypes": [
+      "album",
+      "compilation"
+    ],
     "artist": "Various Artists",
     "artist_credit": null,
     "artist_id": "https://ismusberlin.bandcamp.com",
     "artist_sort": null,
+    "artists": [
+      "Various Artists"
+    ],
+    "artists_credit": [],
+    "artists_ids": [
+      "https://ismusberlin.bandcamp.com"
+    ],
+    "artists_sort": [],
     "asin": null,
+    "barcode": null,
     "catalognum": "ISMVA003.3",
     "comments": "Mastering by Eric Reivolp, Artwork by Nick Cocozza",
     "country": "DE",
@@ -29,17 +41,27 @@
     "original_day": null,
     "original_month": null,
     "original_year": null,
+    "release_group_title": null,
     "releasegroup_id": null,
     "releasegroupdisambig": null,
     "script": null,
     "style": "electronic",
     "tracks": [
       {
+        "album": "ISMVA003.3",
         "arranger": null,
         "artist": "Zebar & Zimo",
         "artist_credit": null,
         "artist_id": "https://ismusberlin.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Zebar & Zimo"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://ismusberlin.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -64,11 +86,20 @@
         "work_disambig": null
       },
       {
+        "album": "ISMVA003.3",
         "arranger": null,
         "artist": "Alpha Tracks",
         "artist_credit": null,
         "artist_id": "https://ismusberlin.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Alpha Tracks"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://ismusberlin.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -93,11 +124,20 @@
         "work_disambig": null
       },
       {
+        "album": "ISMVA003.3",
         "arranger": null,
         "artist": "Less Distress",
         "artist_credit": null,
         "artist_id": "https://ismusberlin.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Less Distress"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://ismusberlin.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -122,11 +162,20 @@
         "work_disambig": null
       },
       {
+        "album": "ISMVA003.3",
         "arranger": null,
         "artist": "Lucas Martins",
         "artist_credit": null,
         "artist_id": "https://ismusberlin.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Lucas Martins"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://ismusberlin.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -151,11 +200,20 @@
         "work_disambig": null
       },
       {
+        "album": "ISMVA003.3",
         "arranger": null,
         "artist": "Pro Athlete",
         "artist_credit": null,
         "artist_id": "https://ismusberlin.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Pro Athlete"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://ismusberlin.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -180,11 +238,20 @@
         "work_disambig": null
       },
       {
+        "album": "ISMVA003.3",
         "arranger": null,
         "artist": "zwyrg",
         "artist_credit": null,
         "artist_id": "https://ismusberlin.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "zwyrg"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://ismusberlin.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -209,11 +276,20 @@
         "work_disambig": null
       },
       {
+        "album": "ISMVA003.3",
         "arranger": null,
         "artist": "ΣNDYM",
         "artist_credit": null,
         "artist_id": "https://ismusberlin.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "ΣNDYM"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://ismusberlin.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -238,11 +314,20 @@
         "work_disambig": null
       },
       {
+        "album": "ISMVA003.3",
         "arranger": null,
         "artist": "KLØNE",
         "artist_credit": null,
         "artist_id": "https://ismusberlin.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "KLØNE"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://ismusberlin.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -267,11 +352,20 @@
         "work_disambig": null
       },
       {
+        "album": "ISMVA003.3",
         "arranger": null,
         "artist": "I.E",
         "artist_credit": null,
         "artist_id": "https://ismusberlin.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "I.E"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://ismusberlin.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -296,11 +390,20 @@
         "work_disambig": null
       },
       {
+        "album": "ISMVA003.3",
         "arranger": null,
         "artist": "DJ G2G",
         "artist_credit": null,
         "artist_id": "https://ismusberlin.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "DJ G2G"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://ismusberlin.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -325,11 +428,20 @@
         "work_disambig": null
       },
       {
+        "album": "ISMVA003.3",
         "arranger": null,
         "artist": "Mr. Free",
         "artist_credit": null,
         "artist_id": "https://ismusberlin.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Mr. Free"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://ismusberlin.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -354,11 +466,20 @@
         "work_disambig": null
       },
       {
+        "album": "ISMVA003.3",
         "arranger": null,
         "artist": "ABEM",
         "artist_credit": null,
         "artist_id": "https://ismusberlin.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "ABEM"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://ismusberlin.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -383,11 +504,20 @@
         "work_disambig": null
       },
       {
+        "album": "ISMVA003.3",
         "arranger": null,
         "artist": "DJ Reiz",
         "artist_credit": null,
         "artist_id": "https://ismusberlin.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "DJ Reiz"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://ismusberlin.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,

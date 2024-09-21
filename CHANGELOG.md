@@ -56,7 +56,8 @@
 ### Added
 
 - Auto-Tagger: Wider search analogous to cli search query as a fallback for bad or missing
-  meta data
+  meta data.
+- Add artist list fields support for `beets==2.0.0`.
 
 ### Updated
 

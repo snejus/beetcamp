@@ -5,12 +5,23 @@
     "albumdisambig": null,
     "albumstatus": "Official",
     "albumtype": "ep",
-    "albumtypes": "ep",
+    "albumtypes": [
+      "ep"
+    ],
     "artist": "Gareth Wild",
     "artist_credit": null,
     "artist_id": "https://foldrecords.bandcamp.com",
     "artist_sort": null,
+    "artists": [
+      "Gareth Wild"
+    ],
+    "artists_credit": [],
+    "artists_ids": [
+      "https://foldrecords.bandcamp.com"
+    ],
+    "artists_sort": [],
     "asin": null,
+    "barcode": null,
     "catalognum": "FLD001",
     "comments": null,
     "country": "GB",
@@ -29,17 +40,27 @@
     "original_day": null,
     "original_month": null,
     "original_year": null,
+    "release_group_title": null,
     "releasegroup_id": null,
     "releasegroupdisambig": null,
     "script": null,
     "style": null,
     "tracks": [
       {
+        "album": "Common Assault EP",
         "arranger": null,
         "artist": "Gareth Wild",
         "artist_credit": null,
         "artist_id": "https://foldrecords.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Gareth Wild"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://foldrecords.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -64,11 +85,20 @@
         "work_disambig": null
       },
       {
+        "album": "Common Assault EP",
         "arranger": null,
         "artist": "Gareth Wild",
         "artist_credit": null,
         "artist_id": "https://foldrecords.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Gareth Wild"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://foldrecords.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -93,11 +123,20 @@
         "work_disambig": null
       },
       {
+        "album": "Common Assault EP",
         "arranger": null,
         "artist": "Gareth Wild",
         "artist_credit": null,
         "artist_id": "https://foldrecords.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Gareth Wild"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://foldrecords.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -122,11 +161,20 @@
         "work_disambig": null
       },
       {
+        "album": "Common Assault EP",
         "arranger": null,
         "artist": "Gareth Wild",
         "artist_credit": null,
         "artist_id": "https://foldrecords.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Gareth Wild"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://foldrecords.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -151,11 +199,20 @@
         "work_disambig": null
       },
       {
+        "album": "Common Assault EP",
         "arranger": null,
         "artist": "Gareth Wild",
         "artist_credit": null,
         "artist_id": "https://foldrecords.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Gareth Wild"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://foldrecords.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -180,11 +237,20 @@
         "work_disambig": null
       },
       {
+        "album": "Common Assault EP",
         "arranger": null,
         "artist": "Gareth Wild",
         "artist_credit": null,
         "artist_id": "https://foldrecords.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Gareth Wild"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://foldrecords.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -218,12 +284,23 @@
     "albumdisambig": null,
     "albumstatus": "Official",
     "albumtype": "ep",
-    "albumtypes": "ep",
+    "albumtypes": [
+      "ep"
+    ],
     "artist": "Gareth Wild",
     "artist_credit": null,
     "artist_id": "https://foldrecords.bandcamp.com",
     "artist_sort": null,
+    "artists": [
+      "Gareth Wild"
+    ],
+    "artists_credit": [],
+    "artists_ids": [
+      "https://foldrecords.bandcamp.com"
+    ],
+    "artists_sort": [],
     "asin": null,
+    "barcode": null,
     "catalognum": "FLD001",
     "comments": "For the inaugural EP, FOLD resident Gareth Wild presents ‘Common Assault’. With metallic tubular synthesis, cut-throat percussion and rolling rhythms, this EP is an effective and essential piece of material demonstrating all angles of Techno, immersive to peak-time.\n\nThe release features three original tracks and two locked grooves from Gareth with stripped back, dark-side remix work from Madrid’s very own Roll Dann.",
     "country": "GB",
@@ -242,17 +319,27 @@
     "original_day": null,
     "original_month": null,
     "original_year": null,
+    "release_group_title": null,
     "releasegroup_id": null,
     "releasegroupdisambig": null,
     "script": null,
     "style": null,
     "tracks": [
       {
+        "album": "Common Assault EP",
         "arranger": null,
         "artist": "Gareth Wild",
         "artist_credit": null,
         "artist_id": "https://foldrecords.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Gareth Wild"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://foldrecords.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -277,11 +364,20 @@
         "work_disambig": null
       },
       {
+        "album": "Common Assault EP",
         "arranger": null,
         "artist": "Gareth Wild",
         "artist_credit": null,
         "artist_id": "https://foldrecords.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Gareth Wild"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://foldrecords.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -306,11 +402,20 @@
         "work_disambig": null
       },
       {
+        "album": "Common Assault EP",
         "arranger": null,
         "artist": "Gareth Wild",
         "artist_credit": null,
         "artist_id": "https://foldrecords.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Gareth Wild"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://foldrecords.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -335,11 +440,20 @@
         "work_disambig": null
       },
       {
+        "album": "Common Assault EP",
         "arranger": null,
         "artist": "Gareth Wild",
         "artist_credit": null,
         "artist_id": "https://foldrecords.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Gareth Wild"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://foldrecords.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -364,11 +478,20 @@
         "work_disambig": null
       },
       {
+        "album": "Common Assault EP",
         "arranger": null,
         "artist": "Gareth Wild",
         "artist_credit": null,
         "artist_id": "https://foldrecords.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Gareth Wild"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://foldrecords.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -393,11 +516,20 @@
         "work_disambig": null
       },
       {
+        "album": "Common Assault EP",
         "arranger": null,
         "artist": "Gareth Wild",
         "artist_credit": null,
         "artist_id": "https://foldrecords.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Gareth Wild"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://foldrecords.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,

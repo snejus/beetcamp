@@ -10,10 +10,8 @@ from functools import cached_property, partial
 from typing import Any, Dict, Iterable, List, Optional, Set
 from unicodedata import normalize
 
-from beets import __version__ as beets_version
 from beets import config as beets_config
 from beets.autotag.hooks import AlbumInfo, TrackInfo
-from packaging.version import Version
 from pycountry import countries, subdivisions
 
 from .album_name import AlbumName
@@ -21,9 +19,6 @@ from .catalognum import Catalognum
 from .helpers import PATTERNS, Helpers, MediaInfo
 from .track import Track
 from .tracks import Tracks
-
-BEETS_VERSION = Version(beets_version)
-ALBUMTYPES_LIST_SUPPORT = BEETS_VERSION >= Version("1.6.0")
 
 JSONDict = Dict[str, Any]
 
@@ -408,10 +403,14 @@ class Metaguru(Helpers):
     @property
     def _common(self) -> JSONDict:
         return {
-            "data_source": DATA_SOURCE,
-            "media": self.media.name,
-            "data_url": self.album_id,
+            "album": self.album_name,
             "artist_id": self.artist_id,
+            "artists_credit": [],  # TODO: implement
+            "artists_ids": [self.artist_id],
+            "artists_sort": [],  # TODO: implement
+            "data_source": DATA_SOURCE,
+            "data_url": self.album_id,
+            "media": self.media.name,
         }
 
     def get_fields(self, fields: Iterable[str], src: object = None) -> JSONDict:
@@ -424,7 +423,7 @@ class Metaguru(Helpers):
 
     @property
     def _common_album(self) -> JSONDict:
-        common_data: JSONDict = {"album": self.album_name}
+        common_data: JSONDict = dict.fromkeys(["barcode", "release_group_title"])
         fields = [
             "albumtype",
             "albumtypes",
@@ -436,11 +435,10 @@ class Metaguru(Helpers):
             "style",
         ]
         common_data.update(self.get_fields(fields))
-        if not ALBUMTYPES_LIST_SUPPORT:
-            common_data["albumtypes"] = "; ".join(common_data["albumtypes"])
         reldate = self.release_date
         if reldate:
             common_data.update(self.get_fields(["year", "month", "day"], reldate))
+        common_data["artists"] = self.albumartist.split(", ")
 
         return common_data
 
@@ -464,9 +462,9 @@ class Metaguru(Helpers):
         self.media = self.media_formats[0]
         track = self._trackinfo(self.tracks.first)
         track.update(self._common_album)
-        track.pop("album", None)
+        track.album = None
         track.track_id = track.data_url
-        return track
+        return self.check_list_fields(track)
 
     def get_media_album(self, media: MediaInfo) -> AlbumInfo:
         """Return album for the appropriate release format."""
@@ -497,7 +495,7 @@ class Metaguru(Helpers):
         album_info.album_id = self.media.album_id
         if self.media.name == "Vinyl":
             album_info = self.add_track_alts(album_info, self.comments or "")
-        return album_info
+        return self.check_list_fields(album_info)
 
     @cached_property
     def albums(self) -> List[AlbumInfo]:

@@ -5,12 +5,24 @@
     "albumdisambig": null,
     "albumstatus": "Official",
     "albumtype": "album",
-    "albumtypes": "album; lp",
+    "albumtypes": [
+      "album",
+      "lp"
+    ],
     "artist": "Various Artists",
     "artist_credit": null,
     "artist_id": "https://gutterfunkuk.bandcamp.com",
     "artist_sort": null,
+    "artists": [
+      "Various Artists"
+    ],
+    "artists_credit": [],
+    "artists_ids": [
+      "https://gutterfunkuk.bandcamp.com"
+    ],
+    "artists_sort": [],
     "asin": null,
+    "barcode": null,
     "catalognum": "",
     "comments": "DJ Die's GutterFunk imprint has gone from strength to strength over the past few years, the label's ethos of ‘good-music-first’, whilst not being restricted by genre, has permeated with artists and listeners alike. The labels tracks have found their way into the sets of a massively diverse set of DJs - from the likes of Gerd Janson, David Rodigan, dBridge and Shy FX.\n\nThe labels first compilation album, ‘GutterFunk: All Subject To Vibes’ acts as an introduction or indeed a reminder of what GutterFunk is all about. Style-wise we are presented with House, mutations of 140bpm, Broken Beat, Drum and Bass, Jungle and Soul. The compilation is encapsulated by an archive photo from the legendary photographer Mark Simmons, reflecting the curveball nature of the album, whilst also paying homage to Bristol values of ignoring rules and tradition, which is embedded into GutterFunk’s DNA. The artwork used for the album is a photo by Mark Simmons from his book 'Bristol Black & White'.\n\n The guest list on the album speaks for itself, showing GutterFunk’s penchant for high-quality artists: DJ Die, Pinch, Fox, Randall, Dismantle, Addison Groove and Fixate to name a few. Meanwhile the newly formed Watch The Ride project delivers the club anthem 'Skeematics', riding high after the massive success of the collab with D Double E and mysterious Soul/boogie outfit Sure Thing close off the album with the perfect last dance 'Atoms.'\n\nIn true GutterFunk fashion, the album was worked on with a fine-tooth comb, each detail in each track was agonised over by the artist and then by DJ Die and Dismantle emphasising the importance of the labels first compilation album. It's an album that prides itself on working as a complete listen when going from track 1 to track 11, whilst working as DJ tools when used as club tracks.\n\nA great way to end a big year for the label and celebrate the achievements of all the artists’ successes during 2019.",
     "country": "GB",
@@ -29,17 +41,27 @@
     "original_day": null,
     "original_month": null,
     "original_year": null,
+    "release_group_title": null,
     "releasegroup_id": null,
     "releasegroupdisambig": null,
     "script": null,
     "style": "electronic",
     "tracks": [
       {
+        "album": "All Subject To Vibes LP",
         "arranger": null,
         "artist": "DieMantle",
         "artist_credit": null,
         "artist_id": "https://gutterfunkuk.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "DieMantle"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://gutterfunkuk.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -64,11 +86,20 @@
         "work_disambig": null
       },
       {
+        "album": "All Subject To Vibes LP",
         "arranger": null,
         "artist": "Sure Thing",
         "artist_credit": null,
         "artist_id": "https://gutterfunkuk.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Sure Thing"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://gutterfunkuk.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -93,11 +124,20 @@
         "work_disambig": null
       },
       {
+        "album": "All Subject To Vibes LP",
         "arranger": null,
         "artist": "Monkey Wrench",
         "artist_credit": null,
         "artist_id": "https://gutterfunkuk.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Monkey Wrench"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://gutterfunkuk.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -122,11 +162,20 @@
         "work_disambig": null
       },
       {
+        "album": "All Subject To Vibes LP",
         "arranger": null,
         "artist": "Addison Groove",
         "artist_credit": null,
         "artist_id": "https://gutterfunkuk.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Addison Groove"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://gutterfunkuk.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -151,11 +200,20 @@
         "work_disambig": null
       },
       {
+        "album": "All Subject To Vibes LP",
         "arranger": null,
         "artist": "Fox & DieMantle",
         "artist_credit": null,
         "artist_id": "https://gutterfunkuk.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Fox & DieMantle"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://gutterfunkuk.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -180,11 +238,20 @@
         "work_disambig": null
       },
       {
+        "album": "All Subject To Vibes LP",
         "arranger": null,
         "artist": "DJ Die & Pinch",
         "artist_credit": null,
         "artist_id": "https://gutterfunkuk.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "DJ Die & Pinch"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://gutterfunkuk.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -209,11 +276,20 @@
         "work_disambig": null
       },
       {
+        "album": "All Subject To Vibes LP",
         "arranger": null,
         "artist": "Dismantle",
         "artist_credit": null,
         "artist_id": "https://gutterfunkuk.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Dismantle"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://gutterfunkuk.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -238,11 +314,20 @@
         "work_disambig": null
       },
       {
+        "album": "All Subject To Vibes LP",
         "arranger": null,
         "artist": "Dead Mans Chest & Josimar",
         "artist_credit": null,
         "artist_id": "https://gutterfunkuk.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Dead Mans Chest & Josimar"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://gutterfunkuk.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -267,11 +352,20 @@
         "work_disambig": null
       },
       {
+        "album": "All Subject To Vibes LP",
         "arranger": null,
         "artist": "Fixate",
         "artist_credit": null,
         "artist_id": "https://gutterfunkuk.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Fixate"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://gutterfunkuk.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -296,11 +390,22 @@
         "work_disambig": null
       },
       {
+        "album": "All Subject To Vibes LP",
         "arranger": null,
         "artist": "Watch The Ride (DJ Randall, DJ Die, Dismantle)",
         "artist_credit": null,
         "artist_id": "https://gutterfunkuk.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Watch The Ride (DJ Randall",
+          "DJ Die",
+          "Dismantle)"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://gutterfunkuk.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -325,11 +430,20 @@
         "work_disambig": null
       },
       {
+        "album": "All Subject To Vibes LP",
         "arranger": null,
         "artist": "Sure Thing",
         "artist_credit": null,
         "artist_id": "https://gutterfunkuk.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Sure Thing"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://gutterfunkuk.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
