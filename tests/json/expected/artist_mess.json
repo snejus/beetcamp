@@ -5,12 +5,23 @@
     "albumdisambig": null,
     "albumstatus": "Official",
     "albumtype": "album",
-    "albumtypes": "album",
+    "albumtypes": [
+      "album"
+    ],
     "artist": "Various Artists",
     "artist_credit": null,
     "artist_id": "https://psykovsky.bandcamp.com",
     "artist_sort": null,
+    "artists": [
+      "Various Artists"
+    ],
+    "artists_credit": [],
+    "artists_ids": [
+      "https://psykovsky.bandcamp.com"
+    ],
+    "artists_sort": [],
     "asin": null,
+    "barcode": null,
     "catalognum": "",
     "comments": null,
     "country": "NU",
@@ -29,17 +40,27 @@
     "original_day": null,
     "original_month": null,
     "original_year": null,
+    "release_group_title": null,
     "releasegroup_id": null,
     "releasegroupdisambig": null,
     "script": null,
     "style": "electronic",
     "tracks": [
       {
+        "album": "Ksolntsu",
         "arranger": null,
         "artist": "Psykovsky & Orestis",
         "artist_credit": null,
         "artist_id": "https://psykovsky.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Psykovsky & Orestis"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://psykovsky.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -64,11 +85,20 @@
         "work_disambig": null
       },
       {
+        "album": "Ksolntsu",
         "arranger": null,
         "artist": "Psykovsky & Luuli",
         "artist_credit": null,
         "artist_id": "https://psykovsky.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Psykovsky & Luuli"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://psykovsky.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -93,11 +123,20 @@
         "work_disambig": null
       },
       {
+        "album": "Ksolntsu",
         "arranger": null,
         "artist": "Psykovsky & Spiral",
         "artist_credit": null,
         "artist_id": "https://psykovsky.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Psykovsky & Spiral"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://psykovsky.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -122,11 +161,20 @@
         "work_disambig": null
       },
       {
+        "album": "Ksolntsu",
         "arranger": null,
         "artist": "Psykovsky & Kasatka",
         "artist_credit": null,
         "artist_id": "https://psykovsky.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Psykovsky & Kasatka"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://psykovsky.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -151,11 +199,20 @@
         "work_disambig": null
       },
       {
+        "album": "Ksolntsu",
         "arranger": null,
         "artist": "Psykovsky & Spiral & Seeasound",
         "artist_credit": null,
         "artist_id": "https://psykovsky.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Psykovsky & Spiral & Seeasound"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://psykovsky.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -180,11 +237,20 @@
         "work_disambig": null
       },
       {
+        "album": "Ksolntsu",
         "arranger": null,
         "artist": "Psykovsky & Friends",
         "artist_credit": null,
         "artist_id": "https://psykovsky.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Psykovsky & Friends"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://psykovsky.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -209,11 +275,20 @@
         "work_disambig": null
       },
       {
+        "album": "Ksolntsu",
         "arranger": null,
         "artist": "Psykovsky & Orestis & Jobaba",
         "artist_credit": null,
         "artist_id": "https://psykovsky.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Psykovsky & Orestis & Jobaba"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://psykovsky.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -238,11 +313,20 @@
         "work_disambig": null
       },
       {
+        "album": "Ksolntsu",
         "arranger": null,
         "artist": "Psykovsky & Kashyyyk & Arcek",
         "artist_credit": null,
         "artist_id": "https://psykovsky.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Psykovsky & Kashyyyk & Arcek"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://psykovsky.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -267,11 +351,20 @@
         "work_disambig": null
       },
       {
+        "album": "Ksolntsu",
         "arranger": null,
         "artist": "Psykovsky & Arcek",
         "artist_credit": null,
         "artist_id": "https://psykovsky.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Psykovsky & Arcek"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://psykovsky.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -296,11 +389,20 @@
         "work_disambig": null
       },
       {
+        "album": "Ksolntsu",
         "arranger": null,
         "artist": "Psykovsky & Maleficium & Seeasound",
         "artist_credit": null,
         "artist_id": "https://psykovsky.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Psykovsky & Maleficium & Seeasound"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://psykovsky.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -326,11 +428,20 @@
         "work_disambig": null
       },
       {
+        "album": "Ksolntsu",
         "arranger": null,
         "artist": "Psykovsky & Friends",
         "artist_credit": null,
         "artist_id": "https://psykovsky.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Psykovsky & Friends"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://psykovsky.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -355,11 +466,20 @@
         "work_disambig": null
       },
       {
+        "album": "Ksolntsu",
         "arranger": null,
         "artist": "Psykovsky & Friends",
         "artist_credit": null,
         "artist_id": "https://psykovsky.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Psykovsky & Friends"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://psykovsky.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -384,11 +504,20 @@
         "work_disambig": null
       },
       {
+        "album": "Ksolntsu",
         "arranger": null,
         "artist": "Psykovsky & Friends",
         "artist_credit": null,
         "artist_id": "https://psykovsky.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Psykovsky & Friends"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://psykovsky.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -413,11 +542,20 @@
         "work_disambig": null
       },
       {
+        "album": "Ksolntsu",
         "arranger": null,
         "artist": "Psykovsky & Quip Tone Beatz & Flish",
         "artist_credit": null,
         "artist_id": "https://psykovsky.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Psykovsky & Quip Tone Beatz & Flish"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://psykovsky.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -442,11 +580,20 @@
         "work_disambig": null
       },
       {
+        "album": "Ksolntsu",
         "arranger": null,
         "artist": "Birds Of Praise",
         "artist_credit": null,
         "artist_id": "https://psykovsky.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Birds Of Praise"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://psykovsky.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,

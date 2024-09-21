@@ -5,12 +5,25 @@
     "albumdisambig": null,
     "albumstatus": "Official",
     "albumtype": "ep",
-    "albumtypes": "ep; single",
+    "albumtypes": [
+      "ep",
+      "single"
+    ],
     "artist": "Aluphobia, Astatine",
     "artist_credit": null,
     "artist_id": "https://purehate000.bandcamp.com",
     "artist_sort": null,
+    "artists": [
+      "Aluphobia",
+      "Astatine"
+    ],
+    "artists_credit": [],
+    "artists_ids": [
+      "https://purehate000.bandcamp.com"
+    ],
+    "artists_sort": [],
     "asin": null,
+    "barcode": null,
     "catalognum": "",
     "comments": null,
     "country": "HU",
@@ -29,17 +42,28 @@
     "original_day": null,
     "original_month": null,
     "original_year": null,
+    "release_group_title": null,
     "releasegroup_id": null,
     "releasegroupdisambig": null,
     "script": null,
     "style": "electronic",
     "tracks": [
       {
+        "album": "Problem Child EP",
         "arranger": null,
         "artist": "Aluphobia x Astatine",
         "artist_credit": null,
         "artist_id": "https://purehate000.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Aluphobia",
+          "Astatine"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://purehate000.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -64,11 +88,21 @@
         "work_disambig": null
       },
       {
+        "album": "Problem Child EP",
         "arranger": null,
         "artist": "Aluphobia x Astatine",
         "artist_credit": null,
         "artist_id": "https://purehate000.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Aluphobia",
+          "Astatine"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://purehate000.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -93,11 +127,21 @@
         "work_disambig": null
       },
       {
+        "album": "Problem Child EP",
         "arranger": null,
         "artist": "Aluphobia x Astatine",
         "artist_credit": null,
         "artist_id": "https://purehate000.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Aluphobia",
+          "Astatine"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://purehate000.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,

@@ -5,12 +5,23 @@
     "albumdisambig": null,
     "albumstatus": "Official",
     "albumtype": "album",
-    "albumtypes": "album",
+    "albumtypes": [
+      "album"
+    ],
     "artist": "Process 404",
     "artist_credit": null,
     "artist_id": "https://blvckplvgue.bandcamp.com",
     "artist_sort": null,
+    "artists": [
+      "Process 404"
+    ],
+    "artists_credit": [],
+    "artists_ids": [
+      "https://blvckplvgue.bandcamp.com"
+    ],
+    "artists_sort": [],
     "asin": null,
+    "barcode": null,
     "catalognum": "",
     "comments": "Future as always been a fantasy\n\nBlack/Plague wants to take you to the future. This distant fantasy that continues to inspire so many artists. Will technology bring us progress, or even more chaos?\nAntoine aka Process 404 wants you to take part. This near future where technology creates a constant conflict in our daily life. By combining elements and sonority of cyberpunk culture with Electronic, Process 404 seek to prove his vision of the future and why so many people call Techno « the sound of tomorrow». You can expect 4/4 tracks loaded with dystopian sounds and robotics ammo.\n---\nMastering: Axel Picodot",
     "country": "FR",
@@ -29,17 +40,27 @@
     "original_day": null,
     "original_month": null,
     "original_year": null,
+    "release_group_title": null,
     "releasegroup_id": null,
     "releasegroupdisambig": null,
     "script": null,
     "style": "electronic",
     "tracks": [
       {
+        "album": "Cybernetic Punk Unit",
         "arranger": null,
         "artist": "Process 404",
         "artist_credit": null,
         "artist_id": "https://blvckplvgue.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Process 404"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://blvckplvgue.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -64,11 +85,20 @@
         "work_disambig": null
       },
       {
+        "album": "Cybernetic Punk Unit",
         "arranger": null,
         "artist": "Process 404",
         "artist_credit": null,
         "artist_id": "https://blvckplvgue.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Process 404"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://blvckplvgue.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -93,11 +123,20 @@
         "work_disambig": null
       },
       {
+        "album": "Cybernetic Punk Unit",
         "arranger": null,
         "artist": "Process 404",
         "artist_credit": null,
         "artist_id": "https://blvckplvgue.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Process 404"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://blvckplvgue.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -122,11 +161,20 @@
         "work_disambig": null
       },
       {
+        "album": "Cybernetic Punk Unit",
         "arranger": null,
         "artist": "Process 404",
         "artist_credit": null,
         "artist_id": "https://blvckplvgue.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Process 404"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://blvckplvgue.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,

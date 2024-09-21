@@ -5,12 +5,23 @@
     "albumdisambig": null,
     "albumstatus": "Official",
     "albumtype": "album",
-    "albumtypes": "album",
+    "albumtypes": [
+      "album"
+    ],
     "artist": "Mikkel Rev",
     "artist_credit": null,
     "artist_id": "https://ute-rec.bandcamp.com",
     "artist_sort": null,
+    "artists": [
+      "Mikkel Rev"
+    ],
+    "artists_credit": [],
+    "artists_ids": [
+      "https://ute-rec.bandcamp.com"
+    ],
+    "artists_sort": [],
     "asin": null,
+    "barcode": null,
     "catalognum": "UTE004",
     "comments": "Our dear Mikkel serving four emotional and warm trancers focused on the journey within.\n---\nProduction: Mikkel Haraldstad\nMaster: Joel Krozer, 6bitdeep\nGraphics: Haider Ahmed",
     "country": "NO",
@@ -29,17 +40,27 @@
     "original_day": null,
     "original_month": null,
     "original_year": null,
+    "release_group_title": null,
     "releasegroup_id": null,
     "releasegroupdisambig": null,
     "script": null,
     "style": null,
     "tracks": [
       {
+        "album": "UTE004",
         "arranger": null,
         "artist": "Mikkel Rev",
         "artist_credit": null,
         "artist_id": "https://ute-rec.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Mikkel Rev"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://ute-rec.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -64,11 +85,20 @@
         "work_disambig": null
       },
       {
+        "album": "UTE004",
         "arranger": null,
         "artist": "Mikkel Rev",
         "artist_credit": null,
         "artist_id": "https://ute-rec.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Mikkel Rev"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://ute-rec.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -93,11 +123,20 @@
         "work_disambig": null
       },
       {
+        "album": "UTE004",
         "arranger": null,
         "artist": "Mikkel Rev",
         "artist_credit": null,
         "artist_id": "https://ute-rec.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Mikkel Rev"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://ute-rec.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -122,11 +161,20 @@
         "work_disambig": null
       },
       {
+        "album": "UTE004",
         "arranger": null,
         "artist": "Mikkel Rev",
         "artist_credit": null,
         "artist_id": "https://ute-rec.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Mikkel Rev"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://ute-rec.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -160,12 +208,23 @@
     "albumdisambig": null,
     "albumstatus": "Official",
     "albumtype": "album",
-    "albumtypes": "album",
+    "albumtypes": [
+      "album"
+    ],
     "artist": "Mikkel Rev",
     "artist_credit": null,
     "artist_id": "https://ute-rec.bandcamp.com",
     "artist_sort": null,
+    "artists": [
+      "Mikkel Rev"
+    ],
+    "artists_credit": [],
+    "artists_ids": [
+      "https://ute-rec.bandcamp.com"
+    ],
+    "artists_sort": [],
     "asin": null,
+    "barcode": null,
     "catalognum": "UTE004",
     "comments": "Our dear Mikkel serving four emotional and warm trancers focused on the journey within.\n---\nProduction: Mikkel Haraldstad\nMaster: Joel Krozer, 6bitdeep\nGraphics: Haider Ahmed",
     "country": "NO",
@@ -184,17 +243,27 @@
     "original_day": null,
     "original_month": null,
     "original_year": null,
+    "release_group_title": null,
     "releasegroup_id": null,
     "releasegroupdisambig": null,
     "script": null,
     "style": null,
     "tracks": [
       {
+        "album": "UTE004",
         "arranger": null,
         "artist": "Mikkel Rev",
         "artist_credit": null,
         "artist_id": "https://ute-rec.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Mikkel Rev"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://ute-rec.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -219,11 +288,20 @@
         "work_disambig": null
       },
       {
+        "album": "UTE004",
         "arranger": null,
         "artist": "Mikkel Rev",
         "artist_credit": null,
         "artist_id": "https://ute-rec.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Mikkel Rev"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://ute-rec.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -248,11 +326,20 @@
         "work_disambig": null
       },
       {
+        "album": "UTE004",
         "arranger": null,
         "artist": "Mikkel Rev",
         "artist_credit": null,
         "artist_id": "https://ute-rec.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Mikkel Rev"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://ute-rec.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -277,11 +364,20 @@
         "work_disambig": null
       },
       {
+        "album": "UTE004",
         "arranger": null,
         "artist": "Mikkel Rev",
         "artist_credit": null,
         "artist_id": "https://ute-rec.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Mikkel Rev"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://ute-rec.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
