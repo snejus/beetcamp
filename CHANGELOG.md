@@ -4,6 +4,10 @@
 
 - Drop support for `beets<1.5`.
 
+### Added
+
+- Add artist list fields support for `beets==2.0.0`.
+
 ### Fixed
 
 - `album`:

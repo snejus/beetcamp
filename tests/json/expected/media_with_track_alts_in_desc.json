@@ -5,12 +5,24 @@
     "albumdisambig": null,
     "albumstatus": "Official",
     "albumtype": "album",
-    "albumtypes": "album; lp",
+    "albumtypes": [
+      "album",
+      "lp"
+    ],
     "artist": "Dominik Eulberg",
     "artist_credit": null,
     "artist_id": "https://dominikeulberg.bandcamp.com",
     "artist_sort": null,
+    "artists": [
+      "Dominik Eulberg"
+    ],
+    "artists_credit": [],
+    "artists_ids": [
+      "https://dominikeulberg.bandcamp.com"
+    ],
+    "artists_sort": [],
     "asin": null,
+    "barcode": null,
     "catalognum": "",
     "comments": "Finally. More than eight years after Diorama, Dominik Eulberg releases his long awaited fifth studio album Mannigfaltig. With twelve elaborate pieces of music, he creates a burning plea to preserve the breathtaking biodiversity of nature and at the same time warns of the threat posed to it by humans. It is a detailed record that demands close listening and showcases Eulberg's considerable synth craft, with drawn out pads and delicate keys laid over undulating rhythms that slowly take you through a wide range of emotions. Elements of ambient, downtempo, electronica, pop and minimal are infused with the sounds of nature, a choral sense of musicality and wistful air of grace across all the majestically composed pieces.\n\nOn his return and finally serving up a new album, Eulberg says, “music only makes sense for me if it has something to say. And I have something to say now! \nHe feels he has found a holistic and fulfilling way to use his musical platform to continue to advocate for the importance of biodiversity. “It's my mission—my calling, if you will —to sensitise people to nature,” says the qualified biologist and ecologist, specialist nature author, ambassador and accomplished producer. \n\nHe came up with the idea for the new album’s concept during a hiking tour in his home town when he first happened upon a butterfly whose name is literally translated as ‘golden-eight.’ Then he saw a songbird called ‘nine-slayer’ and heard the calls of a dormouse, whose name in German is ‘seven-sleeper.’ This is when he discovered that the seemingly casual chain went further - that for every number from one to twelve there is a name of a native animal species.\n\nOur nature is so diverse, or more beautifully expressed so manifold (hence the album title, ‘mannigfaltig,’ which means manifold in German). But the threat to it from human behaviour has never been more real, with more species than ever before going extinct in such a short space of time. This record is his attempt to point out the importance of “giving our animal friends back the space they need.”\n\nMannigfaltig is an album about the variety and colourfulness of nature, which for Eulberg is “the greatest artist of all” and something that soothes his soul and is the “easiest, healthiest and most cost-effective key to happiness”. With a clear concept behind each album, this latest one is a musical attempt to mirror the endless variation of nature and “highlight the entire colour palette” while always going with the flow of his inner feelings. “I always look for an innovative momentum, and never try to imitate anything, or even myself.” The album is an artistic advancement on Diorama thanks to new synths, mixers and developing new production techniques.\n\nIt is a positive record, a mosaic of many small pleasures that can be listened to in a range of settings, from comedowns to long drives thanks to many rewarding layers of richness and complexity. “The most beautiful setting would be of course along with contemplative observations of nature, for that is indeed its origin.”\n\nEulberg uses his synths like a water-colour painter, spreading them across the airwaves in soft tones and with blurred edges. Gentle rhythms propel the tracks as glistening percussion and angelic harmonies lift your spirits. Reconciling the beauty of nature with the beauty of sound, Eulberg takes you through dewy mornings, spring afternoons and brightly lit forest rambles with a real deftness and delicacy that replicates the majesty of the natural world in which we live.\n\nFrom melancholy to euphoria and back again, this is an invigorating, inspiring record that washed over you in waves of soul-stirring sound.\n---\n2019, !K7 Music",
     "country": "DE",
@@ -29,17 +41,27 @@
     "original_day": null,
     "original_month": null,
     "original_year": null,
+    "release_group_title": null,
     "releasegroup_id": null,
     "releasegroupdisambig": null,
     "script": null,
     "style": "electronic",
     "tracks": [
       {
+        "album": "Mannigfaltig",
         "arranger": null,
         "artist": "Dominik Eulberg",
         "artist_credit": null,
         "artist_id": "https://dominikeulberg.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Dominik Eulberg"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://dominikeulberg.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -64,11 +86,20 @@
         "work_disambig": null
       },
       {
+        "album": "Mannigfaltig",
         "arranger": null,
         "artist": "Dominik Eulberg",
         "artist_credit": null,
         "artist_id": "https://dominikeulberg.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Dominik Eulberg"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://dominikeulberg.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -93,11 +124,20 @@
         "work_disambig": null
       },
       {
+        "album": "Mannigfaltig",
         "arranger": null,
         "artist": "Dominik Eulberg",
         "artist_credit": null,
         "artist_id": "https://dominikeulberg.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Dominik Eulberg"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://dominikeulberg.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -122,11 +162,20 @@
         "work_disambig": null
       },
       {
+        "album": "Mannigfaltig",
         "arranger": null,
         "artist": "Dominik Eulberg",
         "artist_credit": null,
         "artist_id": "https://dominikeulberg.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Dominik Eulberg"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://dominikeulberg.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -151,11 +200,20 @@
         "work_disambig": null
       },
       {
+        "album": "Mannigfaltig",
         "arranger": null,
         "artist": "Dominik Eulberg",
         "artist_credit": null,
         "artist_id": "https://dominikeulberg.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Dominik Eulberg"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://dominikeulberg.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -180,11 +238,20 @@
         "work_disambig": null
       },
       {
+        "album": "Mannigfaltig",
         "arranger": null,
         "artist": "Dominik Eulberg",
         "artist_credit": null,
         "artist_id": "https://dominikeulberg.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Dominik Eulberg"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://dominikeulberg.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -209,11 +276,20 @@
         "work_disambig": null
       },
       {
+        "album": "Mannigfaltig",
         "arranger": null,
         "artist": "Dominik Eulberg",
         "artist_credit": null,
         "artist_id": "https://dominikeulberg.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Dominik Eulberg"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://dominikeulberg.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -238,11 +314,20 @@
         "work_disambig": null
       },
       {
+        "album": "Mannigfaltig",
         "arranger": null,
         "artist": "Dominik Eulberg",
         "artist_credit": null,
         "artist_id": "https://dominikeulberg.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Dominik Eulberg"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://dominikeulberg.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -267,11 +352,20 @@
         "work_disambig": null
       },
       {
+        "album": "Mannigfaltig",
         "arranger": null,
         "artist": "Dominik Eulberg",
         "artist_credit": null,
         "artist_id": "https://dominikeulberg.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Dominik Eulberg"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://dominikeulberg.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -296,11 +390,20 @@
         "work_disambig": null
       },
       {
+        "album": "Mannigfaltig",
         "arranger": null,
         "artist": "Dominik Eulberg",
         "artist_credit": null,
         "artist_id": "https://dominikeulberg.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Dominik Eulberg"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://dominikeulberg.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -325,11 +428,20 @@
         "work_disambig": null
       },
       {
+        "album": "Mannigfaltig",
         "arranger": null,
         "artist": "Dominik Eulberg",
         "artist_credit": null,
         "artist_id": "https://dominikeulberg.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Dominik Eulberg"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://dominikeulberg.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -354,11 +466,20 @@
         "work_disambig": null
       },
       {
+        "album": "Mannigfaltig",
         "arranger": null,
         "artist": "Dominik Eulberg",
         "artist_credit": null,
         "artist_id": "https://dominikeulberg.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Dominik Eulberg"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://dominikeulberg.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -392,12 +513,24 @@
     "albumdisambig": null,
     "albumstatus": "Official",
     "albumtype": "album",
-    "albumtypes": "album; lp",
+    "albumtypes": [
+      "album",
+      "lp"
+    ],
     "artist": "Dominik Eulberg",
     "artist_credit": null,
     "artist_id": "https://dominikeulberg.bandcamp.com",
     "artist_sort": null,
+    "artists": [
+      "Dominik Eulberg"
+    ],
+    "artists_credit": [],
+    "artists_ids": [
+      "https://dominikeulberg.bandcamp.com"
+    ],
+    "artists_sort": [],
     "asin": null,
+    "barcode": null,
     "catalognum": "",
     "comments": "Finally. More than eight years after Diorama, Dominik Eulberg releases his long awaited fifth studio album Mannigfaltig. With twelve elaborate pieces of music, he creates a burning plea to preserve the breathtaking biodiversity of nature and at the same time warns of the threat posed to it by humans. It is a detailed record that demands close listening and showcases Eulberg's considerable synth craft, with drawn out pads and delicate keys laid over undulating rhythms that slowly take you through a wide range of emotions. Elements of ambient, downtempo, electronica, pop and minimal are infused with the sounds of nature, a choral sense of musicality and wistful air of grace across all the majestically composed pieces.\n\nOn his return and finally serving up a new album, Eulberg says, “music only makes sense for me if it has something to say. And I have something to say now! \nHe feels he has found a holistic and fulfilling way to use his musical platform to continue to advocate for the importance of biodiversity. “It's my mission—my calling, if you will —to sensitise people to nature,” says the qualified biologist and ecologist, specialist nature author, ambassador and accomplished producer. \n\nHe came up with the idea for the new album’s concept during a hiking tour in his home town when he first happened upon a butterfly whose name is literally translated as ‘golden-eight.’ Then he saw a songbird called ‘nine-slayer’ and heard the calls of a dormouse, whose name in German is ‘seven-sleeper.’ This is when he discovered that the seemingly casual chain went further - that for every number from one to twelve there is a name of a native animal species.\n\nOur nature is so diverse, or more beautifully expressed so manifold (hence the album title, ‘mannigfaltig,’ which means manifold in German). But the threat to it from human behaviour has never been more real, with more species than ever before going extinct in such a short space of time. This record is his attempt to point out the importance of “giving our animal friends back the space they need.”\n\nMannigfaltig is an album about the variety and colourfulness of nature, which for Eulberg is “the greatest artist of all” and something that soothes his soul and is the “easiest, healthiest and most cost-effective key to happiness”. With a clear concept behind each album, this latest one is a musical attempt to mirror the endless variation of nature and “highlight the entire colour palette” while always going with the flow of his inner feelings. “I always look for an innovative momentum, and never try to imitate anything, or even myself.” The album is an artistic advancement on Diorama thanks to new synths, mixers and developing new production techniques.\n\nIt is a positive record, a mosaic of many small pleasures that can be listened to in a range of settings, from comedowns to long drives thanks to many rewarding layers of richness and complexity. “The most beautiful setting would be of course along with contemplative observations of nature, for that is indeed its origin.”\n\nEulberg uses his synths like a water-colour painter, spreading them across the airwaves in soft tones and with blurred edges. Gentle rhythms propel the tracks as glistening percussion and angelic harmonies lift your spirits. Reconciling the beauty of nature with the beauty of sound, Eulberg takes you through dewy mornings, spring afternoons and brightly lit forest rambles with a real deftness and delicacy that replicates the majesty of the natural world in which we live.\n\nFrom melancholy to euphoria and back again, this is an invigorating, inspiring record that washed over you in waves of soul-stirring sound.\n---\nA1: Eintagsfliege\nA2: Zweibrütiger Scheckenfalter\n\nB1: Dreizehenspecht\nB2: Vierfleck\n\nC1: Fünffleck-Widderchen\nC2: Sechslinien-Bodeneule\n\nD1: Siebenschläfer\nD2: Goldene Acht\n\nE1: Neuntöter\nE2: Zehnpunkt-Marienkäfer\n\nF1 Elfenbein-Flechtenbärchen\nF2 Zwölfpunkt-Spargelkäfer\n---\n2019, !K7 Music",
     "country": "DE",
@@ -416,17 +549,27 @@
     "original_day": null,
     "original_month": null,
     "original_year": null,
+    "release_group_title": null,
     "releasegroup_id": null,
     "releasegroupdisambig": null,
     "script": null,
     "style": "electronic",
     "tracks": [
       {
+        "album": "Mannigfaltig",
         "arranger": null,
         "artist": "Dominik Eulberg",
         "artist_credit": null,
         "artist_id": "https://dominikeulberg.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Dominik Eulberg"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://dominikeulberg.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -451,11 +594,20 @@
         "work_disambig": null
       },
       {
+        "album": "Mannigfaltig",
         "arranger": null,
         "artist": "Dominik Eulberg",
         "artist_credit": null,
         "artist_id": "https://dominikeulberg.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Dominik Eulberg"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://dominikeulberg.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -480,11 +632,20 @@
         "work_disambig": null
       },
       {
+        "album": "Mannigfaltig",
         "arranger": null,
         "artist": "Dominik Eulberg",
         "artist_credit": null,
         "artist_id": "https://dominikeulberg.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Dominik Eulberg"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://dominikeulberg.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -509,11 +670,20 @@
         "work_disambig": null
       },
       {
+        "album": "Mannigfaltig",
         "arranger": null,
         "artist": "Dominik Eulberg",
         "artist_credit": null,
         "artist_id": "https://dominikeulberg.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Dominik Eulberg"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://dominikeulberg.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -538,11 +708,20 @@
         "work_disambig": null
       },
       {
+        "album": "Mannigfaltig",
         "arranger": null,
         "artist": "Dominik Eulberg",
         "artist_credit": null,
         "artist_id": "https://dominikeulberg.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Dominik Eulberg"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://dominikeulberg.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -567,11 +746,20 @@
         "work_disambig": null
       },
       {
+        "album": "Mannigfaltig",
         "arranger": null,
         "artist": "Dominik Eulberg",
         "artist_credit": null,
         "artist_id": "https://dominikeulberg.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Dominik Eulberg"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://dominikeulberg.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -596,11 +784,20 @@
         "work_disambig": null
       },
       {
+        "album": "Mannigfaltig",
         "arranger": null,
         "artist": "Dominik Eulberg",
         "artist_credit": null,
         "artist_id": "https://dominikeulberg.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Dominik Eulberg"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://dominikeulberg.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -625,11 +822,20 @@
         "work_disambig": null
       },
       {
+        "album": "Mannigfaltig",
         "arranger": null,
         "artist": "Dominik Eulberg",
         "artist_credit": null,
         "artist_id": "https://dominikeulberg.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Dominik Eulberg"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://dominikeulberg.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -654,11 +860,20 @@
         "work_disambig": null
       },
       {
+        "album": "Mannigfaltig",
         "arranger": null,
         "artist": "Dominik Eulberg",
         "artist_credit": null,
         "artist_id": "https://dominikeulberg.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Dominik Eulberg"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://dominikeulberg.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -683,11 +898,20 @@
         "work_disambig": null
       },
       {
+        "album": "Mannigfaltig",
         "arranger": null,
         "artist": "Dominik Eulberg",
         "artist_credit": null,
         "artist_id": "https://dominikeulberg.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Dominik Eulberg"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://dominikeulberg.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -712,11 +936,20 @@
         "work_disambig": null
       },
       {
+        "album": "Mannigfaltig",
         "arranger": null,
         "artist": "Dominik Eulberg",
         "artist_credit": null,
         "artist_id": "https://dominikeulberg.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Dominik Eulberg"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://dominikeulberg.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -741,11 +974,20 @@
         "work_disambig": null
       },
       {
+        "album": "Mannigfaltig",
         "arranger": null,
         "artist": "Dominik Eulberg",
         "artist_credit": null,
         "artist_id": "https://dominikeulberg.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Dominik Eulberg"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://dominikeulberg.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -779,12 +1021,24 @@
     "albumdisambig": null,
     "albumstatus": "Official",
     "albumtype": "album",
-    "albumtypes": "album; lp",
+    "albumtypes": [
+      "album",
+      "lp"
+    ],
     "artist": "Dominik Eulberg",
     "artist_credit": null,
     "artist_id": "https://dominikeulberg.bandcamp.com",
     "artist_sort": null,
+    "artists": [
+      "Dominik Eulberg"
+    ],
+    "artists_credit": [],
+    "artists_ids": [
+      "https://dominikeulberg.bandcamp.com"
+    ],
+    "artists_sort": [],
     "asin": null,
+    "barcode": null,
     "catalognum": "",
     "comments": "Finally. More than eight years after Diorama, Dominik Eulberg releases his long awaited fifth studio album Mannigfaltig. With twelve elaborate pieces of music, he creates a burning plea to preserve the breathtaking biodiversity of nature and at the same time warns of the threat posed to it by humans. It is a detailed record that demands close listening and showcases Eulberg's considerable synth craft, with drawn out pads and delicate keys laid over undulating rhythms that slowly take you through a wide range of emotions. Elements of ambient, downtempo, electronica, pop and minimal are infused with the sounds of nature, a choral sense of musicality and wistful air of grace across all the majestically composed pieces.\n\nOn his return and finally serving up a new album, Eulberg says, “music only makes sense for me if it has something to say. And I have something to say now! \nHe feels he has found a holistic and fulfilling way to use his musical platform to continue to advocate for the importance of biodiversity. “It's my mission—my calling, if you will —to sensitise people to nature,” says the qualified biologist and ecologist, specialist nature author, ambassador and accomplished producer. \n\nHe came up with the idea for the new album’s concept during a hiking tour in his home town when he first happened upon a butterfly whose name is literally translated as ‘golden-eight.’ Then he saw a songbird called ‘nine-slayer’ and heard the calls of a dormouse, whose name in German is ‘seven-sleeper.’ This is when he discovered that the seemingly casual chain went further - that for every number from one to twelve there is a name of a native animal species.\n\nOur nature is so diverse, or more beautifully expressed so manifold (hence the album title, ‘mannigfaltig,’ which means manifold in German). But the threat to it from human behaviour has never been more real, with more species than ever before going extinct in such a short space of time. This record is his attempt to point out the importance of “giving our animal friends back the space they need.”\n\nMannigfaltig is an album about the variety and colourfulness of nature, which for Eulberg is “the greatest artist of all” and something that soothes his soul and is the “easiest, healthiest and most cost-effective key to happiness”. With a clear concept behind each album, this latest one is a musical attempt to mirror the endless variation of nature and “highlight the entire colour palette” while always going with the flow of his inner feelings. “I always look for an innovative momentum, and never try to imitate anything, or even myself.” The album is an artistic advancement on Diorama thanks to new synths, mixers and developing new production techniques.\n\nIt is a positive record, a mosaic of many small pleasures that can be listened to in a range of settings, from comedowns to long drives thanks to many rewarding layers of richness and complexity. “The most beautiful setting would be of course along with contemplative observations of nature, for that is indeed its origin.”\n\nEulberg uses his synths like a water-colour painter, spreading them across the airwaves in soft tones and with blurred edges. Gentle rhythms propel the tracks as glistening percussion and angelic harmonies lift your spirits. Reconciling the beauty of nature with the beauty of sound, Eulberg takes you through dewy mornings, spring afternoons and brightly lit forest rambles with a real deftness and delicacy that replicates the majesty of the natural world in which we live.\n\nFrom melancholy to euphoria and back again, this is an invigorating, inspiring record that washed over you in waves of soul-stirring sound.\n---\n1.Eintagsfliege\n2.Zweibrütiger Scheckenfalter\n3.Dreizehenspecht\n4.Vierfleck\n5.Fünffleck-Widderchen\n6.Sechslinien-Bodeneule\n7.Siebenschläfer\n8.Goldene Acht\n9.Neuntöter\n10.Zehnpunkt-Marienkäfer\n11.Elfenbein-Flechtenbärchen\n12.Zwölfpunkt-Spargelkäfer\n---\n2019, !K7 Music",
     "country": "DE",
@@ -803,17 +1057,27 @@
     "original_day": null,
     "original_month": null,
     "original_year": null,
+    "release_group_title": null,
     "releasegroup_id": null,
     "releasegroupdisambig": null,
     "script": null,
     "style": "electronic",
     "tracks": [
       {
+        "album": "Mannigfaltig",
         "arranger": null,
         "artist": "Dominik Eulberg",
         "artist_credit": null,
         "artist_id": "https://dominikeulberg.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Dominik Eulberg"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://dominikeulberg.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -838,11 +1102,20 @@
         "work_disambig": null
       },
       {
+        "album": "Mannigfaltig",
         "arranger": null,
         "artist": "Dominik Eulberg",
         "artist_credit": null,
         "artist_id": "https://dominikeulberg.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Dominik Eulberg"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://dominikeulberg.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -867,11 +1140,20 @@
         "work_disambig": null
       },
       {
+        "album": "Mannigfaltig",
         "arranger": null,
         "artist": "Dominik Eulberg",
         "artist_credit": null,
         "artist_id": "https://dominikeulberg.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Dominik Eulberg"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://dominikeulberg.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -896,11 +1178,20 @@
         "work_disambig": null
       },
       {
+        "album": "Mannigfaltig",
         "arranger": null,
         "artist": "Dominik Eulberg",
         "artist_credit": null,
         "artist_id": "https://dominikeulberg.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Dominik Eulberg"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://dominikeulberg.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -925,11 +1216,20 @@
         "work_disambig": null
       },
       {
+        "album": "Mannigfaltig",
         "arranger": null,
         "artist": "Dominik Eulberg",
         "artist_credit": null,
         "artist_id": "https://dominikeulberg.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Dominik Eulberg"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://dominikeulberg.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -954,11 +1254,20 @@
         "work_disambig": null
       },
       {
+        "album": "Mannigfaltig",
         "arranger": null,
         "artist": "Dominik Eulberg",
         "artist_credit": null,
         "artist_id": "https://dominikeulberg.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Dominik Eulberg"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://dominikeulberg.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -983,11 +1292,20 @@
         "work_disambig": null
       },
       {
+        "album": "Mannigfaltig",
         "arranger": null,
         "artist": "Dominik Eulberg",
         "artist_credit": null,
         "artist_id": "https://dominikeulberg.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Dominik Eulberg"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://dominikeulberg.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -1012,11 +1330,20 @@
         "work_disambig": null
       },
       {
+        "album": "Mannigfaltig",
         "arranger": null,
         "artist": "Dominik Eulberg",
         "artist_credit": null,
         "artist_id": "https://dominikeulberg.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Dominik Eulberg"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://dominikeulberg.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -1041,11 +1368,20 @@
         "work_disambig": null
       },
       {
+        "album": "Mannigfaltig",
         "arranger": null,
         "artist": "Dominik Eulberg",
         "artist_credit": null,
         "artist_id": "https://dominikeulberg.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Dominik Eulberg"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://dominikeulberg.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -1070,11 +1406,20 @@
         "work_disambig": null
       },
       {
+        "album": "Mannigfaltig",
         "arranger": null,
         "artist": "Dominik Eulberg",
         "artist_credit": null,
         "artist_id": "https://dominikeulberg.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Dominik Eulberg"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://dominikeulberg.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -1099,11 +1444,20 @@
         "work_disambig": null
       },
       {
+        "album": "Mannigfaltig",
         "arranger": null,
         "artist": "Dominik Eulberg",
         "artist_credit": null,
         "artist_id": "https://dominikeulberg.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Dominik Eulberg"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://dominikeulberg.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -1128,11 +1482,20 @@
         "work_disambig": null
       },
       {
+        "album": "Mannigfaltig",
         "arranger": null,
         "artist": "Dominik Eulberg",
         "artist_credit": null,
         "artist_id": "https://dominikeulberg.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Dominik Eulberg"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://dominikeulberg.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,

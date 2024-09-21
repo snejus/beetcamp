@@ -5,12 +5,24 @@
     "albumdisambig": null,
     "albumstatus": "Official",
     "albumtype": "ep",
-    "albumtypes": "ep; remix",
+    "albumtypes": [
+      "ep",
+      "remix"
+    ],
     "artist": "UNREALNUMBERS",
     "artist_credit": null,
     "artist_id": "https://maisoncloserecords.bandcamp.com",
     "artist_sort": null,
+    "artists": [
+      "UNREALNUMBERS"
+    ],
+    "artists_credit": [],
+    "artists_ids": [
+      "https://maisoncloserecords.bandcamp.com"
+    ],
+    "artists_sort": [],
     "asin": null,
+    "barcode": null,
     "catalognum": "",
     "comments": "Supported by Dax J, SPFDJ, Wallis, u.r.trax, Rezystor, DYEN, VII Circle, VII Circle & more ...",
     "country": "FR",
@@ -29,17 +41,27 @@
     "original_day": null,
     "original_month": null,
     "original_year": null,
+    "release_group_title": null,
     "releasegroup_id": null,
     "releasegroupdisambig": null,
     "script": null,
     "style": "electronic",
     "tracks": [
       {
+        "album": "Unseen EP",
         "arranger": null,
         "artist": "UNREALNUMBERS",
         "artist_credit": null,
         "artist_id": "https://maisoncloserecords.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "UNREALNUMBERS"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://maisoncloserecords.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -64,11 +86,20 @@
         "work_disambig": null
       },
       {
+        "album": "Unseen EP",
         "arranger": null,
         "artist": "UNREALNUMBERS",
         "artist_credit": null,
         "artist_id": "https://maisoncloserecords.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "UNREALNUMBERS"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://maisoncloserecords.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -93,11 +124,20 @@
         "work_disambig": null
       },
       {
+        "album": "Unseen EP",
         "arranger": null,
         "artist": "UNREALNUMBERS",
         "artist_credit": null,
         "artist_id": "https://maisoncloserecords.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "UNREALNUMBERS"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://maisoncloserecords.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -122,11 +162,20 @@
         "work_disambig": null
       },
       {
+        "album": "Unseen EP",
         "arranger": null,
         "artist": "UNREALNUMBERS",
         "artist_credit": null,
         "artist_id": "https://maisoncloserecords.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "UNREALNUMBERS"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://maisoncloserecords.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -151,11 +200,20 @@
         "work_disambig": null
       },
       {
+        "album": "Unseen EP",
         "arranger": null,
         "artist": "UNREALNUMBERS",
         "artist_credit": null,
         "artist_id": "https://maisoncloserecords.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "UNREALNUMBERS"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://maisoncloserecords.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -180,11 +238,20 @@
         "work_disambig": null
       },
       {
+        "album": "Unseen EP",
         "arranger": null,
         "artist": "UNREALNUMBERS",
         "artist_credit": null,
         "artist_id": "https://maisoncloserecords.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "UNREALNUMBERS"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://maisoncloserecords.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,

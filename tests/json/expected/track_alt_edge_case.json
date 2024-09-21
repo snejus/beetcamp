@@ -5,12 +5,23 @@
     "albumdisambig": null,
     "albumstatus": "Official",
     "albumtype": "album",
-    "albumtypes": "album",
+    "albumtypes": [
+      "album"
+    ],
     "artist": "Barker",
     "artist_credit": null,
     "artist_id": "https://sambarker.bandcamp.com",
     "artist_sort": null,
+    "artists": [
+      "Barker"
+    ],
+    "artists_credit": [],
+    "artists_ids": [
+      "https://sambarker.bandcamp.com"
+    ],
+    "artists_sort": [],
     "asin": null,
+    "barcode": null,
     "catalognum": "BARKER002",
     "comments": "Follow-up to 2019’s BARKER001.\n\nAvailable now for digital download and hand-stamped 12\" vinyl in all shops.\n---\nWritten and produced by Sam Barker\nPublished by Ostgut Verlag\nMastering Stefan Betke at Scape Mastering, Berlin",
     "country": "DE",
@@ -29,17 +40,27 @@
     "original_day": null,
     "original_month": null,
     "original_year": null,
+    "release_group_title": null,
     "releasegroup_id": null,
     "releasegroupdisambig": null,
     "script": null,
     "style": "electronic",
     "tracks": [
       {
+        "album": "BARKER002",
         "arranger": null,
         "artist": "Barker",
         "artist_credit": null,
         "artist_id": "https://sambarker.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Barker"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://sambarker.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -64,11 +85,20 @@
         "work_disambig": null
       },
       {
+        "album": "BARKER002",
         "arranger": null,
         "artist": "Barker",
         "artist_credit": null,
         "artist_id": "https://sambarker.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Barker"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://sambarker.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -93,11 +123,20 @@
         "work_disambig": null
       },
       {
+        "album": "BARKER002",
         "arranger": null,
         "artist": "Barker",
         "artist_credit": null,
         "artist_id": "https://sambarker.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Barker"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://sambarker.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -131,12 +170,23 @@
     "albumdisambig": null,
     "albumstatus": "Official",
     "albumtype": "album",
-    "albumtypes": "album",
+    "albumtypes": [
+      "album"
+    ],
     "artist": "Barker",
     "artist_credit": null,
     "artist_id": "https://sambarker.bandcamp.com",
     "artist_sort": null,
+    "artists": [
+      "Barker"
+    ],
+    "artists_credit": [],
+    "artists_ids": [
+      "https://sambarker.bandcamp.com"
+    ],
+    "artists_sort": [],
     "asin": null,
+    "barcode": null,
     "catalognum": "BARKER002",
     "comments": "Follow-up to 2019’s BARKER001.\n\nAvailable now for digital download and hand-stamped 12\" vinyl in all shops.\n---\nHand-stamped vinyl.\n\nTracklisting:\nA1. E7-E5\nA2. Bent\nB. Polytely\n---\nWritten and produced by Sam Barker\nPublished by Ostgut Verlag\nMastering Stefan Betke at Scape Mastering, Berlin",
     "country": "DE",
@@ -155,17 +205,27 @@
     "original_day": null,
     "original_month": null,
     "original_year": null,
+    "release_group_title": null,
     "releasegroup_id": null,
     "releasegroupdisambig": null,
     "script": null,
     "style": "electronic",
     "tracks": [
       {
+        "album": "BARKER002",
         "arranger": null,
         "artist": "Barker",
         "artist_credit": null,
         "artist_id": "https://sambarker.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Barker"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://sambarker.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -190,11 +250,20 @@
         "work_disambig": null
       },
       {
+        "album": "BARKER002",
         "arranger": null,
         "artist": "Barker",
         "artist_credit": null,
         "artist_id": "https://sambarker.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Barker"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://sambarker.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -219,11 +288,20 @@
         "work_disambig": null
       },
       {
+        "album": "BARKER002",
         "arranger": null,
         "artist": "Barker",
         "artist_credit": null,
         "artist_id": "https://sambarker.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Barker"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://sambarker.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,

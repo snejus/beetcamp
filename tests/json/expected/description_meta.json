@@ -5,12 +5,24 @@
     "albumdisambig": null,
     "albumstatus": "Official",
     "albumtype": "album",
-    "albumtypes": "album; lp",
+    "albumtypes": [
+      "album",
+      "lp"
+    ],
     "artist": "Francois Dillinger",
     "artist_credit": null,
     "artist_id": "https://diffusereality.bandcamp.com",
     "artist_sort": null,
+    "artists": [
+      "Francois Dillinger"
+    ],
+    "artists_credit": [],
+    "artists_ids": [
+      "https://diffusereality.bandcamp.com"
+    ],
+    "artists_sort": [],
     "asin": null,
+    "barcode": null,
     "catalognum": "",
     "comments": null,
     "country": "PT",
@@ -29,17 +41,27 @@
     "original_day": null,
     "original_month": null,
     "original_year": null,
+    "release_group_title": null,
     "releasegroup_id": null,
     "releasegroupdisambig": null,
     "script": null,
     "style": "electronic",
     "tracks": [
       {
+        "album": "Icosahedrone",
         "arranger": null,
         "artist": "Francois Dillinger",
         "artist_credit": null,
         "artist_id": "https://diffusereality.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Francois Dillinger"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://diffusereality.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -64,11 +86,20 @@
         "work_disambig": null
       },
       {
+        "album": "Icosahedrone",
         "arranger": null,
         "artist": "Francois Dillinger",
         "artist_credit": null,
         "artist_id": "https://diffusereality.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Francois Dillinger"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://diffusereality.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -93,11 +124,20 @@
         "work_disambig": null
       },
       {
+        "album": "Icosahedrone",
         "arranger": null,
         "artist": "Francois Dillinger",
         "artist_credit": null,
         "artist_id": "https://diffusereality.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Francois Dillinger"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://diffusereality.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -122,11 +162,20 @@
         "work_disambig": null
       },
       {
+        "album": "Icosahedrone",
         "arranger": null,
         "artist": "Francois Dillinger",
         "artist_credit": null,
         "artist_id": "https://diffusereality.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Francois Dillinger"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://diffusereality.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -151,11 +200,20 @@
         "work_disambig": null
       },
       {
+        "album": "Icosahedrone",
         "arranger": null,
         "artist": "Francois Dillinger",
         "artist_credit": null,
         "artist_id": "https://diffusereality.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Francois Dillinger"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://diffusereality.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -180,11 +238,20 @@
         "work_disambig": null
       },
       {
+        "album": "Icosahedrone",
         "arranger": null,
         "artist": "Francois Dillinger",
         "artist_credit": null,
         "artist_id": "https://diffusereality.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Francois Dillinger"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://diffusereality.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -209,11 +276,20 @@
         "work_disambig": null
       },
       {
+        "album": "Icosahedrone",
         "arranger": null,
         "artist": "Francois Dillinger",
         "artist_credit": null,
         "artist_id": "https://diffusereality.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Francois Dillinger"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://diffusereality.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -238,11 +314,20 @@
         "work_disambig": null
       },
       {
+        "album": "Icosahedrone",
         "arranger": null,
         "artist": "Francois Dillinger",
         "artist_credit": null,
         "artist_id": "https://diffusereality.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Francois Dillinger"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://diffusereality.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -267,11 +352,20 @@
         "work_disambig": null
       },
       {
+        "album": "Icosahedrone",
         "arranger": null,
         "artist": "Francois Dillinger",
         "artist_credit": null,
         "artist_id": "https://diffusereality.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Francois Dillinger"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://diffusereality.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -296,11 +390,20 @@
         "work_disambig": null
       },
       {
+        "album": "Icosahedrone",
         "arranger": null,
         "artist": "Francois Dillinger",
         "artist_credit": null,
         "artist_id": "https://diffusereality.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Francois Dillinger"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://diffusereality.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -334,12 +437,24 @@
     "albumdisambig": null,
     "albumstatus": "Official",
     "albumtype": "album",
-    "albumtypes": "album; lp",
+    "albumtypes": [
+      "album",
+      "lp"
+    ],
     "artist": "Francois Dillinger",
     "artist_credit": null,
     "artist_id": "https://diffusereality.bandcamp.com",
     "artist_sort": null,
+    "artists": [
+      "Francois Dillinger"
+    ],
+    "artists_credit": [],
+    "artists_ids": [
+      "https://diffusereality.bandcamp.com"
+    ],
+    "artists_sort": [],
     "asin": null,
+    "barcode": null,
     "catalognum": "DREA 005",
     "comments": "Artist: Francois Dillinger\nTitle: Icosahedrone\nFormat: Vinyl, 12\" & CD\nLabel: Diffuse Reality\nCatalogue: DREA 005\n\nVinyl → bit.ly/3cUflzb\nVinyl orders include two Diffuse Reality stickers and digital downloads of the full release.\n\n誠 Makoto - Honesty, absolute sincerity.\nFSC certified Bamboo wood USB flash drive.\nThis means that the wood from which this USB memory is made comes from sustainable forests and is respectful with the environment.\n4GB capacity.\nBlack screen printing. \nwww.diffusereality.net",
     "country": "PT",
@@ -358,17 +473,27 @@
     "original_day": null,
     "original_month": null,
     "original_year": null,
+    "release_group_title": null,
     "releasegroup_id": null,
     "releasegroupdisambig": null,
     "script": null,
     "style": "electronic",
     "tracks": [
       {
+        "album": "Icosahedrone",
         "arranger": null,
         "artist": "Francois Dillinger",
         "artist_credit": null,
         "artist_id": "https://diffusereality.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Francois Dillinger"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://diffusereality.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -393,11 +518,20 @@
         "work_disambig": null
       },
       {
+        "album": "Icosahedrone",
         "arranger": null,
         "artist": "Francois Dillinger",
         "artist_credit": null,
         "artist_id": "https://diffusereality.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Francois Dillinger"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://diffusereality.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -422,11 +556,20 @@
         "work_disambig": null
       },
       {
+        "album": "Icosahedrone",
         "arranger": null,
         "artist": "Francois Dillinger",
         "artist_credit": null,
         "artist_id": "https://diffusereality.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Francois Dillinger"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://diffusereality.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -451,11 +594,20 @@
         "work_disambig": null
       },
       {
+        "album": "Icosahedrone",
         "arranger": null,
         "artist": "Francois Dillinger",
         "artist_credit": null,
         "artist_id": "https://diffusereality.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Francois Dillinger"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://diffusereality.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -480,11 +632,20 @@
         "work_disambig": null
       },
       {
+        "album": "Icosahedrone",
         "arranger": null,
         "artist": "Francois Dillinger",
         "artist_credit": null,
         "artist_id": "https://diffusereality.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Francois Dillinger"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://diffusereality.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -509,11 +670,20 @@
         "work_disambig": null
       },
       {
+        "album": "Icosahedrone",
         "arranger": null,
         "artist": "Francois Dillinger",
         "artist_credit": null,
         "artist_id": "https://diffusereality.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Francois Dillinger"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://diffusereality.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -538,11 +708,20 @@
         "work_disambig": null
       },
       {
+        "album": "Icosahedrone",
         "arranger": null,
         "artist": "Francois Dillinger",
         "artist_credit": null,
         "artist_id": "https://diffusereality.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Francois Dillinger"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://diffusereality.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -567,11 +746,20 @@
         "work_disambig": null
       },
       {
+        "album": "Icosahedrone",
         "arranger": null,
         "artist": "Francois Dillinger",
         "artist_credit": null,
         "artist_id": "https://diffusereality.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Francois Dillinger"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://diffusereality.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -596,11 +784,20 @@
         "work_disambig": null
       },
       {
+        "album": "Icosahedrone",
         "arranger": null,
         "artist": "Francois Dillinger",
         "artist_credit": null,
         "artist_id": "https://diffusereality.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Francois Dillinger"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://diffusereality.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
@@ -625,11 +822,20 @@
         "work_disambig": null
       },
       {
+        "album": "Icosahedrone",
         "arranger": null,
         "artist": "Francois Dillinger",
         "artist_credit": null,
         "artist_id": "https://diffusereality.bandcamp.com",
         "artist_sort": null,
+        "artists": [
+          "Francois Dillinger"
+        ],
+        "artists_credit": [],
+        "artists_ids": [
+          "https://diffusereality.bandcamp.com"
+        ],
+        "artists_sort": [],
         "bpm": null,
         "composer": null,
         "composer_sort": null,
