@@ -29,8 +29,7 @@ from beetsplug.bandcamp.album import AlbumName
         ("[MCVA003] - VARIOUS ARTISTS", ["MCVA003"], ""),
         ("Drepa Mann [Vinyl]", [], "Drepa Mann"),
         ("Drepa Mann  [Vinyl]", [], "Drepa Mann"),
-        ("The Castle [BLCKLPS009] Incl. Remix", ["BLCKLPS009"], "The Castle"),
-        ("The Castle [BLCKLPS009] Incl. Remix", [], "The Castle [BLCKLPS009]"),
+        ("The Castle [BLCKLPS009] Incl. Remix", [], "The Castle"),
         ('Anetha - "Ophiuchus EP"', ["Anetha"], "Ophiuchus EP"),
         ("Album (FREE DL)", [], "Album"),
         ("Album (Single)", [], "Album"),
@@ -62,6 +61,8 @@ from beetsplug.bandcamp.album import AlbumName
         ("Album", [], "Album"),
         ("Artist EP", ["Artist"], "Artist EP"),
         ("Artist & Another EP", ["Artist", "Another"], "Artist & Another EP"),
+        ("CAT123 | Album", [], "Album"),
+        ("Album [CAT123]", [], "Album"),
     ],
 )
 def test_clean_name(name, extras, expected):

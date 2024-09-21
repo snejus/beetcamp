@@ -1,5 +1,11 @@
 ## Unreleased
 
+### Updated
+
+- `album`:
+  - remove **all** catalogue numbers from album name. Previously, we only removed the
+    valid catalogue number found in the data.
+
 ## [0.19.2] 2024-08-04
 
 ### Fixed
