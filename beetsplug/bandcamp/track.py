@@ -227,8 +227,6 @@ class Track:
         artists = self.artists
         if self.ft_artist:
             artists.append(self.ft_artist)
-        # if self.remix:
-        #     artists.append(self.remix.remixer)
 
         return {
             "index": self.index,

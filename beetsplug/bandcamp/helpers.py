@@ -105,12 +105,12 @@ PATTERNS: Dict[str, Pattern[str]] = {
     ),
     "track_alt": re.compile(
         r"""
-        (?:(?<=^)|(?<=-\ ))             # beginning of the line or right after the title separator
+        (?:(?<=^)|(?<=-\ ))         # beginning of the line or right after the title separator
         (  # capture the catalogue number, either
-            (?:[A-J]{1,3}[12]?\.?\d)    # A1, B2, E4, A1.1 etc.
-          | (?:[AB]+(?=\W{2}\b))        # A, AA BB
+            [A-J]{1,3}[12]?\.?\d    # A1, B2, E4, A1.1 etc.
+          | [AB]+(?=\W{2}\b)        # A, AA BB
         )
-        (?:[/.:)_\s-]+)                 # consume the non-word chars for removal
+        [/.:)_\s-]+                 # consume the non-word chars for removal
     """,
         re.M | re.VERBOSE,
     ),
@@ -154,18 +154,18 @@ def split_artist_title(m: Match[str]) -> str:
 # fmt: off
 CLEAN_PATTERNS: List[Tuple[Pattern[str], Union[str, Callable[[Match[str]], str]]]] = [
     (re.compile(rf"(([\[(])|(^| ))\*?({'|'.join(rm_strings)})(?(2)[])]|([- ]|$))", re.I), ""),
-    (re.compile(r" -(\S)"), r" - \1"),                                              # hi -bye                   -> hi - bye
-    (re.compile(r"(\S)- "), r"\1 - "),                                              # hi- bye                   -> hi - bye
-    (re.compile(r"  +"), " "),                                                      # hi  bye                   -> hi bye
-    (re.compile(r"(- )?\( *"), "("),                                                # hi - ( bye)               -> hi (bye)
-    (re.compile(r" \)+|(\)+$)"), ")"),                                              # hi (bye ))                -> hi (bye)
-    (re.compile(r"- Reworked"), "(Reworked)"),                                      # bye - Reworked            -> bye (Reworked)
-    (re.compile(rf"(?<= - )([^()]+?) - ({REMIX.pattern})$", re.I), r"\1 (\2)"),     # - bye - Some Mix          -> - bye (Some Mix)
-    (re.compile(rf"(\({REMIX.pattern})$", re.I), r"\1)"),                           # bye - (Some Mix           -> bye - (Some Mix)
-    (re.compile(rf"- *({REMIX.pattern})$", re.I), r"(\1)"),                         # bye - Some Mix            -> bye (Some Mix)
-    (re.compile(r'(^|- )[“"]([^”"]+)[”"]( \(|$)'), r"\1\2\3"),                      # "bye" -> bye; hi - "bye"  -> hi - bye
-    (re.compile(r"\((the )?(remixes)\)", re.I), r"\2"),                             # Album (Remixes)           -> Album Remixes
-    (re.compile(r"examine-.+CD\d+_([^_-]+)[_-](.*)"), split_artist_title),          # See https://examine-archive.bandcamp.com/album/va-examine-archive-international-sampler-xmn01
+    (re.compile(r" -(\S)"), r" - \1"),                                              # hi -bye                   -> hi - bye  # noqa
+    (re.compile(r"(\S)- "), r"\1 - "),                                              # hi- bye                   -> hi - bye  # noqa
+    (re.compile(r"  +"), " "),                                                      # hi  bye                   -> hi bye  # noqa
+    (re.compile(r"(- )?\( *"), "("),                                                # hi - ( bye)               -> hi (bye)  # noqa
+    (re.compile(r" \)+|(\)+$)"), ")"),                                              # hi (bye ))                -> hi (bye)  # noqa
+    (re.compile(r"- Reworked"), "(Reworked)"),                                      # bye - Reworked            -> bye (Reworked)  # noqa
+    (re.compile(rf"(?<= - )([^()]+?) - ({REMIX.pattern})$", re.I), r"\1 (\2)"),     # - bye - Some Mix          -> - bye (Some Mix)  # noqa
+    (re.compile(rf"(\({REMIX.pattern})$", re.I), r"\1)"),                           # bye - (Some Mix           -> bye - (Some Mix)  # noqa
+    (re.compile(rf"- *({REMIX.pattern})$", re.I), r"(\1)"),                         # bye - Some Mix            -> bye (Some Mix)  # noqa
+    (re.compile(r'(^|- )[“"]([^”"]+)[”"]( \(|$)'), r"\1\2\3"),                     # "bye" -> bye; hi - "bye"  -> hi - bye  # noqa
+    (re.compile(r"\((the )?(remixes)\)", re.I), r"\2"),                             # Album (Remixes)           -> Album Remixes  # noqa
+    (re.compile(r"examine-.+CD\d+_([^_-]+)[_-](.*)"), split_artist_title),          # See https://examine-archive.bandcamp.com/album/va-examine-archive-international-sampler-xmn01  # noqa
 ]
 # fmt: on
 

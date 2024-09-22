@@ -2,7 +2,6 @@
 
 import re
 from difflib import SequenceMatcher
-from html import unescape
 from operator import itemgetter
 from typing import Any, Callable, Dict, List
 from urllib.parse import quote_plus

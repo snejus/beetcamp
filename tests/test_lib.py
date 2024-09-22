@@ -16,8 +16,6 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any, Callable, Dict, Iterable, List, NamedTuple, Tuple
 
 import pytest
-from beetsplug.bandcamp import BandcampPlugin
-from beetsplug.bandcamp.metaguru import Metaguru
 from rich.console import Group
 from rich.traceback import install
 from rich_tables.utils import (
@@ -29,6 +27,9 @@ from rich_tables.utils import (
     simple_panel,
     wrap,
 )
+
+from beetsplug.bandcamp import BandcampPlugin
+from beetsplug.bandcamp.metaguru import Metaguru
 
 if TYPE_CHECKING:
     from _pytest.config import Config
@@ -303,7 +304,10 @@ def desc(old: AttrDict, new: AttrDict, guru: Metaguru) -> str:
     else:
         artist, title = new["artist"], new["title"]
 
-    return f"{make_difftext(guru.original_albumartist, artist)} - {make_difftext(guru.original_album, title)}"
+    return (
+        f"{make_difftext(guru.original_albumartist, artist)} - "
+        f"{make_difftext(guru.original_album, title)}"
+    )
 
 
 @pytest.fixture

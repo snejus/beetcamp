@@ -1,4 +1,5 @@
 """End to end tests aimed at catching issues with html updates on bandcamp side."""
+
 import pytest
 from beetsplug.bandcamp import BandcampPlugin
 
