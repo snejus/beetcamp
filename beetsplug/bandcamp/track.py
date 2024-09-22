@@ -220,7 +220,7 @@ class Track:
 
     @property
     def artists(self) -> List[str]:
-        return Helpers.split_artists([self.artist])
+        return Helpers.split_artists(self.artist)
 
     @property
     def info(self) -> JSONDict:
