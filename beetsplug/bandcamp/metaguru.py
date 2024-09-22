@@ -141,7 +141,7 @@ class Metaguru(Helpers):
             if len(split) > 1:
                 aartist = split[0]
 
-        aartists = Helpers.split_artists([aartist])
+        aartists = Helpers.split_artists(aartist)
         if len(aartists) == 1:
             return aartist
 
