@@ -51,18 +51,21 @@
 ### Updated
 
 - `album`:
+
   - handle some edge cases when string **EP** or **LP** is followed with data relevant to
     the album
-  - do not remove artist or label when it is preceded by **` x `** or followed by characters
+  - do not remove artist or label when it is preceded by **`x`** or followed by characters
     **`'`**, **`_`** and **`&`**, or words **EP**, **LP** and **deluxe**
   - handle apostrophes more reliably
   - Do not remove **VA** or **V/A** from the beginning when followed by a word or a number
 
 - `album` / `title`:
+
   - Remove **`Various -`** from album and track names
   - Handle this [album sent to us by the devil himself]
 
 - `catalognum`:
+
   - allow catalogue numbers like **Dystopian LP01**
   - parse a _range_ of catalogue numbers when it is present, for example
     **TFT013SR - TFT-016SR**
