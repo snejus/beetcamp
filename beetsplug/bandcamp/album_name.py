@@ -7,6 +7,8 @@ from dataclasses import dataclass
 from functools import cached_property
 from typing import Any, Dict, Match
 
+import regex
+
 from .helpers import PATTERNS, Helpers
 
 JSONDict = Dict[str, Any]
@@ -17,7 +19,7 @@ class AlbumName:
     _series = r"(?i:\b(part|volume|pt|vol)\b\.?)"
     SERIES = re.compile(rf"{_series}[ ]?[A-Z\d.-]+\b")
     SERIES_FMT = re.compile(rf"^(.+){_series} *0*")
-    REMIX_IN_TITLE = re.compile(r"[\( :]+(with re|inc|\+).*?mix[^)]*(\)|$)", re.I)
+    REMIX_IN_TITLE = regex.compile(r"[\( :]+(with re|inc|\+)[^m]*+mix[^)]*(\)|$)", re.I)
     CLEAN_EPLP = re.compile(r"(?:[([]|Double ){0,2}(\b[EL]P\b)\S?", re.I)
     EPLP_ALBUM = re.compile(r"\b(?!VA|0\d|-)([^\s:]+\b|[&, ])+ [EL]P\b( [\w#][^ ]+$)?")
     EPLP_ALBUM_LINE = re.compile(r"\b(?=[A-Z])(((?!Vinyl|VA|-)[^:\s]+ )+)[EL]P$", re.M)
@@ -32,10 +34,10 @@ class AlbumName:
         re.IGNORECASE + re.VERBOSE,
     )
     COMPILATION_IN_TITLE = re.compile(r"compilation|best of|anniversary", re.I)
-    CLEAN_CATALOGNUM = re.compile(
+    CLEAN_CATALOGNUM = regex.compile(
         r"""
           (^[A-Z]+\d+\ [|-]\ )
-        | [^[\w)\]]*\[[A-Z]+\d+\]
+        | [^[\w)\]]*+\[[A-Z]+\d+\]
     """,
         re.VERBOSE,
     )
