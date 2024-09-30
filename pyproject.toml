@@ -28,11 +28,10 @@ Changelog = "https://github.com/snejus/beetcamp/blob/master/CHANGELOG.md"
 python = ">=3.8, <4"
 
 pycountry = ">=20.7.3"
-beets = ">=1.4,<=2"
 httpx = ">=0.27.0"
 ordered-set = ">=4.0"
 packaging = ">=24.0"
-requests = "^2.32.3"
+beets = {version = ">=1.5,<=2", extras = ["fetchart"]}
 
 [tool.poetry.dev-dependencies]
 flake8 = ">=3.8.4"
