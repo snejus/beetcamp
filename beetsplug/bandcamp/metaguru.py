@@ -95,12 +95,10 @@ class Metaguru(Helpers):
 
     @cached_property
     def all_media_comments(self) -> str:
-        return "\n".join(
-            [
-                *[m.description for m in self.media_formats],
-                self.comments or "",
-            ]
-        )
+        return "\n".join([
+            *[m.description for m in self.media_formats],
+            self.comments or "",
+        ])
 
     @cached_property
     def label(self) -> str:
