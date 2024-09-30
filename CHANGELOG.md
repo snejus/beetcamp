@@ -1,5 +1,10 @@
 ## Unreleased
 
+### Updated
+
+- CI: Use `poetry` in the build workflow.
+- CI: Use `pull_request_target` trigger to make sure secrets are passed to runs in forks.
+
 ## [0.19.2] 2024-08-04
 
 ### Fixed
