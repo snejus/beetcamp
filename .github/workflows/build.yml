@@ -1,6 +1,5 @@
----
 name: Code quality
-on: [push, pull_request]
+on: [push, pull_request_target]
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -10,40 +9,46 @@ jobs:
         python: ["3.8", "3.9", "3.10", "3.11", "3.12"]
         beets: ["1.4.9", "1.5.0", "1.6.0"]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           # Disabling shallow clone is recommended for improving relevancy of reporting
           fetch-depth: 0
-      - name: Generate requirements.txt
-        run: ./generate_requirements
+
+      - name: Install poetry
+        run: pipx install poetry
+
       - name: Set up Python ${{ matrix.python }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python }}
-          cache: pip
+          cache: poetry
+
       - name: Install dependencies
         run: |
-          pip install --upgrade pip setuptools wheel
-          pip install -r requirements.txt
-          pip install beets==${{ matrix.beets }}
-          pip install coveralls
-          pip install -e .
+          poetry install
+
       - name: Pytest
-        run: pytest -k 'not need_connection' --ignore-glob='*test_lib*'
+        run: poetry run pytest -k 'not need_connection' --ignore-glob='*test_lib*'
+
       - name: Upload coverage data to coveralls.io
-        run: coveralls --service=github
+        run: poetry run coveralls --service=github
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           COVERALLS_FLAG_NAME: python${{ matrix.python }}_beets${{ matrix.beets }}
           COVERALLS_PARALLEL: true
+
       - name: Lint flake8
-        run: flake8 . --output-file flake.log --exit-zero
+        run: poetry run flake8 . --output-file flake.log --exit-zero
+
       - name: Lint mypy
-        run: mypy > mypy.log || true
+        run: poetry run mypy > mypy.log || true
+
       - name: Lint pylint
-        run: pylint --output pylint.log --exit-zero $(git ls-files '*.py')
+        run: poetry run pylint --output pylint.log --exit-zero $(git ls-files '*.py')
+
       - name: Set project version
         run: echo PROJECT_VERSION="$(git describe --tags | sed 's/-[^-]*$//')" >> $GITHUB_ENV
+
       - name: SonarCloud Scan
         if: ${{ matrix.beets == '1.5.0' && matrix.python == '3.8' }}
         uses: SonarSource/sonarcloud-github-action@master
@@ -58,6 +63,7 @@ jobs:
             -Dsonar.python.coverage.reportPaths=.reports/coverage.xml
             -Dsonar.python.flake8.reportPaths=flake.log
             -Dsonar.python.pylint.reportPaths=pylint.log
+            -Dsonar.python.ruff.reportPaths=
             -Dsonar.python.mypy.reportPaths=mypy.log
             -Dsonar.python.version=3.8
             -Dsonar.python.xunit.reportPath=.reports/test-report.xml
@@ -67,6 +73,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
   coveralls:
     if: ${{ always() }}
     name: Indicate completion to coveralls.io
