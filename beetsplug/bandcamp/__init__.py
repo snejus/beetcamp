@@ -218,10 +218,10 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
 
         if album == "":
             search = {
-                "query": item.title,
+                "query": artist + " - " + item.title,
                 "artist": artist,
                 "label": label,
-                "search_type": "t",
+                "search_type": "",
             }
         else:
             search = {
