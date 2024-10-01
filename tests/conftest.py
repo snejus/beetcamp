@@ -50,7 +50,7 @@ def console():
 
 @pytest.fixture
 def beets_config():
-    return deepcopy({**DEFAULT_CONFIG, "exclude_extra_fields": ["comments"]})
+    return deepcopy(DEFAULT_CONFIG)
 
 
 @pytest.fixture

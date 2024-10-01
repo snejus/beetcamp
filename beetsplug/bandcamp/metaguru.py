@@ -77,7 +77,7 @@ class Metaguru(Helpers):
 
     @cached_property
     def excluded_fields(self) -> Set[str]:
-        return set(self.config.get("excluded_fields") or [])
+        return set(self.config.get("exclude_extra_fields") or [])
 
     @property
     def comments(self) -> Optional[str]:
