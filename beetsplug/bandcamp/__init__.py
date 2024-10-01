@@ -216,21 +216,7 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         if "various" in artist.lower():
             artist = ""
 
-        if album == "":
-            search = {
-                "query": item.title,
-                "artist": artist,
-                "label": label,
-                "search_type": "t",
-            }
-        else:
-            search = {
-                "query": album,
-                "artist": artist,
-                "label": label,
-                "search_type": "a",
-            }
-
+        search = {"query": album, "artist": artist, "label": label, "search_type": "a"}
         results = map(itemgetter("url"), self._search(search))
         yield from chain.from_iterable(filter(None, map(self.get_album_info, results)))
 
