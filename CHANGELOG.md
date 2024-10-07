@@ -1,5 +1,8 @@
 ## Unreleased
 
+### Added
+- Auto-Tagger: Wider search analogous to cli search query as a fallback for bad or missing meta data
+
 ### Updated
 
 - CI: Use `poetry` in the build workflow.
