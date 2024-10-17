@@ -21,10 +21,10 @@ from __future__ import annotations
 import logging
 import re
 from contextlib import contextmanager
-from functools import lru_cache, partial
+from functools import partial
 from itertools import chain
 from operator import itemgetter
-from typing import TYPE_CHECKING, Any, Dict, Iterable, Iterator, List, Literal, Sequence
+from typing import TYPE_CHECKING, Any, Dict, Iterable, Iterator, List, Literal
 
 from beets import IncludeLazyConfig, config, library, plugins
 
@@ -64,10 +64,10 @@ class BandcampRequestsHandler:
     _log: logging.Logger
     config: IncludeLazyConfig
 
-    def _exc(self, msg_template: str, *args: Sequence[str]) -> None:
+    def _exc(self, msg_template: str, *args: object) -> None:
         self._log.log(logging.WARNING, msg_template, *args, exc_info=True)
 
-    def _info(self, msg_template: str, *args: Sequence[str]) -> None:
+    def _info(self, msg_template: str, *args: object) -> None:
         self._log.log(logging.DEBUG, msg_template, *args, exc_info=False)
 
     def _get(self, url: str) -> str:

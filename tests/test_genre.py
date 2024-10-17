@@ -1,4 +1,5 @@
 """Tests for genre functionality."""
+
 import pytest
 from beetsplug.bandcamp.metaguru import Metaguru
 

@@ -3,10 +3,10 @@
 import sys
 
 import pytest
+
 from beetsplug.bandcamp import get_args
 
 
-# fmt: off
 @pytest.mark.parametrize(
     "cmdline, args",
     [
@@ -18,8 +18,7 @@ from beetsplug.bandcamp import get_args
         (["hello", "-l", "-o", "1"], {"query": "hello", "search_type": "b", "index": 1, "page": 1}),
         (["hello", "-l", "-p", "2"], {"query": "hello", "search_type": "b", "index": None, "page": 2}),
     ],
-)
-# fmt: on
+)  # fmt: skip
 def test_cmdline_flags(cmdline, args):
     sys.argv = ["beetcamp", *cmdline]
     assert vars(get_args()) == args

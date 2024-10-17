@@ -69,7 +69,7 @@ class Catalognum:
         (?:[.-]\d+)?                    # .1 in RAWVA01.1RP, -1322 in SOP 063-1322
         (?:
             (?!MIX)
-            (?<=\d\d)-?[A-Z]+           # CD in IBM001CD (needs at least two preceding digits)
+            (?<=\d\d)-?[A-Z]+           # CD in IBM001CD (needs two preceding digits)
           | RP                          # RP in RAWVA01.1RP
         )?
     )?
