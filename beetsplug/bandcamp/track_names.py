@@ -22,7 +22,7 @@ class TrackNames:
     ALBUM_IN_TITLE = re.compile(r"[- ]*\[([^\]]+ [EL]P)\]+", re.I)
     SEPARATOR_PAT = re.compile(r" [^\w&()+/[\]] ")
     TITLE_IN_QUOTES = re.compile(r'^(.+[^ -])[ -]+"([^"]+)"$')
-    NUMBER_PREFIX = re.compile(r"((?<=^)|(?<=- ))\d{1,2}[\W\s]+(?=\D)")
+    NUMBER_PREFIX = re.compile(r"((?<=^)|(?<=- ))\d{1,2}\W+(?=\D)")
 
     original: List[str]
     names: List[str]
@@ -96,7 +96,7 @@ class TrackNames:
     def remove_label(names: List[str], label: str) -> List[str]:
         """Remove label name from the end of track names.
 
-        See https://gutterfunkuk.bandcamp.com/album/gutterfunk-all-subject-to-vibes-various-artists-lp
+        See https://gutterfunkuk.bandcamp.com/album/gutterfunk-all-subject-to-vibes-various-artists-lp  # noqa: E501
         """
         return [
             (n.replace(label, "").strip(" -") if n.endswith(label) else n)
@@ -167,7 +167,7 @@ class TrackNames:
             # every track was split at least into two parts
             all(len(s) > 1 for s in splits)
             # every track has the same title
-            and len(unique_titles := set(t for _, t in splits)) == 1
+            and len(unique_titles := {t for _, t in splits}) == 1
             # there's an overlap between album artists and parts of the unique title
             and (
                 set(Helpers.split_artists(unique_titles.pop()))
