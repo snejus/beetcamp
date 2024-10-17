@@ -1,5 +1,7 @@
 ## Unreleased
 
+## [0.19.3] 2024-10-17
+
 ### Updated
 
 - CI: Use `poetry` in the build workflow.
@@ -1118,3 +1120,4 @@ Thanks @arogl for reporting each of the above!
 [0.19.0]: https://github.com/snejus/beetcamp/releases/tag/0.19.0
 [0.19.1]: https://github.com/snejus/beetcamp/releases/tag/0.19.1
 [0.19.2]: https://github.com/snejus/beetcamp/releases/tag/0.19.2
+[0.19.3]: https://github.com/snejus/beetcamp/releases/tag/0.19.3
