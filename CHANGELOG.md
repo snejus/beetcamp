@@ -3,6 +3,8 @@
 ### Added
 - Auto-Tagger: Wider search analogous to cli search query as a fallback for bad or missing meta data
 
+## [0.19.3] 2024-10-17
+
 ### Updated
 
 - CI: Use `poetry` in the build workflow.
@@ -92,11 +94,7 @@
 
 - (#50) Fix art fetching functionality which has essentially been disabled until now.
 
-[0.17.2]: https://github.com/snejus/beetcamp/releases/tag/0.17.2
-
 ## [0.17.1] 2023-05-20
-
-[0.17.1]: https://github.com/snejus/beetcamp/releases/tag/0.17.1
 
 ### Fixed
 
@@ -104,8 +102,6 @@
   albums that have **bundle** in their names
 
 ## [0.17.0] 2023-05-20
-
-[0.17.0]: https://github.com/snejus/beetcamp/releases/tag/0.17.0
 
 ### Added
 
@@ -162,8 +158,6 @@
 
 ## [0.16.3] 2023-02-13
 
-[0.16.3]: https://github.com/snejus/beetcamp/releases/tag/0.16.3
-
 ### Fixed
 
 - (#41) fix `re.error: nothing to repeat` caused by missing regex escape
@@ -203,8 +197,6 @@
 
 ## [0.16.2] 2022-12-28
 
-[0.16.2]: https://github.com/snejus/beetcamp/releases/tag/0.16.2
-
 ### Fixed
 
 - (#40) Improve overall search reliability (#37) and handle alternative domain names, thanks @shagr4th.
@@ -214,8 +206,6 @@
 - internal/build: make sure tests and linting run on pull requests.
 
 ## [0.16.1] 2022-12-17
-
-[0.16.1]: https://github.com/snejus/beetcamp/releases/tag/0.16.1
 
 ### Fixed
 
@@ -239,8 +229,6 @@
   - Add missing closing parenthesis for mix/edit titles: **Title (Some Mix** -> **Title (Some Mix)**
 
 ## [0.16.0] 2022-08-19
-
-[0.16.0]: https://github.com/snejus/beetcamp/releases/tag/0.16.0
 
 ### Fixed
 
@@ -274,8 +262,6 @@
 
 ## [0.15.1] 2022-06-19
 
-[0.15.1]: https://github.com/snejus/beetcamp/releases/tag/0.15.1
-
 ### Deprecations
 
 - Python 3.6 support will end with the next non-patch version update.
@@ -298,8 +284,6 @@
 - `title`: handle an edge case where one of the track names contains a utf-8 equivalent of a dash
 
 ## [0.15.0] 2022-05-16
-
-[0.15.0]: https://github.com/snejus/beetcamp/releases/tag/0.15.0
 
 ### Added
 
@@ -456,23 +440,17 @@
   - Remove **EP** or **LP** from the beginning more reliably
   - Only remove **VA** if album name starts or ends with it
 
-[0.14.0]: https://github.com/snejus/beetcamp/releases/tag/0.14.0
-
 ## [0.13.2] 2022-04-03
 
 ### Fixed
 
 - Fixed importing of officially purchased Bandcamp tracks which have **Visit {label_url}** in their `COMMENT` field (at least for FLAC files) when the album name does not contain a single ASCII alphanumeric character. We here use the album name to guess the release url, and in this case the plugin has previously been failing to take into account this edge case and failed the import process immediately.
 
-[0.13.2]: https://github.com/snejus/beetcamp/releases/tag/0.13.2
-
 ## [0.13.1] 2022-04-03
 
 ### Fixed
 
 - search: changes introduced in [0.13.0] broke searching functionality for `python 3.6-3.8` due to changes in the built-in `difflib` library. This has been fixed and tests for the searching logic are now added. Thanks to @emanuele-virgillito for reporting the issue.
-
-[0.13.1]: https://github.com/snejus/beetcamp/releases/tag/0.13.1
 
 ## [0.13.0] 2022-03-22
 
@@ -555,8 +533,6 @@
 - Clarified that `preferred_media` should include **Digital Media** (not **Digital**) in
   the README.
 
-[0.13.0]: https://github.com/snejus/beetcamp/releases/tag/0.13.0
-
 ## [0.12.0] 2022-02-10
 
 ### Added
@@ -619,8 +595,6 @@
 
 [tracklist]: https://scumcllctv.bandcamp.com/album/scum002-arcadia
 [title format specification]: https://beta.musicbrainz.org/doc/Style/Titles
-[0.12.0]: https://github.com/snejus/beetcamp/releases/tag/0.12.0
-
 ## [0.11.0] 2021-11-12
 
 ### Added
@@ -685,8 +659,6 @@
   data - this is now handled gracefully.
 
 [musicbrainz genres]: https://beta.musicbrainz.org/genres
-[0.11.0]: https://github.com/snejus/beetcamp/releases/tag/0.11.0
-
 ## [0.10.1] 2021-09-13
 
 ### Fixed
@@ -708,8 +680,6 @@ Thanks @arogl for reporting each of the above!
   example scenario:
   - `label: Mike`
   - `album: Mike's Creations`
-
-[0.10.1]: https://github.com/snejus/beetcamp/releases/tag/0.10.1
 
 ## [0.10.0] 2021-09-10
 
@@ -1132,3 +1102,25 @@ Thanks @arogl for reporting each of the above!
   finds a good fit and won't continue further (same as the musicbrainz autotagger)
 - Extended the parsing functionality with data like catalog number, label,
   country etc. The full list is given in the readme.
+
+[0.10.1]: https://github.com/snejus/beetcamp/releases/tag/0.10.1
+[0.11.0]: https://github.com/snejus/beetcamp/releases/tag/0.11.0
+[0.12.0]: https://github.com/snejus/beetcamp/releases/tag/0.12.0
+[0.13.0]: https://github.com/snejus/beetcamp/releases/tag/0.13.0
+[0.13.1]: https://github.com/snejus/beetcamp/releases/tag/0.13.1
+[0.13.2]: https://github.com/snejus/beetcamp/releases/tag/0.13.2
+[0.14.0]: https://github.com/snejus/beetcamp/releases/tag/0.14.0
+[0.15.0]: https://github.com/snejus/beetcamp/releases/tag/0.15.0
+[0.15.1]: https://github.com/snejus/beetcamp/releases/tag/0.15.1
+[0.16.0]: https://github.com/snejus/beetcamp/releases/tag/0.16.0
+[0.16.1]: https://github.com/snejus/beetcamp/releases/tag/0.16.1
+[0.16.2]: https://github.com/snejus/beetcamp/releases/tag/0.16.2
+[0.16.3]: https://github.com/snejus/beetcamp/releases/tag/0.16.3
+[0.17.0]: https://github.com/snejus/beetcamp/releases/tag/0.17.0
+[0.17.1]: https://github.com/snejus/beetcamp/releases/tag/0.17.1
+[0.17.2]: https://github.com/snejus/beetcamp/releases/tag/0.17.2
+[0.18.0]: https://github.com/snejus/beetcamp/releases/tag/0.18.0
+[0.19.0]: https://github.com/snejus/beetcamp/releases/tag/0.19.0
+[0.19.1]: https://github.com/snejus/beetcamp/releases/tag/0.19.1
+[0.19.2]: https://github.com/snejus/beetcamp/releases/tag/0.19.2
+[0.19.3]: https://github.com/snejus/beetcamp/releases/tag/0.19.3
