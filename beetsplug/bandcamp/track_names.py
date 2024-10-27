@@ -11,7 +11,7 @@ from typing import Iterator, List, Optional, Tuple
 from ordered_set import OrderedSet
 
 from .catalognum import Catalognum
-from .helpers import REMIX
+from .helpers import REMIX, Helpers
 
 
 @dataclass
@@ -89,7 +89,8 @@ class TrackNames:
     def normalize_delimiter(cls, names: List[str]) -> List[str]:
         """Ensure the same delimiter splits artist and title in all names."""
         delim = cls.find_common_track_delimiter(names)
-        return [n.replace(f" {delim} ", " - ") for n in names]
+        pat = re.compile(f" +{re.escape(delim)} +")
+        return [pat.sub(" - ", n) for n in names]
 
     @staticmethod
     def remove_label(names: List[str], label: str) -> List[str]:
@@ -159,6 +160,25 @@ class TrackNames:
         ]
 
     @classmethod
+    def ensure_artist_first(cls, names: List[str], album_artist: str) -> List[str]:
+        """Ensure the artist is the first part of the track name."""
+        splits = [n.split(" - ", 1) for n in names]
+        if (
+            # every track was split at least into two parts
+            all(len(s) > 1 for s in splits)
+            # every track has the same title
+            and len(unique_titles := set(t for _, t in splits)) == 1
+            # there's an overlap between album artists and parts of the unique title
+            and (
+                set(Helpers.split_artists(unique_titles.pop()))
+                & set(Helpers.split_artists(album_artist))
+            )
+        ):
+            return [f"{a} - {t}" for t, a in splits]
+
+        return names
+
+    @classmethod
     def make(cls, original: List[str], label: str, album_artist: str) -> "TrackNames":
         names = cls.split_quoted_titles(original)
         catalognum, names = cls.eject_common_catalognum(names, album_artist)
@@ -168,4 +188,5 @@ class TrackNames:
             )
         )
         album, names = cls.eject_album_name(names)
+        names = cls.ensure_artist_first(names, album_artist)
         return cls(original, names, album=album, catalognum=catalognum)
