@@ -179,11 +179,14 @@ class Helpers:
         return item.get("name") or ""
 
     @staticmethod
-    def split_artists(artists: Iterable[str]) -> List[str]:
+    def split_artists(artists: Union[str, Iterable[str]]) -> List[str]:
         """Split artists taking into account delimiters such as ',', '+', 'x', 'X'.
 
         Note: featuring artists are removed since they are not main artists.
         """
+        if isinstance(artists, str):
+            artists = [artists]
+
         no_ft_artists = (PATTERNS["ft"].sub("", a) for a in artists)
         split = map(PATTERNS["split_artists"].split, ordset(no_ft_artists))
         split_artists = ordset(map(str.strip, chain(*split))) - {"", "more"}
