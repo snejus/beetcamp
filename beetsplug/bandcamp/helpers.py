@@ -4,15 +4,30 @@ import re
 from functools import lru_cache, partial
 from itertools import chain
 from operator import contains
-from typing import Any, Dict, Iterable, List, Match, NamedTuple, Pattern
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    Dict,
+    Iterable,
+    List,
+    Match,
+    NamedTuple,
+    Pattern,
+    Tuple,
+    Union,
+)
 
-from beets.autotag.hooks import AlbumInfo
-from ordered_set import OrderedSet as ordset
+from ordered_set import OrderedSet as ordset  # noqa: N813
 
 from .genres_lookup import GENRES
 
+if TYPE_CHECKING:
+    from beets.autotag.hooks import AlbumInfo
+
 JSONDict = Dict[str, Any]
 DIGI_MEDIA = "Digital Media"
+USB_TYPE_ID = 5
 FORMAT_TO_MEDIA = {
     "VinylFormat": "Vinyl",
     "CDFormat": "CD",
@@ -118,7 +133,7 @@ def split_artist_title(m: Match[str]) -> str:
 
 
 # fmt: off
-CLEAN_PATTERNS = [
+CLEAN_PATTERNS: List[Tuple[Pattern[str], Union[str, Callable[[Match[str]], str]]]] = [
     (re.compile(rf"(([\[(])|(^| ))\*?({'|'.join(rm_strings)})(?(2)[])]|([- ]|$))", re.I), ""),       # noqa
     (re.compile(r" -(\S)"), r" - \1"),                    # hi -bye          -> hi - bye
     (re.compile(r"(\S)- "), r"\1 - "),                    # hi- bye          -> hi - bye
@@ -147,7 +162,8 @@ class Helpers:
 
     @staticmethod
     def split_artists(artists: Iterable[str]) -> List[str]:
-        """Split artists taking into account delimiters such as ',', '+', 'x', 'X' etc.
+        """Split artists taking into account delimiters such as ',', '+', 'x', 'X'.
+
         Note: featuring artists are removed since they are not main artists.
         """
         no_ft_artists = (PATTERNS["ft"].sub("", a) for a in artists)
@@ -161,15 +177,16 @@ class Helpers:
             for char in "X&":
                 subartists = artist.split(f" {char} ")
                 if len(subartists) > 1 and any(s in split_artists for s in subartists):
-                    split_artists.discard(artist)  # type: ignore[attr-defined]
-                    split_artists.update(subartists)  # type: ignore[attr-defined]
+                    split_artists -= {artist}
+                    split_artists |= ordset(subartists)
         return list(split_artists)
 
     @staticmethod
     def clean_name(name: str) -> str:
         """Both album and track names are cleaned using these patterns."""
-        for pat, repl in CLEAN_PATTERNS:
-            name = pat.sub(repl, name).strip()
+        if name:
+            for pat, repl in CLEAN_PATTERNS:
+                name = pat.sub(repl, name).strip()
         return name
 
     @staticmethod
@@ -223,7 +240,7 @@ class Helpers:
             # remove full stops and hashes and ensure the expected form of 'and'
             _kw = re.sub("[.#]", "", str(kw)).replace("&", "and")
             if not is_label_name(_kw) and (is_included(_kw) or valid_for_mode(_kw)):
-                unique_genres.add(_kw)
+                unique_genres |= {_kw}
 
         def within_another_genre(genre: str) -> bool:
             """Check if this genre is part of another genre.
@@ -281,7 +298,7 @@ class Helpers:
                 # not a subscription
                 and obj["item_type"] != "i"
                 # musicReleaseFormat format is given or it is a USB
-                and ("musicReleaseFormat" in obj or obj["type_id"] == 5)
+                and ("musicReleaseFormat" in obj or obj["type_id"] == USB_TYPE_ID)
                 # it is not a vinyl bundle
                 and not (obj["item_type"] == "p" and "bundle" in obj["name"].lower())
             )
@@ -290,7 +307,7 @@ class Helpers:
         return list(map(MediaInfo.from_format, valid_formats))
 
     @staticmethod
-    def add_track_alts(album: AlbumInfo, comments: str) -> AlbumInfo:
+    def add_track_alts(album: "AlbumInfo", comments: str) -> "AlbumInfo":
         # using an ordered set here in case of duplicates
         track_alts = ordset(PATTERNS["track_alt"].findall(comments))
 
