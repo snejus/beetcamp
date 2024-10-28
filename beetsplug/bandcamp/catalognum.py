@@ -64,6 +64,7 @@ class Catalognum:
         | [A-Z]+\d+[-_]\d{2,}           # P90-003, CC2_011
         | [A-Z]+_[A-Z]\d{1,3}           # PRL_S03
         | [A-Z]{2,}\d+[A-Z]\d{2,}       # SK11X015
+        | [A-Z]{2}(?!999)\d{3}          # ST172
     )
     (?: # optionally followed by
         (?:[.-]\d+)?                    # .1 in RAWVA01.1RP, -1322 in SOP 063-1322
