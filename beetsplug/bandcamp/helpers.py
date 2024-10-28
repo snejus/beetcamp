@@ -101,7 +101,7 @@ PATTERNS: Dict[str, Pattern[str]] = {
 }
 rm_strings = [
     "limited edition",
-    r"^[EL]P( \d+)?",
+    r"^EP -",
     r"\((digital )?album\)",
     r"\(single\)",
     r"\Wvinyl\W|vinyl-only",

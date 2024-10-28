@@ -6,6 +6,7 @@
   - Keep remix artist in place within 'remix' parentheses, such as **Album (Artist
     Remix)**.
   - When a release has the same name as the album artist, do not clean/adjust it.
+  - Do not remove **EP** or **LP** from the beginning of the album name.
 
 - `albumtype`:
   - Identify **LP** release type when Bandcamp media contains a string **2LP** and alike.
