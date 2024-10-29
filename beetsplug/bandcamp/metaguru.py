@@ -37,6 +37,7 @@ VA = "Various Artists"
 
 
 class Metaguru(Helpers):
+    HTML_REMOVE_CHARS = ["\u200b", "\u00a0"]
     _singleton = False
     va_name = VA
     media = MediaInfo("", "", "", "")
@@ -63,8 +64,10 @@ class Metaguru(Helpers):
 
     @classmethod
     def from_html(cls, html: str, config: Optional[JSONDict] = None) -> "Metaguru":
+        for char in cls.HTML_REMOVE_CHARS:
+            html = html.replace(char, "")
         try:
-            meta = re.search(PATTERNS["meta"], html.replace("\u200b", "")).group()  # type: ignore[union-attr]  # noqa: E501
+            meta = re.search(PATTERNS["meta"], html).group()  # type: ignore[union-attr]
         except AttributeError as exc:
             raise AttributeError("Could not find release metadata JSON") from exc
         else:
