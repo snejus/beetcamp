@@ -4,9 +4,8 @@
     "album_id": "https://44labelgroup.bandcamp.com/album/rr2",
     "albumdisambig": null,
     "albumstatus": "Official",
-    "albumtype": "album",
+    "albumtype": "single",
     "albumtypes": [
-      "album",
       "remix",
       "single"
     ],

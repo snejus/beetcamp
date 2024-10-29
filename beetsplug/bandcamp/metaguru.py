@@ -332,10 +332,10 @@ class Metaguru(Helpers):
 
     @cached_property
     def albumtype(self) -> str:
-        if self._singleton:
-            return "single"
         if self.is_ep:
             return "ep"
+        if self.is_single_album:
+            return "single"
         if self.is_lp:
             return "album"
 
@@ -360,6 +360,8 @@ class Metaguru(Helpers):
             albumtypes.add("lp")
         if self.is_single_album:
             albumtypes.add("single")
+        if self.albumtype == "single" and len(self.tracks) > 1:
+            albumtypes.add("album")
         for word in ["remix", "rmx", "edits", "live", "soundtrack"]:
             if word in self.original_album.lower():
                 albumtypes.add(word.replace("rmx", "remix").replace("edits", "remix"))
