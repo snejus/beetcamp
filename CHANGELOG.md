@@ -17,6 +17,7 @@
 - cleanup:
   - Remove **`(... preview)`**, **`free dl`**, **`Name Your Price:`** from album and track
     names.
+  - Remove unicode HTML whitespace from incoming data.
 
 - `albumtype`:
   - Identify **LP** release type when Bandcamp media contains a string **2LP** and alike.
