@@ -99,7 +99,7 @@ class FieldDiff(NamedTuple):
 
     def expand(self) -> Iterator[FieldDiff]:
         if self.field == "tracks":
-            for old_track, new_track in zip_longest(self.old, self.new, fillvalue=[]):  # type: ignore[var-annotated]
+            for old_track, new_track in zip_longest(self.old, self.new, fillvalue=[]):  # type: ignore[var-annotated]  # noqa: E501
                 yield FieldDiff("album_track", old_track, new_track)
         elif self.field == "album_track":
             for field, (old, new) in zip_longest(
@@ -212,8 +212,21 @@ def _write_results(summary_file, failed: Results, fixed: Results) -> Iterator[No
         summary_file.write_text(json.dumps(summary, indent=2))
 
 
+@pytest.fixture(scope="session")
+def include_fields(pytestconfig: Config) -> set[str]:
+    include_fields: set[str] = set()
+    if (fields := pytestconfig.getoption("fields")) != "*":
+        include_fields |= set(fields.split(","))
+        if include_fields & set(TRACK_FIELDS):
+            include_fields.add("album_track")
+
+    return include_fields
+
+
 @pytest.fixture(scope="session", autouse=True)
-def _report(pytestconfig, summary_file) -> Iterator[None]:
+def _report(
+    pytestconfig: Config, include_fields: set[str], summary_file
+) -> Iterator[None]:
     yield
 
     if not summary_file.is_file():
@@ -236,8 +249,12 @@ def _report(pytestconfig, summary_file) -> Iterator[None]:
                 sections.append(("Fixed", summary["fixed"], "green"))
 
         columns = []
-        for name, changes, color in sections:
+        for name, all_changes, color in sections:
             album_panels = []
+            if include_fields:
+                changes = [(u, d) for u, d in all_changes if d.field in include_fields]
+            else:
+                changes = all_changes
             changes.sort(key=FIRST_ITEM)
             for url, diffs in groupby(changes, FIRST_ITEM):
                 album_panels.append(
@@ -265,7 +282,7 @@ def _report(pytestconfig, summary_file) -> Iterator[None]:
                     )
                 )
 
-        if field_changes := get_field_changes(summary["failed"]):
+        if field_changes := get_field_changes(summary["failed"], include_fields):
             columns.append(field_changes)
 
         console.print("\n")
@@ -274,8 +291,10 @@ def _report(pytestconfig, summary_file) -> Iterator[None]:
             console.print(new_table(*headers, vertical="bottom", rows=[columns]))
 
 
-def get_field_changes(results: Results) -> Panel:
+def get_field_changes(results: Results, include_fields: set[str]) -> Panel:
     diffs = [d for _, diff in results for d in diff.expand() if d.old != d.new]
+    if include_fields:
+        diffs = [d for d in diffs if d.field in include_fields]
     diffs.sort(key=lambda d: (d.field, str(d.new)))
 
     cols = []
