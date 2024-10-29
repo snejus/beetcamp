@@ -46,6 +46,11 @@ def pytest_addoption(parser):
         metavar="COMMIT",
         help="target name or short commit hash",
     )
+    parser.addoption(
+        "--fields",
+        default="*",
+        help="comma-delimited list of fields to compare, all by default",
+    )
 
 
 def pytest_terminal_summary(terminalreporter, exitstatus, config):
