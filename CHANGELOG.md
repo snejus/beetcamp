@@ -22,6 +22,8 @@
 - `albumtype`:
   - Identify **LP** release type when Bandcamp media contains a string **2LP** and alike.
   - Fix several **compilation** false positives which are actually **single**s.
+  - Remove some funky description parsing logic responsible for multiple **ep** false
+    positives.
 
 - `artist`: handle remix releases with a single title and its remixes. Instead of trying
   to determine the artist from the titles, detect such release and use the given album

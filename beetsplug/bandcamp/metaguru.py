@@ -4,7 +4,6 @@ import itertools as it
 import json
 import operator as op
 import re
-from collections import Counter
 from datetime import date, datetime
 from functools import cached_property, partial
 from typing import Any, Dict, Iterable, List, Optional, Set
@@ -306,19 +305,6 @@ class Metaguru(Helpers):
             " / " in self.album_name and len(self.tracks.artists) == 2
         )
 
-    def check_albumtype_in_descriptions(self) -> str:
-        """Count 'lp', 'album' and 'ep' words in the release and media descriptions
-        and return the albumtype that represents the word matching the most times.
-        """
-        matches = re.findall(r"\b(album|ep|lp)\b", self.all_media_comments.lower())
-        if matches:
-            counts = Counter(x.replace("lp", "album") for x in matches)
-            # if equal, we assume it's an EP since it's more likely that an EP is
-            # referred to as an "album" rather than the other way around
-            if counts["ep"] >= counts["album"]:
-                return "ep"
-        return "album"
-
     @cached_property
     def is_comp(self) -> bool:
         """Return whether the release is a compilation."""
@@ -341,11 +327,6 @@ class Metaguru(Helpers):
             return "single"
         if self.is_lp:
             return "album"
-
-        atype = self.check_albumtype_in_descriptions()
-        if atype == "ep":
-            return "ep"
-        # otherwise, it's an album, but we firstly need to check if it's a compilation
         if self.is_comp:
             return "compilation"
 
