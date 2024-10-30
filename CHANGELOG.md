@@ -24,6 +24,7 @@
   - Fix several **compilation** false positives which are actually **single**s.
   - Remove some funky description parsing logic responsible for multiple **ep** false
     positives.
+  - Resolve either **ep** or **lp** to add to `albumtypes`, and never both.
 
 - `artist`: handle remix releases with a single title and its remixes. Instead of trying
   to determine the artist from the titles, detect such release and use the given album

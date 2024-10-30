@@ -321,12 +321,12 @@ class Metaguru(Helpers):
 
     @cached_property
     def albumtype(self) -> str:
+        if self.is_lp:
+            return "album"
         if self.is_ep:
             return "ep"
         if self.is_single_album:
             return "single"
-        if self.is_lp:
-            return "album"
         if self.is_comp:
             return "compilation"
 
