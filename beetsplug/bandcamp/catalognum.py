@@ -50,7 +50,10 @@ class Catalognum:
     (?:
           (?<![A-Z].)[A-Z]{2,}\ 0\d{2}  # MNQ 049, SOP 063, SP 040
         | [A-Z]+[. ][A-Z]\d{3,}         # M.A025, HANDS D300
-        | [A-Z]{4,}\d(?!\.)             # ROAD6, FREELAB9
+        | (?:                           # ROAD6, FREELAB9
+          (?<!\ )[A-Z]{4,}\d(?!\.)  # not preceded by space
+          |      [A-Z]{4,}\d(?=$)   # or at the end of the line
+        )
         | \d*[A-Z$]{3,}[.-]?\d{3}       # EDLX.034, HEY-101, LI$INGLE025
         | [A-Z][A-z]{2,}0\d{2}          # Fabrik038, GiBS027, PSRL_001
         | [A-Z]{3,4}(?:CD)?\.?\d{2,}    # TAR30, NEN.39, ZENCD30

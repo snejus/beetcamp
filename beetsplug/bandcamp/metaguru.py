@@ -195,7 +195,7 @@ class Metaguru(Helpers):
     def _catalognum(self) -> Catalognum:
         """Return catalogue number parser."""
         return Catalognum(
-            f"{self.description}\n{self.credits}",
+            f"{self.description}\n{self.credits}".replace("\r", ""),
             self.original_album,
             self.label,
             self._tracks.artists_and_titles,
