@@ -129,6 +129,7 @@ rm_strings = [
     "split w",
     r"CD ?\d+",
     "Name Your Price:",
+    "just out!"
 ]
 
 REMIX = re.compile(
