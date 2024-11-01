@@ -10,6 +10,7 @@
   - Keep remix artist in place within 'remix' parentheses, such as **Album (Artist
     Remix)**.
   - When a release has the same name as the album artist, do not clean/adjust it.
+  - Keep album artist in album when it is immediately followed by a dot.
   - Do not remove **EP** or **LP** from the beginning of the album name.
   - Remove **`V.A`** from the beginning of the album name, in the same way we remove
     **`VA`**.
