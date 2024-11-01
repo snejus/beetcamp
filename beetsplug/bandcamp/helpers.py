@@ -120,7 +120,7 @@ rm_strings = [
     r"\(single\)",
     r"\Wvinyl\W|vinyl-only",
     "compiled by.*",
-    r"[\[(]presented by.*",
+    r"[\[(](presented|selected) by.*",
     r"free download(?! \w)",
     r"[([][^])]*free\b(?!.*mix)[^])]*[])]",
     r"[([][^])]*preview[])]",

@@ -18,7 +18,7 @@
 
 - cleanup:
   - Remove **`(... preview)`**, **`free dl`**, **`Name Your Price:`**, **`just out!`**,
-    **`- Album`** from album and track names.
+    **`- Album`**, **`(Selected by ...)`** from album and track names.
   - Remove unicode HTML whitespace from incoming data.
 
 - `albumtype`:
