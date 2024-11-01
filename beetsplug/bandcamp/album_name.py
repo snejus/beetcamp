@@ -135,7 +135,7 @@ class AlbumName:
             \W*               # pick up any punctuation
             (?<!\w[ ])        # cannot be preceded by a simple word
             \b{re.escape(label)}\b
-            (?!'|[ -][A-Za-z])  # cannot be followed by a word
+            (?!.[A-Za-z])     # cannot be followed by a word
             ([^[\]\w]|\d)*    # pick up any digits and punctuation
         """,
             flags=re.VERBOSE | re.IGNORECASE,
@@ -183,7 +183,8 @@ class AlbumName:
 
         name = PATTERNS["ft"].sub("", name)
         name = cls.remove_va(name)
-        name = cls.remove_label(Helpers.clean_name(name), label)
+        name = Helpers.clean_name(name)
+        name = cls.remove_label(name, label)
         name = cls.REMIX_IN_TITLE.sub(" ", name).strip("- ")
 
         # uppercase EP and LP, and remove surrounding parens / brackets
