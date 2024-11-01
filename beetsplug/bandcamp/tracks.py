@@ -6,7 +6,7 @@ from functools import cached_property
 from typing import Iterator, List, Set
 
 from .track import Track
-from .track_names import Names
+from .names import Names
 
 
 @dataclass
