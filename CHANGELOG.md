@@ -61,6 +61,8 @@
     incorrectly identified as `track_alt`.
   - `artist` / `title`: In releases where every track has the same title, check whether
     this title may actually be the artist name. If so, move it to the artist field.
+  - `artist` / `title`: use characters **`[|-–—]`** explicitly for splitting artists and
+    titles.
 
 ### Added
 

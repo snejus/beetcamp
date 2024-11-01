@@ -20,7 +20,7 @@ class TrackNames:
 
     # Title [Some Album EP]
     ALBUM_IN_TITLE = re.compile(r"[- ]*\[([^\]]+ [EL]P)\]+", re.I)
-    SEPARATOR_PAT = re.compile(r" [^\w&()+/[\]] ")
+    SEPARATOR_PAT = re.compile(r"(?<= )[|\u2013\u2014-](?= )")
     TITLE_IN_QUOTES = re.compile(r'^(.+[^ -])[ -]+"([^"]+)"$')
     NUMBER_PREFIX = re.compile(r"((?<=^)|(?<=- ))\d{1,2}\W+(?=\D)")
 
@@ -78,11 +78,11 @@ class TrackNames:
         If no such character is found, or if we have just one track, return a dash '-'.
         """
 
-        def get_delim(string: str) -> str:
-            m = cls.SEPARATOR_PAT.search(string)
-            return m.group().strip() if m else "-"
+        matches = [m for mat in map(cls.SEPARATOR_PAT.findall, names) for m in mat]
+        if not matches:
+            return "-"
 
-        delim, count = Counter(map(get_delim, names)).most_common(1).pop()
+        delim, count = Counter(matches).most_common(1).pop()
         return delim if (len(names) == 1 or count > len(names) / 2) else "-"
 
     @classmethod
@@ -99,7 +99,7 @@ class TrackNames:
         See https://gutterfunkuk.bandcamp.com/album/gutterfunk-all-subject-to-vibes-various-artists-lp  # noqa: E501
         """
         return [
-            (n.replace(label, "").strip(" -") if n.endswith(label) else n)
+            (n.replace(label, "").strip(": -") if n.endswith(label) else n)
             for n in names
         ]
 

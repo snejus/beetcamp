@@ -139,7 +139,7 @@ class Tracks:
                     len(split := t.title.split("-")) > 1
                     or len(split := TrackNames.SEPARATOR_PAT.split(t.title)) > 1
                 ):
-                    t.artist, t.title = split
+                    t.artist, t.title = map(str.strip, split)
 
         for t in (t for t in self.tracks if not t.artist):
             # default to the albumartist
