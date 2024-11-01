@@ -13,6 +13,7 @@
   - Do not remove **EP** or **LP** from the beginning of the album name.
   - Remove **`V.A`** from the beginning of the album name, in the same way we remove
     **`VA`**.
+  - Do not split album with a year range into `albumartist` and `album`.
 
 - cleanup:
   - Remove **`(... preview)`**, **`free dl`**, **`Name Your Price:`** from album and track
