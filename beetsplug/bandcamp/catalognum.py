@@ -56,7 +56,7 @@ class Catalognum:
         )
         | \d*[A-Z$]{3,}[.-]?\d{3}       # EDLX.034, HEY-101, LI$INGLE025
         | [A-Z][A-z]{2,}0\d{2}          # Fabrik038, GiBS027, PSRL_001
-        | [A-Z]{3,4}(?:CD)?\.?\d{2,}    # TAR30, NEN.39, ZENCD30
+        | [A-Z]{3,4}(?:CD)?[.!]?\d{2,}  # TAR30, NEN.39, ZENCD30, TMF!12
         | [A-Z]{2}\d{5}                 # RM12012, DD13109
         | [A-Z]{5}\d{2}                 # PNKMN18, LBRNM11
         | [A-Z]{6,}0\d{1}               # BODYHI01, DYNMCSS01
