@@ -1,6 +1,6 @@
 import pytest
 
-from beetsplug.bandcamp.track_names import Names
+from beetsplug.bandcamp.names import Names
 
 
 @pytest.mark.parametrize(

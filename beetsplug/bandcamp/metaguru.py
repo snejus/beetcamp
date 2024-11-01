@@ -16,8 +16,8 @@ from pycountry import countries, subdivisions
 from .album_name import AlbumName
 from .catalognum import Catalognum
 from .helpers import PATTERNS, Helpers, MediaInfo
+from .names import Names
 from .track import Track
-from .track_names import Names
 from .tracks import Tracks
 
 JSONDict = Dict[str, Any]
