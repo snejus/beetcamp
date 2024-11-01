@@ -15,7 +15,7 @@ _client = httpx.Client(headers={"User-Agent": USER_AGENT})
 def http_get_text(url: str) -> str:
     """Return text contents of the url."""
 
-    response = _client.get(url)
+    response = _client.get(url, follow_redirects=True)
     response.raise_for_status()
 
     return unescape(response.text)
