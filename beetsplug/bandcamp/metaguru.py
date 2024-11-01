@@ -137,8 +137,9 @@ class Metaguru(Helpers):
         """Return the official release albumartist.
         It is correct in half of the cases. In others, we usually find the label name.
         """
+        year_range = re.compile(r"20[12]\d - 20[12]\d")
         aartist = self.original_albumartist
-        if self.label == aartist:
+        if self.label == aartist and not year_range.match(self.original_album):
             split = AlbumName.clean(self.original_album, [self.catalognum]).split(" - ")
             if len(split) > 1:
                 aartist = split[0]
