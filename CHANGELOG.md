@@ -17,8 +17,8 @@
   - Do not split album with a year range into `albumartist` and `album`.
 
 - cleanup:
-  - Remove **`(... preview)`**, **`free dl`**, **`Name Your Price:`**, **`just out!`** from
-    album and track names.
+  - Remove **`(... preview)`**, **`free dl`**, **`Name Your Price:`**, **`just out!`**,
+    **`- Album`** from album and track names.
   - Remove unicode HTML whitespace from incoming data.
 
 - `albumtype`:
