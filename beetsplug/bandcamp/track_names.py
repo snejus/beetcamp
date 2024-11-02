@@ -3,19 +3,19 @@
 import operator as op
 import re
 from collections import Counter
-from dataclasses import dataclass
-from functools import reduce
+from dataclasses import dataclass, field
+from functools import cached_property, reduce
 from os.path import commonprefix
-from typing import Iterator, List, Optional, Tuple
+from typing import List, Optional, Tuple
 
 from ordered_set import OrderedSet
 
 from .catalognum import Catalognum
-from .helpers import REMIX, Helpers
+from .helpers import REMIX, Helpers, JSONDict
 
 
 @dataclass
-class TrackNames:
+class Names:
     """Responsible for parsing track names in the entire release context."""
 
     # Title [Some Album EP]
@@ -24,17 +24,54 @@ class TrackNames:
     TITLE_IN_QUOTES = re.compile(r'^(.+[^ -])[ -]+"([^"]+)"$')
     NUMBER_PREFIX = re.compile(r"((?<=^)|(?<=- ))\d{1,2}\W+(?=\D)")
 
-    original: List[str]
-    names: List[str]
-    album: Optional[str] = None
-    catalognum: Optional[str] = None
+    meta: JSONDict
+    album_artist: str
+    album_in_titles: Optional[str] = None
+    catalognum_in_titles: Optional[str] = None
+    titles: List[str] = field(default_factory=list)
+
+    @cached_property
+    def label(self) -> str:
+        try:
+            item = self.meta.get("inAlbum", self.meta)["albumRelease"][0]["recordLabel"]
+        except (KeyError, IndexError):
+            item = self.meta["publisher"]
+
+        return item.get("name") or ""
+
+    @cached_property
+    def original_album(self) -> str:
+        return str(self.meta["name"])
+
+    @cached_property
+    def json_tracks(self) -> List[JSONDict]:
+        try:
+            return [{**t, **t["item"]} for t in self.meta["track"]["itemListElement"]]
+        except (TypeError, KeyError):
+            return [{**self.meta}]
+
+    @cached_property
+    def original_titles(self) -> List[str]:
+        return [i["name"] for i in self.json_tracks]
+
+    @cached_property
+    def catalognum_in_album(self) -> Optional[str]:
+        if cat := Catalognum.from_album(self.original_album):
+            return cat
+
+        return None
+
+    @cached_property
+    def catalognum(self) -> Optional[str]:
+        for cat in (self.catalognum_in_album, self.catalognum_in_titles):
+            if cat and cat != self.album_artist:
+                return cat
+
+        return None
 
     @property
     def common_prefix(self) -> str:
-        return commonprefix(self.names)
-
-    def __iter__(self) -> Iterator[str]:
-        return iter(self.names)
+        return commonprefix(self.titles)
 
     @classmethod
     def split_quoted_titles(cls, names: List[str]) -> List[str]:
@@ -42,6 +79,13 @@ class TrackNames:
             matches = list(filter(None, map(cls.TITLE_IN_QUOTES.match, names)))
             if len(matches) == len(names):
                 return [m.expand(r"\1 - \2") for m in matches]
+
+        return names
+
+    def remove_album_catalognum(self, names: List[str]) -> List[str]:
+        if catalognum := self.catalognum_in_album:
+            pat = re.compile(rf"(?i)[([]{re.escape(catalognum)}[])]")
+            return [pat.sub("", n) for n in names]
 
         return names
 
@@ -92,20 +136,18 @@ class TrackNames:
         pat = re.compile(f" +{re.escape(delim)} +")
         return [pat.sub(" - ", n) for n in names]
 
-    @staticmethod
-    def remove_label(names: List[str], label: str) -> List[str]:
+    def remove_label(self, names: List[str]) -> List[str]:
         """Remove label name from the end of track names.
 
         See https://gutterfunkuk.bandcamp.com/album/gutterfunk-all-subject-to-vibes-various-artists-lp  # noqa: E501
         """
         return [
-            (n.replace(label, "").strip(": -") if n.endswith(label) else n)
+            (n.replace(self.label, "").strip(": -") if n.endswith(self.label) else n)
             for n in names
         ]
 
-    @staticmethod
     def eject_common_catalognum(
-        names: List[str], album_artist: str
+        self, names: List[str]
     ) -> Tuple[Optional[str], List[str]]:
         """Return catalognum found in every track title.
 
@@ -121,10 +163,9 @@ class TrackNames:
         if common_words:
             candidates = dict.fromkeys((common_words[0], common_words[-1]))
             for m in map(Catalognum.anywhere.search, candidates):
-                if m and (potential_catalognum := m.group(1)):
-                    if potential_catalognum != album_artist:
-                        catalognum = potential_catalognum
-                    names = [n.replace(m.string, "").strip("- ") for n in names]
+                if m:
+                    catalognum = m.group(1)
+                    names = [n.replace(m.string, "").strip("|- ") for n in names]
 
         return catalognum, names
 
@@ -159,8 +200,7 @@ class TrackNames:
             (n.replace(m.group(), "") if m else n) for m, n in zip(matches, names)
         ]
 
-    @classmethod
-    def ensure_artist_first(cls, names: List[str], album_artist: str) -> List[str]:
+    def ensure_artist_first(self, names: List[str]) -> List[str]:
         """Ensure the artist is the first part of the track name."""
         splits = [n.split(" - ", 1) for n in names]
         if (
@@ -171,22 +211,22 @@ class TrackNames:
             # there's an overlap between album artists and parts of the unique title
             and (
                 set(Helpers.split_artists(unique_titles.pop()))
-                & set(Helpers.split_artists(album_artist))
+                & set(Helpers.split_artists(self.album_artist))
             )
         ):
             return [f"{a} - {t}" for t, a in splits]
 
         return names
 
-    @classmethod
-    def make(cls, original: List[str], label: str, album_artist: str) -> "TrackNames":
-        names = cls.split_quoted_titles(original)
-        catalognum, names = cls.eject_common_catalognum(names, album_artist)
-        names = cls.parenthesize_remixes(
-            cls.remove_label(
-                cls.normalize_delimiter(cls.remove_number_prefix(names)), label
+    def resolve(self) -> None:
+        self.catalognum_in_titles, titles = self.eject_common_catalognum(
+            self.remove_album_catalognum(self.split_quoted_titles(self.original_titles))
+        )
+        self.album_in_titles, titles = self.eject_album_name(
+            self.parenthesize_remixes(
+                self.remove_label(
+                    self.normalize_delimiter(self.remove_number_prefix(titles))
+                )
             )
         )
-        album, names = cls.eject_album_name(names)
-        names = cls.ensure_artist_first(names, album_artist)
-        return cls(original, names, album=album, catalognum=catalognum)
+        self.titles = self.ensure_artist_first(titles)

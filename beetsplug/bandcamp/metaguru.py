@@ -17,6 +17,7 @@ from .album_name import AlbumName
 from .catalognum import Catalognum
 from .helpers import PATTERNS, Helpers, MediaInfo
 from .track import Track
+from .track_names import Names
 from .tracks import Tracks
 
 JSONDict = Dict[str, Any]
@@ -56,9 +57,18 @@ class Metaguru(Helpers):
             self.media = self.media_formats[0]
         self.config = config or {}
         self.va_name = beets_config["va_name"].as_str() or self.va_name
-        self._tracks = Tracks.from_json(meta, self.original_albumartist)
+        names = Names(meta, self.original_albumartist)
+        names.resolve()
+        self._names = names
+        self._tracks = Tracks.from_names(names)
+        self._catalognum = Catalognum(
+            f"{self.description}\n{self.credits}".replace("\r", ""),
+            names.original_album,
+            names.label,
+            self._tracks.artists_and_titles,
+        )
         self._album_name = AlbumName(
-            meta.get("name") or "", self.all_media_comments, self._tracks.album
+            names.original_album, self.all_media_comments, names.album_in_titles
         )
 
     @classmethod
@@ -109,7 +119,7 @@ class Metaguru(Helpers):
         if m:
             return m.expand(r"\1").strip(" '\"")
 
-        return self.get_label(self.meta)
+        return self._names.label
 
     @cached_property
     def album_id(self) -> str:
@@ -130,7 +140,7 @@ class Metaguru(Helpers):
 
     @cached_property
     def original_album(self) -> str:
-        return self._album_name.original
+        return self._names.original_album
 
     @cached_property
     def bandcamp_albumartist(self) -> str:
@@ -192,21 +202,14 @@ class Metaguru(Helpers):
     def mediums(self) -> int:
         return self.media.medium_count
 
-    @cached_property
-    def _catalognum(self) -> Catalognum:
-        """Return catalogue number parser."""
-        return Catalognum(
-            f"{self.description}\n{self.credits}".replace("\r", ""),
-            self.original_album,
-            self.label,
-            self._tracks.artists_and_titles,
-        )
-
     @property
     def catalognum(self) -> str:
         """Return the first found catalogue number."""
-        media_description = f"{self.media.disctitle}\n{self.media.description}"
-        return self._tracks.catalognum or self._catalognum.get(media_description) or ""
+        return (
+            self._names.catalognum
+            or self._catalognum.get(f"{self.media.disctitle}\n{self.media.description}")
+            or ""
+        )
 
     @cached_property
     def country(self) -> str:

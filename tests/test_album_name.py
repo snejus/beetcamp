@@ -1,4 +1,5 @@
 import pytest
+
 from beetsplug.bandcamp.album_name import AlbumName
 
 
@@ -29,7 +30,6 @@ from beetsplug.bandcamp.album_name import AlbumName
         ("[MCVA003] - VARIOUS ARTISTS", ["MCVA003"], ""),
         ("Drepa Mann [Vinyl]", [], "Drepa Mann"),
         ("Drepa Mann  [Vinyl]", [], "Drepa Mann"),
-        ("The Castle [BLCKLPS009] Incl. Remix", ["BLCKLPS009"], "The Castle"),
         ("The Castle [BLCKLPS009] Incl. Remix", [], "The Castle [BLCKLPS009]"),
         ('Anetha - "Ophiuchus EP"', ["Anetha"], "Ophiuchus EP"),
         ("Album (FREE DL)", [], "Album"),

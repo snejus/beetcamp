@@ -3,17 +3,16 @@
 import itertools as it
 from dataclasses import dataclass
 from functools import cached_property
-from typing import Iterator, List, Optional, Set
+from typing import Iterator, List, Set
 
-from .helpers import Helpers, JSONDict
 from .track import Track
-from .track_names import TrackNames
+from .track_names import Names
 
 
 @dataclass
 class Tracks:
     tracks: List[Track]
-    names: TrackNames
+    names: Names
 
     def __iter__(self) -> Iterator[Track]:
         return iter(self.tracks)
@@ -22,40 +21,22 @@ class Tracks:
         return len(self.tracks)
 
     @classmethod
-    def from_json(cls, meta: JSONDict, album_artist: str) -> "Tracks":
-        try:
-            tracks = [{**t, **t["item"]} for t in meta["track"]["itemListElement"]]
-        except (TypeError, KeyError):
-            tracks = [{**meta}]
-
-        label = Helpers.get_label(meta)
-        names = TrackNames.make(
-            [i.get("name", "") for i in tracks], label, album_artist
-        )
-
-        for track, name in zip(tracks, names):
+    def from_names(cls, names: Names) -> "Tracks":
+        tracks = names.json_tracks
+        for track, name in zip(tracks, names.titles):
             track["name"] = name
 
-        album = meta["name"]
-        album_artist = meta["byArtist"]["name"]
+        album_artist = names.album_artist
         if (
             len(tracks) > 1
-            and album in names.common_prefix
-            and album_artist != label
+            and names.original_album in names.common_prefix
+            and album_artist != names.label
             and "," not in album_artist
         ):
             for track in tracks:
                 track["album_artist"] = album_artist
 
         return cls(list(map(Track.make, tracks)), names)
-
-    @property
-    def album(self) -> Optional[str]:
-        return self.names.album
-
-    @property
-    def catalognum(self) -> Optional[str]:
-        return self.names.catalognum
 
     @cached_property
     def first(self) -> Track:
@@ -65,7 +46,7 @@ class Tracks:
     def raw_names(self) -> List[str]:
         return [j.name for j in self.tracks]
 
-    @cached_property
+    @property
     def original_artists(self) -> List[str]:
         """Return all unique unsplit (original) main track artists."""
         return list(dict.fromkeys(j.artist for j in self.tracks))
@@ -91,7 +72,7 @@ class Tracks:
         ft = [j.ft for j in self.tracks if j.ft]
         return set(it.chain(self.remixers, ft))
 
-    @cached_property
+    @property
     def all_artists(self) -> Set[str]:
         """Return all unique (1) track, (2) remix, (3) featuring artists."""
         return self.other_artists | set(self.original_artists)
@@ -137,7 +118,7 @@ class Tracks:
                 # split the title by '-' (without spaces) or something unknown in ' ? '
                 if (
                     len(split := t.title.split("-")) > 1
-                    or len(split := TrackNames.SEPARATOR_PAT.split(t.title)) > 1
+                    or len(split := Names.SEPARATOR_PAT.split(t.title)) > 1
                 ):
                     t.artist, t.title = map(str.strip, split)
 
