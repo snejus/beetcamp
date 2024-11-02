@@ -52,7 +52,10 @@
 - `media`: ignore subscription type Bandcamp media format which returns a duplicate
   digital media.
 
-- `title`: Remove track number from the beginning of the title more reliably.
+- `title`: 
+  - Remove track number from the beginning of the title more reliably.
+  - Remove label name from anywhere if it inside brackets or from the end of the title if
+    preceded by a dash or a colon.
 
 - `track`:
   - `artist` / `title` / `track_alt`: Handle edge cases where `track_alt` is followed by a
