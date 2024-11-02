@@ -5,6 +5,7 @@ the maintainer's beets library.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 from collections import Counter
@@ -48,6 +49,7 @@ pytestmark = pytest.mark.lib
 JSONDict = Dict[str, Any]
 
 LIB_TESTS_DIR = Path("lib_tests")
+RESULTS_DIR = LIB_TESTS_DIR / "results"
 JSONS_DIR = Path("jsons")
 
 IGNORE_FIELDS = {
@@ -350,16 +352,6 @@ def _fmt_old(s: str, times: int) -> str:
 
 
 @pytest.fixture
-def target(target_filepath: Path) -> JSONDict:
-    try:
-        with target_filepath.open() as f:
-            data: JSONDict = json.load(f)
-            return data
-    except FileNotFoundError:
-        return {}
-
-
-@pytest.fixture
 def guru(config: JSONDict, test_filepath: Path) -> Metaguru:
     test_data = test_filepath.read_text()
 
@@ -372,48 +364,88 @@ def original_name(guru: Metaguru) -> str:
 
 
 @pytest.fixture
-def old(base_dir: Path, test_filepath: Path) -> JSONDict:
-    try:
-        data: JSONDict = json.loads((base_dir / test_filepath.name).read_text())
-    except FileNotFoundError:
-        return {}
+def base_filepath(base_dir: Path, test_filepath: Path) -> Path:
+    return base_dir / test_filepath.name
 
-    for key in IGNORE_FIELDS:
-        data.pop(key, None)
+
+@pytest.fixture
+def base(base_filepath: Path) -> JSONDict:
+    try:
+        data: JSONDict = json.loads(base_filepath.read_text())
+    except FileNotFoundError:
+        if base_filepath.is_symlink() and not base_filepath.exists():
+            base_filepath.unlink()
+        return {}
 
     return data
 
 
 @pytest.fixture
-def new(
-    guru: Metaguru,
-    target: JSONDict,
-    target_filepath: Path,
-    original_name: str,
-) -> AttrDict:
-    new: AttrDict
-    if "_track_" in target_filepath.name:
-        new = guru.singleton
-    else:
-        new = next((a for a in guru.albums if a.media == "Vinyl"), guru.albums[0])
-        new.album = " / ".join(dict.fromkeys(x.album for x in guru.albums))
+def old(base: JSONDict) -> JSONDict:
+    return {k: v for k, v in base.items() if k not in IGNORE_FIELDS}
 
-    new.catalognum = " / ".join(
-        sorted({x.catalognum for x in guru.albums if x.catalognum})
-    )
-    new.original_name = original_name
 
-    if not target or new != target:
-        with target_filepath.open("w") as f:
-            json.dump(new, f, indent=2, sort_keys=True)
+def write_results(data: JSONDict, name: str) -> Path:
+    contents = json.dumps(data, indent=2, sort_keys=True).encode()
+    _id = hashlib.md5(contents).hexdigest()
+    results_filepath = RESULTS_DIR / f"{name}-{_id}.json"
+    if not results_filepath.exists():
+        results_filepath.write_bytes(contents)
 
-    for key in IGNORE_FIELDS:
-        new.pop(key, None)
-    return new
+    return results_filepath
 
 
 @pytest.fixture
-def desc(old: AttrDict, new: AttrDict, guru: Metaguru) -> str:
+def new(
+    base: JSONDict,
+    base_filepath: Path,
+    guru: Metaguru,
+    original_name: str,
+    target_filepath: Path,
+) -> JSONDict:
+    _new: AttrDict
+    if "_track_" in target_filepath.name:
+        _new = guru.singleton
+    else:
+        _new = next((a for a in guru.albums if a.media == "Vinyl"), guru.albums[0])
+        _new.album = " / ".join(dict.fromkeys(x.album for x in guru.albums))
+
+    _new.catalognum = " / ".join(
+        sorted({x.catalognum for x in guru.albums if x.catalognum})
+    )
+    _new.original_name = original_name
+    new = dict(_new)
+
+    results_filepath = base_filepath.resolve()
+    if base and results_filepath.parent != RESULTS_DIR:
+        results_filepath = write_results(base, base_filepath.stem)
+        base_filepath.unlink()
+        symlink_path = os.path.relpath(results_filepath, base_filepath.parent)
+        base_filepath.symlink_to(symlink_path)
+
+    if new == base:
+        results_filepath = base_filepath
+    else:
+        results_filepath = write_results(new, target_filepath.stem)
+
+    if (target_filepath.is_symlink() and not target_filepath.exists()) or (
+        target_filepath.exists()
+        and (
+            target_filepath != results_filepath
+            or not target_filepath.samefile(results_filepath)
+        )
+    ):
+        target_filepath.unlink()
+
+    if not target_filepath.exists():
+        symlink_path = os.path.relpath(results_filepath, target_filepath.parent)
+        target_filepath.symlink_to(symlink_path)
+
+    return {k: v for k, v in new.items() if k not in IGNORE_FIELDS}
+
+
+@pytest.fixture
+def desc(old: JSONDict, new: JSONDict, guru: Metaguru) -> str:
     get_values = itemgetter(*TRACK_FIELDS)
 
     def get_tracks(data: JSONDict) -> List[Tuple[str, ...]]:
@@ -434,7 +466,7 @@ def desc(old: AttrDict, new: AttrDict, guru: Metaguru) -> str:
 
 
 @pytest.fixture
-def entity_id(new: AttrDict) -> str:
+def entity_id(new: JSONDict) -> str:
     return str(new["album_id"] if "/album/" in new["data_url"] else new["track_id"])
 
 
@@ -459,8 +491,8 @@ def check_field(
 @pytest.fixture
 def difference(
     check_field: Callable[[NewTable, Field], None],
-    old: AttrDict,
-    new: AttrDict,
+    old: JSONDict,
+    new: JSONDict,
     cache: pytest.Cache,
     desc: str,
     entity_id: str,
