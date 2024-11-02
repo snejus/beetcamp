@@ -78,6 +78,9 @@
 - `album`:
   - When album name is wrapped in brackets, **[ALBUM]**, keep the brackets in place.
 
+- `albumartist`:
+  - Remove notes about remixes, like **(incl. ABC remix)** and similar.
+
 - `albumtype`:
   - Improve accuracy of identifying **EP** and **LP** release types from the description.
 
