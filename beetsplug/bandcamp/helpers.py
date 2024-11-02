@@ -4,7 +4,7 @@ import re
 from functools import lru_cache, partial
 from itertools import chain, starmap
 from operator import contains
-from typing import Any, Dict, Iterable, List, NamedTuple, Pattern
+from typing import Any, Dict, Iterable, List, NamedTuple, Pattern, Tuple
 
 from beets.autotag.hooks import AlbumInfo
 from ordered_set import OrderedSet as ordset
@@ -84,10 +84,12 @@ _cat_pat = CATALOGNUM_CONSTRAINT.format(
 """
 )
 
-LABEL_CATNUM = CATALOGNUM_CONSTRAINT.format(r"(?i:{}[ ]?[A-Z]*\d+[A-Z]*)")
+LABEL_CATNUM = CATALOGNUM_CONSTRAINT.format(r"(?i:{}[ -]?[A-Z]*\d+([A-Z]|\.\d+)*)")
 CATNUM_PAT = {
     # preceded by some variation of 'Catalogue number:'
-    "header": re.compile(r"^cat[\w .]+(?:number\b:?|:) ?(\w.+)$", re.I | re.M),
+    "header": re.compile(
+        r"^cat[\w .]+(?:(?:number|no)\b:?|:)[ ]*(\w.*?)( \W|$)", re.I | re.M
+    ),
     # beginning or end of line
     "start_end": re.compile(rf"(^{_cat_pat}|{_cat_pat}$)", re.M | re.VERBOSE),
     # enclosed by parens or square brackets, but not ending with MIX
@@ -203,20 +205,9 @@ class Helpers:
     @staticmethod
     @lru_cache(maxsize=None)
     def parse_catalognum(
-        album="", disctitle="", description="", label="", artistitles=""
-    ):
-        # type: (str, str, str, str, str) -> str
-        """Try getting the catalog number looking at text from various fields."""
-        cases = [
-            (CATNUM_PAT["header"], description),
-            (CATNUM_PAT["anywhere"], disctitle),
-            (CATNUM_PAT["anywhere"], album),
-            (CATNUM_PAT["start_end"], description),
-            (CATNUM_PAT["anywhere"], description),
-        ]
-        if label:
-            pat = re.compile(LABEL_CATNUM.format(re.escape(label)), re.VERBOSE)
-            cases.append((pat, "\n".join((album, disctitle, description))))
+        cases: Tuple[Tuple[Pattern[str], str], ...], label: str, artistitles: str
+    ) -> str:
+        """Try getting the catalog number using supplied pattern/string pairs."""
 
         def find(pat: Pattern[str], string: str) -> str:
             """Return the match.

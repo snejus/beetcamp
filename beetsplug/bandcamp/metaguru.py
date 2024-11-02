@@ -17,7 +17,7 @@ from packaging import version
 from pycountry import countries, subdivisions
 
 from .album import AlbumName
-from .helpers import PATTERNS, Helpers, MediaInfo
+from .helpers import CATNUM_PAT, LABEL_CATNUM, PATTERNS, Helpers, MediaInfo
 from .track import Track
 from .tracks import Tracks
 
@@ -186,29 +186,52 @@ class Metaguru(Helpers):
         return self.media.medium_count
 
     @cached_property
-    def general_catalognum(self) -> str:
-        """Find catalog number in the media-agnostic release metadata and cache it."""
-        return self._tracks.catalognum or self.parse_catalognum(
-            album=self.meta["name"],
-            description=self.comments or "",
-            label=self.label,
-            artistitles=self._tracks.artistitles,
+    def label_prefix_catalognum(self) -> str:
+        pat = re.compile(LABEL_CATNUM.format(re.escape(self.label)), re.VERBOSE)
+        return self.parse_catalognum(
+            (
+                (
+                    pat,
+                    "\n".join((
+                        self.meta["name"],
+                        self.media.disctitle,
+                        self.media.description,
+                        self.comments or ""
+                    )),
+                ),
+            ),
+            self.label,
+            self._tracks.artistitles,
         )
+
+    @cached_property
+    def description_catalognum(self) -> str:
+        """Find catalog number in the media-agnostic release metadata and cache it."""
+        description = self.comments or ""
+        cases = (
+            (CATNUM_PAT["header"], description),
+            (CATNUM_PAT["start_end"], description),
+            (CATNUM_PAT["anywhere"], description),
+        )
+        return self.parse_catalognum(cases, self.label, self._tracks.artistitles)
+
+    def get_media_catalognum(self, media: MediaInfo) -> str:
+        cases = (
+            (CATNUM_PAT["header"], media.description),
+            (CATNUM_PAT["anywhere"], media.disctitle),
+            (CATNUM_PAT["anywhere"], self.original_album),
+            (CATNUM_PAT["anywhere"], media.description),
+        )
+        return self.parse_catalognum(cases, self.label, self._tracks.artistitles)
 
     @property
     def catalognum(self) -> str:
-        """Find catalog number in the media-specific release metadata or return
-        the cached media-agnostic one.
-        """
+        """Return the first found catalogue number."""
         return (
-            self.parse_catalognum(
-                album=self.meta["name"],
-                disctitle=self.disctitle,
-                description=self.media.description,
-                label=self.label,
-                artistitles=self._tracks.artistitles,
-            )
-            or self.general_catalognum
+            self._tracks.catalognum
+            or self.get_media_catalognum(self.media)
+            or self.label_prefix_catalognum
+            or self.description_catalognum
         )
 
     @cached_property
