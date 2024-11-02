@@ -141,10 +141,8 @@ class Names:
 
         See https://gutterfunkuk.bandcamp.com/album/gutterfunk-all-subject-to-vibes-various-artists-lp  # noqa: E501
         """
-        return [
-            (n.replace(self.label, "").strip(": -") if n.endswith(self.label) else n)
-            for n in names
-        ]
+        remove_label = re.compile(rf"([:-]+ |\[){re.escape(self.label)}(\]|$)", re.I)
+        return [remove_label.sub(" ", n).strip() for n in names]
 
     def eject_common_catalognum(
         self, names: List[str]
