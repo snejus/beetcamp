@@ -136,7 +136,8 @@ class Metaguru(Helpers):
     def original_albumartist(self) -> str:
         m = re.search(r"Artists?:([^\n]+)", self.all_media_comments)
         aartist = m.group(1).strip() if m else self.meta["byArtist"]["name"]
-        return re.sub(r" +// +", ", ", aartist)
+        aartist = ", ".join(map(str.strip, aartist.split(" // ")))
+        return re.split(r"[(,][^(,]{1,30}remix", aartist, flags=re.I)[0].strip()
 
     @cached_property
     def original_album(self) -> str:
