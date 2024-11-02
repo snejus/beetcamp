@@ -134,8 +134,13 @@ def bundle_format() -> JSONDict:
 
 
 @pytest.fixture
-def json_track() -> JSONDict:
-    return {"item": {"@id": "track_url", "name": "Artist - Title"}, "position": 1}
+def track_name() -> str:
+    return "Artist - Title"
+
+
+@pytest.fixture
+def json_track(track_name) -> JSONDict:
+    return {"item": {"@id": "track_url", "name": track_name}, "position": 1}
 
 
 @pytest.fixture

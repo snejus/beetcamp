@@ -173,14 +173,6 @@ CLEAN_PATTERNS: List[Tuple[Pattern[str], Union[str, Callable[[Match[str]], str]]
 
 class Helpers:
     @staticmethod
-    def get_label(meta: JSONDict) -> str:
-        try:
-            item = meta.get("inAlbum", meta)["albumRelease"][0]["recordLabel"]
-        except (KeyError, IndexError):
-            item = meta["publisher"]
-        return item.get("name") or ""
-
-    @staticmethod
     def split_artists(artists: Union[str, Iterable[str]]) -> List[str]:
         """Split artists taking into account delimiters such as ',', '+', 'x', 'X'.
 
