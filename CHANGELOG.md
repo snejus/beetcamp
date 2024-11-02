@@ -1,7 +1,9 @@
 ## Unreleased
 
 ### Added
-- Auto-Tagger: Wider search analogous to cli search query as a fallback for bad or missing meta data
+
+- Auto-Tagger: Wider search analogous to cli search query as a fallback for bad or missing
+  meta data
 
 ## [0.19.3] 2024-10-17
 
@@ -12,7 +14,8 @@
 
 ### Fixed
 
-- `exclude_extra_fields`: A typo that prevented exclude configurations from being applied correctly
+- `exclude_extra_fields`: A typo that prevented exclude configurations from being applied
+  correctly
 
 ## [0.19.2] 2024-08-04
 
