@@ -1,7 +1,9 @@
 """Module for the helpers module tests."""
 
 import pytest
+
 from beetsplug.bandcamp.helpers import Helpers, MediaInfo
+from beetsplug.bandcamp.metaguru import Metaguru
 
 pytestmark = pytest.mark.parsing
 
@@ -26,7 +28,7 @@ pytestmark = pytest.mark.parsing
         ("Blood 1/4", "", "", "", ""),
         ("Emotion 1 - Kulør 008", "Emotion 1 Vinyl", "", "Kulør", "Kulør 008"),
         ("zz333HZ with remixes from Le Chocolat Noir", "", "", "", ""),
-        ("UTC-003", "", "Catalogue Number: TE0029", "", "TE0029"),
+        ("UTC-003", "Catalogue Number: TE0029", "", "", "TE0029"),
         ("", "LP | ostgutlp31", "", "", "ostgutlp31"),
         ("Album VA001", "", "", "", ""),
         ("Album MVA001", "", "", "", "MVA001"),
@@ -60,10 +62,28 @@ pytestmark = pytest.mark.parsing
         ("SOP 023-1322", "", "", "", "SOP 023-1322"),
         ("", "UVB76-023", "", "", "UVB76-023"),
         ("", "-GEN-RES-23", "", "", ""),
+        ("Global Amnesia 1.1", "", "", "Global Amnesia", "Global Amnesia 1.1"),
+        ("", "", "Hardcore Classic 014", "", ""),
     ],
 )
-def test_parse_catalognum(album, disctitle, description, label, expected):
-    assert Helpers.parse_catalognum(album, disctitle, description, label) == expected
+def test_parse_catalognum(
+    json_meta,
+    vinyl_format,
+    album,
+    disctitle,
+    description,
+    label,
+    expected,
+    beets_config,
+):
+    json_meta["name"] = album
+    json_meta["publisher"]["name"] = label or "Label"
+    json_meta["description"] = description
+    json_meta["albumRelease"] = [{**vinyl_format, "name": disctitle}]
+
+    guru = Metaguru(json_meta, beets_config)
+
+    assert guru.catalognum == expected
 
 
 @pytest.mark.parametrize(
