@@ -102,6 +102,7 @@ rm_strings = [
     r"free download|\([^()]*\bfree(?!.*mix)[^()]*\)",
     r"(\W|\W )bonus( \w+)*",
     "Various -",
+    "split w",
     r"CD ?\d+",
 ]
 

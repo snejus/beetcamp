@@ -1,5 +1,11 @@
 ## Unreleased
 
+### Fixed
+
+- `album`:
+  - Keep remix artist in place within 'remix' parentheses, such as **Album (Artist
+    Remix)**.
+
 ### Added
 
 - Auto-Tagger: Wider search analogous to cli search query as a fallback for bad or missing
