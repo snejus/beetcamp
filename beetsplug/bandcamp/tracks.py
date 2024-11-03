@@ -106,14 +106,34 @@ class Tracks:
     def set_missing_artists(self, missing_count: int, albumartist: str) -> None:
         """Set artist for tracks that do not have it.
 
+        Firstly, check how many tracks are missing artists. If there are 1-3 tracks
+        which have it set, this is most likely because the titles had ' - ' separator
+        and our logic split it into artist. For each, ensure that
+            (1) Artist was not set in the JSON metadata
+            (2) This string is not part of the albumartist
+            (3) Albumartist is not found anywhere in the title
+        If so, move this string back to the title and replace it by the albumartist.
+
         If only one artist is missing, check whether the title can be split by '-'
         without spaces or some other UTF-8 equivalent (most likely an alternative
         representation of a dash).
 
         Otherwise, use the albumartist as the default.
         """
-        tracks_without_artist = [t for t in self.tracks if not t.artist]
-        if missing_count < len(self) / 2:
+        tracks_without_artist = [t for t in self if not t.artist]
+        if 1 <= len(self) - len(tracks_without_artist) < 4:
+            aartist = albumartist.lower()
+            for t in (
+                t
+                for t in self
+                if (artist := t.artist.lower())
+                and not t.json_artist
+                and artist not in aartist
+                and aartist not in f"{artist}{t.ft_artist.lower()}{t.title.lower()}"
+            ):
+                t.title = f"{t.artist} - {t.title}"
+                t.artist = ""
+        elif missing_count < len(self) / 2:
             for t in tracks_without_artist:
                 # split the title by '-' (without spaces) or something unknown in ' ? '
                 if (

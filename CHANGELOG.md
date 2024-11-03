@@ -66,6 +66,8 @@
     this title may actually be the artist name. If so, move it to the artist field.
   - `artist` / `title`: use characters **`[|-–—]`** explicitly for splitting artists and
     titles.
+  - `artist` / `title`: recover some of the original titles which contain **`-`** and got
+    split into `artist` and `title`.
 
 ### Added
 
