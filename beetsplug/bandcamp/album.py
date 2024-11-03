@@ -158,22 +158,31 @@ class AlbumName:
         """
         name = re.sub(r"^\[(.*)\]$", r"\1", name)
 
-        for w in map(re.escape, filter(None, to_clean)):
-            name = re.sub(rf" *(?i:(compiled )?by|vs|\W*split w) {w}", "", name)
-            if not re.search(
-                rf"\w {w} \w|(of|&) {w}|{w}(['_\d]| (deluxe|[el]p\b|&))", name, re.I
-            ):
-                name = re.sub(
-                    rf"""
-    (?<! x )
-    (^|[^\])\w])+
-    (?i:{w})
-    ([^(\[\w]| _|(\d+$))*
-                    """,
-                    " ",
-                    name,
-                    flags=re.VERBOSE,
-                ).strip()
+        allowed_chars = r"[*|,. \u2013\u2020]"
+        for word in map(re.escape, filter(None, to_clean)):
+            name = re.sub(
+                rf"""
+    (
+        (?P<br>[([])                # match either an opening bracket/parens
+      | (^|{allowed_chars})+        # or line start with and all allowed chars
+    )
+    (?<!\ [x&]\ )                   # do not remove A2 from 'A1 x A2' or 'A1 & A2'
+    (?<!\ of\ )                     # do not remove Artist from 'Best of Artist'
+    (((compiled\ |selected\ )?by|vs)\ )?  # remove these prefixes when they are present
+    (?i:{word})                     # match the word we want to remove
+    (?!
+        ['.\d]                      # cannot be followed by these characters
+      | [ ](deluxe|&|[el]p\b|x\b)   # cannot be followed by ' deluxe', ' &' ' ep', ' x'
+    )
+    (?(br)                          # if we had a bracket/parens match
+        [])]                        # then match closing bracket/parens
+      | ({allowed_chars}|-|\d+$)*   # otherwise remove any of these patterns
+    )
+                """,
+                " ",
+                name,
+                flags=re.VERBOSE | re.IGNORECASE | re.UNICODE,
+            ).strip("_: ")
 
         name = PATTERNS["ft"].sub("", name)
         name = cls.remove_va(name)
