@@ -6,7 +6,8 @@
     "albumstatus": "Official",
     "albumtype": "album",
     "albumtypes": [
-      "album"
+      "album",
+      "remix"
     ],
     "artist": "DJ DISRESPECT, jeånne",
     "artist_credit": null,
@@ -210,7 +211,8 @@
     "albumstatus": "Official",
     "albumtype": "album",
     "albumtypes": [
-      "album"
+      "album",
+      "remix"
     ],
     "artist": "DJ DISRESPECT, jeånne",
     "artist_credit": null,

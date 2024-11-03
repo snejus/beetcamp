@@ -349,12 +349,14 @@ class Metaguru(Helpers):
             albumtypes.add("lp")
         if self.is_single_album:
             albumtypes.add("single")
-        if self.albumtype == "single" and len(self.tracks) > 1:
+
+        track_count = len(self.tracks)
+        if self.albumtype == "single" and track_count > 1:
             albumtypes.add("album")
         for word in ["remix", "rmx", "edits", "live", "soundtrack"]:
             if word in self.original_album.lower():
                 albumtypes.add(word.replace("rmx", "remix").replace("edits", "remix"))
-        if len(self.tracks.remixers) == len(self.tracks):
+        if len(self.tracks.remixers) >= max(track_count - 1, 1):
             albumtypes.add("remix")
 
         return sorted(albumtypes)
