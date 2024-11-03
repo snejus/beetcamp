@@ -15,7 +15,15 @@ class AlbumName:
     _series = r"(?i:\b(part|volume|pt|vol)\b\.?)"
     SERIES = re.compile(rf"{_series}[ ]?[A-Z\d.-]+\b")
     SERIES_FMT = re.compile(rf"^(.+){_series} *0*")
-    REMIX_IN_TITLE = re.compile(r"[\( :]+(with re|inc|\+).*mix(\)|(.*$))", re.I)
+    REMIX_IN_TITLE = re.compile(
+        r"""
+            (?<=remixes\ )\(.+$
+          | \(((inc|\+)[^()]+mix(es)?|tracks\ from[^()]+)\)
+          | (incl\.|with\ remixes)[^()+]+
+          | \W*\+[\w\s/]*remix(ed)?$
+        """,
+        re.IGNORECASE | re.VERBOSE,
+    )
     CLEAN_EPLP = re.compile(r"(?:[([]|Double ){0,2}(\b[EL]P\b)\S?", re.I)
     EPLP_ALBUM = re.compile(r"\b(?!VA|0\d|-)([^\s:]+\b|[&, ])+ [EL]P\b( [\w#][^ ]+$)?")
     EPLP_ALBUM_LINE = re.compile(r"\b(?=[A-Z])(((?!Vinyl|VA|-)[^:\s]+ )+)[EL]P$", re.M)
