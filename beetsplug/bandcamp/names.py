@@ -47,8 +47,14 @@ class Names:
     def json_tracks(self) -> List[JSONDict]:
         try:
             return [{**t, **t["item"]} for t in self.meta["track"]["itemListElement"]]
-        except (TypeError, KeyError):
-            return [{**self.meta}]
+        except KeyError as e:
+            print(str(e))
+            if "track" in str(e):
+                # a single track release
+                return [{**self.meta}]
+
+            # no tracks (sold out release or defunct label, potentially)
+            return []
 
     @cached_property
     def original_titles(self) -> List[str]:
@@ -217,6 +223,9 @@ class Names:
         return names
 
     def resolve(self) -> None:
+        if not self.original_titles:
+            return
+
         self.catalognum_in_titles, titles = self.eject_common_catalognum(
             self.remove_album_catalognum(self.split_quoted_titles(self.original_titles))
         )

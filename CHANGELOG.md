@@ -68,6 +68,9 @@
     titles.
   - `artist` / `title`: recover some of the original titles which contain **`-`** and got
     split into `artist` and `title`.
+  - Return an empty tracklist for [releases that have no tracks].
+
+[releases that have no tracks]: https://seagrave.bandcalmp.com/album/interlocked
 
 ### Added
 
