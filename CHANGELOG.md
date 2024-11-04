@@ -82,6 +82,7 @@
 
 - `album`:
   - When album name is wrapped in brackets, **[ALBUM]**, keep the brackets in place.
+  - Uncover some release names in the description preceded by **Title :**.
 
 - `albumartist`:
   - Remove notes about remixes, like **(incl. ABC remix)** and similar.

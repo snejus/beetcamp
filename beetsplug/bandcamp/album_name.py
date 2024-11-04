@@ -28,7 +28,7 @@ class AlbumName:
     EPLP_ALBUM = re.compile(r"\b(?!VA|0\d|-)([^\s:]+\b|[&, ])+ [EL]P\b( [\w#][^ ]+$)?")
     EPLP_ALBUM_LINE = re.compile(r"\b(?=[A-Z])(((?!Vinyl|VA|-)[^:\s]+ )+)[EL]P$", re.M)
     QUOTED_ALBUM = re.compile(r"\B(['\"])([^'\"]+)\1\B( VA\d+| [EL]P)?", re.I)
-    ALBUM_IN_DESC = re.compile(r"(?:Title: ?|Album(?::|/Single) )([^\n]+)")
+    ALBUM_IN_DESC = re.compile(r"(?:Title *: ?|Album(?: *:|/Single) )([^\n]+)")
     CLEAN_VA_EXCLUDE = re.compile(r"\w various artists \w", re.I)
     CLEAN_VA = re.compile(
         r"""
