@@ -280,7 +280,7 @@ class Metaguru(Helpers):
         text = " ".join(self.all_media_comments.splitlines())
         sentences = re.split(r"[.]\s+", text.lower())
 
-        word_pat = re.compile(rf"(?<!-)\b\d?{word}\b", re.I)
+        word_pat = re.compile(rf"(?<!-)\b\d?{word}(\b|\.)", re.I)
         in_catnum = re.compile(rf"{word}\d", re.I)
         release_ref = re.compile(rf"\b(this[\w\s]*?|the) {word}\b", re.I)
         album_name = self.album_name.lower()
@@ -312,7 +312,7 @@ class Metaguru(Helpers):
     @cached_property
     def is_ep(self) -> bool:
         """Return whether the release is an EP."""
-        return self._search_albumtype("ep") or (
+        return self._search_albumtype(r"e\.?p") or (
             " / " in self.album_name and len(self.tracks.artists) == 2
         )
 
