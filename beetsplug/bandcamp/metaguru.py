@@ -237,6 +237,10 @@ class Metaguru(Helpers):
         return self.split_artists(self._tracks.artists)
 
     @cached_property
+    def track_count(self) -> int:
+        return len(self._tracks)
+
+    @cached_property
     def albumartist(self) -> str:
         """Take into account the release contents and return the actual albumartist.
         * 'Various Artists' (or `va_name` configuration option) for a compilation release
@@ -244,7 +248,7 @@ class Metaguru(Helpers):
         if self.va:
             return self.va_name
 
-        if len(self._tracks) == 1:
+        if self.track_count == 1:
             return self.tracks.first.artist
 
         aartist = self.original_albumartist
@@ -291,11 +295,13 @@ class Metaguru(Helpers):
         )
 
     @cached_property
+    def is_singleton(self) -> bool:
+        return self._singleton or self.track_count == 1
+
+    @cached_property
     def is_single_album(self) -> bool:
-        return (
-            self._singleton
-            or len({t.title_without_remix for t in self.tracks}) == 1
-            or len(self._tracks.raw_names) == 1
+        return self.track_count > 1 and (
+            len({t.title_without_remix for t in self.tracks}) == 1
         )
 
     @cached_property
@@ -321,11 +327,13 @@ class Metaguru(Helpers):
         return (
             self._album_name.mentions_compilation
             or self._search_albumtype("compilation")
-            or (len(truly_unique) > 3 and len(self.tracks) > 4)
+            or (len(truly_unique) > 3 and self.track_count > 4)
         )
 
     @cached_property
     def albumtype(self) -> str:
+        if self.is_singleton:
+            return "single"
         if self.is_lp:
             return "album"
         if self.is_ep:
@@ -345,18 +353,19 @@ class Metaguru(Helpers):
                 albumtypes.add("compilation")
             else:
                 albumtypes.add("album")
-        if self.is_lp:
+        if not self.is_singleton and self.is_lp:
             albumtypes.add("lp")
         if self.is_single_album:
             albumtypes.add("single")
 
-        track_count = len(self.tracks)
-        if self.albumtype == "single" and track_count > 1:
+        if self.albumtype == "single" and self.track_count > 1:
             albumtypes.add("album")
+
         for word in ["remix", "rmx", "edits", "live", "soundtrack"]:
             if word in self.original_album.lower():
                 albumtypes.add(word.replace("rmx", "remix").replace("edits", "remix"))
-        if len(self.tracks.remixers) >= max(track_count - 1, 1):
+
+        if len(self.tracks.remixers) >= max(self.track_count - 1, 1):
             albumtypes.add("remix")
 
         return sorted(albumtypes)
@@ -472,7 +481,7 @@ class Metaguru(Helpers):
             self._trackinfo,
             medium=1,
             disctitle=self.disctitle or None,
-            medium_total=len(self.tracks),
+            medium_total=self.track_count,
         )
         album_info = AlbumInfo(
             **self._common,
