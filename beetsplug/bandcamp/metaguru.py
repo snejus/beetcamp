@@ -106,12 +106,15 @@ class Metaguru(Helpers):
         return " ".join([m.disctitle for m in self.media_formats if m.disctitle])
 
     @cached_property
-    def all_media_comments(self) -> str:
+    def only_media_comments(self) -> str:
         return "\n".join([
             self.disctitles,
             *[m.description for m in self.media_formats],
-            self.comments or "",
         ])
+
+    @cached_property
+    def all_media_comments(self) -> str:
+        return "\n".join([self.only_media_comments, self.comments or ""])
 
     @cached_property
     def label(self) -> str:
@@ -280,12 +283,15 @@ class Metaguru(Helpers):
         text = " ".join(self.all_media_comments.splitlines())
         sentences = re.split(r"[.]\s+", text.lower())
 
-        word_pat = re.compile(rf"(?<!-)\b\d?{word}(\b|\.)", re.I)
+        word_pat = re.compile(rf"(?<!-)\b{word}(\b|\.)", re.I)
         in_catnum = re.compile(rf"{word}\d", re.I)
         release_ref = re.compile(rf"\b(this[\w\s]*?|the) {word}\b", re.I)
         album_name = self.album_name.lower()
+
+        media_word_pat = re.compile(rf"(vinyl |x|[0-5]){word}\b", re.I)
         return bool(
-            in_catnum.search(self.catalognum)
+            media_word_pat.search(self.only_media_comments)
+            or in_catnum.search(self.catalognum)
             or word_pat.search(f"{album_name} {self.disctitles}")
             or in_catnum.search(text)
             or any(

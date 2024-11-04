@@ -22,7 +22,7 @@
   - Remove unicode HTML whitespace from incoming data.
 
 - `albumtype`:
-  - Identify **LP** release type when Bandcamp media contains a string **2LP** and alike.
+  - Identify **LP** / **album** type from vinyl media descriptions.
   - Remove some funky description parsing logic responsible for multiple **ep** false
     positives.
   - Resolve either **ep** or **lp** to add to `albumtypes`, and never both.
