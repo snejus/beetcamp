@@ -91,6 +91,7 @@
   - Improve accuracy of identifying **EP** and **LP** release types from the description.
   - Include **remix** albumtype to the release when remixed track count is one less than
     the track count.
+  - Check album names that may end with **E.P.** instead of **EP**.
 
 - `catalognum`:
   - Add support for new formats: **`UVB76-023`**, **`SOP 061-1233`**, **`a+w lp029`**,
