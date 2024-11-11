@@ -1,3 +1,10 @@
+## Unreleased
+
+### Updated
+
+- `album`:
+  - Clean up/remove artist such as **Various**.
+
 ## [0.20.0] 2024-11-04
 
 ### Removed
@@ -52,7 +59,7 @@
 - `media`: ignore subscription type Bandcamp media format which returns a duplicate
   digital media.
 
-- `title`: 
+- `title`:
   - Remove track number from the beginning of the title more reliably.
   - Remove label name from anywhere if it inside brackets or from the end of the title if
     preceded by a dash or a colon.
