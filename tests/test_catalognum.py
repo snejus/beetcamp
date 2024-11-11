@@ -61,6 +61,13 @@ from beetsplug.bandcamp.metaguru import Metaguru
         ("Global Amnesia 1.1", "", "", "Global Amnesia", "Global Amnesia 1.1"),
         ("", "", "Hardcore Classic 014", "", ""),
         ("", "", "Cat.VIX016", "", "VIX016"),
+        ("CAT123 EP", "", "", "", ""),
+        ("CAT123 ep", "", "", "", ""),
+        ("CAT VA1", "", "", "", ""),
+        ("CAT va12", "", "", "", ""),
+        ("CATVA1", "", "", "", "CATVA1"),
+        ("Label 1234", "", "", "Label", "Label 1234"),
+        ("Label 2020", "", "", "Label", ""),
     ],
 )
 def test_parse_catalognum(

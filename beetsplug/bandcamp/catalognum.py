@@ -31,18 +31,22 @@ def cached_patternprop(
 @dataclass
 class Catalognum:
     CONSTRAINT_TEMPLATE = r"""
-    (?<![]/@.-])        # cannot be preceded by these characters
-    (?<!by\ )
-    (?:
-      \b
-      (?!(?i:vol|ep))   # exclude anything starting with 'vol' or 'ep'
-      {}
-      (?<!\bVA\d)       # cannot end with VA1
-      (?<!\bVA\d\d)     # cannot end with VA01
-      (?<!\bVA\d\d\d)   # cannot end with VA001
-      (?<!\b20\d\d)     # cannot end with a year
-      \b
-      (?!["'%,-])       # cannot be followed by these characters
+    (?<![]/@.-])            # cannot be preceded by these characters
+    (?i:
+      (?<!by\ )
+      (?:
+        \b
+        (?!(?i:vol|ep))     # exclude anything starting with 'vol' or 'ep'
+        (?-i:{})
+                            # cannot end with any of the following words
+        (?<!\bva\d)         # VA1
+        (?<!\bva\d\d)       # VA01
+        (?<!\bva\d\d\d)     # VA001
+        (?<!\b20\d\d)       # a year
+        \b
+        (?!["'%,-])         # cannot be followed by these characters
+        (?!\ [el]p)         # may not be part of an album name
+      )
     )
     """
     MATCH = CONSTRAINT_TEMPLATE.format(
