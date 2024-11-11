@@ -5,6 +5,9 @@
 - `album`:
   - Clean up/remove artist such as **Various**.
 
+- `catalognum`:
+  - Prevent matches followed by lowercase **ep**, **lp** and **va**.
+
 ## [0.20.0] 2024-11-04
 
 ### Removed
