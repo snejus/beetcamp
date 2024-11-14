@@ -20,7 +20,7 @@ class AlbumName:
             (?<=remixes\ )\(.+$
           | \(((inc|\+)[^()]+mix(es)?|tracks\ from[^()]+)\)
           | (incl\.|with\ remixes)[^()+]+
-          | \W*\+[\w\s/]*remix(ed)?$
+          | \W*(\+|w/)[\w\s/]*remix(ed)?$
         """,
         re.IGNORECASE | re.VERBOSE,
     )
@@ -162,6 +162,7 @@ class AlbumName:
         Catalogue number and artists to be removed are provided as 'to_clean'.
         """
         allowed_chars = r"[*|,. \u2013\u2020]"
+        name = PATTERNS["ft"].sub("", name)
         for word in map(re.escape, filter(None, to_clean)):
             name = re.sub(
                 rf"""
@@ -185,7 +186,6 @@ class AlbumName:
                 flags=re.VERBOSE | re.IGNORECASE | re.UNICODE,
             ).strip("_: ")
 
-        name = PATTERNS["ft"].sub("", name)
         name = cls.remove_va(name)
         name = Helpers.clean_name(name)
         name = cls.remove_label(name, label)

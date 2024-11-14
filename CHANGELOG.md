@@ -11,6 +11,7 @@
   - Clean up/remove artist such as **Various**.
   - Keep the artist or label in place when it's followed by part name, like **Volume**
   - Remove the original albumartist unless that's the label name.
+  - Remove **w/ Some Remix** reliably.
 
 - `catalognum`:
   - Prevent matches followed by lowercase **ep**, **lp** and **va**.
