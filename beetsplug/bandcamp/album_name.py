@@ -31,11 +31,8 @@ class AlbumName:
     ALBUM_IN_DESC = re.compile(r"(?:Title *: ?|Album(?: *:|/Single) )([^\n]+)")
     CLEAN_VA_EXCLUDE = re.compile(r"\w various artists \w", re.I)
     CLEAN_VA = re.compile(
-        r"""
-          (?<=^)v[./]?a\.?\b(?!\ \w)[^A-z(]*
-        | \W*Various(?:\ Artists?)?\b(?!\ [A-z])[^A-z(]*
-    """,
-        re.IGNORECASE + re.VERBOSE,
+        r"""(^v[./]?a|\W*Various(?:\ Artists?)?)\b(?!\ [A-z])[^A-z(]*""",
+        re.IGNORECASE,
     )
     COMPILATION_IN_TITLE = re.compile(r"compilation|best of|anniversary", re.I)
 
