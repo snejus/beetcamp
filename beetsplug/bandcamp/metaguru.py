@@ -262,9 +262,13 @@ class Metaguru(Helpers):
 
     @cached_property
     def album_name(self) -> str:
+        artists = []
+        if self.original_albumartist != self.label:
+            artists.append(self.original_albumartist)
+
         return self._album_name.get(
             self.catalognum,
-            self.tracks.original_artists,
+            [*artists, *self.tracks.original_artists],
             self.tracks.artists,
             self.label,
         )
