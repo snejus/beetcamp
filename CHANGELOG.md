@@ -1,5 +1,10 @@
 ## Unreleased
 
+### Added
+
+- `comments`: Add a new configuration option `truncate_comments` which handles very long
+  release descriptions that may crash MPD.
+
 ### Updated
 
 - `album`:
