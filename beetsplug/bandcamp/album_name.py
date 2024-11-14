@@ -143,6 +143,7 @@ class AlbumName:
             \W*               # pick up any punctuation
             (?<!\w[ ])        # cannot be preceded by a simple word
             \b{re.escape(label)}\b
+            (?!:\ Vol)        # cannot be followed by ': Vol'
             (?!.[A-Za-z])     # cannot be followed by a word
             ([^[\]\w]|\d)*    # pick up any digits and punctuation
         """,
@@ -175,10 +176,8 @@ class AlbumName:
     (?<!\ of\ )                     # do not remove Artist from 'Best of Artist'
     (((compiled\ |selected\ )?by|vs)\ )?  # remove these prefixes when they are present
     (?i:{word})                     # match the word we want to remove
-    (?!
-        ['.\d]                      # cannot be followed by these characters
-      | [ ](deluxe|&|[el]p\b|x\b)   # cannot be followed by ' deluxe', ' &' ' ep', ' x'
-    )
+    (?!['.\d])                      # cannot be followed by these characters
+    (?!\ (deluxe|vol|&|[el]p\b|x\b))# cannot be followed by ' deluxe', ' &' ' ep', ' x'
     (?(br)                          # if we had a bracket/parens match
         [])]                        # then match closing bracket/parens
       | ({allowed_chars}|-|\d+$)*   # otherwise remove any of these patterns
