@@ -96,6 +96,7 @@ bandcamp:
   search_max: 2
   art: yes
   comments_separator: "\n---\n"
+  truncate_comments: no
   exclude_extra_fields: []
   genre:
     capitalize: no
@@ -154,6 +155,22 @@ field. By default you would get
     ---
     Credits
 
+---
+
+### `truncate_comments`
+
+- Type: **bool**
+- Default: `false`.
+
+MPD users may have experienced issues with songs that have very long comments: if there is
+a track in the queue with a comments field longer than 4047 characters, MPD fails to
+return any metadata.
+
+This configuration option truncates the `comments` field to the maximum length that MPD
+can handle, and saves the full comment as a flexible attribute on the album.
+
+---
+
 #### `exclude_extra_fields`
 
 - Type: **list**
@@ -176,7 +193,7 @@ You cannot exclude `album`, `album_id`, `artist_id`, `media` and `data_url` albu
 
 ---
 
-#### `genre` (new since 0.11.0)
+#### `genre`
 
 - Type: **object**
 - Default:
