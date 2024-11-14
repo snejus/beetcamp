@@ -14,6 +14,7 @@
 
 - `catalognum`:
   - Prevent matches followed by lowercase **ep**, **lp** and **va**.
+  - Prevent matches based on label name preceded by **of**.
 
 ## [0.20.0] 2024-11-04
 
