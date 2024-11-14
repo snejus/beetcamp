@@ -69,6 +69,7 @@ from beetsplug.bandcamp.metaguru import Metaguru
         ("Label 1234", "", "", "Label", "Label 1234"),
         ("Label 2020", "", "", "Label", ""),
         ("sh-303d", "", "", "", "sh-303d"),
+        ("OF HANDS 20", "", "", "HANDS", ""),
     ],
 )
 def test_parse_catalognum(

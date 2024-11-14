@@ -85,7 +85,7 @@ class Catalognum:
     """
     )
     LABEL_MATCH_TEMPLATE = CONSTRAINT_TEMPLATE.format(
-        r"(?<!by\ )((?i:{}[ -]?[A-Z]*\d+([A-Z]|\.\d+)*))"
+        r"(?i:(?<!by\ )(?<!of\ )({}[ -]?[A-Z]*\d+([A-Z]|\.\d+)*))"
     )
 
     # Preceded by some variation of 'Catalogue number:'."""
