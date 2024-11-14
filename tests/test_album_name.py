@@ -67,6 +67,10 @@ from beetsplug.bandcamp.album_name import AlbumName
         ("(Free Download) Album", [], "Album"),
         ("Free Download Series - Album", [], "Free Download Series"),
         ("Free Download Series - Some Album", [], "Free Download Series - Some Album"),
+        ("Label: Album", [], "Album"),
+        ("Label: Volume 1", [], "Label: Volume 1"),
+        ("Artist Album", ["Artist"], "Album"),
+        ("Artist Vol. 1", ["Artist"], "Artist Vol. 1"),
     ],
 )
 def test_clean_name(name, extras, expected):
