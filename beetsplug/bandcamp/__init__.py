@@ -52,6 +52,7 @@ DEFAULT_CONFIG: JSONDict = {
         "always_include": [],
     },
     "comments_separator": "\n---\n",
+    "truncate_comments": False,
 }
 
 ALBUM_URL_IN_TRACK = re.compile(r'<a id="buyAlbumLink" href="([^"]+)')
@@ -135,6 +136,7 @@ def urlify(pretty_string: str) -> str:
 
 
 class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
+    MAX_COMMENT_LENGTH = 4047
     beets_config: IncludeLazyConfig
 
     def __init__(self) -> None:
@@ -142,8 +144,31 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         self.beets_config = config
         self.config.add(DEFAULT_CONFIG.copy())
 
+        if self.config["truncate_comments"].get():
+            self.register_listener("album_imported", self.adjust_comments_field)
+
         if self.config["art"]:
             self.register_listener("pluginload", self.loaded)
+
+    def adjust_comments_field(self, lib: library.Library, album: library.Album) -> None:
+        """If the comments field is too long, store it as album flex attr.
+
+        Keep the first 4000 characters in the item and store the full comment as
+        a flexible attribute on the album.
+
+        This is relevant for MPD users: mpc seems to crash trying to read comments
+        longer than 4047 characters (mpd 0.23.15).
+        """
+        items = list(album.items())
+        comments = (items[0].comments or "").encode()
+        if len(comments) > self.MAX_COMMENT_LENGTH:
+            self._info("Truncating comments for items in album {}", album)
+            album.comments = comments
+            album.store()
+            truncated = f"{comments[: self.MAX_COMMENT_LENGTH - 3].decode()}..."
+            for item in items:
+                item.comments = truncated
+                item.store()
 
     @property
     def data_source(self) -> str:
