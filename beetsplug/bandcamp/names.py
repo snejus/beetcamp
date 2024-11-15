@@ -48,7 +48,6 @@ class Names:
         try:
             return [{**t, **t["item"]} for t in self.meta["track"]["itemListElement"]]
         except KeyError as e:
-            print(str(e))
             if "track" in str(e):
                 # a single track release
                 return [{**self.meta}]
