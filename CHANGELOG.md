@@ -9,6 +9,11 @@
 - `comments`: Add a new configuration option `truncate_comments` which handles very long
   release descriptions that may crash MPD.
 
+### Fixed
+
+- `title`:
+  - Fix formatting of titles where remix is delimited by a dash or an em-dash.
+
 ### Updated
 
 - `album`:

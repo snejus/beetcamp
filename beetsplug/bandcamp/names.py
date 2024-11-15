@@ -179,13 +179,16 @@ class Names:
         2. Find remixes that do not have parens around them
         3. Add parens
         """
-        names_tokens = map(str.split, names)
-        common_words = reduce(op.and_, [OrderedSet(x) for x in names_tokens])
-        joined = " ".join(common_words)
-        if joined in names:  # it is one of the track names (root title)
-            remix_parts = [n.replace(joined, "").lstrip() for n in names]
+        if len(names) == 1:
+            return names
+
+        words_in_names = list(map(sorted, map(str.split, names)))
+        common_words = sorted(reduce(op.and_, map(set, words_in_names)))
+        if common_words in words_in_names:  # it is one of the track names (root title)
+            root_title = names[words_in_names.index(common_words)]
+            remix_parts = [n.removeprefix(root_title).lstrip(" -") for n in names]
             return [
-                (n.replace(rp, f"({rp})") if REMIX.fullmatch(rp) else n)
+                (n.replace(rp, f"({m['text']})") if (m := REMIX.fullmatch(rp)) else n)
                 for n, rp in zip(names, remix_parts)
             ]
 

@@ -129,7 +129,8 @@ rm_strings = [
 ]
 
 REMIX = re.compile(
-    r"(?P<remix>((?P<remixer>[^])]+) )?\b((re)?mix|edit|bootleg)\b[^])]*)", re.I
+    r"(?P<remix>\W*(?P<text>((?P<remixer>\b\w[^])]+) )?\b((re)?mix|edit|bootleg)\b)[^])]*)",  # noqa: E501
+    re.I,
 )
 CAMELCASE = re.compile(r"(?<=[a-z])(?=[A-Z])")
 

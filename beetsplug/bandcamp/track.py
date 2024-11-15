@@ -40,6 +40,7 @@ class Remix:
     delimited: str
     remixer: str
     remix: str
+    text: str
     by_other_artist: bool
 
     @classmethod
