@@ -1,12 +1,13 @@
 """Module for parsing track names."""
 
+from __future__ import annotations
+
 import operator as op
 import re
 from collections import Counter
 from dataclasses import dataclass, field
 from functools import cached_property, reduce
 from os.path import commonprefix
-from typing import Optional
 
 from ordered_set import OrderedSet
 
@@ -26,8 +27,8 @@ class Names:
 
     meta: JSONDict
     album_artist: str
-    album_in_titles: Optional[str] = None
-    catalognum_in_titles: Optional[str] = None
+    album_in_titles: str | None = None
+    catalognum_in_titles: str | None = None
     titles: list[str] = field(default_factory=list)
 
     @cached_property
@@ -60,14 +61,14 @@ class Names:
         return [i["name"] for i in self.json_tracks]
 
     @cached_property
-    def catalognum_in_album(self) -> Optional[str]:
+    def catalognum_in_album(self) -> str | None:
         if cat := Catalognum.from_album(self.original_album):
             return cat
 
         return None
 
     @cached_property
-    def catalognum(self) -> Optional[str]:
+    def catalognum(self) -> str | None:
         for cat in (self.catalognum_in_album, self.catalognum_in_titles):
             if cat and cat != self.album_artist:
                 return cat
@@ -149,9 +150,7 @@ class Names:
         remove_label = re.compile(rf"([:-]+ |\[){re.escape(self.label)}(\]|$)", re.I)
         return [remove_label.sub(" ", n).strip() for n in names]
 
-    def eject_common_catalognum(
-        self, names: list[str]
-    ) -> tuple[Optional[str], list[str]]:
+    def eject_common_catalognum(self, names: list[str]) -> tuple[str | None, list[str]]:
         """Return catalognum found in every track title.
 
         1. Split each track name into words
@@ -193,7 +192,7 @@ class Names:
         return names
 
     @classmethod
-    def eject_album_name(cls, names: list[str]) -> tuple[Optional[str], list[str]]:
+    def eject_album_name(cls, names: list[str]) -> tuple[str | None, list[str]]:
         matches = list(map(cls.ALBUM_IN_TITLE.search, names))
         albums = {m.group(1).replace('"', "") for m in matches if m}
         if len(albums) != 1:
