@@ -6,7 +6,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+        python: ["3.9", "3.10", "3.11", "3.12"]
         beets: ["1.5.0", "1.6.0", "2.0.0"]
     steps:
       - uses: actions/checkout@v4
@@ -50,7 +50,7 @@ jobs:
         run: echo PROJECT_VERSION="$(git describe --tags | sed 's/-[^-]*$//')" >> $GITHUB_ENV
 
       - name: SonarCloud Scan
-        if: ${{ matrix.beets == '1.5.0' && matrix.python == '3.8' }}
+        if: ${{ matrix.beets == '1.5.0' && matrix.python == '3.9' }}
         uses: SonarSource/sonarcloud-github-action@master
         with:
           args: >
