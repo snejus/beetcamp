@@ -1,5 +1,9 @@
 ## Unreleased
 
+### Removed
+
+- Remove support for Python 3.8.
+
 ### Added
 
 - `comments`: Add a new configuration option `truncate_comments` which handles very long
