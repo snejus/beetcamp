@@ -22,11 +22,10 @@ import logging
 import re
 from contextlib import contextmanager
 from functools import partial
-from itertools import chain
 from operator import itemgetter
 from typing import TYPE_CHECKING, Any, Literal
 
-from beets import IncludeLazyConfig, config, library, plugins
+from beets import IncludeLazyConfig, config, plugins
 
 from beetsplug import fetchart  # type: ignore[attr-defined]
 
@@ -38,6 +37,7 @@ if TYPE_CHECKING:
     from collections.abc import Iterable, Iterator
 
     from beets.autotag.hooks import AlbumInfo, TrackInfo
+    from beets.library import Album, Item, Library
 
 JSONDict = dict[str, Any]
 CandidateType = Literal["album", "track"]
@@ -152,7 +152,7 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         if self.config["art"]:
             self.register_listener("pluginload", self.loaded)
 
-    def adjust_comments_field(self, lib: library.Library, album: library.Album) -> None:
+    def adjust_comments_field(self, lib: Library, album: Album) -> None:
         """If the comments field is too long, store it as album flex attr.
 
         Keep the first 4000 characters in the item and store the full comment as
@@ -194,9 +194,7 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
 
         return None
 
-    def _find_url_in_item(
-        self, item: library.Item, name: str, _type: CandidateType
-    ) -> str:
+    def _find_url_in_item(self, item: Item, name: str, _type: CandidateType) -> str:
         """Try to extract release URL from the library item.
 
         If the item has previously been imported, `mb_albumid` (or `mb_trackid`
@@ -227,7 +225,7 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         return ""
 
     def candidates(
-        self, items: list[library.Item], artist: str, album: str, *_: Any, **__: Any
+        self, items: list[Item], artist: str, album: str, *_: Any, **__: Any
     ) -> Iterable[AlbumInfo]:
         """Return a sequence of album candidates matching given artist and album."""
         item = items[0]
@@ -257,11 +255,12 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
             "search_type": search_type,
         }
 
-        results = map(itemgetter("url"), self._search(search))
-        yield from chain.from_iterable(filter(None, map(self.get_album_info, results)))
+        for url in map(itemgetter("url"), self._search(search)):
+            if albums := self.get_album_info(url):
+                yield from albums
 
     def item_candidates(
-        self, item: library.Item, artist: str, title: str
+        self, item: Item, artist: str, title: str
     ) -> Iterable[TrackInfo]:
         """Return a sequence of singleton candidates matching given artist and title."""
         label = ""
