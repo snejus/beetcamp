@@ -1,35 +1,27 @@
 """Module with a Helpers class that contains various static, independent functions."""
 
 import re
-from functools import lru_cache, partial
+from collections.abc import Iterable
+from functools import cache, partial
 from itertools import chain
 from operator import contains
-from typing import (
-    Any,
-    Callable,
-    Dict,
-    Iterable,
-    List,
-    Match,
-    NamedTuple,
-    Pattern,
-    Tuple,
-    TypeVar,
-    Union,
-)
+from re import Match, Pattern
+from typing import TYPE_CHECKING, Any, Callable, NamedTuple, TypeVar, Union
 
 from beets import __version__ as beets_version
-from beets.autotag.hooks import AlbumInfo
 from ordered_set import OrderedSet as ordset  # noqa: N813
 from packaging.version import Version
 
 from .genres_lookup import GENRES
 
+if TYPE_CHECKING:
+    from beets.autotag.hooks import AlbumInfo
+
 BEETS_VERSION = Version(beets_version)
 ALBUMTYPES_LIST_SUPPORT = BEETS_VERSION >= Version("1.6.0")
 ARTIST_LIST_FIELDS_SUPPORT = BEETS_VERSION >= Version("2.0.0")
 
-JSONDict = Dict[str, Any]
+JSONDict = dict[str, Any]
 DIGI_MEDIA = "Digital Media"
 USB_TYPE_ID = 5
 FORMAT_TO_MEDIA = {
@@ -81,7 +73,7 @@ class MediaInfo(NamedTuple):
         return 1
 
 
-PATTERNS: Dict[str, Pattern[str]] = {
+PATTERNS: dict[str, Pattern[str]] = {
     "split_artists": re.compile(r", - |, | (?:[x+/-]|//|vs|and)[.]? "),
     "meta": re.compile(r'.*"@id".*'),
     "ft": re.compile(
@@ -152,7 +144,7 @@ def split_artist_title(m: Match[str]) -> str:
 
 
 # fmt: off
-CLEAN_PATTERNS: List[Tuple[Pattern[str], Union[str, Callable[[Match[str]], str]]]] = [
+CLEAN_PATTERNS: list[tuple[Pattern[str], Union[str, Callable[[Match[str]], str]]]] = [
     (re.compile(rf"(([\[(])|(^| ))\*?({'|'.join(rm_strings)})(?(2)[])]|([- ]|$))", re.I), ""),  # noqa
     (re.compile(r" -(\S)"), r" - \1"),                                              # hi -bye                   -> hi - bye  # noqa
     (re.compile(r"(\S)- "), r"\1 - "),                                              # hi- bye                   -> hi - bye  # noqa
@@ -173,7 +165,7 @@ CLEAN_PATTERNS: List[Tuple[Pattern[str], Union[str, Callable[[Match[str]], str]]
 
 class Helpers:
     @staticmethod
-    def split_artists(artists: Union[str, Iterable[str]]) -> List[str]:
+    def split_artists(artists: Union[str, Iterable[str]]) -> list[str]:
         """Split artists taking into account delimiters such as ',', '+', 'x', 'X'.
 
         Note: featuring artists are removed since they are not main artists.
@@ -280,7 +272,7 @@ class Helpers:
         return obj
 
     @staticmethod
-    def get_media_formats(format_list: List[JSONDict]) -> List[MediaInfo]:
+    def get_media_formats(format_list: list[JSONDict]) -> list[MediaInfo]:
         """Return filtered Bandcamp media formats as a list of MediaInfo objects.
 
         Formats are filtered using the following fields,
@@ -326,7 +318,7 @@ class Helpers:
         # using an ordered set here in case of duplicates
         track_alts = ordset(PATTERNS["track_alt"].findall(comments))
 
-        @lru_cache(maxsize=None)
+        @cache
         def get_medium_total(medium: int) -> int:
             starts = {1: "AB", 2: "CD", 3: "EF", 4: "GH", 5: "IJ"}[medium]
             return len(re.findall(rf"^[{starts}]", "\n".join(track_alts), re.M))

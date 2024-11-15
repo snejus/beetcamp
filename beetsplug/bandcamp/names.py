@@ -6,7 +6,7 @@ from collections import Counter
 from dataclasses import dataclass, field
 from functools import cached_property, reduce
 from os.path import commonprefix
-from typing import List, Optional, Tuple
+from typing import Optional
 
 from ordered_set import OrderedSet
 
@@ -28,7 +28,7 @@ class Names:
     album_artist: str
     album_in_titles: Optional[str] = None
     catalognum_in_titles: Optional[str] = None
-    titles: List[str] = field(default_factory=list)
+    titles: list[str] = field(default_factory=list)
 
     @cached_property
     def label(self) -> str:
@@ -44,7 +44,7 @@ class Names:
         return str(self.meta["name"])
 
     @cached_property
-    def json_tracks(self) -> List[JSONDict]:
+    def json_tracks(self) -> list[JSONDict]:
         try:
             return [{**t, **t["item"]} for t in self.meta["track"]["itemListElement"]]
         except KeyError as e:
@@ -56,7 +56,7 @@ class Names:
             return []
 
     @cached_property
-    def original_titles(self) -> List[str]:
+    def original_titles(self) -> list[str]:
         return [i["name"] for i in self.json_tracks]
 
     @cached_property
@@ -79,7 +79,7 @@ class Names:
         return commonprefix(self.titles)
 
     @classmethod
-    def split_quoted_titles(cls, names: List[str]) -> List[str]:
+    def split_quoted_titles(cls, names: list[str]) -> list[str]:
         if len(names) > 1:
             matches = list(filter(None, map(cls.TITLE_IN_QUOTES.match, names)))
             if len(matches) == len(names):
@@ -87,7 +87,7 @@ class Names:
 
         return names
 
-    def remove_album_catalognum(self, names: List[str]) -> List[str]:
+    def remove_album_catalognum(self, names: list[str]) -> list[str]:
         if catalognum := self.catalognum_in_album:
             pat = re.compile(rf"(?i)[([]{re.escape(catalognum)}[])]")
             return [pat.sub("", n) for n in names]
@@ -95,7 +95,7 @@ class Names:
         return names
 
     @classmethod
-    def remove_number_prefix(cls, names: List[str]) -> List[str]:
+    def remove_number_prefix(cls, names: list[str]) -> list[str]:
         """Remove track number prefix from the track names.
 
         If there is more than one track and at least half of the track names have
@@ -114,7 +114,7 @@ class Names:
         return names
 
     @classmethod
-    def find_common_track_delimiter(cls, names: List[str]) -> str:
+    def find_common_track_delimiter(cls, names: list[str]) -> str:
         """Return the track parts delimiter that is in effect in the current release.
 
         In some (rare) situations track parts are delimited by a pipe character
@@ -135,13 +135,13 @@ class Names:
         return delim if (len(names) == 1 or count > len(names) / 2) else "-"
 
     @classmethod
-    def normalize_delimiter(cls, names: List[str]) -> List[str]:
+    def normalize_delimiter(cls, names: list[str]) -> list[str]:
         """Ensure the same delimiter splits artist and title in all names."""
         delim = cls.find_common_track_delimiter(names)
         pat = re.compile(f" +{re.escape(delim)} +")
         return [pat.sub(" - ", n) for n in names]
 
-    def remove_label(self, names: List[str]) -> List[str]:
+    def remove_label(self, names: list[str]) -> list[str]:
         """Remove label name from the end of track names.
 
         See https://gutterfunkuk.bandcamp.com/album/gutterfunk-all-subject-to-vibes-various-artists-lp  # noqa: E501
@@ -150,8 +150,8 @@ class Names:
         return [remove_label.sub(" ", n).strip() for n in names]
 
     def eject_common_catalognum(
-        self, names: List[str]
-    ) -> Tuple[Optional[str], List[str]]:
+        self, names: list[str]
+    ) -> tuple[Optional[str], list[str]]:
         """Return catalognum found in every track title.
 
         1. Split each track name into words
@@ -173,7 +173,7 @@ class Names:
         return catalognum, names
 
     @staticmethod
-    def parenthesize_remixes(names: List[str]) -> List[str]:
+    def parenthesize_remixes(names: list[str]) -> list[str]:
         """Reformat broken remix titles for an album with a single root title.
 
         1. Check whether this release has a single root title
@@ -193,7 +193,7 @@ class Names:
         return names
 
     @classmethod
-    def eject_album_name(cls, names: List[str]) -> Tuple[Optional[str], List[str]]:
+    def eject_album_name(cls, names: list[str]) -> tuple[Optional[str], list[str]]:
         matches = list(map(cls.ALBUM_IN_TITLE.search, names))
         albums = {m.group(1).replace('"', "") for m in matches if m}
         if len(albums) != 1:
@@ -203,7 +203,7 @@ class Names:
             (n.replace(m.group(), "") if m else n) for m, n in zip(matches, names)
         ]
 
-    def ensure_artist_first(self, names: List[str]) -> List[str]:
+    def ensure_artist_first(self, names: list[str]) -> list[str]:
         """Ensure the artist is the first part of the track name."""
         splits = [n.split(" - ", 1) for n in names]
         if (

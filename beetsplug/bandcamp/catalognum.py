@@ -4,7 +4,11 @@ import re
 from dataclasses import dataclass
 from functools import cached_property
 from itertools import starmap
-from typing import Callable, Generic, Iterable, Pattern, Tuple, TypeVar
+from re import Pattern
+from typing import TYPE_CHECKING, Callable, Generic, TypeVar
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
 
 T = TypeVar("T")
 
@@ -220,7 +224,7 @@ class Catalognum:
         return None
 
     def find(
-        self, patterns_and_texts: Iterable[Tuple[Pattern[str], str]]
+        self, patterns_and_texts: Iterable[tuple[Pattern[str], str]]
     ) -> str | None:
         """Try getting the catalog number using supplied pattern/string pairs."""
 

@@ -5,14 +5,12 @@ from __future__ import annotations
 import json
 from copy import deepcopy
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Dict, List, Union
+from typing import TYPE_CHECKING, Any
 
 import pytest
 from beets.autotag.hooks import AlbumInfo, TrackInfo
 from git import Repo
-from rich.console import Console
 from rich_tables.utils import make_console, pretty_diff
-from typing_extensions import TypeAlias
 
 from beetsplug.bandcamp import DEFAULT_CONFIG
 from beetsplug.bandcamp.helpers import Helpers
@@ -22,9 +20,10 @@ if TYPE_CHECKING:
     from _pytest.config.argparsing import Parser
     from _pytest.fixtures import SubRequest
     from _pytest.terminal import TerminalReporter
+    from rich.console import Console
 
 
-JSONDict: TypeAlias = "dict[str, Any]"
+JSONDict = dict[str, Any]
 console = make_console()
 
 
@@ -189,9 +188,6 @@ def bandcamp_html(bandcamp_data_path: Path) -> str:
 
     # load and dump the data to remove newlines and spaces
     return json.dumps(json.loads(contents))
-
-
-JSONDictOrList = Union[Dict[str, Any], List[Dict[str, Any]]]
 
 
 @pytest.fixture
