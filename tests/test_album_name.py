@@ -4,77 +4,83 @@ from beetsplug.bandcamp.album_name import AlbumName
 
 
 @pytest.mark.parametrize(
-    ("name", "extras", "expected"),
+    ("name, expected"),
     [
-        ("Album - Various Artists", [], "Album"),
-        ("Various Artists - Album", [], "Album"),
-        ("Various Artists Album", [], "Various Artists Album"),
-        ("Label Various Artists Album", [], "Label Various Artists Album"),
-        ("Album EP", [], "Album EP"),
-        ("Album [EP]", [], "Album EP"),
-        ("Album (EP)", [], "Album EP"),
-        ("Album E.P.", [], "Album E.P."),
-        ("Album LP", [], "Album LP"),
-        ("Album [LP]", [], "Album LP"),
-        ("Album (LP)", [], "Album LP"),
-        ("[Label] Album EP", ["Label"], "Album EP"),
-        ("Artist - Album EP", ["Artist"], "Album EP"),
-        ("Label | Album", ["Label"], "Album"),
-        ("Tweaker-229 [PRH-002]", ["PRH-002", "Tweaker-229"], ""),
-        ("Album (limited edition)", [], "Album"),
-        ("Album - VARIOUS ARTISTS", [], "Album"),
-        ("Drepa Mann", [], "Drepa Mann"),
-        ("Some ft. Some ONE - Album", ["Some ft. Some ONE", "Some"], "Album"),
-        ("Some feat. Some ONE - Album", ["Some feat. Some ONE", "Some"], "Album"),
-        ("Healing Noise (EP) (Free Download)", [], "Healing Noise EP"),
-        ("[MCVA003] - VARIOUS ARTISTS", ["MCVA003"], ""),
-        ("Drepa Mann [Vinyl]", [], "Drepa Mann"),
-        ("Drepa Mann  [Vinyl]", [], "Drepa Mann"),
-        ("The Castle [BLCKLPS009] Incl. Remix", [], "The Castle [BLCKLPS009]"),
-        ('Anetha - "Ophiuchus EP"', ["Anetha"], "Ophiuchus EP"),
-        ("Album (FREE DL)", [], "Album"),
-        ("Album (Single)", [], "Album"),
-        (
-            "Dax J - EDLX.051 Illusions Of Power",
-            ["EDLX.051", "Dax J"],
-            "Illusions Of Power",
-        ),
-        ("WEAPONS 001 - VARIOUS ARTISTS", ["WEAPONS 001"], ""),
-        ("Diva Hello", [], "Diva Hello"),
-        ("RR009 - Various Artist", ["RR009"], ""),
-        ("Diva (Incl. some sort of Remixes)", [], "Diva"),
-        ("HWEP010 - MEZZ - COLOR OF WAR", ["HWEP010", "MEZZ"], "COLOR OF WAR"),
-        ("O)))Bow 1", [], "O)))Bow 1"),
-        ("hi'Hello", ["hi"], "hi'Hello"),
-        ("fjern's stuff and such", [], "fjern's stuff and such"),
-        # only remove VA if album name starts or ends with it
-        ("Album VA", [], "Album VA"),
-        ("VA. Album", [], "Album"),
-        ("VA Album", [], "VA Album"),
-        ("Album VA001", [], "Album VA001"),
-        ("Album VA 03", [], "Album VA 03"),
-        # remove (weird chars too) regardless of its position if explicitly excluded
-        ("Album †INVI VA006†", ["INVI VA006"], "Album"),
-        # keep label name
-        ("Album (Label Refix)", [], "Album (Label Refix)"),
-        ("Label-Album", [], "Label-Album"),
-        # and remove brackets
-        ("Album", [], "Album"),
-        ("Artist EP", ["Artist"], "Artist EP"),
-        ("Artist & Another EP", ["Artist", "Another"], "Artist & Another EP"),
-        ("Album (Artist Remix)", ["Artist"], "Album (Artist Remix)"),
-        ("[NITI-III]", [], "[NITI-III]"),
-        ("(Free Download) Album", [], "Album"),
-        ("Free Download Series - Album", [], "Free Download Series"),
-        ("Free Download Series - Some Album", [], "Free Download Series - Some Album"),
-        ("Label: Album", [], "Album"),
-        ("Label: Volume 1", [], "Label: Volume 1"),
-        ("Artist Album", ["Artist"], "Album"),
-        ("Artist Vol. 1", ["Artist"], "Artist Vol. 1"),
+        # ft
+        ("Artist ft. Artist123 - Album", "Album"),
+        # catalognum
+        ("[CAT123] - Album", "Album"),
+        ("CAT123 - Album", "Album"),
+        ("Album †CAT123†", "Album"),
+        # artist
+        ("Artist - Album EP", "Album EP"),
+        ('Artist - "Album EP"', "Album EP"),
+        ("Artist - CAT123 Album", "Album"),
+        ("CAT123 - Artist - Album", "Album"),
+        ("Artist'hello", "Artist'hello"),
+        ("Artist's stuff and such", "Artist's stuff and such"),
+        ("Artist123 [CAT123]", ""),
+        ("Artist EP", "Artist EP"),
+        ("Artist & Artist123 EP", "Artist & Artist123 EP"),
+        ("Album (Artist Remix)", "Album (Artist Remix)"),
+        ("Artist Album", "Artist Album"),
+        ("Artist Vol. 1", "Artist Vol. 1"),
+        # VA
+        ("Album - Various Artists", "Album"),
+        ("Various Artists - Album", "Album"),
+        ("Various Artists Album", "Various Artists Album"),
+        ("Label Various Artists Album", "Label Various Artists Album"),
+        ("CAT123 - VARIOUS ARTISTS", ""),
+        ("Album - VARIOUS ARTISTS", "Album"),
+        ("Album - Various Artist", "Album"),
+        ("Album VA", "Album VA"),
+        ("VA. Album", "Album"),
+        ("VA Album", "VA Album"),
+        ("Album VA001", "Album VA001"),
+        ("Album VA 03", "Album VA 03"),
+        # general cleanup
+        ("Album (limited edition)", "Album"),
+        ("Album [Vinyl]", "Album"),
+        ("Album  [Vinyl]", "Album"),
+        ("Album (FREE DL)", "Album"),
+        ("Album (Single)", "Album"),
+        ("Album", "Album"),
+        ("[Album]", "[Album]"),
+        ("(Free Download) Album", "Album"),
+        ("Free Download Series - Album", "Free Download Series"),
+        ("Free Download Series - Some Album", "Free Download Series - Some Album"),
+        ("O)))Bow 1", "O)))Bow 1"),
+        # label
+        ("[Label] Album EP", "Album EP"),
+        ("Label | Album", "Album"),
+        ("Album (Label Refix)", "Album (Label Refix)"),
+        ("Label-Album", "Label-Album"),
+        ("Label: Album", "Album"),
+        ("Label: Volume 1", "Label: Volume 1"),
+        # EP/LP
+        ("Album EP", "Album EP"),
+        ("Album [EP]", "Album EP"),
+        ("Album (EP)", "Album EP"),
+        ("Album E.P.", "Album E.P."),
+        ("Album LP", "Album LP"),
+        ("Album [LP]", "Album LP"),
+        ("Album (LP)", "Album LP"),
+        ("Album (EP) (Free Download)", "Album EP"),
+        # Remixes
+        ("Album [CAT123] Incl. Remix", "Album"),
+        ("Album (Incl. some sort of Remixes)", "Album"),
     ],
 )
-def test_clean_name(name, extras, expected):
-    assert AlbumName.clean(name, extras, label="Label") == expected
+def test_clean_name(name, expected):
+    assert (
+        AlbumName.clean(
+            name,
+            artists=["Artist ft. Artist123", "Artist123", "Artist"],
+            catalognum="CAT123",
+            label="Label",
+        )
+        == expected
+    )
 
 
 @pytest.mark.parametrize(

@@ -9,7 +9,7 @@
 
 - `album`:
   - Clean up/remove artist such as **Various**.
-  - Keep the artist or label in place when it's followed by part name, like **Volume**
+  - Only remove artists and label if they are clearly separated out in the album name.
   - Remove the original albumartist unless that's the label name.
   - Remove **w/ Some Remix** reliably.
 
