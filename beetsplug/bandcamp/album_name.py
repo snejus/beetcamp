@@ -3,7 +3,7 @@
 import re
 from dataclasses import dataclass
 from functools import cached_property
-from typing import Any, Dict, List, Match, Optional
+from typing import Any, Dict, Iterable, List, Match, Optional
 
 from .helpers import PATTERNS, Helpers
 
@@ -130,24 +130,6 @@ class AlbumName:
 
         return self.SERIES_FMT.sub(self.format_series, album)
 
-    @staticmethod
-    def remove_label(name: str, label: str) -> str:
-        if not label:
-            return name
-
-        pattern = re.compile(
-            rf"""
-            \W*               # pick up any punctuation
-            (?<!\w[ ])        # cannot be preceded by a simple word
-            \b{re.escape(label)}\b
-            (?!:\ Vol)        # cannot be followed by ': Vol'
-            (?!.[A-Za-z])     # cannot be followed by a word
-            ([^[\]\w]|\d)*    # pick up any digits and punctuation
-        """,
-            flags=re.VERBOSE | re.IGNORECASE,
-        )
-        return pattern.sub(" ", name).strip()
-
     @classmethod
     def remove_va(cls, name: str) -> str:
         if not cls.CLEAN_VA_EXCLUDE.search(name):
@@ -155,40 +137,78 @@ class AlbumName:
 
         return name
 
+    @staticmethod
+    def remove_pattern(name: str, pattern: str) -> str:
+        allowed_chars = r"[*|,. \u2013\u2020]"
+        return re.sub(
+            rf"""
+            (
+                (?P<br>[([])                # match either an opening bracket/parens
+              | (^|{allowed_chars})+        # and line start or any of the allowed chars
+            )
+            {pattern}
+            (?(br)[])]                      # match closing brackets if they were opened
+              | ({allowed_chars}|-|\d+$)*   # otherwise remove any of these chars
+            )
+            """,
+            " ",
+            name,
+            flags=re.VERBOSE | re.IGNORECASE,
+        ).strip("_: -")
+
     @classmethod
-    def clean(cls, name: str, to_clean: List[str], label: str = "") -> str:
+    def remove_label(cls, name: str, label: str) -> str:
+        return cls.remove_pattern(
+            name,
+            rf"""
+            (?<!\w[ ])          # cannot be preceded by a simple word
+            \b{re.escape(label)}\b
+            (?!:\ Vol)          # cannot be followed by ': Vol'
+            (?!.[&#A-z])        # cannot be followed by a word
+            """,
+        )
+
+    @classmethod
+    def remove_artist(cls, name: str, artist: str) -> str:
+        return cls.remove_pattern(
+            name,
+            rf"""
+            (?<!\ [x&,]\ )                      # keep B in 'A x B', 'A & B', 'A, B'
+            (?<!\ (of|vs)\ )                    # keep B in 'A of B', 'A vs B'
+            (((compiled\ |selected\ )?by)\ )?   # remove these prefixes if present
+            {re.escape(artist)}                 # match the word we want to remove
+            (?![':,.\w])                        # cannot be followed by these characters
+            (?!\ [\w&])                         # cannot be followed by ' &' ' ep', ' x'
+            """,
+        )
+
+    @classmethod
+    def remove_catalognum(cls, name: str, catalognum: str) -> str:
+        return cls.remove_pattern(name, rf"{re.escape(catalognum)}(?!\ deluxe)")
+
+    @classmethod
+    def clean(
+        cls,
+        name: str,
+        artists: Optional[List[str]] = None,
+        catalognum: Optional[str] = None,
+        label: Optional[str] = None,
+    ) -> str:
         """Return clean album name.
 
         Catalogue number and artists to be removed are provided as 'to_clean'.
         """
-        allowed_chars = r"[*|,. \u2013\u2020]"
         name = PATTERNS["ft"].sub("", name)
-        for word in map(re.escape, filter(None, to_clean)):
-            name = re.sub(
-                rf"""
-    (
-        (?P<br>[([])                # match either an opening bracket/parens
-      | (^|{allowed_chars})+        # or line start with and all allowed chars
-    )
-    (?<!\ [x&]\ )                   # do not remove A2 from 'A1 x A2' or 'A1 & A2'
-    (?<!\ of\ )                     # do not remove Artist from 'Best of Artist'
-    (((compiled\ |selected\ )?by|vs)\ )?  # remove these prefixes when they are present
-    (?i:{word})                     # match the word we want to remove
-    (?!['.\d])                      # cannot be followed by these characters
-    (?!\ (deluxe|vol|&|[el]p\b|x\b))# cannot be followed by ' deluxe', ' &' ' ep', ' x'
-    (?(br)                          # if we had a bracket/parens match
-        [])]                        # then match closing bracket/parens
-      | ({allowed_chars}|-|\d+$)*   # otherwise remove any of these patterns
-    )
-                """,
-                " ",
-                name,
-                flags=re.VERBOSE | re.IGNORECASE | re.UNICODE,
-            ).strip("_: ")
+        if catalognum:
+            name = cls.remove_catalognum(name, catalognum)
+
+        for artist in filter(None, artists or []):
+            name = cls.remove_artist(name, artist)
 
         name = cls.remove_va(name)
         name = Helpers.clean_name(name)
-        name = cls.remove_label(name, label)
+        if label:
+            name = cls.remove_label(name, label)
         name = cls.REMIX_IN_TITLE.sub(" ", name).strip("- ")
 
         # uppercase EP and LP, and remove surrounding parens / brackets
@@ -222,12 +242,15 @@ class AlbumName:
         if artists and original_album.lower() == artists[0].lower():
             # if album is named by the main artist, keep it as it is
             return original_album
-        to_clean = [catalognum]
-        if self.remove_artists:
-            to_clean.extend(original_artists + artists)
-        to_clean = sorted(filter(None, set(to_clean)), key=len, reverse=True)
 
-        album = self.clean(original_album, to_clean, label)
+        artists_to_clean: Iterable[str] = []
+        if self.remove_artists:
+            artists_to_clean = filter(None, original_artists + artists)
+        artists_to_clean = sorted(set(artists_to_clean), key=len, reverse=True)
+
+        album = self.clean(
+            original_album, artists=artists_to_clean, catalognum=catalognum, label=label
+        )
         if album.startswith("("):
             album = original_album
 
