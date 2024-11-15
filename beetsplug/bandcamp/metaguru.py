@@ -154,7 +154,9 @@ class Metaguru(Helpers):
         year_range = re.compile(r"20[12]\d - 20[12]\d")
         aartist = self.original_albumartist
         if self.label == aartist and not year_range.match(self.original_album):
-            split = AlbumName.clean(self.original_album, [self.catalognum]).split(" - ")
+            split = AlbumName.clean(
+                self.original_album, catalognum=self.catalognum
+            ).split(" - ")
             if len(split) > 1:
                 aartist = split[0]
 
