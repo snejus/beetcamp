@@ -5,10 +5,10 @@ from dataclasses import dataclass
 from functools import cached_property
 from itertools import starmap
 from re import Pattern
-from typing import TYPE_CHECKING, Callable, Generic, TypeVar
+from typing import TYPE_CHECKING, Generic, TypeVar
 
 if TYPE_CHECKING:
-    from collections.abc import Iterable
+    from collections.abc import Callable, Iterable
 
 T = TypeVar("T")
 

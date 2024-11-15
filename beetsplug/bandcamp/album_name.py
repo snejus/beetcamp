@@ -1,10 +1,12 @@
 """Module with album parsing logic."""
 
+from __future__ import annotations
+
 import re
 from dataclasses import dataclass
 from functools import cached_property
 from re import Match
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any
 
 from .helpers import PATTERNS, Helpers
 
@@ -43,12 +45,12 @@ class AlbumName:
 
     original: str
     description: str
-    from_track_titles: Optional[str]
+    from_track_titles: str | None
 
     remove_artists = True
 
     @cached_property
-    def from_description(self) -> Optional[str]:
+    def from_description(self) -> str | None:
         """Try finding album name in the release description."""
         if m := self.ALBUM_IN_DESC.search(self.description):
             self.remove_artists = False
@@ -61,7 +63,7 @@ class AlbumName:
         return bool(self.COMPILATION_IN_TITLE.search(self.original))
 
     @cached_property
-    def from_title(self) -> Optional[str]:
+    def from_title(self) -> str | None:
         """Try to guess album name from the original title.
 
         Return the first match from below, defaulting to None:
@@ -91,7 +93,7 @@ class AlbumName:
         return next(iter(self.album_names))
 
     @cached_property
-    def series_part(self) -> Optional[str]:
+    def series_part(self) -> str | None:
         """Return series if it is found in any of the album names."""
         for name in self.album_names:
             if m := self.SERIES.search(name):
@@ -195,9 +197,9 @@ class AlbumName:
     def clean(
         cls,
         name: str,
-        artists: Optional[list[str]] = None,
-        catalognum: Optional[str] = None,
-        label: Optional[str] = None,
+        artists: list[str] | None = None,
+        catalognum: str | None = None,
+        label: str | None = None,
     ) -> str:
         """Return clean album name.
 

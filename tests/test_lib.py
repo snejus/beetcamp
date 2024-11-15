@@ -15,7 +15,7 @@ from functools import cached_property, partial
 from itertools import groupby, zip_longest
 from operator import itemgetter
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Callable, NamedTuple
+from typing import TYPE_CHECKING, Any, NamedTuple
 
 import pytest
 from filelock import FileLock
@@ -39,7 +39,7 @@ from beetsplug.bandcamp import BandcampPlugin
 from beetsplug.bandcamp.metaguru import Metaguru
 
 if TYPE_CHECKING:
-    from collections.abc import Iterator
+    from collections.abc import Callable, Iterator
 
     from _pytest.config import Config
     from _pytest.fixtures import FixtureRequest

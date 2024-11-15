@@ -1,9 +1,10 @@
 """Module with bandcamp search functionality."""
 
 import re
+from collections.abc import Callable
 from difflib import SequenceMatcher
 from operator import itemgetter
-from typing import Any, Callable
+from typing import Any
 from urllib.parse import quote_plus
 
 from .http import http_get_text

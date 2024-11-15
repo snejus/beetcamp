@@ -1,13 +1,14 @@
 """Module for parsing bandcamp metadata."""
 
+from __future__ import annotations
+
 import itertools as it
 import json
 import operator as op
 import re
-from collections.abc import Iterable
 from datetime import date, datetime
 from functools import cached_property, partial
-from typing import Any, Optional
+from typing import TYPE_CHECKING, Any
 from unicodedata import normalize
 
 from beets import config as beets_config
@@ -18,8 +19,12 @@ from .album_name import AlbumName
 from .catalognum import Catalognum
 from .helpers import PATTERNS, Helpers, MediaInfo
 from .names import Names
-from .track import Track
 from .tracks import Tracks
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
+
+    from .track import Track
 
 JSONDict = dict[str, Any]
 
@@ -49,7 +54,7 @@ class Metaguru(Helpers):
     _tracks: Tracks
     _album_name: AlbumName
 
-    def __init__(self, meta: JSONDict, config: Optional[JSONDict] = None) -> None:
+    def __init__(self, meta: JSONDict, config: JSONDict | None = None) -> None:
         self.meta = meta
         self.media_formats = self.get_media_formats(
             (meta.get("inAlbum") or meta).get("albumRelease") or []
@@ -73,7 +78,7 @@ class Metaguru(Helpers):
         )
 
     @classmethod
-    def from_html(cls, html: str, config: Optional[JSONDict] = None) -> "Metaguru":
+    def from_html(cls, html: str, config: JSONDict | None = None) -> Metaguru:
         for char in cls.HTML_REMOVE_CHARS:
             html = html.replace(char, "")
         try:
@@ -96,7 +101,7 @@ class Metaguru(Helpers):
         return self.meta.get("creditText") or ""
 
     @property
-    def comments(self) -> Optional[str]:
+    def comments(self) -> str | None:
         """Return concatenated release, media descriptions and credits."""
         parts = [self.description, self.media.description, self.credits]
         sep = self.config["comments_separator"]
@@ -184,7 +189,7 @@ class Metaguru(Helpers):
         return image
 
     @cached_property
-    def release_date(self) -> Optional[date]:
+    def release_date(self) -> date | None:
         """Parse the datestring that takes the format like below and return date object.
         {"datePublished": "17 Jul 2020 00:00:00 GMT"}
 
@@ -388,7 +393,7 @@ class Metaguru(Helpers):
         return len(self.unique_artists) > 3
 
     @cached_property
-    def style(self) -> Optional[str]:
+    def style(self) -> str | None:
         """Extract bandcamp genre tag from the metadata."""
         # expecting the following form: https://bandcamp.com/tag/folk
         tag_url = self.meta.get("publisher", {}).get("genre") or ""
@@ -400,7 +405,7 @@ class Metaguru(Helpers):
         return style
 
     @cached_property
-    def genre(self) -> Optional[str]:
+    def genre(self) -> str | None:
         kws: Iterable[str] = map(str.lower, self.meta.get("keywords", []))
         if self.style:
             exclude_style = partial(op.ne, self.style.lower())
