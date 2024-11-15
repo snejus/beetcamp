@@ -3,7 +3,7 @@
 import re
 from dataclasses import dataclass, field
 from functools import cached_property
-from typing import Dict, List, Optional, Tuple
+from typing import Optional
 
 from .catalognum import Catalognum
 from .helpers import PATTERNS, REMIX, Helpers, JSONDict
@@ -70,7 +70,7 @@ class Track:
     album_artist: Optional[str] = None
 
     @staticmethod
-    def clean_digi_name(name: str) -> Tuple[str, bool]:
+    def clean_digi_name(name: str) -> tuple[str, bool]:
         """Clean the track title from digi-only artifacts.
 
         Return the clean name, and whether this track is digi-only.
@@ -79,7 +79,7 @@ class Track:
         return clean_name, clean_name != name
 
     @staticmethod
-    def split_ft(value: str) -> Tuple[str, str, str]:
+    def split_ft(value: str) -> tuple[str, str, str]:
         """Return ft artist, full ft string, and the value without the ft string."""
         if m := PATTERNS["ft"].search(value):
             grp = m.groupdict()
@@ -88,7 +88,7 @@ class Track:
         return "", "", value
 
     @classmethod
-    def get_featuring_artist(cls, name: str, artist: str) -> Dict[str, str]:
+    def get_featuring_artist(cls, name: str, artist: str) -> dict[str, str]:
         """Find featuring artist in the track name.
 
         If the found artist is contained within the remixer, do not do anything.
@@ -219,7 +219,7 @@ class Track:
         return artist.strip(" -")
 
     @property
-    def artists(self) -> List[str]:
+    def artists(self) -> list[str]:
         return Helpers.split_artists(self.artist)
 
     @property
