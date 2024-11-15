@@ -1,6 +1,5 @@
 """Module with tracks parsing functionality."""
 
-import itertools as it
 from collections.abc import Iterator
 from dataclasses import dataclass
 from functools import cached_property
@@ -57,7 +56,7 @@ class Tracks:
 
         "Artist1 x Artist2" -> ["Artist1", "Artist2"]
         """
-        return list(dict.fromkeys(it.chain(*(j.artists for j in self.tracks))))
+        return list(dict.fromkeys(a for t in self.tracks for a in t.artists))
 
     @property
     def remixers(self) -> list[str]:
@@ -69,8 +68,7 @@ class Tracks:
     @property
     def other_artists(self) -> set[str]:
         """Return all unique remix and featuring artists."""
-        ft = [j.ft for j in self.tracks if j.ft]
-        return set(it.chain(self.remixers, ft))
+        return set(self.remixers + [j.ft for j in self.tracks if j.ft])
 
     @property
     def all_artists(self) -> set[str]:
