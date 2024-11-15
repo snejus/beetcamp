@@ -1,17 +1,17 @@
 """Module with tracks parsing functionality."""
 
 import itertools as it
+from collections.abc import Iterator
 from dataclasses import dataclass
 from functools import cached_property
-from typing import Iterator, List, Set
 
-from .track import Track
 from .names import Names
+from .track import Track
 
 
 @dataclass
 class Tracks:
-    tracks: List[Track]
+    tracks: list[Track]
     names: Names
 
     def __iter__(self) -> Iterator[Track]:
@@ -43,16 +43,16 @@ class Tracks:
         return self.tracks[0]
 
     @cached_property
-    def raw_names(self) -> List[str]:
+    def raw_names(self) -> list[str]:
         return [j.name for j in self.tracks]
 
     @property
-    def original_artists(self) -> List[str]:
+    def original_artists(self) -> list[str]:
         """Return all unique unsplit (original) main track artists."""
         return list(dict.fromkeys(j.artist for j in self.tracks))
 
     @property
-    def artists(self) -> List[str]:
+    def artists(self) -> list[str]:
         """Return all unique split main track artists.
 
         "Artist1 x Artist2" -> ["Artist1", "Artist2"]
@@ -60,25 +60,25 @@ class Tracks:
         return list(dict.fromkeys(it.chain(*(j.artists for j in self.tracks))))
 
     @property
-    def remixers(self) -> List[str]:
+    def remixers(self) -> list[str]:
         """Return all remix artists."""
         return [
             t.remix.remixer for t in self.tracks if t.remix and t.remix.by_other_artist
         ]
 
     @property
-    def other_artists(self) -> Set[str]:
+    def other_artists(self) -> set[str]:
         """Return all unique remix and featuring artists."""
         ft = [j.ft for j in self.tracks if j.ft]
         return set(it.chain(self.remixers, ft))
 
     @property
-    def all_artists(self) -> Set[str]:
+    def all_artists(self) -> set[str]:
         """Return all unique (1) track, (2) remix, (3) featuring artists."""
         return self.other_artists | set(self.original_artists)
 
     @cached_property
-    def artists_and_titles(self) -> Set[str]:
+    def artists_and_titles(self) -> set[str]:
         """Return a set with all artists and titles."""
         return set(self.raw_names) | self.all_artists
 

@@ -4,9 +4,10 @@ import itertools as it
 import json
 import operator as op
 import re
+from collections.abc import Iterable
 from datetime import date, datetime
 from functools import cached_property, partial
-from typing import Any, Dict, Iterable, List, Optional, Set
+from typing import Any, Optional
 from unicodedata import normalize
 
 from beets import config as beets_config
@@ -20,7 +21,7 @@ from .names import Names
 from .track import Track
 from .tracks import Tracks
 
-JSONDict = Dict[str, Any]
+JSONDict = dict[str, Any]
 
 COUNTRY_OVERRIDES = {
     "Russia": "RU",  # pycountry: Russian Federation
@@ -44,7 +45,7 @@ class Metaguru(Helpers):
 
     meta: JSONDict
     config: JSONDict
-    media_formats: List[MediaInfo]
+    media_formats: list[MediaInfo]
     _tracks: Tracks
     _album_name: AlbumName
 
@@ -83,7 +84,7 @@ class Metaguru(Helpers):
             return cls(json.loads(meta), config)
 
     @cached_property
-    def excluded_fields(self) -> Set[str]:
+    def excluded_fields(self) -> set[str]:
         return set(self.config.get("exclude_extra_fields") or [])
 
     @cached_property
@@ -238,7 +239,7 @@ class Metaguru(Helpers):
         return self._tracks
 
     @cached_property
-    def unique_artists(self) -> List[str]:
+    def unique_artists(self) -> list[str]:
         return self.split_artists(self._tracks.artists)
 
     @cached_property
@@ -358,7 +359,7 @@ class Metaguru(Helpers):
         return "album"
 
     @cached_property
-    def albumtypes(self) -> List[str]:
+    def albumtypes(self) -> list[str]:
         albumtypes = {self.albumtype}
         if self.is_comp:
             if self.albumtype == "ep":
@@ -512,6 +513,6 @@ class Metaguru(Helpers):
         return self.check_list_fields(album_info)
 
     @cached_property
-    def albums(self) -> List[AlbumInfo]:
+    def albums(self) -> list[AlbumInfo]:
         """Return album for the appropriate release format."""
         return list(map(self.get_media_album, self.media_formats))

@@ -3,11 +3,15 @@
 import re
 from dataclasses import dataclass
 from functools import cached_property
-from typing import Any, Dict, Iterable, List, Match, Optional
+from re import Match
+from typing import TYPE_CHECKING, Any, Optional
 
 from .helpers import PATTERNS, Helpers
 
-JSONDict = Dict[str, Any]
+if TYPE_CHECKING:
+    from collections.abc import Iterable
+
+JSONDict = dict[str, Any]
 
 
 @dataclass
@@ -73,7 +77,7 @@ class AlbumName:
         return None
 
     @cached_property
-    def album_names(self) -> List[str]:
+    def album_names(self) -> list[str]:
         priority_list = [
             self.from_track_titles,
             self.from_description,
@@ -191,7 +195,7 @@ class AlbumName:
     def clean(
         cls,
         name: str,
-        artists: Optional[List[str]] = None,
+        artists: Optional[list[str]] = None,
         catalognum: Optional[str] = None,
         label: Optional[str] = None,
     ) -> str:
@@ -235,8 +239,8 @@ class AlbumName:
     def get(
         self,
         catalognum: str,
-        original_artists: List[str],
-        artists: List[str],
+        original_artists: list[str],
+        artists: list[str],
         label: str,
     ) -> str:
         original_album = self.name

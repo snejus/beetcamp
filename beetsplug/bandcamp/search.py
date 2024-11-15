@@ -3,12 +3,12 @@
 import re
 from difflib import SequenceMatcher
 from operator import itemgetter
-from typing import Any, Callable, Dict, List
+from typing import Any, Callable
 from urllib.parse import quote_plus
 
 from .http import http_get_text
 
-JSONDict = Dict[str, Any]
+JSONDict = dict[str, Any]
 SEARCH_URL = "https://bandcamp.com/search?page={}&q={}"
 
 
@@ -72,7 +72,7 @@ def get_matches(text: str) -> JSONDict:
     return result
 
 
-def parse_and_sort_results(html: str, **kwargs: str) -> List[JSONDict]:
+def parse_and_sort_results(html: str, **kwargs: str) -> list[JSONDict]:
     """Extract search results from `html` and sort them by similarity to kwargs.
 
     Bandcamp search may be unpredictable, therefore search results get sorted
@@ -81,7 +81,7 @@ def parse_and_sort_results(html: str, **kwargs: str) -> List[JSONDict]:
     `kwargs` contains field and value pairs we compare the results with. Usually,
     this has 'label', 'artist' and 'name' ('title' or 'album') fields.
     """
-    results: List[JSONDict] = []
+    results: list[JSONDict] = []
     for block in html.split("searchresult data-search")[1:]:
         similarities = []
         res = get_matches(block)
@@ -100,7 +100,7 @@ def search_bandcamp(
     page: int = 1,
     get: Callable[[str], str] = http_get_text,
     **kwargs: Any,
-) -> List[JSONDict]:
+) -> list[JSONDict]:
     """Return a list with item JSONs of type search_type matching the query."""
     url = SEARCH_URL.format(page, quote_plus(query))
     if search_type:

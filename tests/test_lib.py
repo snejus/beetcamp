@@ -15,7 +15,7 @@ from functools import cached_property, partial
 from itertools import groupby, zip_longest
 from operator import itemgetter
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Callable, Dict, Iterator, List, NamedTuple, Tuple
+from typing import TYPE_CHECKING, Any, Callable, NamedTuple
 
 import pytest
 from filelock import FileLock
@@ -33,12 +33,14 @@ from rich_tables.utils import (
     simple_panel,
     wrap,
 )
-from typing_extensions import TypeAlias, TypedDict
+from typing_extensions import TypedDict
 
 from beetsplug.bandcamp import BandcampPlugin
 from beetsplug.bandcamp.metaguru import Metaguru
 
 if TYPE_CHECKING:
+    from collections.abc import Iterator
+
     from _pytest.config import Config
     from _pytest.fixtures import FixtureRequest
     from beets.autotag.hooks import AttrDict
@@ -46,7 +48,7 @@ if TYPE_CHECKING:
 
 pytestmark = pytest.mark.lib
 
-JSONDict = Dict[str, Any]
+JSONDict = dict[str, Any]
 
 LIB_TESTS_DIR = Path("lib_tests")
 RESULTS_DIR = LIB_TESTS_DIR / "results"
@@ -165,10 +167,10 @@ class Field:
         return self.changed
 
 
-FieldChanges: TypeAlias = "list[tuple[str, FieldDiff]]"
-AlbumFieldChanges: TypeAlias = "list[FieldDiff]"  # (FieldDiff)
-FieldOutcome: TypeAlias = "tuple[str, FieldDiff]"  # (url, FieldDiff)
-Results: TypeAlias = "list[FieldOutcome]"
+FieldChanges = list[tuple[str, FieldDiff]]
+AlbumFieldChanges = list[FieldDiff]  # (FieldDiff)
+FieldOutcome = tuple[str, FieldDiff]  # (url, FieldDiff)
+Results = list[FieldOutcome]
 
 
 class Summary(TypedDict):
@@ -458,7 +460,7 @@ def new(
 def desc(old: JSONDict, new: JSONDict, guru: Metaguru) -> str:
     get_values = itemgetter(*TRACK_FIELDS)
 
-    def get_tracks(data: JSONDict) -> List[Tuple[str, ...]]:
+    def get_tracks(data: JSONDict) -> list[tuple[str, ...]]:
         return [tuple(get_values(t)) for t in data.get("tracks", [])]
 
     if "/album/" in new["data_url"]:

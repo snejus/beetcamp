@@ -24,7 +24,7 @@ from contextlib import contextmanager
 from functools import partial
 from itertools import chain
 from operator import itemgetter
-from typing import TYPE_CHECKING, Any, Dict, Iterable, Iterator, List, Literal
+from typing import TYPE_CHECKING, Any, Literal
 
 from beets import IncludeLazyConfig, config, library, plugins
 
@@ -35,12 +35,14 @@ from .metaguru import Metaguru
 from .search import search_bandcamp
 
 if TYPE_CHECKING:
+    from collections.abc import Iterable, Iterator
+
     from beets.autotag.hooks import AlbumInfo, TrackInfo
 
-JSONDict = Dict[str, Any]
+JSONDict = dict[str, Any]
 CandidateType = Literal["album", "track"]
 
-DEFAULT_CONFIG: JSONDict = {
+DEFAULT_CONFIG = {
     "include_digital_only_tracks": True,
     "search_max": 2,
     "art": False,
@@ -225,7 +227,7 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         return ""
 
     def candidates(
-        self, items: List[library.Item], artist: str, album: str, *_: Any, **__: Any
+        self, items: list[library.Item], artist: str, album: str, *_: Any, **__: Any
     ) -> Iterable[AlbumInfo]:
         """Return a sequence of album candidates matching given artist and album."""
         item = items[0]
@@ -300,7 +302,7 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         self._info("Not a bandcamp URL, skipping")
         return None
 
-    def get_album_info(self, url: str) -> List[AlbumInfo] | None:
+    def get_album_info(self, url: str) -> list[AlbumInfo] | None:
         """Return an AlbumInfo object for a bandcamp album page.
 
         If track url is given by mistake, find and fetch the album url instead.
