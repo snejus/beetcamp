@@ -17,10 +17,11 @@ class AlbumName:
     SERIES_FMT = re.compile(rf"^(.+){_series} *0*")
     REMIX_IN_TITLE = re.compile(
         r"""
-            (?<=remixes\ )\(.+$
-          | \(((inc|\+)[^()]+mix(es)?|tracks\ from[^()]+)\)
-          | (incl\.|with\ remixes)[^()+]+
-          | \W*(\+|w/)[\w\s/]*remix(ed)?$
+            (?<=remixes\ )\([^()]+\)$
+          | \((?:inc|\+)[^()]*mix(?:es)?\)
+          | (?:incl\.|with\ remixes)[^()+]+
+          | \W*(?:\+|w/)[\w\s/]*remix(?:ed)?$
+          | \(tracks\ from[^)]+\)
         """,
         re.IGNORECASE | re.VERBOSE,
     )
