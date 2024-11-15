@@ -1,12 +1,13 @@
 """Module with a Helpers class that contains various static, independent functions."""
 
+from __future__ import annotations
+
 import re
-from collections.abc import Iterable
 from functools import cache, partial
 from itertools import chain
 from operator import contains
 from re import Match, Pattern
-from typing import TYPE_CHECKING, Any, Callable, NamedTuple, TypeVar, Union
+from typing import TYPE_CHECKING, Any, NamedTuple, TypeVar
 
 from beets import __version__ as beets_version
 from ordered_set import OrderedSet as ordset  # noqa: N813
@@ -15,6 +16,8 @@ from packaging.version import Version
 from .genres_lookup import GENRES
 
 if TYPE_CHECKING:
+    from collections.abc import Callable, Iterable
+
     from beets.autotag.hooks import AlbumInfo
 
 BEETS_VERSION = Version(beets_version)
@@ -43,7 +46,7 @@ class MediaInfo(NamedTuple):
     description: str
 
     @classmethod
-    def from_format(cls, _format: JSONDict) -> "MediaInfo":
+    def from_format(cls, _format: JSONDict) -> MediaInfo:
         release_format = _format.get("musicReleaseFormat")
 
         return cls(
@@ -144,7 +147,7 @@ def split_artist_title(m: Match[str]) -> str:
 
 
 # fmt: off
-CLEAN_PATTERNS: list[tuple[Pattern[str], Union[str, Callable[[Match[str]], str]]]] = [
+CLEAN_PATTERNS: list[tuple[Pattern[str], str | Callable[[Match[str]], str]]] = [
     (re.compile(rf"(([\[(])|(^| ))\*?({'|'.join(rm_strings)})(?(2)[])]|([- ]|$))", re.I), ""),  # noqa
     (re.compile(r" -(\S)"), r" - \1"),                                              # hi -bye                   -> hi - bye  # noqa
     (re.compile(r"(\S)- "), r"\1 - "),                                              # hi- bye                   -> hi - bye  # noqa
@@ -165,7 +168,7 @@ CLEAN_PATTERNS: list[tuple[Pattern[str], Union[str, Callable[[Match[str]], str]]
 
 class Helpers:
     @staticmethod
-    def split_artists(artists: Union[str, Iterable[str]]) -> list[str]:
+    def split_artists(artists: str | Iterable[str]) -> list[str]:
         """Split artists taking into account delimiters such as ',', '+', 'x', 'X'.
 
         Note: featuring artists are removed since they are not main artists.
@@ -314,7 +317,7 @@ class Helpers:
         return list(map(MediaInfo.from_format, valid_formats))
 
     @staticmethod
-    def add_track_alts(album: "AlbumInfo", comments: str) -> "AlbumInfo":
+    def add_track_alts(album: AlbumInfo, comments: str) -> AlbumInfo:
         # using an ordered set here in case of duplicates
         track_alts = ordset(PATTERNS["track_alt"].findall(comments))
 

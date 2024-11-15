@@ -1,9 +1,10 @@
 """Module with a single track parsing functionality."""
 
+from __future__ import annotations
+
 import re
 from dataclasses import dataclass, field
 from functools import cached_property
-from typing import Optional
 
 from .catalognum import Catalognum
 from .helpers import PATTERNS, REMIX, Helpers, JSONDict
@@ -42,7 +43,7 @@ class Remix:
     by_other_artist: bool
 
     @classmethod
-    def from_name(cls, name: str) -> Optional["Remix"]:
+    def from_name(cls, name: str) -> Remix | None:
         m = cls.PATTERN.search(name)
         if m:
             remix = m.groupdict()
@@ -56,18 +57,18 @@ class Remix:
 class Track:
     json_item: JSONDict = field(default_factory=dict)
     track_id: str = ""
-    index: Optional[int] = None
+    index: int | None = None
     json_artist: str = ""
 
     name: str = ""
     ft: str = ""
-    catalognum: Optional[str] = None
+    catalognum: str | None = None
     ft_artist: str = ""
-    remix: Optional[Remix] = None
+    remix: Remix | None = None
 
     digi_only: bool = False
-    track_alt: Optional[str] = None
-    album_artist: Optional[str] = None
+    track_alt: str | None = None
+    album_artist: str | None = None
 
     @staticmethod
     def clean_digi_name(name: str) -> tuple[str, bool]:
@@ -104,7 +105,7 @@ class Track:
         return {"name": name, "json_artist": artist, "ft": ft, "ft_artist": ft_artist}
 
     @classmethod
-    def parse_name(cls, name: str, artist: str, index: Optional[int]) -> JSONDict:
+    def parse_name(cls, name: str, artist: str, index: int | None) -> JSONDict:
         result: JSONDict = {}
         artist, artist_digi_only = cls.clean_digi_name(artist)
         name, name_digi_only = cls.clean_digi_name(name)
@@ -141,7 +142,7 @@ class Track:
         return {**result, **cls.get_featuring_artist(name, artist)}
 
     @classmethod
-    def make(cls, json: JSONDict) -> "Track":
+    def make(cls, json: JSONDict) -> Track:
         try:
             artist = json["inAlbum"]["byArtist"]["name"]
         except KeyError:
@@ -158,7 +159,7 @@ class Track:
         return cls(**data)
 
     @cached_property
-    def duration(self) -> Optional[int]:
+    def duration(self) -> int | None:
         try:
             h, m, s = map(int, re.findall(r"\d+", self.json_item["duration"]))
         except KeyError:
