@@ -10,10 +10,11 @@ from re import Match, Pattern
 from typing import TYPE_CHECKING, Any, NamedTuple, TypeVar
 
 from beets import __version__ as beets_version
-from ordered_set import OrderedSet as ordset  # noqa: N813
 from packaging.version import Version
 
 from .genres_lookup import GENRES
+
+ordset = dict.fromkeys
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterable
@@ -179,7 +180,9 @@ class Helpers:
 
         no_ft_artists = (PATTERNS["ft"].sub("", a) for a in artists)
         split = map(PATTERNS["split_artists"].split, ordset(no_ft_artists))
-        split_artists = ordset(map(str.strip, chain(*split))) - {"", "more"}
+        split_artists = ordset(
+            a for a in map(str.strip, chain(*split)) if a not in {"", "more"}
+        )
 
         for artist in list(split_artists):
             # ' & ' or ' X ' may be part of single artist name, so we need to be careful
@@ -188,7 +191,7 @@ class Helpers:
             for char in "X&":
                 subartists = artist.split(f" {char} ")
                 if len(subartists) > 1 and any(s in split_artists for s in subartists):
-                    split_artists -= {artist}
+                    split_artists.pop(artist)
                     split_artists |= ordset(subartists)
         return list(split_artists)
 
@@ -244,14 +247,14 @@ class Helpers:
 
             return valid_mb_genre(kw) or valid_mb_genre(list(words)[-1])
 
-        unique_genres: ordset[str] = ordset()
+        unique_genres: dict[str, None] = ordset([])
         # expand badly delimited keywords
         split_kw = partial(re.split, r"[.] | #| - ")
         for kw in chain.from_iterable(map(split_kw, keywords)):
             # remove full stops and hashes and ensure the expected form of 'and'
             _kw = re.sub("[.#]", "", str(kw)).replace("&", "and")
             if not is_label_name(_kw) and (is_included(_kw) or valid_for_mode(_kw)):
-                unique_genres |= {_kw}
+                unique_genres[_kw] = None
 
         def within_another_genre(genre: str) -> bool:
             """Check if this genre is part of another genre.
@@ -262,8 +265,8 @@ class Helpers:
             This is so that 'dark folk' is kept while 'darkfolk' is removed, and not
             the other way around.
             """
-            others = unique_genres - {genre}
-            others |= {x.replace(" ", "").replace("-", "") for x in others}
+            others = ordset(g for g in unique_genres if g not in genre)
+            others |= ordset(x.replace(" ", "").replace("-", "") for x in others)
             return any(genre in x for x in others)
 
         return (g for g in unique_genres if not within_another_genre(g))
