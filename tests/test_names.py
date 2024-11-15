@@ -2,6 +2,8 @@ import pytest
 
 from beetsplug.bandcamp.names import Names
 
+_p = pytest.param
+
 
 @pytest.mark.parametrize(
     "names, album_artist, expected",
@@ -45,3 +47,32 @@ def test_album_catalognum(original_name, albumartist, expected_catalognum):
 
     names = Names(meta, albumartist)
     assert names.catalognum == expected_catalognum
+
+
+@pytest.mark.parametrize(
+    "names, expected",
+    [
+        _p(
+            ["Track", "Track remix", "Track Extended Mix", "Track (Acoustic)"],
+            ["Track", "Track (remix)", "Track (Extended Mix)", "Track (Acoustic)"],
+            id="reformat remixes",
+        ),
+        _p(
+            ["One", "Two remix", "One Extended Mix", "Two (Acoustic)"],
+            ["One", "Two remix", "One Extended Mix", "Two (Acoustic)"],
+            id="multiple remix titles",
+        ),
+        _p(
+            ["Solo Track", "Another Solo Track"],
+            ["Solo Track", "Another Solo Track"],
+            id="multiple titles",
+        ),
+        _p(
+            ["Track", "Track (remix)", "Track (Extended Mix)"],
+            ["Track", "Track (remix)", "Track (Extended Mix)"],
+            id="already parenthesized",
+        ),
+    ],
+)
+def test_parenthesize_remixes(names, expected):
+    assert Names.parenthesize_remixes(names) == expected
