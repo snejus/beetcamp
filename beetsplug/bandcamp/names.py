@@ -9,8 +9,6 @@ from dataclasses import dataclass, field
 from functools import cached_property, reduce
 from os.path import commonprefix
 
-from ordered_set import OrderedSet
-
 from .catalognum import Catalognum
 from .helpers import REMIX, Helpers, JSONDict
 
@@ -150,7 +148,8 @@ class Names:
         remove_label = re.compile(rf"([:-]+ |\[){re.escape(self.label)}(\]|$)", re.I)
         return [remove_label.sub(" ", n).strip() for n in names]
 
-    def eject_common_catalognum(self, names: list[str]) -> tuple[str | None, list[str]]:
+    @staticmethod
+    def eject_common_catalognum(names: list[str]) -> tuple[str | None, list[str]]:
         """Return catalognum found in every track title.
 
         1. Split each track name into words
@@ -160,14 +159,16 @@ class Names:
         """
         catalognum = None
 
-        names_tokens = map(str.split, names)
-        common_words = reduce(op.and_, [OrderedSet(x) for x in names_tokens])
-        if common_words:
-            candidates = dict.fromkeys((common_words[0], common_words[-1]))
-            for m in map(Catalognum.anywhere.search, candidates):
-                if m:
-                    catalognum = m.group(1)
-                    names = [n.replace(m.string, "").strip("|- ") for n in names]
+        names_tokens = [name.split() for name in names]
+        sets = [set(tokens) for tokens in names_tokens]
+        common_words_set = reduce(op.and_, sets) if sets else set()
+
+        first_name_words = names_tokens[0]
+        words = [first_name_words[0], first_name_words[-1]]
+        for word in (w for w in words if w in common_words_set):
+            if m := Catalognum.anywhere.search(word):
+                catalognum = m.group(1)
+                names = [n.replace(m.string, "").strip("|- ") for n in names]
 
         return catalognum, names
 
