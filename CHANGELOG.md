@@ -26,6 +26,9 @@
   - Prevent matches followed by lowercase **ep**, **lp** and **va**.
   - Prevent matches based on label name preceded by **of**.
 
+- `title`:
+  - Reformat titles such as **"Title" by Artist** to **Artist - Title**.
+
 ## [0.20.0] 2024-11-04
 
 ### Removed
