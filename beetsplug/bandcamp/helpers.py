@@ -114,7 +114,7 @@ rm_strings = [
     r"^EP -",
     r"\((digital )?album\)",
     r"\(single\)",
-    r"\Wvinyl\W|vinyl-only",
+    r"\Wvinyl\W|vinyl-only|vinyl[^ ]*cd",
     "compiled by.*",
     r"[\[(](presented|selected) by.*",
     r"free download(?! \w)",
@@ -164,6 +164,7 @@ CLEAN_PATTERNS: list[tuple[Pattern[str], str | Callable[[Match[str]], str]]] = [
     (re.compile(r"\((the )?(remixes)\)", re.I), r"\2"),                             # Album (Remixes)           -> Album Remixes  # noqa
     (re.compile(r"^(\[[^]-]+\]) - (([^-]|-\w)+ - ([^-]|-\w)+)$"), r"\2 \1"),        # [Remixer] - hi - bye      -> hi - bye [Remixer]  # noqa
     (re.compile(r"examine-.+CD\d+_([^_-]+)[_-](.*)"), split_artist_title),          # See https://examine-archive.bandcamp.com/album/va-examine-archive-international-sampler-xmn01  # noqa
+    (re.compile(r'"([^"]+)" by (.+)$'), r"\2 - \1"),                                # "bye" by hi               -> hi - bye  # noqa: E501
 ]
 # fmt: on
 
