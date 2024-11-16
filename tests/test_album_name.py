@@ -50,6 +50,7 @@ from beetsplug.bandcamp.album_name import AlbumName
         ("Free Download Series - Album", "Free Download Series"),
         ("Free Download Series - Some Album", "Free Download Series - Some Album"),
         ("O)))Bow 1", "O)))Bow 1"),
+        ("Album Vinylx2+cd", "Album"),
         # label
         ("[Label] Album EP", "Album EP"),
         ("Label | Album", "Album"),
