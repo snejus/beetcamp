@@ -1,15 +1,20 @@
 import atexit
-from functools import cache
+import re
+from functools import cache, partial
 from html import unescape
 
+import beets
 import httpx
-from beets import __version__
 
 HTTPError = httpx.HTTPError
 
-USER_AGENT = f"beets/{__version__} +https://beets.io/"
+USER_AGENT = f"beets/{beets.__version__} +https://beets.io/"
 
 _client = httpx.Client(headers={"User-Agent": USER_AGENT})
+
+_rm_single_quote_dot = partial(re.compile(r"'|(?<=\d)\.(?=\d)").sub, "")
+_non_ascii_to_dash = partial(re.compile(r"\W", flags=re.ASCII).sub, "-")
+_squeeze_dashes = partial(re.compile("--+").sub, "-")
 
 
 @atexit.register
@@ -26,3 +31,9 @@ def http_get_text(url: str) -> str:
     response.raise_for_status()
 
     return unescape(response.text)
+
+
+def urlify(pretty_string: str) -> str:
+    """Transform a string into bandcamp url."""
+    name = _rm_single_quote_dot(pretty_string.lower())
+    return _squeeze_dashes(_non_ascii_to_dash(name)).strip("-")

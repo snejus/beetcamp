@@ -29,7 +29,7 @@ from beets import IncludeLazyConfig, config, plugins
 
 from beetsplug import fetchart  # type: ignore[attr-defined]
 
-from .http import HTTPError, http_get_text
+from .http import HTTPError, http_get_text, urlify
 from .metaguru import Metaguru
 from .search import search_bandcamp
 
@@ -129,12 +129,6 @@ class BandcampAlbumArt(BandcampRequestsHandler, fetchart.RemoteArtSource):
                     yield self._candidate(
                         url=image, match=fetchart.Candidate.MATCH_EXACT
                     )
-
-
-def urlify(pretty_string: str) -> str:
-    """Transform a string into bandcamp url."""
-    name = pretty_string.lower().replace("'", "").replace(".", "")
-    return re.sub("--+", "-", re.sub(r"\W", "-", name, flags=re.ASCII)).strip("-")
 
 
 class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
