@@ -1,3 +1,4 @@
+import atexit
 from functools import cache
 from html import unescape
 
@@ -9,6 +10,12 @@ HTTPError = httpx.HTTPError
 USER_AGENT = f"beets/{__version__} +https://beets.io/"
 
 _client = httpx.Client(headers={"User-Agent": USER_AGENT})
+
+
+@atexit.register
+def close_client() -> None:
+    """Close the http client at exit."""
+    _client.close()
 
 
 @cache
