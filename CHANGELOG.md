@@ -19,6 +19,8 @@
 - `album`:
   - Clean up/remove artist such as **Various**.
   - Only remove artists and label if they are clearly separated out in the album name.
+  - Detect artists that may be separated with commas in the album, but with an ampersand
+    in the artist field, and vice versa.
   - Remove the original albumartist unless that's the label name.
   - Remove **w/ Some Remix** reliably.
 
