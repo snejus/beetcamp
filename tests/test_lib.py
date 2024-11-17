@@ -176,6 +176,11 @@ class Summary(TypedDict):
     fixed: Results
 
 
+@pytest.fixture(scope="session", autouse=True)
+def _ensure_results_dir():
+    RESULTS_DIR.mkdir(exist_ok=True)
+
+
 @pytest.fixture(scope="session")
 def fixed() -> Results:
     return []
