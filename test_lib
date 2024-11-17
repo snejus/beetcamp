@@ -19,12 +19,14 @@ print >&2 "Base: $before, target: $after"
 
 poe test-files --no-summary -n4 --base $before --target $after
 
+jq '"\(.original_artist) -> \(.artist)"' -r $TESTS_DIR/$after/*.json >$TESTS_DIR/artist-$after
+
 jq '"\(.original_name) -> \(.album // .title)"' -r $TESTS_DIR/$after/*.json >$TESTS_DIR/album-$after
 
 jq '.catalognum // ""' -r $TESTS_DIR/$after/*.json >$TESTS_DIR/catalognum-$after
 
 jq '(.tracks // [.])[] | if .track_alt then "\(.track_alt). " else "" end + "\(.artist) - \(.title)"' -r $TESTS_DIR/$after/*.json -r >$TESTS_DIR/tracks-$after
 
-for type in album catalognum tracks; do
+for type in album artist catalognum tracks; do
   git diff --unified=0 --no-index --color-words $TESTS_DIR/$type-$before $TESTS_DIR/$type-$after
 done

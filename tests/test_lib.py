@@ -65,6 +65,7 @@ IGNORE_FIELDS = {
     "city",
     "disctitle",
     "times_bought",
+    "original_artist",
     "original_name",
     "artists",
     "artists_credit",
@@ -369,6 +370,11 @@ def original_name(guru: Metaguru) -> str:
 
 
 @pytest.fixture
+def original_artist(guru: Metaguru) -> str:
+    return str(guru.meta["byArtist"]["name"])
+
+
+@pytest.fixture
 def base_filepath(base_dir: Path, test_filepath: Path) -> Path:
     return base_dir / test_filepath.name
 
@@ -406,6 +412,7 @@ def new(
     base_filepath: Path,
     guru: Metaguru,
     original_name: str,
+    original_artist: str,
     target_filepath: Path,
 ) -> JSONDict:
     _new: AttrDict
@@ -419,6 +426,7 @@ def new(
         sorted({x.catalognum for x in guru.albums if x.catalognum})
     )
     _new.original_name = original_name
+    _new.original_artist = original_artist
     new = dict(_new)
 
     results_filepath = base_filepath.resolve()
