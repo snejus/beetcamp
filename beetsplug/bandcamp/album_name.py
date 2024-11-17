@@ -118,16 +118,12 @@ class AlbumName:
 
     def standardize_series(self, album: str) -> str:
         """Standardize 'Vol', 'Part' etc. format."""
-        series = self.series_part
-        if not series:
+        if not (series := self.series_part):
             return album
 
         if series.lower() not in album.lower():
-            # series was not given in the description, but found in the original name
-            if series[0].isalpha():
-                series = f", {series}"
-
-            album += series
+            # series found in the original name was not given in the description, but 
+            album += f", {series}"
         else:
             # move from the beginning to the end of the album
             album, moved = re.subn(rf"^({series})\W+(.+)", r"\2, \1", album)

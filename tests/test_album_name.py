@@ -107,3 +107,27 @@ def test_check_eplp(original, comments, catalognum, artists, expected):
     assert (
         AlbumName(original, comments, None).get(catalognum, artists, [], "") == expected
     )
+
+
+@pytest.mark.parametrize(
+    "original,in_desc,expected",
+    [
+        ("Album Vol 1", "", "Album, Vol. 1"),
+        ("Album Volume 1", "", "Album, Volume 1"),
+        ("Album Pt 1", "", "Album, Pt. 1"),
+        ("Album Part 1", "", "Album, Part 1"),
+        ("Album Vol 01", "", "Album, Vol. 1"),
+        ("Vol 1 Album", "", "Album, Vol. 1"),
+        ("album Vol 1", "", "album, Vol. 1"),
+        ("ALBUM vol 1", "", "ALBUM, Vol. 1"),
+        ("Album (vol 1)", "", "Album (Vol. 1)"),
+        ("Volume 1", "Album", "Album, Volume 1"),
+    ],
+)
+def test_standardize_series(original, in_desc, expected):
+    album_name = AlbumName(
+        original=original,
+        description=f"Album: {in_desc}" if in_desc else "",
+        from_track_titles=None,
+    )
+    assert album_name.standardize_series(album_name.name) == expected
