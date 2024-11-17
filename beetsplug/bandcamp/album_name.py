@@ -122,7 +122,7 @@ class AlbumName:
             return album
 
         if series.lower() not in album.lower():
-            # series found in the original name was not given in the description, but 
+            # series found in the original name was not given in the description, but
             album += f", {series}"
         else:
             # move from the beginning to the end of the album
@@ -173,13 +173,14 @@ class AlbumName:
 
     @classmethod
     def remove_artist(cls, name: str, artist: str) -> str:
+        artist = re.escape(artist).replace(r",\ ", r"(,\ |\ [x&]\ )")
         return cls.remove_pattern(
             name,
             rf"""
             (?<!\ [x&,]\ )                      # keep B in 'A x B', 'A & B', 'A, B'
             (?<!\ (of|vs)\ )                    # keep B in 'A of B', 'A vs B'
             (((compiled\ |selected\ )?by)\ )?   # remove these prefixes if present
-            {re.escape(artist)}                 # match the word we want to remove
+            {artist}                            # match the word we want to remove
             (?![':,.\w])                        # cannot be followed by these characters
             (?!\ [\w&])                         # cannot be followed by ' &' ' ep', ' x'
             """,
