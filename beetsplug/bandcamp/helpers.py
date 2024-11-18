@@ -171,27 +171,32 @@ CLEAN_PATTERNS: list[tuple[Pattern[str], str | Callable[[Match[str]], str]]] = [
 
 class Helpers:
     @staticmethod
-    def split_artists(artists: str | Iterable[str]) -> list[str]:
+    def remove_ft(text: str) -> str:
+        """Remove featuring artists from the text."""
+        return PATTERNS["ft"].sub("", text)
+
+    @classmethod
+    def split_artists(
+        cls, artists: str | Iterable[str], force: bool = False
+    ) -> list[str]:
         """Split artists taking into account delimiters such as ',', '+', 'x', 'X'.
 
         Note: featuring artists are removed since they are not main artists.
         """
-        if isinstance(artists, str):
-            artists = [artists]
+        if not isinstance(artists, str):
+            artists = ", ".join(artists)
 
-        no_ft_artists = (PATTERNS["ft"].sub("", a) for a in artists)
-        split = map(PATTERNS["split_artists"].split, ordset(no_ft_artists))
+        split = PATTERNS["split_artists"].split(cls.remove_ft(artists))
         split_artists = ordset(
-            a for a in map(str.strip, chain(*split)) if a not in {"", "more"}
+            a for a in map(str.strip, split) if a not in {"", "more"}
         )
 
         for artist in list(split_artists):
             # ' & ' or ' X ' may be part of single artist name, so we need to be careful
             # here. We check whether any of the split artists appears on their own and
             # only split then
-            for char in "X&":
-                subartists = artist.split(f" {char} ")
-                if len(subartists) > 1 and any(s in split_artists for s in subartists):
+            for subartists in (s for c in "X&" if len(s := artist.split(f" {c} ")) > 1):
+                if force or any(a in split_artists for a in subartists):
                     split_artists.pop(artist)
                     split_artists |= ordset(subartists)
         return list(split_artists)
