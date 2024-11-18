@@ -181,8 +181,9 @@ class AlbumName:
             (?<!\ (of|vs)\ )                    # keep B in 'A of B', 'A vs B'
             (((compiled\ |selected\ )?by)\ )?   # remove these prefixes if present
             {artist}                            # match the word we want to remove
+            (\ x\ [^-]+)?                       # remove other artist ' x C' if present
             (?![':,.\w])                        # cannot be followed by these characters
-            (?!\ [\w&])                         # cannot be followed by ' &' ' ep', ' x'
+            (?!\ [a-wyz&])                      # cannot be followed by ' &' ' ep'
             """,
         )
 
