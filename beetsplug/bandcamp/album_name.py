@@ -8,7 +8,7 @@ from functools import cached_property
 from re import Match
 from typing import TYPE_CHECKING, Any
 
-from .helpers import PATTERNS, Helpers
+from .helpers import Helpers
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
@@ -203,7 +203,7 @@ class AlbumName:
 
         Catalogue number and artists to be removed are provided as 'to_clean'.
         """
-        name = PATTERNS["ft"].sub("", name)
+        name = Helpers.remove_ft(name)
         if catalognum:
             name = cls.remove_catalognum(name, catalognum)
 
