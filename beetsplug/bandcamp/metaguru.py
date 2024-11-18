@@ -245,7 +245,11 @@ class Metaguru(Helpers):
 
     @cached_property
     def unique_artists(self) -> list[str]:
-        return self.split_artists(self._tracks.artists)
+        """Return all unique artists in the release ignoring differences in case."""
+        artists = self.split_artists(self._tracks.artists)
+        if len(set(map(str.lower, artists))) == 1:
+            return artists[:1]
+        return artists
 
     @cached_property
     def track_count(self) -> int:
@@ -260,12 +264,18 @@ class Metaguru(Helpers):
             return self.va_name
 
         if self.track_count == 1:
-            return self.tracks.first.artist
+            return self.remove_ft(self.tracks.first.artist)
 
-        aartist = self.original_albumartist
-        if self.unique_artists:
-            aartist = ", ".join(sorted(self.unique_artists))
+        aartist = self.remove_ft(self.original_albumartist)
+        split_aartist = self.split_artists(aartist, force=True)
+        # if artists in the albumartist field do not align with artists in the tracks
+        if self.unique_artists and set(map(str.lower, split_aartist)) ^ set(
+            map(str.lower, self.unique_artists)
+        ):
+            # then return track artists
+            return ", ".join(sorted(self.unique_artists))
 
+        # otherwise return the original albumartist (with original separators)
         return aartist
 
     @cached_property
