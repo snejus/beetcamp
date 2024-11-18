@@ -25,6 +25,7 @@ from beetsplug.bandcamp.album_name import AlbumName
         ("Album (Artist Remix)", "Album (Artist Remix)"),
         ("Artist Album", "Artist Album"),
         ("Artist Vol. 1", "Artist Vol. 1"),
+        ("Artist x Someone Else - Album", "Album"),
         # VA
         ("Album - Various Artists", "Album"),
         ("Various Artists - Album", "Album"),
