@@ -78,7 +78,7 @@ class MediaInfo(NamedTuple):
 
 
 PATTERNS: dict[str, Pattern[str]] = {
-    "split_artists": re.compile(r", - |, | (?:[x+/-]|//|vs|and)[.]? "),
+    "split_artists": re.compile(r", - |, ?| (?:[x+/-]|//|vs|and)[.]? "),
     "meta": re.compile(r'.*"@id".*'),
     "ft": re.compile(
         r"""
@@ -100,9 +100,9 @@ PATTERNS: dict[str, Pattern[str]] = {
     "track_alt": re.compile(
         r"""
         (?:(?<=^)|(?<=-\ ))             # beginning of the line or after the separator
-        (  # capture the catalogue number, either
+        (
             (?:[A-J]{1,3}[12]?\.?\d)    # A1, B2, E4, A1.1 etc.
-          | (?:[AB]+(?=\W{2}\b))        # A, AA BB
+          | (?:[AB]+(?!\ \()(?=\W{2}\b))# A, AA BB
         )
         (?:[/.:)_\s-]+)                 # consume the non-word chars for removal
     """,
