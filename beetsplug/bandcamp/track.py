@@ -56,7 +56,7 @@ class Remix:
 
 @dataclass
 class Track:
-    json_item: JSONDict = field(default_factory=dict)
+    json_item: JSONDict = field(default_factory=dict, repr=False)
     track_id: str = ""
     index: int | None = None
     json_artist: str = ""
@@ -214,11 +214,15 @@ class Track:
         if self.album_artist:
             return self.album_artist
 
-        title_start_idx = self.full_name.rfind(self.title_without_remix)
-        artist = Remix.PATTERN.sub("", self.full_name[:title_start_idx].strip(", -"))
+        if not self.title_without_remix:
+            return ""
+
+        artist, _ = self.full_name.rsplit(self.title_without_remix, 1)
+        artist = Remix.PATTERN.sub("", artist.strip(", -"))
         if self.remix:
             artist = artist.replace(self.remix.remixer, "").strip(" ,")
-        return artist.strip(" -")
+
+        return ", ".join(map(str.strip, artist.strip(" -").split(",")))
 
     @property
     def artists(self) -> list[str]:

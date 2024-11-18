@@ -24,6 +24,9 @@
   - Remove the original albumartist unless that's the label name.
   - Remove **w/ Some Remix** reliably.
 
+- `artist`:
+  - Ensure that artists are properly separated when a comma is present in the field.
+
 - `catalognum`:
   - Prevent matches followed by lowercase **ep**, **lp** and **va**.
   - Prevent matches based on label name preceded by **of**.
