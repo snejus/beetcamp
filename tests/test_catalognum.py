@@ -74,6 +74,7 @@ from beetsplug.bandcamp.metaguru import Metaguru
         ("", "", "This CA12", "", "CA12"),
         ("", "", "CA12 ok", "", "CA12"),
         ("", "", "this CA12 not", "", ""),
+        ("AE-MJ-001.1", "", "", "", "AE-MJ-001.1"),
     ],
 )
 def test_parse_catalognum(
