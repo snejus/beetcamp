@@ -229,6 +229,13 @@ class Track:
         return Helpers.split_artists(self.artist)
 
     @property
+    def lead_artist(self) -> str:
+        if artists := Helpers.split_artists(self.artist, force=True):
+            return artists[0]
+
+        return self.artist
+
+    @property
     def info(self) -> JSONDict:
         artists = self.artists
         if self.ft_artist:

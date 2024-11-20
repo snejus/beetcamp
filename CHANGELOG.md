@@ -27,6 +27,8 @@
 - `artist`:
   - Ensure that artists are properly separated when a comma is present in the field.
   - Try to keep artists in the same format as they were found on the release.
+  - Extract the lead artist from tracks and use it as albumartist if it matches the
+    original artist specified on the release.
 
 - `catalognum`:
   - Prevent matches followed by lowercase **ep**, **lp** and **va**.
