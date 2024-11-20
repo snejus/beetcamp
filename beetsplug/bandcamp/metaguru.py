@@ -40,6 +40,7 @@ DATA_SOURCE = "bandcamp"
 WORLDWIDE = "XW"
 DIGI_MEDIA = "Digital Media"
 VA = "Various Artists"
+VA_ARTIST_COUNT = 4  # this number of artists is replaced with VA name
 
 
 class Metaguru(Helpers):
@@ -177,7 +178,7 @@ class Metaguru(Helpers):
             return not any(y.lower() in remixers_str for y in splits)
 
         valid = list(filter(not_remixer, aartists))
-        if len(valid) == len(aartists) and len(self._tracks.artists) <= 4:
+        if len(valid) == len(aartists) and len(self._tracks.artists) <= VA_ARTIST_COUNT:
             return aartist
         return ", ".join(valid)
 
@@ -258,25 +259,32 @@ class Metaguru(Helpers):
     @cached_property
     def albumartist(self) -> str:
         """Take into account the release contents and return the actual albumartist.
-        * 'Various Artists' (or `va_name` configuration option) for a compilation release
-        """
-        if self.va:
-            return self.va_name
 
+        If we have one track, return the artist of that track.
+        If we have more than VA_ARTIST_COUNT artists, return the VA name.
+        Compare artists across the tracks and the original albumartist: if they are
+        different, prioritize artists in the tracks. Otherwise, return the original
+        albumartist.
+
+        Note: ft artists are not included in the albumartist.
+        """
         if self.track_count == 1:
             return self.remove_ft(self.tracks.first.artist)
 
-        aartist = self.remove_ft(self.original_albumartist)
-        split_aartist = self.split_artists(aartist, force=True)
-        # if artists in the albumartist field do not align with artists in the tracks
-        if self.unique_artists and set(map(str.lower, split_aartist)) ^ set(
-            map(str.lower, self.unique_artists)
-        ):
-            # then return track artists
-            return ", ".join(sorted(self.unique_artists))
+        if self.va:
+            return self.va_name
 
-        # otherwise return the original albumartist (with original separators)
-        return aartist
+        def normalize(artists: Iterable[str]) -> tuple[str, ...]:
+            return tuple(sorted(set(map(str.lower, artists))))
+
+        aartist = self.remove_ft(self.original_albumartist)
+        if not self._tracks.lead_artists or (
+            {normalize(self._tracks.lead_artists), normalize(self.unique_artists)}
+            & {normalize(self.split_artists(aartist, force=f)) for f in [False, True]}
+        ):
+            return aartist
+
+        return ", ".join(sorted(self.unique_artists))
 
     @cached_property
     def album_name(self) -> str:
@@ -355,7 +363,10 @@ class Metaguru(Helpers):
         return (
             self._album_name.mentions_compilation
             or self._search_albumtype("compilation")
-            or (len(truly_unique) > 3 and self.track_count > 4)
+            or (
+                len(truly_unique) >= VA_ARTIST_COUNT
+                and self.track_count > VA_ARTIST_COUNT
+            )
         )
 
     @cached_property
@@ -400,7 +411,7 @@ class Metaguru(Helpers):
 
     @cached_property
     def va(self) -> bool:
-        return len(self.unique_artists) > 3
+        return len(self.unique_artists) >= VA_ARTIST_COUNT
 
     @cached_property
     def style(self) -> str | None:
