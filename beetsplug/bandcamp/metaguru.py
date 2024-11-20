@@ -125,8 +125,7 @@ class Metaguru(Helpers):
 
     @cached_property
     def label(self) -> str:
-        m = re.search(r"Label:([^/,\n]+)", self.all_media_comments)
-        if m:
+        if m := re.search(r"Label: *(\b[^/,\n]+)", self.all_media_comments):
             return m.expand(r"\1").strip(" '\"")
 
         return self._names.label
@@ -144,7 +143,7 @@ class Metaguru(Helpers):
 
     @cached_property
     def original_albumartist(self) -> str:
-        m = re.search(r"Artists?:([^\n]+)", self.all_media_comments)
+        m = re.search(r"Artists?: *(\b[^\n]+)", self.all_media_comments)
         aartist = m.group(1).strip() if m else self.meta["byArtist"]["name"]
         aartist = ", ".join(map(str.strip, aartist.split(" // ")))
         return re.split(r"[(,][^(,]{1,30}remix", aartist, flags=re.I)[0].strip()
