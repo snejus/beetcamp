@@ -40,7 +40,7 @@ class Catalognum:
       (?<!by\ )
       (?:
         \b
-        (?!(?i:vol|ep))     # exclude anything starting with 'vol' or 'ep'
+        (?!(?i:vol|[el]p))  # exclude anything starting with 'vol', 'ep', 'lp'
         (?-i:{})
                             # cannot end with any of the following words
         (?<!\bva\d)         # VA1
@@ -74,8 +74,11 @@ class Catalognum:
         | [a-z]+(?:cd|lp|:)\d+          # ostgutlp45, reni:7
         | [A-Z]+\d+[-_]\d{2,}           # P90-003, CC2_011
         | [A-Z]+_[A-Z]\d{1,3}           # PRL_S03
-        | [A-Z]{2,}\d+[A-Z]\d{2,}       # SK11X015
         | [A-Z]{2}(?!999)\d{3}          # ST172
+        | (?:                           # SP61, MT22
+          (?<!\w\ )[A-Z]{2}\d{2}        # not preceded by a word
+          |        [A-Z]{2}\d{2}(?!\ \w)# or not followed by a word
+        )
         | (?<=^)[A-Z]{2}\d{4}           # WS1209
         | [a-z]{2}-\d{2,}[a-z]          # sh-303d
     )
@@ -141,7 +144,7 @@ class Catalognum:
     )
 
     label_suffix = cached_patternprop(
-        r" (?:Records|Recordings|Productions|Music)$", re.I
+        r" (?:Record(?:ing)?s|Productions|Music|Official)$", re.I
     )
     punctuation = cached_patternprop(r"\W")
 

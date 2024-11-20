@@ -19,7 +19,7 @@ from beetsplug.bandcamp.metaguru import Metaguru
         ("Christmas 2020", "", "", "", ""),
         ("Various Artists 001", "", "", "", ""),
         ("C30 Cassette", "", "", "", ""),
-        ("BC30 Hello", "", "", "", ""),
+        ("BC30 Hello", "", "", "", "BC30"),
         ("Blood 1/4", "", "", "", ""),
         ("Emotion 1 - Kulør 008", "Emotion 1 Vinyl", "", "Kulør", "Kulør 008"),
         ("zz333HZ with remixes from Le Chocolat Noir", "", "", "", ""),
@@ -39,7 +39,7 @@ from beetsplug.bandcamp.metaguru import Metaguru
         ("3: Flight Of The Behemoth", "", "", "SUNN O)))", ""),
         ("[CAT001]", "", "", "\\m/ records", "CAT001"),
         ("", "", "On INS004, ", "", ""),
-        ("WU55", "", "", "", ""),
+        ("WU55", "", "", "", "WU55"),
         (" - WU55", "", "", "", "WU55"),
         ("BAD001", "Life Without Friction (SSPB008)", "", "", "SSPB008"),
         ("", "TS G5000 hello hello t-shirt.", "", "", "TS G5000"),
@@ -70,6 +70,10 @@ from beetsplug.bandcamp.metaguru import Metaguru
         ("Label 2020", "", "", "Label", ""),
         ("sh-303d", "", "", "", "sh-303d"),
         ("OF HANDS 20", "", "", "HANDS", ""),
+        ("", "", "CA12", "", "CA12"),
+        ("", "", "This CA12", "", "CA12"),
+        ("", "", "CA12 ok", "", "CA12"),
+        ("", "", "this CA12 not", "", ""),
     ],
 )
 def test_parse_catalognum(
