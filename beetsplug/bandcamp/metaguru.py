@@ -72,7 +72,7 @@ class Metaguru(Helpers):
             f"{self.description}\n{self.credits}".replace("\r", ""),
             names.original_album,
             names.label,
-            self._tracks.artists_and_titles,
+            [*self._tracks.artists_and_titles, self.original_albumartist],
         )
         self._album_name = AlbumName(
             names.original_album, self.all_media_comments, names.album_in_titles
