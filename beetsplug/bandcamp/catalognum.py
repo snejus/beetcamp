@@ -68,7 +68,7 @@ class Catalognum:
         | [A-Z]{2}\d{5}                 # RM12012, DD13109
         | [A-Z]{5}\d{2}                 # PNKMN18, LBRNM11
         | [A-Z]{6,}0\d{1}               # BODYHI01, DYNMCSS01
-        | [A-z]+-[A-z]+[ ]?\d{2,}       # o-ton 119
+        | [A-z]+-[A-z]+[ -]?\d{2,}      # AE-MJ-001.1 o-ton 119
         | [A-z]{2,3}-?0\d{2,}           # SS-023, mt001, src002
         | [A-z+]+[ ]?(?:(?i:[EL]P))\d+  # Dystopian LP01, a+w lp036
         | [a-z]+(?:cd|lp|:)\d+          # ostgutlp45, reni:7
