@@ -59,6 +59,14 @@ class Tracks:
         return list(dict.fromkeys(a for t in self.tracks for a in t.artists))
 
     @property
+    def lead_artists(self) -> list[str]:
+        """Return all lead artists.
+
+        "Artist1 x Artist2" -> ["Artist1"]
+        """
+        return list(dict.fromkeys(t.lead_artist for t in self.tracks))
+
+    @property
     def remixers(self) -> list[str]:
         """Return all remix artists."""
         return [
