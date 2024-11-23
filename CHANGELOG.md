@@ -16,6 +16,8 @@
 
 - `title`:
   - Fix formatting of titles where remix is delimited by a dash or an em-dash.
+  - For some releases, handle track names where artist and title may be provided in
+    reverse order.
 
 ### Updated
 
