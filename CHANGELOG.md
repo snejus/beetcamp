@@ -11,6 +11,9 @@
 
 ### Fixed
 
+- `mediums`:
+  - Fix incorrect mediums count.
+
 - `title`:
   - Fix formatting of titles where remix is delimited by a dash or an em-dash.
 
