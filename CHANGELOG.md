@@ -11,6 +11,9 @@
 
 ### Fixed
 
+- `album`:
+  - Remove string **free download** from the album name.
+
 - `mediums`:
   - Fix incorrect mediums count.
 
