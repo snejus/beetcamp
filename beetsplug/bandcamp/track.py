@@ -140,7 +140,10 @@ class Track:
         remix = Remix.from_name(name)
         if remix:
             result["remix"] = remix
-            name = name.replace(remix.delimited, "").rstrip()
+            if name.startswith(remix.delimited):
+                name = name.removeprefix(remix.delimited).strip()
+            if name.endswith(remix.delimited):
+                name = name.removesuffix(remix.delimited).strip()
 
         return {**result, **cls.get_featuring_artist(name, artist)}
 
@@ -206,7 +209,7 @@ class Track:
     @cached_property
     def title(self) -> str:
         """Return the main title with the full remixer part appended to it."""
-        if self.remix:
+        if self.remix and self.remix.delimited not in self.title_without_remix:
             return f"{self.title_without_remix} {self.remix.delimited}"
         return self.title_without_remix
 
