@@ -135,9 +135,13 @@ class Names:
 
     @classmethod
     def normalize_delimiter(cls, names: list[str]) -> list[str]:
-        """Ensure the same delimiter splits artist and title in all names."""
+        """Ensure the same delimiter splits artist and title in all names.
+
+        Additionally, assume that a tab character is a delimiter and replace it
+        accordingly.
+        """
         delim = cls.find_common_track_delimiter(names)
-        pat = re.compile(f" +{re.escape(delim)} +")
+        pat = re.compile(rf" +[{re.escape(delim)}] +|\t")
         return [pat.sub(" - ", n) for n in names]
 
     def remove_label(self, names: list[str]) -> list[str]:
@@ -209,15 +213,22 @@ class Names:
     def ensure_artist_first(self, names: list[str]) -> list[str]:
         """Ensure the artist is the first part of the track name."""
         splits = [n.split(" - ", 1) for n in names]
+        left = [s[0] for s in splits]
         if (
             # every track was split at least into two parts
             all(len(s) > 1 for s in splits)
-            # every track has the same title
-            and len(unique_titles := {t for _, t in splits}) == 1
-            # there's an overlap between album artists and parts of the unique title
             and (
-                set(Helpers.split_artists(unique_titles.pop()))
-                & set(Helpers.split_artists(self.album_artist))
+                (
+                    # every track has the same title
+                    len(unique_titles := {t for _, t in splits}) == 1
+                    # album artists and parts of the unique title overlap
+                    and (
+                        set(Helpers.split_artists(unique_titles.pop()))
+                        & set(Helpers.split_artists(self.album_artist))
+                    )
+                )
+                # or there are at least 2 remixes on the left side of the delimiter
+                or sum(1 for x in left if REMIX.search(x)) > 1
             )
         ):
             return [f"{a} - {t}" for t, a in splits]
