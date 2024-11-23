@@ -115,7 +115,7 @@ rm_strings = [
     r"\Wvinyl\W|vinyl-only|vinyl[^ ]*cd",
     "compiled by.*",
     r"[\[(](presented|selected) by.*",
-    r"free download(?! \w)",
+    r"[ |-]*free download(?! \w)",
     r"[([][^])]*free\b(?!.*mix)[^])]*[])]",
     r"[([][^])]*preview[])]",
     r"(\W|\W )bonus( \w+)*",
