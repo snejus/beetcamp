@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import re
-from functools import cache, partial
+from functools import partial
 from itertools import chain
 from operator import contains
 from re import Match, Pattern
@@ -18,8 +18,6 @@ ordset = dict.fromkeys
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterable
-
-    from beets.autotag.hooks import AlbumInfo
 
 BEETS_VERSION = Version(beets_version)
 ALBUMTYPES_LIST_SUPPORT = BEETS_VERSION >= Version("1.6.0")
@@ -325,31 +323,6 @@ class Helpers:
 
         valid_formats = filter(valid_format, map(Helpers.unpack_props, format_list))
         return list(map(MediaInfo.from_format, valid_formats))
-
-    @staticmethod
-    def add_track_alts(album: AlbumInfo, comments: str) -> AlbumInfo:
-        # using an ordered set here in case of duplicates
-        track_alts = ordset(PATTERNS["track_alt"].findall(comments))
-
-        @cache
-        def get_medium_total(medium: int) -> int:
-            starts = {1: "AB", 2: "CD", 3: "EF", 4: "GH", 5: "IJ"}[medium]
-            return len(re.findall(rf"^[{starts}]", "\n".join(track_alts), re.M))
-
-        medium = 1
-        medium_index = 1
-        if len(track_alts) == len(album.tracks):
-            for track, track_alt in zip(album.tracks, track_alts):
-                track.track_alt = track_alt
-                track.medium_index = medium_index
-                track.medium = medium
-                track.medium_total = get_medium_total(medium)
-                if track.medium_index == track.medium_total:
-                    medium += 1
-                    medium_index = 1
-                else:
-                    medium_index += 1
-        return album
 
     @staticmethod
     def check_list_fields(data: T) -> T:

@@ -1,15 +1,36 @@
 """Module with tracks parsing functionality."""
 
-from collections.abc import Iterator
+from __future__ import annotations
+
+from collections import Counter
 from dataclasses import dataclass
 from functools import cached_property
+from typing import TYPE_CHECKING, Any
 
+from .helpers import PATTERNS
 from .names import Names
 from .track import Track
+
+ordset = dict.fromkeys
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
 
 
 @dataclass
 class Tracks:
+    DISC_BY_LETTER = {
+        "A": 1,
+        "B": 1,
+        "C": 2,
+        "D": 2,
+        "E": 3,
+        "F": 3,
+        "G": 4,
+        "H": 4,
+        "I": 5,
+        "J": 5,
+    }
     tracks: list[Track]
     names: Names
 
@@ -20,7 +41,7 @@ class Tracks:
         return len(self.tracks)
 
     @classmethod
-    def from_names(cls, names: Names) -> "Tracks":
+    def from_names(cls, names: Names) -> Tracks:
         tracks = names.json_tracks
         for track, name in zip(tracks, names.titles):
             track["name"] = name
@@ -163,3 +184,35 @@ class Tracks:
 
         if missing_artist_count := sum(1 for t in self.tracks if not t.artist):
             self.set_missing_artists(missing_artist_count, albumartist)
+
+    def for_media(
+        self, media: str, comments: str, include_digi: bool
+    ) -> list[dict[str, Any]]:
+        if not include_digi and media != "Digital Media":
+            _tracks = [t for t in self.tracks if not t.digi_only]
+        else:
+            _tracks = self.tracks
+
+        medium_total = {"medium_total": len(_tracks)}
+        tracks = [t.info | medium_total for t in _tracks]
+        if len(tracks) == 1 or media != "Vinyl":
+            return tracks
+
+        # using an ordered set here in case of duplicates
+        track_alts = ordset(PATTERNS["track_alt"].findall(comments))
+        if len(track_alts) != len(tracks):
+            return tracks
+
+        mediums = [self.DISC_BY_LETTER[ta[0]] for ta in track_alts]
+        total_by_medium = Counter(mediums)
+        index_by_medium = dict.fromkeys(total_by_medium, 1)
+        for track, (track_alt, medium) in zip(tracks, zip(track_alts, mediums)):
+            track.update(
+                track_alt=track_alt,
+                medium=medium,
+                medium_total=total_by_medium[medium],
+                medium_index=index_by_medium[medium],
+            )
+            index_by_medium[medium] += 1
+
+        return tracks

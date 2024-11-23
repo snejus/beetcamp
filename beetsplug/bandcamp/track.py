@@ -59,6 +59,7 @@ class Track:
     json_item: JSONDict = field(default_factory=dict, repr=False)
     track_id: str = ""
     index: int | None = None
+    medium_index: int | None = None
     json_artist: str = ""
 
     name: str = ""
@@ -133,6 +134,7 @@ class Track:
         # Remove leading index
         if index:
             name = re.sub(rf"^0?{index}\W\W+", "", name)
+            result["medium_index"] = index
 
         # find the remixer and remove it from the name
         remix = Remix.from_name(name)
@@ -243,8 +245,8 @@ class Track:
 
         return {
             "index": self.index,
-            "medium_index": self.index,
-            "medium": None,
+            "medium_index": self.medium_index,
+            "medium": 1,
             "track_id": self.track_id,
             "artist": (
                 f"{self.artist} {self.ft}"

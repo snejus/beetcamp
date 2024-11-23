@@ -206,13 +206,14 @@ class Metaguru(Helpers):
         return "Official" if reldate and reldate <= date.today() else "Promotional"
 
     @property
-    def disctitle(self) -> str:
+    def disctitle(self) -> str | None:
         """Return medium's disc title if found."""
-        return self.media.disctitle
+        return self.media.disctitle or None
 
-    @property
-    def mediums(self) -> int:
-        return self.media.medium_count
+    @staticmethod
+    def get_mediums(track_infos: list[TrackInfo]) -> int:
+        """Get the count of discs / mediums for this release format."""
+        return max((t.medium or 0 for t in track_infos), default=0)
 
     @property
     def catalognum(self) -> str:
@@ -482,8 +483,7 @@ class Metaguru(Helpers):
 
         return common_data
 
-    def _trackinfo(self, track: Track, **kwargs: Any) -> TrackInfo:
-        data = track.info
+    def _trackinfo(self, data: dict[str, Any], **kwargs: Any) -> TrackInfo:
         data.update(**self._common, **kwargs)
         # if track-level catalognum is not found or if it is the same as album's, then
         # remove it. Otherwise, keep it attached to the track
@@ -500,7 +500,7 @@ class Metaguru(Helpers):
     def singleton(self) -> TrackInfo:
         self._singleton = True
         self.media = self.media_formats[0]
-        track = self._trackinfo(self.tracks.first)
+        track = self._trackinfo(self.tracks.first.info, medium=None)
         track.update(self._common_album)
         track.album = None
         track.track_id = track.data_url
@@ -509,32 +509,25 @@ class Metaguru(Helpers):
     def get_media_album(self, media: MediaInfo) -> AlbumInfo:
         """Return album for the appropriate release format."""
         self.media = media
-        include_digi = self.config.get("include_digital_only_tracks")
 
-        tracks = list(self.tracks)
-        if not include_digi and self.media.name != DIGI_MEDIA:
-            tracks = [t for t in self.tracks if not t.digi_only]
-
-        get_trackinfo = partial(
-            self._trackinfo,
-            medium=1,
-            disctitle=self.disctitle or None,
-            medium_total=self.track_count,
+        tracks = self.tracks.for_media(
+            self.media.name,
+            self.comments or "",
+            bool(self.config.get("include_digital_only_tracks")),
         )
+        track_infos = [self._trackinfo(t, disctitle=self.disctitle) for t in tracks]
         album_info = AlbumInfo(
             **self._common,
             **self._common_album,
             artist=self.albumartist,
             album_id=self.album_id,
-            mediums=self.mediums,
+            mediums=self.get_mediums(track_infos),
             albumstatus=self.albumstatus,
-            tracks=list(map(get_trackinfo, tracks)),
+            tracks=track_infos,
         )
         for key, val in self.get_fields(["va"]).items():
             setattr(album_info, key, val)
         album_info.album_id = self.media.album_id
-        if self.media.name == "Vinyl":
-            album_info = self.add_track_alts(album_info, self.comments or "")
         return self.check_list_fields(album_info)
 
     @cached_property
