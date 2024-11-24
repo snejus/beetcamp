@@ -149,8 +149,8 @@ def split_artist_title(m: Match[str]) -> str:
 # fmt: off
 CLEAN_PATTERNS: list[tuple[Pattern[str], str | Callable[[Match[str]], str]]] = [
     (re.compile(rf"(([\[(])|(^| ))\*?({'|'.join(rm_strings)})(?(2)[])]|([- ]|$))", re.I), ""),  # noqa
-    (re.compile(r" -(\S)"), r" - \1"),                                              # hi -bye                   -> hi - bye  # noqa
-    (re.compile(r"(\S)- "), r"\1 - "),                                              # hi- bye                   -> hi - bye  # noqa
+    (re.compile(r" -([^\s-])"), r" - \1"),                                          # hi -bye                   -> hi - bye  # noqa
+    (re.compile(r"([^\s-])- "), r"\1 - "),                                          # hi- bye                   -> hi - bye  # noqa
     (re.compile(r"  +"), " "),                                                      # hi  bye                   -> hi bye  # noqa
     (re.compile(r"(- )?\( *"), "("),                                                # hi - ( bye)               -> hi (bye)  # noqa
     (re.compile(r" \)+|(\)+$)"), ")"),                                              # hi (bye ))                -> hi (bye)  # noqa
