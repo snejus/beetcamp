@@ -56,6 +56,7 @@ class Remix:
 
 @dataclass
 class Track:
+    DELIM_NOT_INSIDE_PARENS = re.compile(r" - (?!-|[^([]+\w[])])")
     json_item: JSONDict = field(default_factory=dict, repr=False)
     track_id: str = ""
     index: int | None = None
@@ -149,11 +150,7 @@ class Track:
 
     @classmethod
     def make(cls, json: JSONDict) -> Track:
-        try:
-            artist = json["inAlbum"]["byArtist"]["name"]
-        except KeyError:
-            artist = json.get("byArtist", {}).get("name", "")
-
+        artist = json.get("byArtist", {}).get("name", "")
         index = json.get("position")
         data = {
             "json_item": json,
@@ -183,11 +180,13 @@ class Track:
             return text.replace("\r", "")
 
     @cached_property
-    def full_name(self) -> str:
+    def name_split(self) -> list[str]:
         name = self.name
+        split = self.DELIM_NOT_INSIDE_PARENS.split(name.strip())
         if self.json_artist and " - " not in name:
-            name = f"{self.json_artist} - {name}"
-        return name.strip()
+            return [self.json_artist.strip(), *split]
+
+        return split
 
     @cached_property
     def title_without_remix(self) -> str:
@@ -196,9 +195,7 @@ class Track:
         The extra complexity here is to ensure that it does not cut off a title
         that ends with ' - -', like in '(DJ) NICK JERSEY - 202memo - - -'.
         """
-        parts = re.split(r" - (?![^\[(]+[])])", self.full_name)
-        if len(parts) == 1:
-            parts = self.full_name.split(" - ")
+        parts = self.name_split
         title_without_remix = parts[-1]
         for idx, maybe in enumerate(reversed(parts)):
             if not maybe.strip(" -"):
@@ -222,7 +219,7 @@ class Track:
         if not self.title_without_remix:
             return ""
 
-        artist, _ = self.full_name.rsplit(self.title_without_remix, 1)
+        artist = " - ".join(self.name_split[:-1])
         artist = Remix.PATTERN.sub("", artist.strip(", -"))
         if self.remix:
             artist = artist.replace(self.remix.remixer, "").strip(" ,")

@@ -164,8 +164,8 @@ class Tracks:
             for t in tracks_without_artist:
                 # split the title by '-' (without spaces) or something unknown in ' ? '
                 if (
-                    len(split := t.title.split("-")) > 1
-                    or len(split := Names.SEPARATOR_PAT.split(t.title)) > 1
+                    len(split := t.title.split("-", 1)) > 1
+                    or len(split := Names.SEPARATOR_PAT.split(t.title, 1)) > 1
                 ):
                     t.artist, t.title = map(str.strip, split)
 
