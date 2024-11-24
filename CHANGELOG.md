@@ -23,6 +23,7 @@
     reverse order.
   - Address an issue where track names containing **` - `** _inside parentheses_ get
     wrongly split into artist and title.
+  - Stop stripping dashes from the beginning of track titles.
 
 ### Updated
 
