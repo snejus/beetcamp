@@ -116,7 +116,7 @@ class Track:
 
         if artist:
             artist = Helpers.clean_name(artist)
-        name = Helpers.clean_name(name).strip().lstrip("-")
+        name = Helpers.clean_name(name).strip()
 
         # find the track_alt and remove it from the name
         m = PATTERNS["track_alt"].search(name)
@@ -190,18 +190,7 @@ class Track:
 
     @cached_property
     def title_without_remix(self) -> str:
-        """Split the track name, deduce the title and return it.
-
-        The extra complexity here is to ensure that it does not cut off a title
-        that ends with ' - -', like in '(DJ) NICK JERSEY - 202memo - - -'.
-        """
-        parts = self.name_split
-        title_without_remix = parts[-1]
-        for idx, maybe in enumerate(reversed(parts)):
-            if not maybe.strip(" -"):
-                title_without_remix = " - ".join(parts[-idx - 2 :])
-                break
-        return title_without_remix
+        return self.name_split[-1]
 
     @cached_property
     def title(self) -> str:

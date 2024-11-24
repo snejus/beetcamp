@@ -504,6 +504,8 @@ class Metaguru(Helpers):
         track.update(self._common_album)
         track.album = None
         track.track_id = track.data_url
+        if not track.title:
+            track.title = self.catalognum
         return self.check_list_fields(track)
 
     def get_media_album(self, media: MediaInfo) -> AlbumInfo:

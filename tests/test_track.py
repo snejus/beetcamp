@@ -86,6 +86,11 @@ pytestmark = pytest.mark.parsing
         ("Artist - ;) (Original Mix)", ("", "Artist", "", ";) (Original Mix)", ";)")),
         ("Artist - Title [Presented by Other]", ("", "Artist", "", "Title", "Title")),
         ('"Title" by Artist', ("", "Artist", "", "Title", "Title")),
+        (
+            "(DJ) NICK JERSEY - 202memo - - -",
+            ("", "(DJ) NICK JERSEY", "", "202memo - - -", "202memo - - -"),
+        ),
+        ("--Title", ("", "", "", "--Title", "--Title")),
     ],
 )
 def test_parse_track_name(name, expected, json_track):
