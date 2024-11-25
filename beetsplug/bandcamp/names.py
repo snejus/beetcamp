@@ -10,7 +10,8 @@ from functools import cached_property, reduce
 from os.path import commonprefix
 
 from .catalognum import Catalognum
-from .helpers import REMIX, Helpers, JSONDict
+from .helpers import Helpers, JSONDict
+from .track import Remix
 
 
 @dataclass
@@ -176,29 +177,6 @@ class Names:
 
         return catalognum, names
 
-    @staticmethod
-    def parenthesize_remixes(names: list[str]) -> list[str]:
-        """Reformat broken remix titles for an album with a single root title.
-
-        1. Check whether this release has a single root title
-        2. Find remixes that do not have parens around them
-        3. Add parens
-        """
-        if len(names) == 1:
-            return names
-
-        words_in_names = list(map(sorted, map(str.split, names)))
-        common_words = sorted(reduce(op.and_, map(set, words_in_names)))
-        if common_words in words_in_names:  # it is one of the track names (root title)
-            root_title = names[words_in_names.index(common_words)]
-            remix_parts = [n.removeprefix(root_title).lstrip(" -") for n in names]
-            return [
-                (n.replace(rp, f"({m['text']})") if (m := REMIX.fullmatch(rp)) else n)
-                for n, rp in zip(names, remix_parts)
-            ]
-
-        return names
-
     @classmethod
     def eject_album_name(cls, names: list[str]) -> tuple[str | None, list[str]]:
         matches = list(map(cls.ALBUM_IN_TITLE.search, names))
@@ -228,7 +206,7 @@ class Names:
                     )
                 )
                 # or there are at least 2 remixes on the left side of the delimiter
-                or sum(1 for x in left if REMIX.search(x)) > 1
+                or sum(1 for x in left if Remix.PATTERN.search(x)) > 1
             )
         ):
             return [f"{a} - {t}" for t, a in splits]
@@ -243,10 +221,8 @@ class Names:
             self.remove_album_catalognum(self.split_quoted_titles(self.original_titles))
         )
         self.album_in_titles, titles = self.eject_album_name(
-            self.parenthesize_remixes(
-                self.remove_label(
-                    self.normalize_delimiter(self.remove_number_prefix(titles))
-                )
+            self.remove_label(
+                self.normalize_delimiter(self.remove_number_prefix(titles))
             )
         )
         self.titles = self.ensure_artist_first(titles)

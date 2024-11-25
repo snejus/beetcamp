@@ -5,9 +5,10 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field
 from functools import cached_property
+from typing import Any
 
 from .catalognum import Catalognum
-from .helpers import PATTERNS, REMIX, Helpers, JSONDict
+from .helpers import PATTERNS, Helpers, JSONDict
 
 digiwords = r"""
     # must contain at least one of
@@ -35,28 +36,62 @@ DIGI_ONLY_PATTERN = re.compile(
 
 @dataclass
 class Remix:
-    PATTERN = re.compile(rf" *[\[(] *{REMIX.pattern}[])]", re.I)
+    PATTERN = re.compile(
+        r"""
+    (?P<start>^)?
+    \ *\(?
+    (?P<text>
+      (?:
+          (?P<b>\[)
+        | (?P<p>\((?!.*\())
+        | (?<!-)-\ (?!.*([([]|\ -\ ))
+      )
+      (?P<remixer>['"]?\b\w.*?|)\ *
+      (?P<type>(re)?mix|edit|bootleg|(?<=\w\ )version|remastered)\b
+      [^])]*
+      (?(b)\])
+      (?(p)\))
+    )
+    (?P<end>$)?
+    """,
+        re.IGNORECASE | re.VERBOSE,
+    )
 
-    delimited: str
+    full: str
     remixer: str
-    remix: str
     text: str
-    by_other_artist: bool
+    type: str
+    start: bool
+    end: bool
 
     @classmethod
     def from_name(cls, name: str) -> Remix | None:
         m = cls.PATTERN.search(name)
         if m:
-            remix = m.groupdict()
-            remix["delimited"] = m.group().strip()
-            remix["remixer"] = remix["remixer"] or ""
-            return cls(**remix, by_other_artist="Original" not in remix["remix"])
+            remix: dict[str, Any] = m.groupdict()
+            remix["start"] = remix["start"] is not None
+            remix["end"] = remix["end"] is not None
+            remix["type"] = remix["type"].lower()
+            remix.pop("b")
+            remix.pop("p")
+            return cls(**remix, full=m[0])
+        return None
+
+    @cached_property
+    def valid(self) -> bool:
+        return self.remixer.lower() != "original" and self.type != "remastered"
+
+    @cached_property
+    def artist(self) -> str | None:
+        if self.valid and self.remixer.lower() != "extended" and self.type != "version":
+            return self.remixer
+
         return None
 
 
 @dataclass
 class Track:
-    DELIM_NOT_INSIDE_PARENS = re.compile(r" - (?!-|[^([]+\w[])])")
+    DELIM_NOT_INSIDE_PARENS = re.compile(r"(?<!-) - (?!-|[^([]+\w[])])")
     json_item: JSONDict = field(default_factory=dict, repr=False)
     track_id: str = ""
     index: int | None = None
@@ -141,10 +176,10 @@ class Track:
         remix = Remix.from_name(name)
         if remix:
             result["remix"] = remix
-            if name.startswith(remix.delimited):
-                name = name.removeprefix(remix.delimited).strip()
-            if name.endswith(remix.delimited):
-                name = name.removesuffix(remix.delimited).strip()
+            if remix.start:
+                name = name.removeprefix(remix.full).strip()
+            elif remix.end:
+                name = name.removesuffix(remix.full).strip()
 
         return {**result, **cls.get_featuring_artist(name, artist)}
 
@@ -195,8 +230,8 @@ class Track:
     @cached_property
     def title(self) -> str:
         """Return the main title with the full remixer part appended to it."""
-        if self.remix and self.remix.delimited not in self.title_without_remix:
-            return f"{self.title_without_remix} {self.remix.delimited}"
+        if self.remix and self.remix.text not in self.title_without_remix:
+            return f"{self.title_without_remix} {self.remix.text}"
         return self.title_without_remix
 
     @cached_property
@@ -210,8 +245,8 @@ class Track:
 
         artist = " - ".join(self.name_split[:-1])
         artist = Remix.PATTERN.sub("", artist.strip(", -"))
-        if self.remix:
-            artist = artist.replace(self.remix.remixer, "").strip(" ,")
+        if self.remix and self.remix.artist:
+            artist = artist.replace(self.remix.artist, "").strip(" ,")
 
         return ", ".join(map(str.strip, artist.strip(" -").split(",")))
 

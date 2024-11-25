@@ -49,6 +49,7 @@
 - `title`:
   - Reformat titles such as **"Title" by Artist** to **Artist - Title**.
   - Do not move remixes to the end of the title.
+  - Remove the need to parenthesize remixes and handle original titles as they are.
 
 ## [0.20.0] 2024-11-04
 
