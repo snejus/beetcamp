@@ -127,10 +127,6 @@ rm_strings = [
     "- album",
 ]
 
-REMIX = re.compile(
-    r"(?P<remix>\W*(?P<text>((?P<remixer>\b\w[^])]+) )?\b((re)?mix|edit|bootleg)\b)[^])]*)",  # noqa: E501
-    re.I,
-)
 CAMELCASE = re.compile(r"(?<=[a-z])(?=[A-Z])")
 
 
@@ -155,9 +151,7 @@ CLEAN_PATTERNS: list[tuple[Pattern[str], str | Callable[[Match[str]], str]]] = [
     (re.compile(r"(- )?\( *"), "("),                                                # hi - ( bye)               -> hi (bye)  # noqa
     (re.compile(r" \)+|(\)+$)"), ")"),                                              # hi (bye ))                -> hi (bye)  # noqa
     (re.compile(r"- Reworked"), "(Reworked)"),                                      # bye - Reworked            -> bye (Reworked)  # noqa
-    (re.compile(rf"(?<= - )([^()]+?) - ({REMIX.pattern})$", re.I), r"\1 (\2)"),     # - bye - Some Mix          -> - bye (Some Mix)  # noqa
-    (re.compile(rf"(\({REMIX.pattern})$", re.I), r"\1)"),                           # bye - (Some Mix           -> bye - (Some Mix)  # noqa
-    (re.compile(rf"- *({REMIX.pattern})$", re.I), r"(\1)"),                         # bye - Some Mix            -> bye (Some Mix)  # noqa
+    (re.compile(rf"(\([^)]+mix)$", re.I), r"\1)"),                                  # bye - (Some Mix           -> bye - (Some Mix)  # noqa
     (re.compile(r'(^|- )[“"]([^”"]+)[”"]( \(|$)'), r"\1\2\3"),                      # "bye" -> bye; hi - "bye"  -> hi - bye  # noqa
     (re.compile(r"\((the )?(remixes)\)", re.I), r"\2"),                             # Album (Remixes)           -> Album Remixes  # noqa
     (re.compile(r"^(\[[^]-]+\]) - (([^-]|-\w)+ - ([^-]|-\w)+)$"), r"\2 \1"),        # [Remixer] - hi - bye      -> hi - bye [Remixer]  # noqa

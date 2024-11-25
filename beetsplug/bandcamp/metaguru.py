@@ -19,12 +19,12 @@ from .album_name import AlbumName
 from .catalognum import Catalognum
 from .helpers import PATTERNS, Helpers, MediaInfo
 from .names import Names
+from .track import Remix, Track
 from .tracks import Tracks
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
 
-    from .track import Track
 
 JSONDict = dict[str, Any]
 
@@ -160,10 +160,11 @@ class Metaguru(Helpers):
         year_range = re.compile(r"20[12]\d - 20[12]\d")
         aartist = self.original_albumartist
         if self.label == aartist and not year_range.match(self.original_album):
-            split = AlbumName.clean(
-                self.original_album, catalognum=self.catalognum
-            ).split(" - ")
-            if len(split) > 1:
+            album = AlbumName.clean(self.original_album, catalognum=self.catalognum)
+            if remix := Remix.from_name(album):
+                album = album.replace(remix.full, "").strip()
+
+            if len(split := Track.DELIM_NOT_INSIDE_PARENS.split(album)) > 1:
                 aartist = split[0]
 
         aartists = Helpers.split_artists(aartist)
@@ -404,7 +405,9 @@ class Metaguru(Helpers):
             if word in self.original_album.lower():
                 albumtypes.add(word.replace("rmx", "remix").replace("edits", "remix"))
 
-        if len(self.tracks.remixers) >= max(self.track_count - 1, 1):
+        if sum(1 for t in self._tracks if t.remix and t.remix.valid) >= max(
+            self.track_count - 1, 1
+        ):
             albumtypes.add("remix")
 
         return sorted(albumtypes)
