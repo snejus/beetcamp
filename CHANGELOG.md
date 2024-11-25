@@ -41,6 +41,7 @@
   - Extract the lead artist from tracks and use it as albumartist if it matches the
     original artist specified on the release.
   - Ignore instagram handles in the description.
+  - Do not remove the featuring artist unless they are present in one of the track titles.
 
 - `catalognum`:
   - Prevent matches followed by lowercase **ep**, **lp** and **va**.
