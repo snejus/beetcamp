@@ -7,16 +7,14 @@
     "albumtype": "ep",
     "albumtypes": [
       "ep",
-      "remix",
-      "single"
+      "remix"
     ],
-    "artist": "Aluphobia, Astatine",
+    "artist": "Aluphobia x Astatine",
     "artist_credit": null,
     "artist_id": "https://purehate000.bandcamp.com",
     "artist_sort": null,
     "artists": [
-      "Aluphobia",
-      "Astatine"
+      "Aluphobia x Astatine"
     ],
     "artists_credit": [],
     "artists_ids": [
@@ -121,7 +119,7 @@
         "medium_index": 2,
         "medium_total": 3,
         "release_track_id": null,
-        "title": "Problem Child (Illiya Korniyen Remix)",
+        "title": "Aluphobia x Astatine - Problem Child Illiya Korniyen Remix",
         "track_alt": null,
         "track_id": "https://purehate000.bandcamp.com/track/aluphobia-x-astatine-problem-child-illiya-korniyen-remix",
         "work": null,
@@ -160,7 +158,7 @@
         "medium_index": 3,
         "medium_total": 3,
         "release_track_id": null,
-        "title": "Problem Child (Korcs Remix)",
+        "title": "Aluphobia x Astatine - Problem Child Korcs Remix",
         "track_alt": null,
         "track_id": "https://purehate000.bandcamp.com/track/aluphobia-x-astatine-problem-child-korcs-remix",
         "work": null,
