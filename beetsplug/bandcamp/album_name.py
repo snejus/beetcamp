@@ -9,6 +9,7 @@ from re import Match
 from typing import TYPE_CHECKING, Any
 
 from .helpers import Helpers
+from .track import Remix, Track
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
@@ -42,6 +43,7 @@ class AlbumName:
         re.IGNORECASE,
     )
     COMPILATION_IN_TITLE = re.compile(r"compilation|best of|anniversary", re.I)
+    YEAR_RANGE = re.compile(r"20[12]\d - 20[12]\d")
 
     original: str
     description: str
@@ -219,6 +221,20 @@ class AlbumName:
         # uppercase EP and LP, and remove surrounding parens / brackets
         name = cls.CLEAN_EPLP.sub(lambda x: x.group(1).upper(), name)
         return name.strip(" /")
+
+    def find_artist(self, catalognum: str) -> str | None:
+        album = self.original
+        if self.YEAR_RANGE.match(album):
+            return None
+
+        album = self.clean(album, catalognum=catalognum)
+        if remix := Remix.from_name(album):
+            album = album.replace(remix.full, "").strip()
+
+        if len(split := Track.DELIM_NOT_INSIDE_PARENS.split(album)) > 1:
+            return split[0]
+
+        return None
 
     def check_eplp(self, album: str) -> str:
         """Return album name followed by 'EP' or 'LP' if that's given in the comments.

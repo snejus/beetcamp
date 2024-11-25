@@ -88,24 +88,30 @@ class Tracks:
         return list(dict.fromkeys(t.lead_artist for t in self.tracks))
 
     @property
-    def remixers(self) -> list[str]:
-        """Return all remix artists."""
-        return [t.remix.artist for t in self.tracks if t.remix and t.remix.artist]
-
-    @property
-    def other_artists(self) -> set[str]:
+    def collaborators(self) -> set[str]:
         """Return all unique remix and featuring artists."""
-        return set(self.remixers + [j.ft for j in self.tracks if j.ft])
-
-    @property
-    def all_artists(self) -> set[str]:
-        """Return all unique (1) track, (2) remix, (3) featuring artists."""
-        return self.other_artists | set(self.original_artists)
+        artists = set(self.artists)
+        remixers = {
+            r
+            for t in self.tracks
+            if t.remix and (r := t.remix.artist) and all(a not in r for a in artists)
+        }
+        feat = {j.ft for j in self.tracks if j.ft}
+        return remixers | feat
 
     @cached_property
     def artists_and_titles(self) -> set[str]:
         """Return a set with all artists and titles."""
-        return set(self.raw_names) | self.all_artists
+        return set(self.raw_names) | self.collaborators | set(self.original_artists)
+
+    def discard_collaborators(self, artists: list[str]) -> list[str]:
+        collaborators = " ".join(self.collaborators).lower()
+
+        return [
+            a
+            for a in artists
+            if any(sa not in collaborators for sa in a.lower().split(" & "))
+        ]
 
     def allocate_track_alt(self, track_alt: str) -> None:
         """Move the track_alt back to artist or title for the tracks that have it.

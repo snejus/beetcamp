@@ -19,7 +19,6 @@ from .album_name import AlbumName
 from .catalognum import Catalognum
 from .helpers import PATTERNS, Helpers, MediaInfo
 from .names import Names
-from .track import Remix, Track
 from .tracks import Tracks
 
 if TYPE_CHECKING:
@@ -153,34 +152,28 @@ class Metaguru(Helpers):
         return self._names.original_album
 
     @cached_property
-    def bandcamp_albumartist(self) -> str:
-        """Return the official release albumartist.
-        It is correct in half of the cases. In others, we usually find the label name.
+    def preliminary_albumartist(self) -> str:
+        """Determine and return preliminary album artist to set as default for tracks.
+
+        This property calculates the lead artist based on the original album artist,
+        label, and track track collaborators. Since this property gets required before
+        track artists are available, it uses the pinciple of elimination to find the
+        albumartist candidate.
         """
-        year_range = re.compile(r"20[12]\d - 20[12]\d")
         aartist = self.original_albumartist
-        if self.label == aartist and not year_range.match(self.original_album):
-            album = AlbumName.clean(self.original_album, catalognum=self.catalognum)
-            if remix := Remix.from_name(album):
-                album = album.replace(remix.full, "").strip()
+        if self.label == aartist and (
+            a := self._album_name.find_artist(self.catalognum)
+        ):
+            aartist = a
 
-            if len(split := Track.DELIM_NOT_INSIDE_PARENS.split(album)) > 1:
-                aartist = split[0]
+        if (
+            len(aartists := Helpers.split_artists(aartist)) > 1
+            and (main_artists := self._tracks.discard_collaborators(aartists))
+            and main_artists != aartists
+        ):
+            return ", ".join(main_artists)
 
-        aartists = Helpers.split_artists(aartist)
-        if len(aartists) == 1:
-            return aartist
-
-        remixers_str = " ".join(self._tracks.other_artists).lower()
-
-        def not_remixer(x: str) -> bool:
-            splits = {x, *x.split(" & ")}
-            return not any(y.lower() in remixers_str for y in splits)
-
-        valid = list(filter(not_remixer, aartists))
-        if len(valid) == len(aartists) and len(self._tracks.artists) <= VA_ARTIST_COUNT:
-            return aartist
-        return ", ".join(valid)
+        return aartist
 
     @cached_property
     def image(self) -> str:
@@ -242,7 +235,8 @@ class Metaguru(Helpers):
 
     @cached_property
     def tracks(self) -> Tracks:
-        self._tracks.post_process(self.bandcamp_albumartist)
+        """Return parsed tracks."""
+        self._tracks.post_process(self.preliminary_albumartist)
         return self._tracks
 
     @cached_property
