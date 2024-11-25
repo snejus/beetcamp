@@ -269,10 +269,16 @@ class Metaguru(Helpers):
         if self.va:
             return self.va_name
 
+        aartist = self.preliminary_albumartist
+        if self.split_artists(aartist) == self.unique_artists:
+            if (m := PATTERNS["ft"].search(aartist)) and "remix" in m[0]:
+                return aartist.replace(m[0], "")
+            return aartist
+
         def normalize(artists: Iterable[str]) -> tuple[str, ...]:
             return tuple(sorted(set(map(str.lower, artists))))
 
-        aartist = self.remove_ft(self.original_albumartist)
+        aartist = self.original_albumartist
         if not self._tracks.lead_artists or (
             {normalize(self._tracks.lead_artists), normalize(self.unique_artists)}
             & {normalize(self.split_artists(aartist, force=f)) for f in [False, True]}
