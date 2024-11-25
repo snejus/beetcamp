@@ -257,11 +257,15 @@ class Metaguru(Helpers):
 
         If we have one track, return the artist of that track.
         If we have more than VA_ARTIST_COUNT artists, return the VA name.
-        Compare artists across the tracks and the original albumartist: if they are
-        different, prioritize artists in the tracks. Otherwise, return the original
-        albumartist.
 
-        Note: ft artists are not included in the albumartist.
+        Compare the original albumartist with artists found in the tracks:
+        * if we have a single albumartist, and it's one of the track lead artists,
+          return it ignoring the rest of track artists
+        * if we have more than one albumartist, and they are all track lead artists,
+          return them in the original format
+        * otherwise, join track lead artists with a comma and return them.
+
+        Note: ft artists are not included.
         """
         if self.track_count == 1:
             return self.remove_ft(self.tracks.first.artist)
@@ -270,7 +274,7 @@ class Metaguru(Helpers):
             return self.va_name
 
         aartist = self.preliminary_albumartist
-        if self.split_artists(aartist) == self.unique_artists:
+        if aartist and (set(self.split_artists(aartist)) <= set(self.unique_artists)):
             if (m := PATTERNS["ft"].search(aartist)) and "remix" in m[0]:
                 return aartist.replace(m[0], "")
             return aartist
@@ -279,9 +283,18 @@ class Metaguru(Helpers):
             return tuple(sorted(set(map(str.lower, artists))))
 
         aartist = self.original_albumartist
-        if not self._tracks.lead_artists or (
-            {normalize(self._tracks.lead_artists), normalize(self.unique_artists)}
-            & {normalize(self.split_artists(aartist, force=f)) for f in [False, True]}
+        aartists = normalize(self.split_artists(aartist, force=True))
+        all_artists_sets = {
+            normalize(self._tracks.lead_artists),
+            normalize(self.unique_artists),
+        }
+        all_artists = {a for artists in all_artists_sets for a in artists}
+        if (
+            not self._tracks.lead_artists
+            # if the release specifies a single albumartist, respect it as long as
+            # that's one of the track artists
+            or (len(aartists) == 1 and next(iter(aartists)) in all_artists)
+            or (aartists in all_artists_sets)
         ):
             return aartist
 
