@@ -12,7 +12,7 @@ from collections import Counter
 from contextlib import suppress
 from dataclasses import dataclass
 from functools import cached_property, partial
-from itertools import groupby, starmap, zip_longest
+from itertools import groupby, zip_longest
 from operator import itemgetter
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Callable, Dict, Iterator, List, NamedTuple, Tuple
@@ -80,7 +80,7 @@ FIRST_ITEM = itemgetter(0)
 console = make_console(stderr=True, record=True, highlighter=None)
 
 
-def get_diff(*args) -> str:
+def get_diff(*args: str) -> str:
     return make_difftext(*map(escape, args))
 
 
@@ -114,10 +114,10 @@ class FieldDiff(NamedTuple):
 
 
 class FieldDiffDecoder(json.JSONDecoder):
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, object_pairs_hook=self.object_pairs_hook, **kwargs)
 
-    def object_pairs_hook(self, pairs):
+    def object_pairs_hook(self, pairs: list[tuple[str, Any]]) -> dict[str, Any]:
         return {
             k: (
                 [(u, FieldDiff(*item)) for u, item in v]
@@ -136,7 +136,7 @@ class Field:
     cached: Any
 
     @classmethod
-    def make(cls, field: str, old: Any, new: Any, *args) -> Field:
+    def make(cls, field: str, old: Any, new: Any, *args: Any) -> Field:
         if field == "albumtypes":
             if isinstance(old, list):
                 old = "; ".join(old)
@@ -178,7 +178,7 @@ class Summary(TypedDict):
 
 
 @pytest.fixture(scope="session", autouse=True)
-def _ensure_results_dir():
+def _ensure_results_dir() -> None:
     RESULTS_DIR.mkdir(exist_ok=True)
 
 
@@ -193,7 +193,7 @@ def failed() -> Results:
 
 
 @pytest.fixture(scope="session")
-def summary_file(tmp_path_factory, worker_id) -> Path:
+def summary_file(tmp_path_factory: pytest.TempPathFactory, worker_id: str) -> Path:
     root_tmp_dir = tmp_path_factory.getbasetemp()
     if worker_id != "master":
         root_tmp_dir = root_tmp_dir.parent
@@ -202,7 +202,9 @@ def summary_file(tmp_path_factory, worker_id) -> Path:
 
 
 @pytest.fixture(scope="session", autouse=True)
-def _write_results(summary_file, failed: Results, fixed: Results) -> Iterator[None]:
+def _write_results(
+    summary_file: Path, failed: Results, fixed: Results
+) -> Iterator[None]:
     yield
 
     lock_file = f"{summary_file}.lock"
@@ -233,7 +235,7 @@ def include_fields(pytestconfig: Config) -> set[str]:
 
 @pytest.fixture(scope="session", autouse=True)
 def _report(
-    pytestconfig: Config, include_fields: set[str], summary_file
+    pytestconfig: Config, include_fields: set[str], summary_file: Path
 ) -> Iterator[None]:
     yield
 
@@ -303,19 +305,16 @@ def get_field_changes(results: Results, include_fields: set[str]) -> Panel:
     diffs = [d for _, diff in results for d in diff.expand() if d.old != d.new]
     if include_fields:
         diffs = [d for d in diffs if d.field in include_fields]
-    diffs.sort(key=lambda d: (d.field, str(d.new)))
+    diffs.sort(key=lambda x: tuple(map(str, x)))
 
     cols = []
     for field, field_diffs in groupby(diffs, lambda d: d.field):
+        changes = [d.diff for d in field_diffs]
+
+        change_counts = Counter(changes).most_common()
         tab = new_table()
-        changes = [(str(d.new or ""), str(d.old or "")) for d in field_diffs]
-        for new, old in (
-            (n, [o for _, o in c]) for n, c in groupby(changes, FIRST_ITEM)
-        ):
-            tab.add_row(
-                " | ".join(starmap(_fmt_old, Counter(map(escape, old)).items())),
-                wrap(escape(new), "b green"),
-            )
+        for change, count in change_counts:
+            tab.add_row((f"[b cyan]({count})[/] " if count > 1 else "") + str(change))
         cols.append(simple_panel(tab, title=f"{len(changes)} [magenta]{field}[/]"))
 
     return border_panel(Group(*cols), title="Field changes")
@@ -415,12 +414,12 @@ def new(
     original_artist: str,
     target_filepath: Path,
 ) -> JSONDict:
-    _new: AttrDict
+    _new: AttrDict[Any]
     if "_track_" in target_filepath.name:
         _new = guru.singleton
     else:
         _new = next((a for a in guru.albums if a.media == "Vinyl"), guru.albums[0])
-        _new.album = " / ".join(dict.fromkeys(x.album for x in guru.albums))
+        _new.album = " / ".join(dict.fromkeys(x["album"] for x in guru.albums))
 
     _new.catalognum = " / ".join(
         sorted({x.catalognum for x in guru.albums if x.catalognum})
@@ -436,9 +435,7 @@ def new(
         symlink_path = os.path.relpath(results_filepath, base_filepath.parent)
         base_filepath.symlink_to(symlink_path)
 
-    if new == base:
-        results_filepath = base_filepath
-    else:
+    if new != base:
         results_filepath = write_results(new, target_filepath.stem)
 
     if (target_filepath.is_symlink() and not target_filepath.exists()) or (
@@ -488,7 +485,7 @@ def check_field(
     failed: Results,
     fixed: Results,
     entity_id: str,
-):
+) -> Callable[[NewTable, Field], None]:
     def do(table: NewTable, field: Field) -> None:
         if field.fixed and field.new != field.cached:
             fixed.extend((entity_id, d) for d in field.fixed_diff.expand())

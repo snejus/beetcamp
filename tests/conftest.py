@@ -40,7 +40,7 @@ def pytest_addoption(parser: Parser) -> None:
 
     base_name = ""
     for commit in Repo(".").iter_commits(paths=["./beetsplug"]):
-        short_commit = str(commit)[:7]
+        short_commit = str(commit)[:8]
         if short_commit in names_set:
             base_name = short_commit
             break
