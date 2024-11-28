@@ -166,8 +166,14 @@ class Tracks:
                 t.artist = ""
         elif missing_count < len(self) / 2:
             for t in tracks_without_artist:
+                if t.remix:
+                    # reset the artist if it got removed because it's in the remix text
+                    if len(t.name_split) > 1:
+                        t.artist = " - ".join(t.name_split[:-1])
+                    else:
+                        t.artist = t.json_artist
                 # split the title by '-' (without spaces) or something unknown in ' ? '
-                if (
+                if not t.artist and (
                     len(split := t.title.split("-", 1)) > 1
                     or len(split := Names.SEPARATOR_PAT.split(t.title, 1)) > 1
                 ):

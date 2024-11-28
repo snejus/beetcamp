@@ -76,7 +76,8 @@ class MediaInfo(NamedTuple):
 
 
 PATTERNS: dict[str, Pattern[str]] = {
-    "split_artists": re.compile(r", - |, ?| (?:[x+/-]|//|vs|and)[.]? "),
+    "split_artists": re.compile(r",(?= ?)| (?:[x+/-]|//|vs|and)[.]? "),
+    "split_all_artists": re.compile(r",(?= ?)| (?:[X&x+/-]|//|vs|and)[.]? "),
     "meta": re.compile(r'.*"@id".*'),
     "ft": re.compile(
         r"""
@@ -178,17 +179,20 @@ class Helpers:
         if not isinstance(artists, str):
             artists = ", ".join(artists)
 
-        split = PATTERNS["split_artists"].split(cls.remove_ft(artists))
+        key = "split_all_artists" if force else "split_artists"
+        split = PATTERNS[key].split(cls.remove_ft(artists))
         split_artists = ordset(
             a for a in map(str.strip, split) if a not in {"", "more"}
         )
+        if force:
+            return list(split_artists)
 
         for artist in list(split_artists):
             # ' & ' or ' X ' may be part of single artist name, so we need to be careful
             # here. We check whether any of the split artists appears on their own and
             # only split then
             for subartists in (s for c in "X&" if len(s := artist.split(f" {c} ")) > 1):
-                if force or any(a in split_artists for a in subartists):
+                if any(a in split_artists for a in subartists):
                     split_artists.pop(artist)
                     split_artists |= ordset(subartists)
         return list(split_artists)
