@@ -77,7 +77,7 @@ class MediaInfo(NamedTuple):
 
 PATTERNS: dict[str, Pattern[str]] = {
     "split_artists": re.compile(r",(?= ?)| (?:[x+/-]|//|vs|and)[.]? "),
-    "split_all_artists": re.compile(r",(?= ?)| (?:[X&x+/-]|//|vs|and)[.]? "),
+    "split_all_artists": re.compile(r",(?= ?)|& | (?:[X&x+/-]|//|vs|and)[.]? "),
     "meta": re.compile(r'.*"@id".*'),
     "ft": re.compile(
         r"""
