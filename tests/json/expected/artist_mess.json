@@ -8,12 +8,12 @@
     "albumtypes": [
       "album"
     ],
-    "artist": "Various Artists",
+    "artist": "Psykovsky & Friends",
     "artist_credit": null,
     "artist_id": "https://psykovsky.bandcamp.com",
     "artist_sort": null,
     "artists": [
-      "Various Artists"
+      "Psykovsky & Friends"
     ],
     "artists_credit": [],
     "artists_ids": [
@@ -618,7 +618,7 @@
         "work_disambig": null
       }
     ],
-    "va": true,
+    "va": false,
     "year": 2015
   }
 ]

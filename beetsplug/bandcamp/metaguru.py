@@ -290,7 +290,7 @@ class Metaguru(Helpers):
         }
         all_artists = {a for artists in all_artists_sets for a in artists}
         if (
-            not self._tracks.lead_artists
+            not self.tracks.lead_artists
             # if the release specifies a single albumartist, respect it as long as
             # that's one of the track artists
             or (len(aartists) == 1 and next(iter(aartists)) in all_artists)
@@ -298,7 +298,7 @@ class Metaguru(Helpers):
         ):
             return aartist
 
-        return ", ".join(sorted(self.unique_artists))
+        return ", ".join(sorted(self.tracks.lead_artists))
 
     @cached_property
     def album_name(self) -> str:
@@ -369,16 +369,11 @@ class Metaguru(Helpers):
     @cached_property
     def is_comp(self) -> bool:
         """Return whether the release is a compilation."""
-
-        def first_one(artist: str) -> str:
-            return PATTERNS["split_artists"].split(artist.replace(" & ", ", "))[0]
-
-        truly_unique = set(map(first_one, self.tracks.artists))
         return (
             self._album_name.mentions_compilation
             or self._search_albumtype("compilation")
             or (
-                len(truly_unique) >= VA_ARTIST_COUNT
+                len(self.tracks.lead_artists) >= VA_ARTIST_COUNT
                 and self.track_count > VA_ARTIST_COUNT
             )
         )
@@ -427,7 +422,7 @@ class Metaguru(Helpers):
 
     @cached_property
     def va(self) -> bool:
-        return len(self.unique_artists) >= VA_ARTIST_COUNT
+        return len(self.tracks.lead_artists) >= VA_ARTIST_COUNT
 
     @cached_property
     def style(self) -> str | None:
