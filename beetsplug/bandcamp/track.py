@@ -234,9 +234,19 @@ class Track:
             return f"{self.title_without_remix} {self.remix.text}"
         return self.title_without_remix
 
+    @staticmethod
+    def clean_duplicate_artists(artist: str, remix_text: str) -> str:
+        """Remove the artist from the artist field if it's already in the remix text."""
+        for subartist in Helpers.split_artists(artist, force=True):
+            if subartist.lower() in remix_text:
+                artist = re.sub(
+                    rf"(and|x|\W*)+\b{re.escape(subartist)}", "", artist, flags=re.I
+                )
+        return artist
+
     @cached_property
     def artist(self) -> str:
-        """Return name without the title and the remixer."""
+        """Deduce the artist from the track name."""
         if self.album_artist:
             return self.album_artist
 
@@ -244,11 +254,16 @@ class Track:
             return ""
 
         artist = " - ".join(self.name_split[:-1])
+        initial_artist = artist
         artist = Remix.PATTERN.sub("", artist.strip(", -"))
-        if self.remix and self.remix.artist:
-            artist = artist.replace(self.remix.artist, "").strip(" ,")
+        if artist and self.remix and self.remix.artist:
+            artist = self.clean_duplicate_artists(artist, self.remix.text.lower())
 
-        return ", ".join(map(str.strip, artist.strip(" -").split(",")))
+        # reset the artist back to the original for singletons, if it's gone
+        if not artist and not self.index:
+            artist = initial_artist
+
+        return ", ".join(map(str.strip, artist.strip(", -").split(",")))
 
     @property
     def artists(self) -> list[str]:
