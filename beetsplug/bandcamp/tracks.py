@@ -79,13 +79,33 @@ class Tracks:
         """
         return list(dict.fromkeys(a for t in self.tracks for a in t.artists))
 
-    @property
+    @cached_property
     def lead_artists(self) -> list[str]:
         """Return all lead artists.
 
-        "Artist1 x Artist2" -> ["Artist1"]
+        Keep the first artist in collaborations:
+        [A] -> [A]
+        [A, A & B] -> [A]
+        [A & B, A & C] -> [A]
+        [A, B] -> [A, B]
+        [A, B, B & C] -> [A, B]
+        [A, B & C, B & D] -> [A, B]
+
+        But keep collaborations in tact if artists do not appear on their own:
+        [A & B] -> [A & B]
+        [A, B & C] -> [A, B & C]
         """
-        return list(dict.fromkeys(t.lead_artist for t in self.tracks))
+        lead_artists = list(dict.fromkeys(t.lead_artist for t in self.tracks))
+        unique_artists = set(self.artists)
+        return [
+            (
+                a
+                if a in unique_artists
+                or len(collabs := [u for u in unique_artists if a in u]) > 1
+                else collabs[0]
+            )
+            for a in lead_artists
+        ]
 
     @property
     def collaborators(self) -> set[str]:
