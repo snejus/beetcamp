@@ -44,6 +44,7 @@
   - Do not remove the featuring artist unless they are present in one of the track titles.
   - If there is a single albumartist in the release and it's one of the track artists, 
     just use it and ignore the rest of track artists.
+  - Deduplicate remix artists in the track artist field.
 
 - `catalognum`:
   - Prevent matches followed by lowercase **ep**, **lp** and **va**.
