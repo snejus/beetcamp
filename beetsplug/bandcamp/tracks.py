@@ -56,7 +56,14 @@ class Tracks:
             for track in tracks:
                 track["album_artist"] = album_artist
 
-        return cls(list(map(Track.make, tracks)), names)
+        obj = cls(list(map(Track.make, tracks)), names)
+        obj.handle_wild_track_alt()
+        obj.fix_remix_artists()
+        return obj
+
+    @property
+    def tracks_without_artist(self) -> list[Track]:
+        return [t for t in self.tracks if not t.artist]
 
     @cached_property
     def first(self) -> Track:
@@ -133,28 +140,41 @@ class Tracks:
             if any(sa not in collaborators for sa in a.lower().split(" & "))
         ]
 
-    def allocate_track_alt(self, track_alt: str) -> None:
-        """Move the track_alt back to artist or title for the tracks that have it.
+    def fix_remix_artists(self) -> None:
+        if 1 <= len(tracks := self.tracks_without_artist) < len(self) / 2:
+            for t in (t for t in tracks if t.remix):
+                # reset the artist if it got removed because it's in the remix text
+                if len(t.name_split) > 1:
+                    t.artist = " - ".join(t.name_split[:-1])
+                else:
+                    t.artist = t.json_artist
 
-        Loop across tracks that have track_alt and:
-        1. Make it the artist if track does not already have it, and (at least one
-           other artist was found or the same track_alt ended up on each track).
-        2. Return it to the beginning of the title otherwise
+    def handle_wild_track_alt(self) -> None:
+        """Handle tracks that have incorrectly parsed `track_alt` field.
+
+        If there is a single unique `track_alt` value and multiple tracks in the
+        release, assign the `track_alt` value to the `artist` or reset the `title` to
+        the initial track's name.
+
+        Clear the `track_alt` value after assignment.
         """
-        track_alt_tracks = [t for t in self.tracks if t.track_alt]
+        unique_track_alts = {t.track_alt for t in self.tracks if t.track_alt}
+        if len(unique_track_alts) == 1 and len(self) > 1:
+            track_alt_tracks = [t for t in self.tracks if t.track_alt]
 
-        same_track_alt_on_all = len(track_alt_tracks) == len(self)
-        parsed_any_artists = any(t for t in self.tracks if t.artist)
+            same_track_alt_on_all = len(track_alt_tracks) == len(self)
+            parsed_any_artists = any(t for t in self.tracks if t.artist)
 
-        may_set_artist = parsed_any_artists or same_track_alt_on_all
-        for t in track_alt_tracks:
-            if not t.artist and may_set_artist:
-                t.artist = track_alt
-            else:
-                t.title = t.json_item["name"]
-            t.track_alt = None
+            may_set_artist = parsed_any_artists or same_track_alt_on_all
+            unique_track_alt = unique_track_alts.pop()
+            for t in track_alt_tracks:
+                if not t.artist and may_set_artist:
+                    t.artist = unique_track_alt
+                else:
+                    t.title = t.json_item["name"]
+                t.track_alt = None
 
-    def set_missing_artists(self, missing_count: int, albumartist: str) -> None:
+    def ensure_track_artists(self, albumartist: str) -> None:
         """Set artist for tracks that do not have it.
 
         Firstly, check how many tracks are missing artists. If there are 1-3 tracks
@@ -171,8 +191,10 @@ class Tracks:
 
         Otherwise, use the albumartist as the default.
         """
-        tracks_without_artist = [t for t in self if not t.artist]
-        if 1 <= len(self) - len(tracks_without_artist) < 4:
+        if not self.tracks_without_artist:
+            return
+
+        if 1 <= len(self) - len(self.tracks_without_artist) < 4:
             aartist = albumartist.lower()
             for t in (
                 t
@@ -184,36 +206,18 @@ class Tracks:
             ):
                 t.title = f"{t.artist} - {t.title}"
                 t.artist = ""
-        elif missing_count < len(self) / 2:
-            for t in tracks_without_artist:
-                if t.remix:
-                    # reset the artist if it got removed because it's in the remix text
-                    if len(t.name_split) > 1:
-                        t.artist = " - ".join(t.name_split[:-1])
-                    else:
-                        t.artist = t.json_artist
-                # split the title by '-' (without spaces) or something unknown in ' ? '
-                if not t.artist and (
+
+        if 1 <= len(tracks := self.tracks_without_artist) < len(self) / 2:
+            for t in tracks:
+                if (
                     len(split := t.title.split("-", 1)) > 1
                     or len(split := Names.SEPARATOR_PAT.split(t.title, 1)) > 1
                 ):
                     t.artist, t.title = map(str.strip, split)
 
-        for t in (t for t in self.tracks if not t.artist):
+        for t in self.tracks_without_artist:
             # default to the albumartist
             t.artist = albumartist
-
-    def post_process(self, albumartist: str) -> None:
-        """Perform adjustments that require knowledge of all parsed tracks.
-
-        Context of a single track is not enough to handle these edge cases.
-        """
-        unique_track_alts = {t.track_alt for t in self.tracks if t.track_alt}
-        if len(unique_track_alts) == 1 and len(self) > 1:
-            self.allocate_track_alt(unique_track_alts.pop())
-
-        if missing_artist_count := sum(1 for t in self.tracks if not t.artist):
-            self.set_missing_artists(missing_artist_count, albumartist)
 
     def for_media(
         self, media: str, comments: str, include_digi: bool
