@@ -47,7 +47,7 @@ class Remix:
         | (?<!-)-\ (?!.*([([]|\ -\ ))
       )
       (?P<remixer>['"]?\b\w.*?|)\ *
-      (?P<type>(re)?mix|edit|bootleg|(?<=\w\ )version|remastered)\b
+      (?P<type>(re)?mix|rmx|edit|bootleg|(?<=\w\ )version|remastered)\b
       [^])]*
       (?(b)\])
       (?(p)\))
