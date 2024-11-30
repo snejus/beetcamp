@@ -142,10 +142,13 @@ class Metaguru(Helpers):
 
     @cached_property
     def original_albumartist(self) -> str:
-        m = re.search(r"Artists?: *(\b[^\n]+)", self.all_media_comments)
-        aartist = m.group(1).strip() if m else self.meta["byArtist"]["name"]
+        if m := re.search(r"Artists?: *(\b[^\n]+)", self.all_media_comments):
+            aartist = m.group(1).strip()
+        else:
+            aartist = self.meta["byArtist"]["name"]
+
         aartist = ", ".join(map(str.strip, aartist.split(" // ")))
-        return re.split(r"[(,][^(,]{1,30}remix", aartist, flags=re.I)[0].strip()
+        return re.split(r"[(,+]+.+?re?mi?x", aartist, flags=re.I)[0].strip()
 
     @cached_property
     def original_album(self) -> str:
@@ -161,9 +164,9 @@ class Metaguru(Helpers):
         albumartist candidate.
         """
         aartist = self.original_albumartist
-        if self.label == aartist and (
-            a := self._album_name.find_artist(self.catalognum)
-        ):
+        if self.label != aartist:
+            aartist = Helpers.clean_name(aartist)
+        elif a := self._album_name.find_artist(self.catalognum):
             aartist = a
 
         if (
