@@ -285,7 +285,6 @@ class Metaguru(Helpers):
         def normalize(artists: Iterable[str]) -> tuple[str, ...]:
             return tuple(sorted(set(map(str.lower, artists))))
 
-        aartist = self.original_albumartist
         aartists = normalize(self.split_artists(aartist, force=True))
         all_artists_sets = {
             normalize(self._tracks.lead_artists),
