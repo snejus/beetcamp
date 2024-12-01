@@ -91,7 +91,7 @@ class Remix:
 
 @dataclass
 class Track:
-    DELIM_NOT_INSIDE_PARENS = re.compile(r"(?<!-) - (?!-|[^([]+\w[])])")
+    DELIM_NOT_INSIDE_PARENS = re.compile(r"(?<!-)(?<!^live) - (?!-|[^([]+\w[])])", re.I)
     json_item: JSONDict = field(default_factory=dict, repr=False)
     track_id: str = ""
     index: int | None = None
