@@ -174,10 +174,13 @@ class Tracks:
                     t.title = t.json_item["name"]
                 t.track_alt = None
 
-    def ensure_track_artists(self, albumartist: str) -> None:
-        """Set artist for tracks that do not have it.
+    def fix_track_artists(self, albumartist: str) -> None:
+        """Adjust track artists in the context of the entire album.
 
-        Firstly, check how many tracks are missing artists. If there are 1-3 tracks
+        Firstly, check whether the artist is 'the'. If so, prepend it to the title and
+        reset the artist.
+
+        Then, check how many tracks are missing artists. If there are 1-3 tracks
         which have it set, this is most likely because the titles had ' - ' separator
         and our logic split it into artist. For each, ensure that
             (1) Artist was not set in the JSON metadata
@@ -191,6 +194,12 @@ class Tracks:
 
         Otherwise, use the albumartist as the default.
         """
+        for t in (t for t in self if t.artist):
+            # the artist cannot be 'the', so it's most likely a part of the title
+            if t.artist.lower() == "the":
+                t.title = f"{t.artist} {t.title}"
+                t.artist = ""
+
         if not self.tracks_without_artist:
             return
 
