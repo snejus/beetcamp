@@ -20,7 +20,7 @@ class Names:
 
     # Title [Some Album EP]
     ALBUM_IN_TITLE = re.compile(r"[- ]*\[([^\]]+ [EL]P)\]+", re.I)
-    SEPARATOR_PAT = re.compile(r"(?<= )[|\u2013\u2014-](?= )")
+    SEPARATOR_PAT = re.compile(r"(?<=\s)[|\u2013\u2014-](?=\s)")
     TITLE_IN_QUOTES = re.compile(r'^(.+[^ -])[ -]+"([^"]+)"$')
     NUMBER_PREFIX = re.compile(r"((?<=^)|(?<=- ))\d{1,2}\W+(?=\D)")
 
@@ -142,7 +142,7 @@ class Names:
         accordingly.
         """
         delim = cls.find_common_track_delimiter(names)
-        pat = re.compile(rf" +[{re.escape(delim)}] +|\t")
+        pat = re.compile(rf"\s+[{re.escape(delim)}]\s+|\t")
         return [pat.sub(" - ", n) for n in names]
 
     def remove_label(self, names: list[str]) -> list[str]:
