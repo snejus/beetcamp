@@ -239,7 +239,7 @@ class Metaguru(Helpers):
     @cached_property
     def tracks(self) -> Tracks:
         """Return parsed tracks."""
-        self._tracks.ensure_track_artists(self.preliminary_albumartist)
+        self._tracks.fix_track_artists(self.preliminary_albumartist)
         return self._tracks
 
     @cached_property
