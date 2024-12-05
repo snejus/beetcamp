@@ -20,6 +20,8 @@ _p = pytest.param
         _p("", "sick vinyl", "", "sick vinyl", id="only media desc"),
         _p("", "", "credit", "credit", id="only credits"),
         _p("stuff", "sick vinyl", "creds", "stuff\nsick vinyl\ncreds", id="all"),
+        _p("hello", "hello", "", "hello", id="no dupes"),
+        _p("Hello hi", "hello,hi", "", "Hello hi", id="no dupes normalized"),
     ],
 )
 def test_comments(descr, disctitle, creds, expected, json_meta, vinyl_format):
