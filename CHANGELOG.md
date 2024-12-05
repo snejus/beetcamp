@@ -49,6 +49,9 @@
   - Prevent matches followed by lowercase **ep**, **lp** and **va**.
   - Prevent matches based on label name preceded by **of**.
 
+- `comment`:
+  - Do not include media description if it duplicates the release description.
+
 - `title`:
   - Reformat titles such as **"Title" by Artist** to **Artist - Title**.
   - Do not move remixes to the end of the title.
