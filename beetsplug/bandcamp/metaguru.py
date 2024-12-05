@@ -103,7 +103,15 @@ class Metaguru(Helpers):
     @property
     def comments(self) -> str | None:
         """Return concatenated release, media descriptions and credits."""
-        parts = [self.description, self.media.description, self.credits]
+        parts = [self.description]
+
+        normalize = partial(re.compile(r"\W").sub, "")
+        if normalize(self.media.description.lower()) != normalize(
+            self.description.lower()
+        ):
+            parts.append(self.media.description)
+        parts.append(self.credits)
+
         sep = self.config["comments_separator"]
         return sep.join(filter(None, parts)).replace("\r", "") or None
 
