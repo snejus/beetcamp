@@ -498,7 +498,11 @@ class Metaguru(Helpers):
         reldate = self.release_date
         if reldate:
             common_data.update(self.get_fields(["year", "month", "day"], reldate))
-        common_data["artists"] = self.albumartist.split(", ")
+        artists = self.split_artists(self.albumartist)
+        if m := PATTERNS["ft"].search(self.albumartist):
+            artists.append(m["ft_artist"])
+
+        common_data["artists"] = artists
 
         return common_data
 
