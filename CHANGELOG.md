@@ -6,6 +6,8 @@
 
 ### Added
 
+- `artists`: split artists properly, both for tracks and albums.
+
 - `comments`: Add a new configuration option `truncate_comments` which handles very long
   release descriptions that may crash MPD.
 
