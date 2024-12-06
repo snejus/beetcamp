@@ -43,7 +43,7 @@ VA_ARTIST_COUNT = 4  # this number of artists is replaced with VA name
 
 
 class Metaguru(Helpers):
-    HTML_REMOVE_CHARS = ["\u200b", "\u00a0"]
+    HTML_REMOVE_CHARS = ["\u200b", "\u200d", "\u200e", "\u200f", "\u00a0"]
     _singleton = False
     va_name = VA
     media = MediaInfo("", "", "", "")
