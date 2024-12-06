@@ -281,8 +281,9 @@ class Track:
     @property
     def info(self) -> JSONDict:
         artists = self.artists
-        if self.ft_artist:
-            artists.append(self.ft_artist)
+        if ft := self.ft_artist:
+            artists.append(ft)
+        artists = Helpers.split_artists(artists, force=True)
 
         return {
             "index": self.index,

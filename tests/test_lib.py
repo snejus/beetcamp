@@ -69,7 +69,6 @@ IGNORE_FIELDS = {
     "times_bought",
     "original_artist",
     "original_name",
-    "artists",
     "artists_credit",
     "artists_ids",
     "artists_sort",

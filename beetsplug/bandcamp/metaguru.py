@@ -465,6 +465,14 @@ class Metaguru(Helpers):
 
         return ", ".join(sorted(genres)).strip() or None
 
+    @cached_property
+    def artists(self) -> list[str]:
+        artists = self.split_artists(self.albumartist, force=True)
+        if m := PATTERNS["ft"].search(self.albumartist):
+            artists.append(m["ft_artist"])
+
+        return artists
+
     @property
     def _common(self) -> JSONDict:
         return {
@@ -498,12 +506,12 @@ class Metaguru(Helpers):
             "genre",
             "label",
             "style",
+            "artists",
         ]
         common_data.update(self.get_fields(fields))
         reldate = self.release_date
         if reldate:
             common_data.update(self.get_fields(["year", "month", "day"], reldate))
-        common_data["artists"] = self.albumartist.split(", ")
 
         return common_data
 
