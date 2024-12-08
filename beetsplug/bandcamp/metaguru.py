@@ -282,6 +282,9 @@ class Metaguru(Helpers):
                 return aartist.replace(m[0], "")
             return aartist
 
+        if len(self.tracks.original_artists) == 1:
+            return self.tracks.original_artists[0]
+
         def normalize(artists: Iterable[str]) -> tuple[str, ...]:
             return tuple(sorted(set(map(str.lower, artists))))
 
