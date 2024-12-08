@@ -146,7 +146,7 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         if self.config["art"]:
             self.register_listener("pluginload", self.loaded)
 
-    def adjust_comments_field(self, _: Library, album: Album) -> None:
+    def adjust_comments_field(self, lib: Library, album: Album) -> None:
         """If the comments field is too long, store it as album flex attr.
 
         Keep the first 4000 characters in the item and store the full comment as
