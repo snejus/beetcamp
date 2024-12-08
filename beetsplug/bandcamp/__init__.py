@@ -236,14 +236,14 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
             artist = ""
 
         if album:
-            query = album
+            name = album
             search_type = "a"
         else:
-            query = " - ".join(filter(None, [artist, item.title]))
+            name = item.title
             search_type = ""
 
         search = {
-            "query": query,
+            "query": " - ".join(filter(None, [artist, name])),
             "artist": artist,
             "label": label,
             "search_type": search_type,
