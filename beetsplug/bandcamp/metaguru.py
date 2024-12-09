@@ -44,7 +44,12 @@ VA_ARTIST_COUNT = 4  # this number of artists is replaced with VA name
 
 class Metaguru(Helpers):
     META = cached_patternprop(r'.*"@id".*')
+    LABEL_IN_DESC = cached_patternprop(r"(?<=Label:) *\b[^/,\n]+")
+    ARTIST_IN_DESC = cached_patternprop(r"Artists?: *(\b[^\n]+)")
+    REMIX_IN_ARTIST = cached_patternprop(r"[(,+]+.+?re?mi?x", re.I)
+    NOT_ALPHANUMERIC = cached_patternprop(r"\W")
     HTML_REMOVE_CHARS = ["\u200b", "\u200d", "\u200e", "\u200f", "\u00a0"]
+
     _singleton = False
     va_name = VA
     media = MediaInfo("", "", "", "")
@@ -106,7 +111,7 @@ class Metaguru(Helpers):
         """Return concatenated release, media descriptions and credits."""
         parts = [self.description]
 
-        normalize = partial(re.compile(r"\W").sub, "")
+        normalize = partial(self.NOT_ALPHANUMERIC.sub, "")
         if normalize(self.media.description.lower()) != normalize(
             self.description.lower()
         ):
@@ -133,8 +138,8 @@ class Metaguru(Helpers):
 
     @cached_property
     def label(self) -> str:
-        if m := re.search(r"Label: *(\b[^/,\n]+)", self.all_media_comments):
-            return m.expand(r"\1").strip(" '\"")
+        if m := self.LABEL_IN_DESC.search(self.all_media_comments):
+            return m[0].strip(" '\"")
 
         return self._names.label
 
@@ -151,13 +156,13 @@ class Metaguru(Helpers):
 
     @cached_property
     def original_albumartist(self) -> str:
-        if m := re.search(r"Artists?: *(\b[^\n]+)", self.all_media_comments):
-            aartist = m.group(1).strip()
+        if m := self.ARTIST_IN_DESC.search(self.all_media_comments):
+            aartist = m[1].strip()
         else:
             aartist = self.meta["byArtist"]["name"]
 
         aartist = ", ".join(map(str.strip, aartist.split(" // ")))
-        return re.split(r"[(,+]+.+?re?mi?x", aartist, flags=re.I)[0].strip()
+        return self.REMIX_IN_ARTIST.split(aartist)[0].strip()
 
     @cached_property
     def original_album(self) -> str:
@@ -203,7 +208,7 @@ class Metaguru(Helpers):
         """
         rel = self.meta.get("datePublished") or self.meta.get("dateModified")
         if rel:
-            return datetime.strptime(re.sub(r" \d{2}:.+", "", rel), "%d %b %Y").date()
+            return datetime.strptime(rel[:11], "%d %b %Y").date()
         return rel
 
     @cached_property
@@ -339,7 +344,7 @@ class Metaguru(Helpers):
           any media description.
         """
         text = " ".join(self.all_media_comments.splitlines())
-        sentences = re.split(r"[.]\s+", text.lower())
+        sentences = [s.strip() for s in text.lower().split(". ")]
 
         word_pat = re.compile(rf"(?<!-)\b{word}(\b|\.)", re.I)
         in_catnum = re.compile(rf"{word}\d", re.I)

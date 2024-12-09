@@ -105,6 +105,7 @@ class Track:
         """,
         re.M | re.VERBOSE,
     )
+    NUMBER_PAT = cached_patternprop(r"\d+")
 
     json_item: JSONDict = field(default_factory=dict, repr=False)
     track_id: str = ""
@@ -213,7 +214,7 @@ class Track:
     @cached_property
     def duration(self) -> int | None:
         try:
-            h, m, s = map(int, re.findall(r"\d+", self.json_item["duration"]))
+            h, m, s = map(int, self.NUMBER_PAT.findall(self.json_item["duration"]))
         except KeyError:
             return None
         else:
