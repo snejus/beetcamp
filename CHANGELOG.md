@@ -27,6 +27,9 @@
     wrongly split into artist and title.
   - Stop stripping dashes from the beginning of track titles.
 
+- `year` / `month` / `day`:
+  - Take the timezone into account for the parsed release date.
+
 ### Updated
 
 - `album`:

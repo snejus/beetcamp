@@ -133,7 +133,7 @@ class BandcampAlbumArt(BandcampRequestsHandler, fetchart.RemoteArtSource):
 class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
     MAX_COMMENT_LENGTH = 4047
     ALBUM_SLUG_IN_TRACK = cached_patternprop(r'(?<=<a id="buyAlbumLink" href=")[^"]+')
-    LABEL_URL_IN_COMMENT = cached_patternprop(r"(?<=Visit )https:[\w/.-]+\.[a-z]+")
+    LABEL_URL_IN_COMMENT = cached_patternprop(r"Visit (https:[\w/.-]+\.[a-z]+)")
     beets_config: IncludeLazyConfig
 
     def __init__(self) -> None:
@@ -184,8 +184,8 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
 
     @classmethod
     def parse_label_url(cls, text: str) -> str | None:
-        if m := cls.LABEL_URL_IN_COMMENT.match(text):
-            return m[0]
+        if m := cls.LABEL_URL_IN_COMMENT.search(text):
+            return m[1]
 
         return None
 
