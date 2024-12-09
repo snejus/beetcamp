@@ -19,7 +19,6 @@
 from __future__ import annotations
 
 import logging
-import re
 from contextlib import contextmanager
 from functools import partial
 from operator import itemgetter
@@ -62,8 +61,22 @@ DEFAULT_CONFIG = {
 class BandcampRequestsHandler:
     """A class that provides an ability to make requests and handles failures."""
 
+    BANDCAMP_URL_PAT = cached_patternprop(r"http[^ ]+/(album|track)/")
+
     _log: logging.Logger
     config: IncludeLazyConfig
+
+    @classmethod
+    def from_bandcamp(cls, clue: str) -> bool:
+        """Check if the clue is likely to be a bandcamp url.
+
+        We could check whether 'bandcamp' is found in the url, however, we would be ignoring
+        cases where the publisher uses their own domain (for example https://eaux.ro) which
+        in reality points to their Bandcamp page. Historically, we found that regardless
+        of the domain, the rest of the url stays the same, therefore '/album/' or '/track/'
+        is what we are looking for in a valid url here.
+        """
+        return bool(cls.BANDCAMP_URL_PAT.match(clue))
 
     def _exc(self, msg_template: str, *args: object) -> None:
         self._log.log(logging.WARNING, msg_template, *args, exc_info=True)
@@ -94,18 +107,6 @@ class BandcampRequestsHandler:
             self._exc("Unexpected error obtaining {}, please report at {}", url, i_url)
 
 
-def _from_bandcamp(clue: str) -> bool:
-    """Check if the clue is likely to be a bandcamp url.
-
-    We could check whether 'bandcamp' is found in the url, however, we would be ignoring
-    cases where the publisher uses their own domain (for example https://eaux.ro) which
-    in reality points to their Bandcamp page. Historically, we found that regardless
-    of the domain, the rest of the url stays the same, therefore '/album/' or '/track/'
-    is what we are looking for in a valid url here.
-    """
-    return bool(re.match(r"http[^ ]+/(album|track)/", clue))
-
-
 class BandcampAlbumArt(BandcampRequestsHandler, fetchart.RemoteArtSource):
     NAME = "Bandcamp"
 
@@ -119,7 +120,7 @@ class BandcampAlbumArt(BandcampRequestsHandler, fetchart.RemoteArtSource):
         This only returns cover art urls for bandcamp albums (by id).
         """
         url = album.mb_albumid
-        if not _from_bandcamp(url):
+        if not self.from_bandcamp(url):
             self._info("Not fetching art for a non-bandcamp album URL")
         else:
             with self.handle_error(url):
@@ -131,8 +132,8 @@ class BandcampAlbumArt(BandcampRequestsHandler, fetchart.RemoteArtSource):
 
 class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
     MAX_COMMENT_LENGTH = 4047
-    ALBUM_URL_IN_TRACK = cached_patternprop(r'<a id="buyAlbumLink" href="([^"]+)')
-    LABEL_URL_IN_COMMENT = cached_patternprop(r"Visit (https:[\w/.-]+\.[a-z]+)")
+    ALBUM_SLUG_IN_TRACK = cached_patternprop(r'(?<=<a id="buyAlbumLink" href=")[^"]+')
+    LABEL_URL_IN_COMMENT = cached_patternprop(r"(?<=Visit )https:[\w/.-]+\.[a-z]+")
     beets_config: IncludeLazyConfig
 
     def __init__(self) -> None:
@@ -184,7 +185,7 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
     @classmethod
     def parse_label_url(cls, text: str) -> str | None:
         if m := cls.LABEL_URL_IN_COMMENT.match(text):
-            return m.group(1)
+            return m[0]
 
         return None
 
@@ -206,7 +207,7 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
               the number of previous releases that also did not have any valid
               alphanums. Therefore, we cannot make a reliable guess here.
         """
-        if (url := getattr(item, f"mb_{_type}id", "")) and _from_bandcamp(url):
+        if (url := getattr(item, f"mb_{_type}id", "")) and self.from_bandcamp(url):
             self._info("Fetching the URL attached to the first item, {}", url)
             return url
 
@@ -272,7 +273,7 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
 
     def album_for_id(self, album_id: str) -> AlbumInfo | None:
         """Fetch an album by its bandcamp ID."""
-        if not _from_bandcamp(album_id):
+        if not self.from_bandcamp(album_id):
             self._info("Not a bandcamp URL, skipping")
             return None
 
@@ -289,7 +290,7 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
 
     def track_for_id(self, track_id: str) -> TrackInfo | None:
         """Fetch a track by its bandcamp ID."""
-        if _from_bandcamp(track_id):
+        if self.from_bandcamp(track_id):
             return self.get_track_info(track_id)
 
         self._info("Not a bandcamp URL, skipping")
@@ -301,10 +302,9 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         If track url is given by mistake, find and fetch the album url instead.
         """
         html = self._get(url)
-        if html and "/track/" in url:
-            m = self.ALBUM_URL_IN_TRACK.search(html)
-            if m:
-                url = re.sub(r"/track/.*", m.expand(r"\1"), url)
+        if html and "/track/" in url and (m := self.ALBUM_SLUG_IN_TRACK.search(html)):
+            label_url = url.split(r"/track/")[0]
+            url = f"{label_url}{m[0]}"
 
         with self.handle_error(url):
             return self.guru(url).albums

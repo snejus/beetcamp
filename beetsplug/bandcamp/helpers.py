@@ -104,6 +104,8 @@ class Helpers:
     SPLIT_ALL_ARTISTS_PAT = cached_patternprop(
         r",(?= ?)|& | (?:[X&x+/-]|//|vs|and)[.]? "
     )
+    KEYWORD_SPLIT = cached_patternprop(r"[.] | #| - ")
+    KEYWORD_SUBSPLIT = cached_patternprop(r"[ -]")
     FT_PAT = cached_patternprop(
         r"""
         [ ]*                            # all preceding space
@@ -218,9 +220,9 @@ class Helpers:
                 name = pat.sub(repl, name).strip()
         return name
 
-    @staticmethod
+    @classmethod
     def get_genre(
-        keywords: Iterable[str], config: JSONDict, label: str
+        cls, keywords: Iterable[str], config: JSONDict, label: str
     ) -> Iterable[str]:
         """Return a comma-delimited list of valid genres, using MB genres for reference.
 
@@ -245,29 +247,29 @@ class Helpers:
         """
         valid_mb_genre = partial(contains, GENRES)
         label_name = label.lower().replace(" ", "")
+        always_include_pat = re.compile("|".join(config["always_include"]))
 
         def is_label_name(kw: str) -> bool:
             return kw.replace(" ", "") == label_name and not valid_mb_genre(kw)
 
         def is_included(kw: str) -> bool:
-            return any(re.search(x, kw) for x in config["always_include"])
+            return bool(always_include_pat.pattern and always_include_pat.search(kw))
 
         def valid_for_mode(kw: str) -> bool:
             if config["mode"] == "classical":
                 return valid_mb_genre(kw)
 
-            words = map(str.strip, re.split("[ -]", kw))
+            words = cls.KEYWORD_SUBSPLIT.split(kw)
             if config["mode"] == "progressive":
                 return valid_mb_genre(kw) or all(map(valid_mb_genre, words))
 
-            return valid_mb_genre(kw) or valid_mb_genre(list(words)[-1])
+            return valid_mb_genre(kw) or valid_mb_genre(words[-1])
 
         unique_genres: dict[str, None] = ordset([])
         # expand badly delimited keywords
-        split_kw = partial(re.split, r"[.] | #| - ")
-        for kw in chain.from_iterable(map(split_kw, keywords)):
+        for kw in chain.from_iterable(map(cls.KEYWORD_SPLIT.split, keywords)):
             # remove full stops and hashes and ensure the expected form of 'and'
-            _kw = re.sub("[.#]", "", str(kw)).replace("&", "and")
+            _kw = kw.strip("#").replace("&", "and").replace(".", "")
             if not is_label_name(_kw) and (is_included(_kw) or valid_for_mode(_kw)):
                 unique_genres[_kw] = None
 
