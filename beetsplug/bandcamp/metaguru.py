@@ -6,7 +6,7 @@ import itertools as it
 import json
 import operator as op
 import re
-from datetime import date, datetime
+from datetime import date, datetime, timezone
 from functools import cached_property, partial
 from typing import TYPE_CHECKING, Any
 from unicodedata import normalize
@@ -206,15 +206,19 @@ class Metaguru(Helpers):
 
         If the field is not found, return None.
         """
-        rel = self.meta.get("datePublished") or self.meta.get("dateModified")
-        if rel:
-            return datetime.strptime(rel[:11], "%d %b %Y").date()
-        return rel
+        dt = self.meta.get("datePublished") or self.meta.get("dateModified")
+        if not dt:
+            return None
+
+        return (
+            datetime.strptime(dt[:11], "%d %b %Y").replace(tzinfo=timezone.utc).date()
+        )
 
     @cached_property
     def albumstatus(self) -> str:
         reldate = self.release_date
-        return "Official" if reldate and reldate <= date.today() else "Promotional"
+        today = datetime.now(tz=timezone.utc).date()
+        return "Official" if reldate and reldate <= today else "Promotional"
 
     @property
     def disctitle(self) -> str | None:
