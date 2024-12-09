@@ -169,7 +169,9 @@ class Catalognum:
             acronym = "".join(word[0] for word in prefix.split())
             prefixes.add(acronym)
 
-        if " " in self.label and len(first := self.label.split()[0]) > 1:
+        label = self.label.strip()
+
+        if " " in label and len(first := label.split()[0]) > 1:
             # add the first word too
             prefixes.add(first)
 
