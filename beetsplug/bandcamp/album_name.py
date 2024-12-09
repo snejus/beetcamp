@@ -96,7 +96,7 @@ class AlbumName:
 
     @cached_property
     def name(self) -> str:
-        return next(iter(self.album_names))
+        return next(iter(self.album_names), "")
 
     @cached_property
     def series_part(self) -> str | None:

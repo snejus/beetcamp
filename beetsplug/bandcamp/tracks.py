@@ -103,6 +103,9 @@ class Tracks:
         """
         lead_artists = list(dict.fromkeys(t.lead_artist for t in self.tracks))
         unique_artists = set(self.artists)
+        if not unique_artists:
+            return []
+
         return [
             (
                 a
