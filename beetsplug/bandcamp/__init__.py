@@ -29,6 +29,7 @@ from beets import IncludeLazyConfig, config, plugins
 
 from beetsplug import fetchart  # type: ignore[attr-defined]
 
+from .helpers import cached_patternprop
 from .http import HTTPError, http_get_text, urlify
 from .metaguru import Metaguru
 from .search import search_bandcamp
@@ -56,9 +57,6 @@ DEFAULT_CONFIG = {
     "comments_separator": "\n---\n",
     "truncate_comments": False,
 }
-
-ALBUM_URL_IN_TRACK = re.compile(r'<a id="buyAlbumLink" href="([^"]+)')
-LABEL_URL_IN_COMMENT = re.compile(r"Visit (https:[\w/.-]+\.[a-z]+)")
 
 
 class BandcampRequestsHandler:
@@ -133,6 +131,8 @@ class BandcampAlbumArt(BandcampRequestsHandler, fetchart.RemoteArtSource):
 
 class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
     MAX_COMMENT_LENGTH = 4047
+    ALBUM_URL_IN_TRACK = cached_patternprop(r'<a id="buyAlbumLink" href="([^"]+)')
+    LABEL_URL_IN_COMMENT = cached_patternprop(r"Visit (https:[\w/.-]+\.[a-z]+)")
     beets_config: IncludeLazyConfig
 
     def __init__(self) -> None:
@@ -181,9 +181,9 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
                 plugin.sources = [bandcamp_fetchart, *plugin.sources]
                 break
 
-    @staticmethod
-    def parse_label_url(text: str) -> str | None:
-        if m := LABEL_URL_IN_COMMENT.match(text):
+    @classmethod
+    def parse_label_url(cls, text: str) -> str | None:
+        if m := cls.LABEL_URL_IN_COMMENT.match(text):
             return m.group(1)
 
         return None
@@ -302,7 +302,7 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         """
         html = self._get(url)
         if html and "/track/" in url:
-            m = ALBUM_URL_IN_TRACK.search(html)
+            m = self.ALBUM_URL_IN_TRACK.search(html)
             if m:
                 url = re.sub(r"/track/.*", m.expand(r"\1"), url)
 
