@@ -3,14 +3,15 @@
 from __future__ import annotations
 
 import re
-from functools import partial
+from functools import cache, partial
 from itertools import chain
 from operator import contains
 from re import Match, Pattern
-from typing import TYPE_CHECKING, Any, NamedTuple, TypeVar
+from typing import TYPE_CHECKING, Any, Generic, NamedTuple, TypeVar
 
 from beets import __version__ as beets_version
 from packaging.version import Version
+from typing_extensions import TypeAlias
 
 from .genres_lookup import GENRES
 
@@ -35,7 +36,27 @@ FORMAT_TO_MEDIA = {
     "USB Flash Drive": DIGI_MEDIA,
 }
 
-T = TypeVar("T", bound=JSONDict)
+J = TypeVar("J", bound=JSONDict)
+T = TypeVar("T")
+
+
+class cached_classproperty(Generic[T]):
+    def __init__(self, getter: Callable[..., T]) -> None:
+        self.getter = getter
+        self.cache: dict[type[object], T] = {}
+
+    def __get__(self, instance: object, owner: type[object]) -> T:
+        if owner not in self.cache:
+            self.cache[owner] = self.getter(owner)
+
+        return self.cache[owner]
+
+
+def cached_patternprop(
+    pattern: str, flags: int = 0
+) -> cached_classproperty[Pattern[str]]:
+    """Pattern is compiled and cached the first time it is accessed."""
+    return cached_classproperty(lambda _: re.compile(pattern, flags))
 
 
 class MediaInfo(NamedTuple):
@@ -75,11 +96,15 @@ class MediaInfo(NamedTuple):
         return 1
 
 
-PATTERNS: dict[str, Pattern[str]] = {
-    "split_artists": re.compile(r",(?= ?)| (?:[x+/-]|//|vs|and)[.]? "),
-    "split_all_artists": re.compile(r",(?= ?)|& | (?:[X&x+/-]|//|vs|and)[.]? "),
-    "meta": re.compile(r'.*"@id".*'),
-    "ft": re.compile(
+Replacement: TypeAlias = "tuple[Pattern[str], str | Callable[[Match[str]], str]]"
+
+
+class Helpers:
+    SPLIT_ARTISTS_PAT = cached_patternprop(r",(?= ?)| (?:[x+/-]|//|vs|and)[.]? ")
+    SPLIT_ALL_ARTISTS_PAT = cached_patternprop(
+        r",(?= ?)|& | (?:[X&x+/-]|//|vs|and)[.]? "
+    )
+    FT_PAT = cached_patternprop(
         r"""
         [ ]*                            # all preceding space
         ((?P<br>[([{])|\b)              # bracket or word boundary
@@ -93,80 +118,68 @@ PATTERNS: dict[str, Pattern[str]] = {
               [])}]                     # must end with a closing bracket
             | (?=\ -\ |\ *[][)(/]|$)    # otherwise ends with of these combinations
         )
-    """,
+        """,
         re.I | re.VERBOSE,
-    ),
-    "track_alt": re.compile(
-        r"""
-        (?:(?<=^)|(?<=-\ ))             # beginning of the line or after the separator
-        (
-            (?:[A-J]{1,3}[12]?\.?\d)    # A1, B2, E4, A1.1 etc.
-          | (?:[AB]+(?!\ \()(?=\W{2}\b))# A, AA BB
-        )
-        (?:[/.:)_\s-]+)                 # consume the non-word chars for removal
-    """,
-        re.M | re.VERBOSE,
-    ),
-}
-rm_strings = [
-    "limited edition",
-    r"^EP -",
-    r"\((digital )?album\)",
-    r"\(single\)",
-    r"\Wvinyl\W|vinyl-only|vinyl[^ ]*cd",
-    "compiled by.*",
-    r"[\[(](presented|selected) by.*",
-    r"[ |-]*free download(?! \w)",
-    r"[([][^])]*free\b(?!.*mix)[^])]*[])]",
-    r"[([][^])]*preview[])]",
-    r"(\W|\W )bonus( \w+)*",
-    "Various -",
-    "split w",
-    r"CD ?\d+",
-    "Name Your Price:",
-    "just out!",
-    "- album",
-]
+    )
 
-CAMELCASE = re.compile(r"(?<=[a-z])(?=[A-Z])")
-
-
-def split_artist_title(m: Match[str]) -> str:
-    """See for yourself.
-
-    https://examine-archive.bandcamp.com/album/va-examine-archive-international-sampler-xmn01
-    """
-    artist, title = m.groups()
-    artist = CAMELCASE.sub(" ", artist)
-    title = CAMELCASE.sub(" ", title)
-
-    return f"{artist} - {title}"
-
-
-# fmt: off
-CLEAN_PATTERNS: list[tuple[Pattern[str], str | Callable[[Match[str]], str]]] = [
-    (re.compile(rf"(([\[(])|(^| ))\*?({'|'.join(rm_strings)})(?(2)[])]|([- ]|$))", re.I), ""),  # noqa
-    (re.compile(r" -([^\s-])"), r" - \1"),                                          # hi -bye                   -> hi - bye  # noqa
-    (re.compile(r"([^\s-])- "), r"\1 - "),                                          # hi- bye                   -> hi - bye  # noqa
-    (re.compile(r"  +"), " "),                                                      # hi  bye                   -> hi bye  # noqa
-    (re.compile(r"(- )?\( *"), "("),                                                # hi - ( bye)               -> hi (bye)  # noqa
-    (re.compile(r" \)+|(\)+$)"), ")"),                                              # hi (bye ))                -> hi (bye)  # noqa
-    (re.compile(r"- Reworked"), "(Reworked)"),                                      # bye - Reworked            -> bye (Reworked)  # noqa
-    (re.compile(rf"(\([^)]+mix)$", re.I), r"\1)"),                                  # bye - (Some Mix           -> bye - (Some Mix)  # noqa
-    (re.compile(r'(^|- )[“"]([^”"]+)[”"]( \(|$)'), r"\1\2\3"),                      # "bye" -> bye; hi - "bye"  -> hi - bye  # noqa
-    (re.compile(r"\((the )?(remixes)\)", re.I), r"\2"),                             # Album (Remixes)           -> Album Remixes  # noqa
-    (re.compile(r"^(\[[^]-]+\]) - (([^-]|-\w)+ - ([^-]|-\w)+)$"), r"\2 \1"),        # [Remixer] - hi - bye      -> hi - bye [Remixer]  # noqa
-    (re.compile(r"examine-.+CD\d+_([^_-]+)[_-](.*)"), split_artist_title),          # See https://examine-archive.bandcamp.com/album/va-examine-archive-international-sampler-xmn01  # noqa
-    (re.compile(r'"([^"]+)" by (.+)$'), r"\2 - \1"),                                # "bye" by hi               -> hi - bye  # noqa: E501
-]
-# fmt: on
-
-
-class Helpers:
     @staticmethod
-    def remove_ft(text: str) -> str:
+    @cache
+    def get_replacements() -> list[Replacement]:
+        rm_strings = [
+            "limited edition",
+            r"^EP -",
+            r"\((digital )?album\)",
+            r"\(single\)",
+            r"\Wvinyl\W|vinyl-only|vinyl[^ ]*cd",
+            "compiled by.*",
+            r"[\[(](presented|selected) by.*",
+            r"[ |-]*free download(?! \w)",
+            r"[([][^])]*free\b(?!.*mix)[^])]*[])]",
+            r"[([][^])]*preview[])]",
+            r"(\W|\W )bonus( \w+)*",
+            "Various -",
+            "split w",
+            r"CD ?\d+",
+            "Name Your Price:",
+            "just out!",
+            "- album",
+        ]
+
+        camelcase = re.compile(r"(?<=[a-z])(?=[A-Z])")
+
+        def split_artist_title(m: Match[str]) -> str:
+            """See for yourself.
+
+            https://examine-archive.bandcamp.com/album/va-examine-archive-international-sampler-xmn01
+            """
+            artist, title = m.groups()
+            artist = camelcase.sub(" ", artist)
+            title = camelcase.sub(" ", title)
+
+            return f"{artist} - {title}"
+
+        # fmt: off
+        return [
+            (re.compile(rf"(([\[(])|(^| ))\*?({'|'.join(rm_strings)})(?(2)[])]|([- ]|$))", re.I), ""),  # noqa
+            (re.compile(r" -([^\s-])"), r" - \1"),                                          # hi -bye                   -> hi - bye  # noqa
+            (re.compile(r"([^\s-])- "), r"\1 - "),                                          # hi- bye                   -> hi - bye  # noqa
+            (re.compile(r"  +"), " "),                                                      # hi  bye                   -> hi bye  # noqa
+            (re.compile(r"(- )?\( *"), "("),                                                # hi - ( bye)               -> hi (bye)  # noqa
+            (re.compile(r" \)+|(\)+$)"), ")"),                                              # hi (bye ))                -> hi (bye)  # noqa
+            (re.compile(r"- Reworked"), "(Reworked)"),                                      # bye - Reworked            -> bye (Reworked)  # noqa
+            (re.compile(rf"(\([^)]+mix)$", re.I), r"\1)"),                                  # bye - (Some Mix           -> bye - (Some Mix)  # noqa
+            (re.compile(r'(^|- )[“"]([^”"]+)[”"]( \(|$)'), r"\1\2\3"),                      # "bye" -> bye; hi - "bye"  -> hi - bye  # noqa
+            (re.compile(r"\((the )?(remixes)\)", re.I), r"\2"),                             # Album (Remixes)           -> Album Remixes  # noqa
+            (re.compile(r"^(\[[^]-]+\]) - (([^-]|-\w)+ - ([^-]|-\w)+)$"), r"\2 \1"),        # [Remixer] - hi - bye      -> hi - bye [Remixer]  # noqa
+            (re.compile(r"examine-.+CD\d+_([^_-]+)[_-](.*)"), split_artist_title),          # See https://examine-archive.bandcamp.com/album/va-examine-archive-international-sampler-xmn01  # noqa
+            (re.compile(r'"([^"]+)" by (.+)$'), r"\2 - \1"),                                # "bye" by hi               -> hi - bye  # noqa: E501
+        ]
+        # fmt: on
+
+    @classmethod
+    def remove_ft(cls, text: str) -> str:
         """Remove featuring artists from the text."""
-        return PATTERNS["ft"].sub("", text)
+        return cls.FT_PAT.sub("", text)
 
     @classmethod
     def split_artists(
@@ -179,8 +192,8 @@ class Helpers:
         if not isinstance(artists, str):
             artists = ", ".join(artists)
 
-        key = "split_all_artists" if force else "split_artists"
-        split = PATTERNS[key].split(cls.remove_ft(artists))
+        pat = cls.SPLIT_ALL_ARTISTS_PAT if force else cls.SPLIT_ARTISTS_PAT
+        split = pat.split(cls.remove_ft(artists))
         split_artists = ordset(
             a for a in map(str.strip, split) if a not in {"", "more"}
         )
@@ -197,11 +210,11 @@ class Helpers:
                     split_artists |= ordset(subartists)
         return list(split_artists)
 
-    @staticmethod
-    def clean_name(name: str) -> str:
+    @classmethod
+    def clean_name(cls, name: str) -> str:
         """Both album and track names are cleaned using these patterns."""
         if name:
-            for pat, repl in CLEAN_PATTERNS:
+            for pat, repl in cls.get_replacements():
                 name = pat.sub(repl, name).strip()
         return name
 
@@ -323,7 +336,7 @@ class Helpers:
         return list(map(MediaInfo.from_format, valid_formats))
 
     @staticmethod
-    def check_list_fields(data: T) -> T:
+    def check_list_fields(data: J) -> J:
         if "albumtypes" in data and not ALBUMTYPES_LIST_SUPPORT:
             data["albumtypes"] = "; ".join(data["albumtypes"])
 

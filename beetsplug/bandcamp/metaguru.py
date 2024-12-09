@@ -17,7 +17,7 @@ from pycountry import countries, subdivisions
 
 from .album_name import AlbumName
 from .catalognum import Catalognum
-from .helpers import PATTERNS, Helpers, MediaInfo
+from .helpers import Helpers, MediaInfo, cached_patternprop
 from .names import Names
 from .tracks import Tracks
 
@@ -43,6 +43,7 @@ VA_ARTIST_COUNT = 4  # this number of artists is replaced with VA name
 
 
 class Metaguru(Helpers):
+    META = cached_patternprop(r'.*"@id".*')
     HTML_REMOVE_CHARS = ["\u200b", "\u200d", "\u200e", "\u200f", "\u00a0"]
     _singleton = False
     va_name = VA
@@ -82,7 +83,7 @@ class Metaguru(Helpers):
         for char in cls.HTML_REMOVE_CHARS:
             html = html.replace(char, "")
         try:
-            meta = re.search(PATTERNS["meta"], html).group()  # type: ignore[union-attr]
+            meta = cls.META.search(html).group()  # type: ignore[union-attr]
         except AttributeError as exc:
             raise AttributeError("Could not find release metadata JSON") from exc
         else:
@@ -286,8 +287,8 @@ class Metaguru(Helpers):
 
         aartist = self.preliminary_albumartist
         if aartist and (set(self.split_artists(aartist)) <= set(self.unique_artists)):
-            if (m := PATTERNS["ft"].search(aartist)) and "remix" in m[0]:
-                return aartist.replace(m[0], "")
+            if "remix" in aartist:
+                return self.remove_ft(aartist)
             return aartist
 
         if len(self.tracks.original_artists) == 1:
@@ -468,7 +469,7 @@ class Metaguru(Helpers):
     @cached_property
     def artists(self) -> list[str]:
         artists = self.split_artists(self.albumartist, force=True)
-        if m := PATTERNS["ft"].search(self.albumartist):
+        if m := self.FT_PAT.search(self.albumartist):
             artists.append(m["ft_artist"])
 
         return artists

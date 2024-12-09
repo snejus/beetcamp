@@ -5,31 +5,12 @@ from dataclasses import dataclass
 from functools import cached_property
 from itertools import starmap
 from re import Pattern
-from typing import TYPE_CHECKING, Generic, TypeVar
+from typing import TYPE_CHECKING
+
+from .helpers import cached_patternprop
 
 if TYPE_CHECKING:
-    from collections.abc import Callable, Iterable
-
-T = TypeVar("T")
-
-
-class cached_classproperty(Generic[T]):
-    def __init__(self, getter: Callable[..., T]) -> None:
-        self.getter = getter
-        self.cache: dict[type[object], T] = {}
-
-    def __get__(self, instance: object, owner: type[object]) -> T:
-        if owner not in self.cache:
-            self.cache[owner] = self.getter(owner)
-
-        return self.cache[owner]
-
-
-def cached_patternprop(
-    pattern: str, flags: int = 0
-) -> cached_classproperty[Pattern[str]]:
-    """Pattern is compiled and cached the first time it is accessed."""
-    return cached_classproperty(lambda _: re.compile(pattern, flags))
+    from collections.abc import Iterable
 
 
 @dataclass

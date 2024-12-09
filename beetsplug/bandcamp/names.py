@@ -10,7 +10,7 @@ from functools import cached_property, reduce
 from os.path import commonprefix
 
 from .catalognum import Catalognum
-from .helpers import Helpers, JSONDict
+from .helpers import Helpers, JSONDict, cached_patternprop
 from .track import Remix
 
 
@@ -19,10 +19,10 @@ class Names:
     """Responsible for parsing track names in the entire release context."""
 
     # Title [Some Album EP]
-    ALBUM_IN_TITLE = re.compile(r"[- ]*\[([^\]]+ [EL]P)\]+", re.I)
-    SEPARATOR_PAT = re.compile(r"(?<=\s)[|\u2013\u2014-](?=\s)")
-    TITLE_IN_QUOTES = re.compile(r'^(.+[^ -])[ -]+"([^"]+)"$')
-    NUMBER_PREFIX = re.compile(r"((?<=^)|(?<=- ))\d{1,2}\W+(?=\D)")
+    ALBUM_IN_TITLE = cached_patternprop(r"[- ]*\[([^\]]+ [EL]P)\]+", re.I)
+    SEPARATOR_PAT = cached_patternprop(r"(?<=\s)[|\u2013\u2014-](?=\s)")
+    TITLE_IN_QUOTES = cached_patternprop(r'^(.+[^ -])[ -]+"([^"]+)"$')
+    NUMBER_PREFIX = cached_patternprop(r"((?<=^)|(?<=- ))\d{1,2}\W+(?=\D)")
 
     meta: JSONDict
     album_artist: str
