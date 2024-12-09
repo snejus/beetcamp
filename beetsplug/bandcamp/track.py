@@ -8,7 +8,7 @@ from functools import cached_property
 from typing import Any
 
 from .catalognum import Catalognum
-from .helpers import PATTERNS, Helpers, JSONDict
+from .helpers import Helpers, JSONDict, cached_patternprop
 
 digiwords = r"""
     # must contain at least one of
@@ -18,25 +18,11 @@ digiwords = r"""
     # and may be followed by
     (\W(track|only|tune))*
     """
-DIGI_ONLY_PATTERN = re.compile(
-    rf"""
-(\s|[^][()\w])*  # space or anything that is not a parens or an alphabetical char
-(
-      (^{digiwords}[.:\d\s]+\s)     # begins with 'Bonus.', 'Bonus 1.' or 'Bonus :'
- | [\[(]{digiwords}[\])]\W*         # delimited by brackets, '[Bonus]', '(Bonus) -'
- |   [*]{digiwords}[*]?             # delimited by asterisks, '*Bonus', '*Bonus*'
- |      {digiwords}[ ]-             # followed by ' -', 'Bonus -'
- |  ([ ]{digiwords}$)               # might not be delimited if at the end, '... Bonus'
-)
-\s*  # all succeeding space
-    """,
-    re.I | re.VERBOSE,
-)
 
 
 @dataclass
 class Remix:
-    PATTERN = re.compile(
+    PATTERN = cached_patternprop(
         r"""
     (?P<start>^)?
     \ *\(?
@@ -91,9 +77,35 @@ class Remix:
 
 @dataclass
 class Track:
-    DELIM_NOT_INSIDE_PARENS = re.compile(
+    DIGI_ONLY_PAT = cached_patternprop(
+        rf"""
+    (\s|[^][()\w])*  # space or anything that is not a parens or an alphabetical char
+    (
+          (^{digiwords}[.:\d\s]+\s)     # begins with 'Bonus.', 'Bonus 1.' or 'Bonus :'
+     | [\[(]{digiwords}[\])]\W*         # delimited by brackets, '[Bonus]', '(Bonus) -'
+     |   [*]{digiwords}[*]?             # delimited by asterisks, '*Bonus', '*Bonus*'
+     |      {digiwords}[ ]-             # followed by ' -', 'Bonus -'
+     |  ([ ]{digiwords}$)               # might not be delimited at the end, '... Bonus'
+    )
+    \s*  # all succeeding space
+        """,
+        re.I | re.VERBOSE,
+    )
+    DELIM_NOT_INSIDE_PARENS = cached_patternprop(
         r"(?<!-)(?<!^live)(?<!sample\ pack) - (?!-|[^([]+\w[])])", re.I
     )
+    TRACK_ALT_PAT = cached_patternprop(
+        r"""
+        (?:(?<=^)|(?<=-\ ))             # beginning of the line or after the separator
+        (
+            (?:[A-J]{1,3}[12]?\.?\d)    # A1, B2, E4, A1.1 etc.
+          | (?:[AB]+(?!\ \()(?=\W{2}\b))# A, AA BB
+        )
+        (?:[/.:)_\s-]+)                 # consume the non-word chars for removal
+        """,
+        re.M | re.VERBOSE,
+    )
+
     json_item: JSONDict = field(default_factory=dict, repr=False)
     track_id: str = ""
     index: int | None = None
@@ -110,19 +122,19 @@ class Track:
     track_alt: str | None = None
     album_artist: str | None = None
 
-    @staticmethod
-    def clean_digi_name(name: str) -> tuple[str, bool]:
+    @classmethod
+    def clean_digi_name(cls, name: str) -> tuple[str, bool]:
         """Clean the track title from digi-only artifacts.
 
         Return the clean name, and whether this track is digi-only.
         """
-        clean_name = DIGI_ONLY_PATTERN.sub("", name)
+        clean_name = cls.DIGI_ONLY_PAT.sub("", name)
         return clean_name, clean_name != name
 
     @staticmethod
     def split_ft(value: str) -> tuple[str, str, str]:
         """Return ft artist, full ft string, and the value without the ft string."""
-        if m := PATTERNS["ft"].search(value):
+        if m := Helpers.FT_PAT.search(value):
             grp = m.groupdict()
             return grp["ft_artist"], grp["ft"], value.replace(m.group(), "")
 
@@ -156,7 +168,7 @@ class Track:
         name = Helpers.clean_name(name).strip()
 
         # find the track_alt and remove it from the name
-        m = PATTERNS["track_alt"].search(name)
+        m = cls.TRACK_ALT_PAT.search(name)
         if m:
             result["track_alt"] = m.group(1).replace(".", "").upper()
             name = name.replace(m.group(), "")

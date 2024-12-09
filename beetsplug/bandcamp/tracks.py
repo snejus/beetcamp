@@ -7,7 +7,6 @@ from dataclasses import dataclass
 from functools import cached_property
 from typing import TYPE_CHECKING, Any
 
-from .helpers import PATTERNS
 from .names import Names
 from .track import Track
 
@@ -242,7 +241,7 @@ class Tracks:
             return tracks
 
         # using an ordered set here in case of duplicates
-        track_alts = ordset(PATTERNS["track_alt"].findall(comments))
+        track_alts = ordset(Track.TRACK_ALT_PAT.findall(comments))
         if len(track_alts) != len(tracks):
             return tracks
 

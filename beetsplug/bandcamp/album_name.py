@@ -8,7 +8,7 @@ from functools import cached_property
 from re import Match
 from typing import TYPE_CHECKING, Any
 
-from .helpers import Helpers
+from .helpers import Helpers, cached_patternprop
 from .track import Remix, Track
 
 if TYPE_CHECKING:
@@ -20,9 +20,9 @@ JSONDict = dict[str, Any]
 @dataclass
 class AlbumName:
     _series = r"(?i:\b(part|volume|pt|vol)\b\.?)"
-    SERIES = re.compile(rf"{_series}[ ]?[A-Z\d.-]+\b")
-    SERIES_FMT = re.compile(rf"^(.+){_series} *0*")
-    REMIX_IN_TITLE = re.compile(
+    SERIES = cached_patternprop(rf"{_series}[ ]?[A-Z\d.-]+\b")
+    SERIES_FMT = cached_patternprop(rf"^(.+){_series} *0*")
+    REMIX_IN_TITLE = cached_patternprop(
         r"""
             (?<=remixes\ )\([^()]+\)$
           | \((?:inc|\+)[^()]*mix(?:es)?\)
@@ -32,18 +32,22 @@ class AlbumName:
         """,
         re.IGNORECASE | re.VERBOSE,
     )
-    CLEAN_EPLP = re.compile(r"(?:[([]|Double ){0,2}(\b[EL]P\b)\S?", re.I)
-    EPLP_ALBUM = re.compile(r"\b(?!VA|0\d|-)([^\s:]+\b|[&, ])+ [EL]P\b( [\w#][^ ]+$)?")
-    EPLP_ALBUM_LINE = re.compile(r"\b(?=[A-Z])(((?!Vinyl|VA|-)[^:\s]+ )+)[EL]P$", re.M)
-    QUOTED_ALBUM = re.compile(r"\B(['\"])([^'\"]+)\1\B( VA\d+| [EL]P)?", re.I)
-    ALBUM_IN_DESC = re.compile(r"(?:Title *: ?|Album(?: *:|/Single) )([^\n]+)")
-    CLEAN_VA_EXCLUDE = re.compile(r"\w various artists \w", re.I)
-    CLEAN_VA = re.compile(
+    CLEAN_EPLP = cached_patternprop(r"(?:[([]|Double ){0,2}(\b[EL]P\b)\S?", re.I)
+    EPLP_ALBUM = cached_patternprop(
+        r"\b(?!VA|0\d|-)([^\s:]+\b|[&, ])+ [EL]P\b( [\w#][^ ]+$)?"
+    )
+    EPLP_ALBUM_LINE = cached_patternprop(
+        r"\b(?=[A-Z])(((?!Vinyl|VA|-)[^:\s]+ )+)[EL]P$", re.M
+    )
+    QUOTED_ALBUM = cached_patternprop(r"\B(['\"])([^'\"]+)\1\B( VA\d+| [EL]P)?", re.I)
+    ALBUM_IN_DESC = cached_patternprop(r"(?:Title *: ?|Album(?: *:|/Single) )([^\n]+)")
+    CLEAN_VA_EXCLUDE = cached_patternprop(r"\w various artists \w", re.I)
+    CLEAN_VA = cached_patternprop(
         r"""(^v[./]?a|\W*Various(?:\ Artists?)?)\b(?!\ [A-z])[^A-z(]*""",
         re.IGNORECASE,
     )
-    COMPILATION_IN_TITLE = re.compile(r"compilation|best of|anniversary", re.I)
-    YEAR_RANGE = re.compile(r"20[12]\d - 20[12]\d")
+    COMPILATION_IN_TITLE = cached_patternprop(r"compilation|best of|anniversary", re.I)
+    YEAR_RANGE = cached_patternprop(r"20[12]\d - 20[12]\d")
 
     original: str
     description: str
