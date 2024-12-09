@@ -10,7 +10,7 @@ pytestmark = pytest.mark.parsing
 
 
 @pytest.mark.parametrize(
-    ("name", "expected"),
+    ("track_name", "expected"),
     [
         ("Title", ("", "", "", "Title", "Title")),
         ("Artist - Title", ("", "Artist", "", "Title", "Title")),
@@ -102,15 +102,31 @@ pytestmark = pytest.mark.parsing
         ("Live - 2020", ("", "", "", "Live - 2020", "Live - 2020")),
     ],
 )
-def test_parse_track_name(name, expected, json_track):
+def test_parse_track_name(expected, json_track):
     fields = "track_alt", "artist", "ft", "title", "title_without_remix"
     expected = dict(zip(fields, expected))
     if not expected["track_alt"]:
         expected["track_alt"] = None
 
-    result_track = Track.make({**json_track["item"], "name": name})
+    result_track = Track.make(json_track["item"])
     result = dict(zip(fields, attrgetter(*fields)(result_track)))
     assert result == expected
+
+
+@pytest.mark.parametrize(
+    "track_name, track_artist, expected_artist, expected_title",
+    [
+        ("Artist - Title", None, "Artist", "Title"),
+        ("Artist - Title", "Artist", "Artist", "Title"),
+        ("Artist - Title - Something", None, "Artist - Title", "Something"),
+        ("Artist - Title - Something", "Artist", "Artist", "Title - Something"),
+    ],
+)
+def test_track_artist(json_track, expected_artist, expected_title):
+    result_track = Track.make(json_track["item"])
+
+    assert result_track.artist == expected_artist
+    assert result_track.title == expected_title
 
 
 @pytest.mark.parametrize(

@@ -24,7 +24,7 @@ class Names:
     TITLE_IN_QUOTES = cached_patternprop(r'^(.+[^ -])[ -]+"([^"]+)"$')
     NUMBER_PREFIX = cached_patternprop(r"((?<=^)|(?<=- ))\d{1,2}\W+(?=\D)")
 
-    meta: JSONDict
+    meta: JSONDict = field(repr=False)
     album_artist: str
     album_in_titles: str | None = None
     catalognum_in_titles: str | None = None
@@ -44,27 +44,41 @@ class Names:
         return str(self.meta["name"])
 
     @cached_property
-    def json_tracks(self) -> list[JSONDict]:
-        try:
-            return [{**t, **t["item"]} for t in self.meta["track"]["itemListElement"]]
-        except KeyError as e:
-            if "track" in str(e):
-                # a single track release
-                return [{**self.meta}]
+    def singleton(self) -> bool:
+        return "track" not in self.meta
 
-            # no tracks (sold out release or defunct label, potentially)
-            return []
+    @cached_property
+    def json_tracks(self) -> list[JSONDict]:
+        if self.singleton:
+            return [{**self.meta, "byArtist": {"name": self.album_artist}}]
+
+        if tracks := self.meta["track"].get("itemListElement"):
+            return [{**t, **t["item"]} for t in tracks]
+
+        # no tracks (sold out release or defunct label, potentially)
+        return []
 
     @cached_property
     def original_titles(self) -> list[str]:
         return [i["name"] for i in self.json_tracks]
 
     @cached_property
+    def _catalognum_in_album_match(self) -> re.Match[str] | None:
+        return Catalognum.in_album_pat.search(self.original_album)
+
+    @cached_property
     def catalognum_in_album(self) -> str | None:
-        if cat := Catalognum.from_album(self.original_album):
-            return cat
+        if m := self._catalognum_in_album_match:
+            return next(filter(None, m.groups()))
 
         return None
+
+    @cached_property
+    def album(self) -> str:
+        if m := self._catalognum_in_album_match:
+            return self.original_album.replace(m[0], "")
+
+        return self.original_album
 
     @cached_property
     def catalognum(self) -> str | None:
@@ -101,9 +115,6 @@ class Names:
         If there is more than one track and at least half of the track names have
         a number prefix remove it from the names.
         """
-        if len(names) == 1:
-            return names
-
         prefix_matches = [cls.NUMBER_PREFIX.search(n) for n in names]
         if len([p for p in prefix_matches if p]) > len(names) / 2:
             return [
@@ -217,12 +228,15 @@ class Names:
         if not self.original_titles:
             return
 
-        self.catalognum_in_titles, titles = self.eject_common_catalognum(
-            self.remove_album_catalognum(self.split_quoted_titles(self.original_titles))
-        )
-        self.album_in_titles, titles = self.eject_album_name(
-            self.remove_label(
-                self.normalize_delimiter(self.remove_number_prefix(titles))
-            )
-        )
+        titles = self.split_quoted_titles(self.original_titles)
+        if self.singleton:
+            titles = [self.album]
+        else:
+            titles = self.remove_album_catalognum(titles)
+            self.catalognum_in_titles, titles = self.eject_common_catalognum(titles)
+            titles = self.remove_number_prefix(titles)
+
+        titles = self.normalize_delimiter(titles)
+        titles = self.remove_label(titles)
+        self.album_in_titles, titles = self.eject_album_name(titles)
         self.titles = self.ensure_artist_first(titles)

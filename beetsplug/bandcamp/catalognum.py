@@ -111,9 +111,15 @@ class Catalognum:
     anywhere = cached_patternprop(rf"({MATCH}(?:\ [-/]\ {MATCH})?)", re.VERBOSE)
     in_album_pat = cached_patternprop(
         r"""
-          (^\d*[A-Z]+\d+)(?::|\s*[|-])\s# '^ABC123: ' or '^ABC123 - ' or '^ABC123 | '
+          (^\d*[A-Z$]+\d+)              # ^ABC123, ^A$C123
+          (?:
+              :\s+                      # ': '
+            | \s+[|-]\s+                # ' | ', ' - '
+            | -\s+                      # '- '
+            | \s+-                      # ' -'
+          )
           # or
-        | \s[|-]\s([A-Z]+\d+$)          # ' - ABC123$' or ' | ABC123$'
+        | \s[|-]\s([A-Z]{2,}\d+$)       # ' - ABC123$' or ' | ABC123$'
           # or
         | [([]                          # just about anything within parens or brackets
           (?!Part|VA\b|LP\b)            # does not start with 'Part', 'VA', 'LP'
@@ -133,13 +139,6 @@ class Catalognum:
     album: str
     label: str
     artists_and_titles: Iterable[str]
-
-    @classmethod
-    def from_album(cls, album: str) -> str | None:
-        if m := cls.in_album_pat.search(album):
-            return next(filter(None, m.groups()))
-
-        return None
 
     @cached_property
     def label_variations(self) -> set[str]:

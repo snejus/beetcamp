@@ -138,8 +138,20 @@ def track_name() -> str:
 
 
 @pytest.fixture
-def json_track(track_name) -> JSONDict:
-    return {"item": {"@id": "track_url", "name": track_name}, "position": 1}
+def track_artist() -> str | None:
+    return None
+
+
+@pytest.fixture
+def json_track(track_name, track_artist) -> JSONDict:
+    return {
+        "item": {
+            "@id": "track_url",
+            "name": track_name,
+            **({"byArtist": {"name": track_artist}} if track_artist else {}),
+        },
+        "position": 1,
+    }
 
 
 @pytest.fixture

@@ -37,6 +37,7 @@ def test_remove_label(json_meta, expected_titles):
         ("Album [CAT001]", "", "CAT001"),
         ("CAT001 - Album", "", "CAT001"),
         ("CAT001- Album", "", "CAT001"),
+        ("CAT001 -Album", "", "CAT001"),
         ("Album - CAT001", "", "CAT001"),
         ("Album | CAT001", "", "CAT001"),
         ("Album [CAT001]", "CAT001", None),
