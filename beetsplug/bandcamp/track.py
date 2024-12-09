@@ -232,6 +232,11 @@ class Track:
     @cached_property
     def name_split(self) -> list[str]:
         name = self.name
+        if (a := self.json_artist) and name.lower().startswith(
+            artist_start := f"{a.lower()} - "
+        ):
+            return [name[len(artist_start) :]]
+
         split = self.DELIM_NOT_INSIDE_PARENS.split(name.strip())
         if self.json_artist and " - " not in name:
             return [self.json_artist.strip(), *split]
@@ -267,6 +272,9 @@ class Track:
 
         if not self.title_without_remix:
             return ""
+
+        if self.json_artist and len(self.name_split) == 1:
+            return self.json_artist
 
         artist = " - ".join(self.name_split[:-1])
         initial_artist = artist
