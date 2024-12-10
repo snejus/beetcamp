@@ -70,11 +70,11 @@ class BandcampRequestsHandler:
     def from_bandcamp(cls, clue: str) -> bool:
         """Check if the clue is likely to be a bandcamp url.
 
-        We could check whether 'bandcamp' is found in the url, however, we would be ignoring
-        cases where the publisher uses their own domain (for example https://eaux.ro) which
-        in reality points to their Bandcamp page. Historically, we found that regardless
-        of the domain, the rest of the url stays the same, therefore '/album/' or '/track/'
-        is what we are looking for in a valid url here.
+        We could check whether 'bandcamp' is found in the url, however, we would be
+        ignoring cases where the publisher uses their own domain (for example
+        https://eaux.ro) which in reality points to their Bandcamp page. Historically,
+        we found that regardless of the domain, the rest of the url stays the same,
+        therefore '/album/' or '/track/' is what we are looking for in a valid url here.
         """
         return bool(cls.BANDCAMP_URL_PAT.match(clue))
 
@@ -147,7 +147,7 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         if self.config["art"]:
             self.register_listener("pluginload", self.loaded)
 
-    def adjust_comments_field(self, lib: Library, album: Album) -> None:
+    def adjust_comments_field(self, lib: Library, album: Album) -> None:  # noqa: ARG002
         """If the comments field is too long, store it as album flex attr.
 
         Keep the first 4000 characters in the item and store the full comment as
@@ -186,7 +186,7 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
     def parse_label_url(cls, text: str) -> str | None:
         return m[1] if (m := cls.LABEL_URL_IN_COMMENT.search(text)) else None
 
-    def _find_url_in_item(self, item: Item, name: str, _type: CandidateType) -> str:
+    def _find_url_in_item(self, item: Item, name: str, type_: CandidateType) -> str:
         """Try to extract release URL from the library item.
 
         If the item has previously been imported, `mb_albumid` (or `mb_trackid`
@@ -204,14 +204,14 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
               the number of previous releases that also did not have any valid
               alphanums. Therefore, we cannot make a reliable guess here.
         """
-        if (url := getattr(item, f"mb_{_type}id", "")) and self.from_bandcamp(url):
+        if (url := getattr(item, f"mb_{type_}id", "")) and self.from_bandcamp(url):
             self._info("Fetching the URL attached to the first item, {}", url)
             return url
 
         if (label_url := self.parse_label_url(item.comments)) and (
             urlified_name := urlify(name)
         ):
-            url = f"{label_url}/{_type}/{urlified_name}"
+            url = f"{label_url}/{type_}/{urlified_name}"
             self._info("Trying our guess {} before searching", url)
             return url
         return ""
@@ -338,10 +338,10 @@ By default, all types are searched.
     class UrlOrQueryAction(Action):
         def __call__(
             self,
-            parser: ArgumentParser,
+            parser: ArgumentParser,  # noqa: ARG002
             namespace: Namespace,
             values: Any,
-            option_string: str | None = None,
+            option_string: str | None = None,  # noqa: ARG002
         ) -> None:
             if values:
                 if values.startswith("https://"):

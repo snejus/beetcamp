@@ -56,9 +56,7 @@ def test_search_logic_alternate_domain_name(search_data):
 
 
 def test_search_prioritises_best_matches(search_data):
-    """Given two releases, the better match is found first in the output regardless
-    of its position in the HTML.
-    """
+    """Search results are sorted by similarity."""
     expected_result = {
         **search_data,
         "name": "Specific Release",
@@ -88,18 +86,17 @@ def test_search_prioritises_best_matches(search_data):
 
 # fmt: off
 @pytest.mark.parametrize(
-    ("test_url", "expected_label"),
-    (
-        ("https://bandcamp.materiacollective.com/track/the-illusionary-dance", "materiacollective"),  # noqa
-        ("https://finderskeepersrecords.bandcamp.com/track/illusional-frieze", "finderskeepersrecords"),  # noqa
-        ("https://compiladoaspen.bandcamp.com/track/kiss-from-a-rose", "compiladoaspen"),  # noqa
+    "test_url, expected_label",
+    [
+        ("https://bandcamp.materiacollective.com/track/the-illusionary-dance", "materiacollective"),  # noqa: E501
+        ("https://finderskeepersrecords.bandcamp.com/track/illusional-frieze", "finderskeepersrecords"),  # noqa: E501
+        ("https://compiladoaspen.bandcamp.com/track/kiss-from-a-rose", "compiladoaspen"),  # noqa: E501
         ("https://comtruise.bandcamp.com/track/karova-digital-bonus-3", "comtruise"),
         ("https://bandofholyjoy.bandcamp.com/track/lost-in-the-night", "bandofholyjoy"),
-        ("https://bandcampcomp.bandcamp.com/track/everything-everything-in-birdsong-acoustic", "bandcampcomp"),  # noqa
+        ("https://bandcampcomp.bandcamp.com/track/everything-everything-in-birdsong-acoustic", "bandcampcomp"),  # noqa: E501
         ("https://bandcamp.bandcamp.com/track/warm-2", "bandcamp"),
-    ),
+    ],
 )
-# fmt: on
 def test_search_matches(search_data, test_url, expected_label):
     result = get_matches(make_html_item({**search_data, "url": test_url}))
     assert result["url"] == test_url

@@ -12,7 +12,7 @@ def test_style(json_meta, beets_config):
 
 
 @pytest.mark.parametrize(
-    ("keywords", "expected"),
+    "keywords, expected",
     [
         ([], None),
         (["crazy music"], None),
@@ -87,7 +87,7 @@ def test_genre(keywords, mode, mode_result, beets_config):
 
 
 @pytest.mark.parametrize(
-    ("capitalize", "maximum", "expected"),
+    "capitalize, maximum, expected",
     [
         (True, 0, "Folk, Grime, House, Trance"),
         (True, 3, "Folk, Grime, House"),
@@ -105,7 +105,7 @@ def test_genre_options(capitalize, maximum, expected, json_meta, beets_config):
 
 
 @pytest.mark.parametrize(
-    ("keywords", "label", "expected"),
+    "keywords, label, expected",
     [
         (["house", "classical"], "Classical", "classical, house"),
         (["house", "hard tunenetwork"], "Hard Tune Network", "house"),

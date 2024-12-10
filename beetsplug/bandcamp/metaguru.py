@@ -202,7 +202,8 @@ class Metaguru(Helpers):
     @cached_property
     def release_date(self) -> date | None:
         """Parse the datestring that takes the format like below and return date object.
-        {"datePublished": "17 Jul 2020 00:00:00 GMT"}
+
+        {"datePublished": "17 Jul 2020 00:00:00 GMT"}.
 
         If the field is not found, return None.
         """
@@ -349,7 +350,7 @@ class Metaguru(Helpers):
         word_pat = re.compile(rf"(?<!-)\b{word}(\b|\.)", re.I)
         in_catnum = re.compile(rf"{word}\d", re.I)
         release_ref = re.compile(
-            rf"\b((this|with|present|deliver|new)[\w\s,'-]*?|the|track|full|first) {word}\b",
+            rf"\b((this|with|present|deliver|new)[\w\s,'-]*?|the|track|full|first) {word}\b",  # noqa: E501
             re.I,
         )
         album_name = self.album_name.lower()
@@ -385,7 +386,8 @@ class Metaguru(Helpers):
     def is_ep(self) -> bool:
         """Return whether the release is an EP."""
         return self._search_albumtype(r"e\.?p") or (
-            " / " in self.album_name and len(self.tracks.artists) == 2
+            " / " in self.album_name
+            and len(self.tracks.artists) == AlbumName.SPLIT_RELEASE_ARTIST_COUNT
         )
 
     @cached_property

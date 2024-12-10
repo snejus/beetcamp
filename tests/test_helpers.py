@@ -8,7 +8,7 @@ pytestmark = pytest.mark.parsing
 
 
 @pytest.mark.parametrize(
-    ("disctitle", "expected"),
+    "disctitle, expected",
     [
         ("2 x Vinyl LP - MTY003", 2),
         ('3 x 12" Vinyl LP - MTY003', 3),
@@ -38,7 +38,7 @@ def test_bundles_get_excluded(bundle_format, digital_format):
 
 
 @pytest.mark.parametrize(
-    ("artists", "expected"),
+    "artists, expected",
     [
         (["Art", "Art"], ["Art"]),
         (["Art", "Art1"], ["Art", "Art1"]),

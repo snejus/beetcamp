@@ -4,7 +4,7 @@ from beetsplug.bandcamp.metaguru import Metaguru
 
 
 @pytest.mark.parametrize(
-    ("album", "disctitle", "description", "label", "expected"),
+    "album, disctitle, description, label, expected",
     [
         ("Tracker-229 [PRH-002]", "", "", "", "PRH-002"),
         ("[PRH-002] Tracker-229", "", "", "", "PRH-002"),

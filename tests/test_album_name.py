@@ -87,7 +87,7 @@ def test_clean_name(name, expected):
 
 
 @pytest.mark.parametrize(
-    ("original", "expected"),
+    "original, expected",
     [
         ("Self-Medicating LP - WU87d", "Self-Medicating LP"),
         ("Stone Techno Series - Tetragonal EP", "Tetragonal EP"),

@@ -1,4 +1,4 @@
-"""List of MusicBrainz genres from https://beta.musicbrainz.org/genres"""
+"""List of MusicBrainz genres from https://beta.musicbrainz.org/genres."""
 
 GENRES = {
     "2 tone",

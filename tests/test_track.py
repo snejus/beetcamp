@@ -10,7 +10,7 @@ pytestmark = pytest.mark.parsing
 
 
 @pytest.mark.parametrize(
-    ("track_name", "expected"),
+    "track_name, expected",
     [
         ("Title", ("", "", "", "Title", "Title")),
         ("Artist - Title", ("", "Artist", "", "Title", "Title")),
@@ -130,7 +130,7 @@ def test_track_artist(json_track, expected_artist, expected_title):
 
 
 @pytest.mark.parametrize(
-    ("name", "expected_title", "expected_catalognum"),
+    "name, expected_title, expected_catalognum",
     [
         ("Artist - Title CAT001", "Title CAT001", None),
         ("Artist - Title [CAT001]", "Title", "CAT001"),
@@ -152,7 +152,7 @@ def test_parse_catalognum_from_track_name(
 
 
 @pytest.mark.parametrize(
-    ("name", "expected_digi_only", "expected_name"),
+    "name, expected_digi_only, expected_name",
     [
         ("Artist - Track [Digital Bonus]", True, "Artist - Track"),
         ("DIGI 11. Track", True, "Track"),
