@@ -134,6 +134,7 @@ class Helpers:
             r"\(single\)",
             r"\Wvinyl\W|vinyl-only|vinyl[^ ]*cd",
             "compiled by.*",
+            "compilation: ",
             r"[\[(](presented|selected) by.*",
             r"[ |-]*free download(?! \w)",
             r"[([][^])]*free\b(?!.*mix)[^])]*[])]",
