@@ -62,9 +62,10 @@ def modes_spec():
         "double_word_valid_separately": False,
         "only_last_word_valid": False,
     }
-    modes = {}
-    modes["classical"] = base_spec
-    modes["progressive"] = {**base_spec, "double_word_valid_separately": True}
+    modes = {
+        "classical": base_spec,
+        "progressive": {**base_spec, "double_word_valid_separately": True},
+    }
     modes["psychedelic"] = {**modes["progressive"], "only_last_word_valid": True}
     return modes
 

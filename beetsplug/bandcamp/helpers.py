@@ -332,7 +332,7 @@ class Helpers:
                 # musicReleaseFormat format is given or it is a USB
                 and ("musicReleaseFormat" in obj or obj["type_id"] == USB_TYPE_ID)
                 # it is not a vinyl bundle
-                and not (obj["item_type"] == "p" and "bundle" in obj["name"].lower())
+                and (obj["item_type"] != "p" or "bundle" not in obj["name"].lower())
             )
 
         valid_formats = filter(valid_format, map(Helpers.unpack_props, format_list))

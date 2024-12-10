@@ -147,7 +147,7 @@ class Field:
 
     @cached_property
     def changed(self) -> bool:
-        return bool(self.new != self.old)
+        return self.new != self.old
 
     @cached_property
     def diff(self) -> FieldDiff:
@@ -261,30 +261,26 @@ def _report(
 
         columns = []
         for name, all_changes, color in sections:
-            album_panels = []
             if include_fields:
                 changes = [(u, d) for u, d in all_changes if d.field in include_fields]
             else:
                 changes = all_changes
             changes.sort(key=FIRST_ITEM)
-            for url, diffs in groupby(changes, FIRST_ITEM):
-                album_panels.append(
-                    border_panel(
-                        new_table(
-                            rows=[
-                                (f"[b dim]{diff.field}[/]", str(diff))
-                                for _, diff in diffs
-                            ]
-                        ),
-                        title=f"[dim]{url}[/]",
-                        title_align="right",
-                        subtitle_align="right",
-                        border_style="dim",
-                        box=box.DOUBLE,
-                    )
+            if album_panels := [
+                border_panel(
+                    new_table(
+                        rows=[
+                            (f"[b dim]{diff.field}[/]", str(diff)) for _, diff in diffs
+                        ]
+                    ),
+                    title=f"[dim]{url}[/]",
+                    title_align="right",
+                    subtitle_align="right",
+                    border_style="dim",
+                    box=box.DOUBLE,
                 )
-
-            if album_panels:
+                for url, diffs in groupby(changes, FIRST_ITEM)
+            ]:
                 columns.append(
                     border_panel(
                         list_table(album_panels),

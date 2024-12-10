@@ -217,7 +217,7 @@ class Names:
                     )
                 )
                 # or there are at least 2 remixes on the left side of the delimiter
-                or sum(1 for x in left if Remix.PATTERN.search(x)) > 1
+                or sum(bool(Remix.PATTERN.search(x)) for x in left) > 1
             )
         ):
             return [f"{a} - {t}" for t, a in splits]

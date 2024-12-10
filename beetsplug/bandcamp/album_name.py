@@ -79,10 +79,7 @@ class AlbumName:
         if m := self.QUOTED_ALBUM.search(self.original):
             return m.expand(r"\2\3")
 
-        if m := self.EPLP_ALBUM.search(self.original):
-            return m.group()
-
-        return None
+        return m.group() if (m := self.EPLP_ALBUM.search(self.original)) else None
 
     @cached_property
     def album_names(self) -> list[str]:
@@ -251,10 +248,7 @@ class AlbumName:
         else:
             m = self.EPLP_ALBUM_LINE.search(self.description)
 
-        if m:
-            return m.group()
-
-        return album
+        return m.group() if m else album
 
     def get(
         self,

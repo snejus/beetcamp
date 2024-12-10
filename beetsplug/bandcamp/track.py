@@ -52,8 +52,7 @@ class Remix:
 
     @classmethod
     def from_name(cls, name: str) -> Remix | None:
-        m = cls.PATTERN.search(name)
-        if m:
+        if m := cls.PATTERN.search(name):
             remix: dict[str, Any] = m.groupdict()
             remix["start"] = remix["start"] is not None
             remix["end"] = remix["end"] is not None
@@ -168,17 +167,11 @@ class Track:
             artist = Helpers.clean_name(artist)
         name = Helpers.clean_name(name).strip()
 
-        # find the track_alt and remove it from the name
-        m = cls.TRACK_ALT_PAT.search(name)
-        if m:
+        if m := cls.TRACK_ALT_PAT.search(name):
             result["track_alt"] = m.group(1).replace(".", "").upper()
             name = name.replace(m.group(), "")
 
-        # check whether track name contains the catalog number within parens
-        # or square brackets
-        # see https://objection999x.bandcamp.com/album/eruption-va-obj012
-        m = Catalognum.delimited.search(name)
-        if m:
+        if m := Catalognum.delimited.search(name):
             result["catalognum"] = m.group(1)
             name = name.replace(m.group(), "").strip()
 
@@ -187,9 +180,7 @@ class Track:
             name = re.sub(rf"^0?{index}\W\W+", "", name)
             result["medium_index"] = index
 
-        # find the remixer and remove it from the name
-        remix = Remix.from_name(name)
-        if remix:
+        if remix := Remix.from_name(name):
             result["remix"] = remix
             if remix.start:
                 name = name.removeprefix(remix.full).strip()
