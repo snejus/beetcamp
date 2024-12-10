@@ -63,8 +63,7 @@ def get_matches(text: str) -> JSONDict:
     """Reduce matches from all patterns into a single dictionary."""
     result: JSONDict = {}
     for pat in RELEASE_PATTERNS:
-        m = pat.search(text)
-        if m:
+        if m := pat.search(text):
             result = {**m.groupdict(), **result}
     if "type" in result:
         result["type"] = result["type"].lower()
@@ -84,11 +83,10 @@ def parse_and_sort_results(html: str, **kwargs: str) -> list[JSONDict]:
     """
     results: list[JSONDict] = []
     for block in html.split("searchresult data-search")[1:]:
-        similarities = []
         res = get_matches(block)
-        for field, query in kwargs.items():
-            similarities.append(get_similarity(query, res.get(field, "")))
-
+        similarities = [
+            get_similarity(query, res.get(field, "")) for field, query in kwargs.items()
+        ]
         res["similarity"] = round(sum(similarities) / len(similarities), 3)
         results.append(res)
     results = sorted(results, key=itemgetter("similarity"), reverse=True)
@@ -105,6 +103,6 @@ def search_bandcamp(
     """Return a list with item JSONs of type search_type matching the query."""
     url = SEARCH_URL.format(page, quote_plus(query))
     if search_type:
-        url += "&item_type=" + search_type
+        url += f"&item_type={search_type}"
     kwargs["name"] = query
     return parse_and_sort_results(get(url), **kwargs)

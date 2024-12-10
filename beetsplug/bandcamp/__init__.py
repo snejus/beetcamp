@@ -184,10 +184,7 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
 
     @classmethod
     def parse_label_url(cls, text: str) -> str | None:
-        if m := cls.LABEL_URL_IN_COMMENT.search(text):
-            return m[1]
-
-        return None
+        return m[1] if (m := cls.LABEL_URL_IN_COMMENT.search(text)) else None
 
     def _find_url_in_item(self, item: Item, name: str, _type: CandidateType) -> str:
         """Try to extract release URL from the library item.
@@ -418,11 +415,10 @@ def main() -> None:
         pl = BandcampPlugin()
         pl._log.setLevel(10)
         url = args.release_url
-        result = pl.get_album_info(args.release_url) or pl.get_track_info(url)
-        if not result:
+        if result := pl.get_album_info(args.release_url) or pl.get_track_info(url):
+            print(json.dumps(result))
+        else:
             raise AssertionError("Failed to find a release under the given url")
-
-        print(json.dumps(result))
 
 
 if __name__ == "__main__":
