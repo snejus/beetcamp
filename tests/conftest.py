@@ -64,14 +64,16 @@ def pytest_addoption(parser: Parser) -> None:
 
 
 def pytest_terminal_summary(
-    terminalreporter: TerminalReporter, exitstatus: int, config: Config
+    terminalreporter: TerminalReporter,
+    exitstatus: int,  # noqa: ARG001
+    config: Config,
 ) -> None:
     base = config.getoption("base")
     target = config.getoption("target")
     terminalreporter.write(f"--- Compared {target} against {base} ---\n")
 
 
-def pytest_assertrepr_compare(op: str, left, right):
+def pytest_assertrepr_compare(op: str, left: Any, right: Any):  # noqa: ARG001
     """Pretty print the difference between dict objects."""
     actual, expected = left, right
 
@@ -143,7 +145,7 @@ def track_artist() -> str | None:
 
 
 @pytest.fixture
-def json_track(track_name, track_artist) -> JSONDict:
+def json_track(track_name: str, track_artist: str | None) -> JSONDict:
     return {
         "item": {
             "@id": "track_url",
