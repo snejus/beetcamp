@@ -14,7 +14,7 @@ _client = httpx.Client(headers={"User-Agent": USER_AGENT})
 
 _rm_single_quote_dot = partial(re.compile(r"'|(?<=\d)\.(?=\d)").sub, "")
 _non_ascii_to_dash = partial(re.compile(r"\W", flags=re.ASCII).sub, "-")
-_squeeze_dashes = partial(re.compile("--+").sub, "-")
+_squeeze_dashes = partial(re.compile(r"--+").sub, "-")
 
 
 @atexit.register

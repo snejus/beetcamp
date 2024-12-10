@@ -251,12 +251,12 @@ class Tracks:
         self, media: str, comments: str, include_digi: bool
     ) -> list[dict[str, Any]]:
         if not include_digi and media != "Digital Media":
-            _tracks = [t for t in self.tracks if not t.digi_only]
+            tracks_ = [t for t in self.tracks if not t.digi_only]
         else:
-            _tracks = self.tracks
+            tracks_ = self.tracks
 
-        medium_total = {"medium_total": len(_tracks)}
-        tracks = [t.info | medium_total for t in _tracks]
+        medium_total = {"medium_total": len(tracks_)}
+        tracks = [t.info | medium_total for t in tracks_]
         if len(tracks) == 1 or media != "Vinyl":
             return tracks
 

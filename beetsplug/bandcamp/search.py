@@ -14,8 +14,9 @@ SEARCH_URL = "https://bandcamp.com/search?page={}&q={}"
 
 
 def _f(field: str) -> str:
-    """Return pattern matching a string that does not start with '<' or space
-    until the end of the line.
+    """Return pattern matching a string that does not start with '<' or space.
+
+    Match until the end of the line.
     """
     return rf"(?P<{field}>[^\s<][^\n]+)"
 

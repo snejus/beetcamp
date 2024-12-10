@@ -1,6 +1,6 @@
-"""Tests which process a bunch of Bandcamp JSONs and compare results with the specified
-reference JSONs. Currently they are only executed locally and are based on
-the maintainer's beets library.
+"""Tests which read a bunch of Bandcamp JSONs and compare results with previous runs.
+
+Currently they are only executed locally using around ~5000 release JSON files.
 """
 
 from __future__ import annotations
@@ -394,8 +394,8 @@ def old(base: JSONDict) -> JSONDict:
 
 def write_results(data: JSONDict, name: str) -> Path:
     contents = json.dumps(data, indent=2, sort_keys=True).encode()
-    _id = hashlib.md5(contents).hexdigest()
-    results_filepath = RESULTS_DIR / f"{name}-{_id}.json"
+    id_ = hashlib.md5(contents).hexdigest()
+    results_filepath = RESULTS_DIR / f"{name}-{id_}.json"
     if not results_filepath.exists():
         results_filepath.write_bytes(contents)
 
@@ -411,19 +411,19 @@ def new(
     original_artist: str,
     target_filepath: Path,
 ) -> JSONDict:
-    _new: AttrDict[Any]
+    new_: AttrDict[Any]
     if "_track_" in target_filepath.name:
-        _new = guru.singleton
+        new_ = guru.singleton
     else:
-        _new = next((a for a in guru.albums if a.media == "Vinyl"), guru.albums[0])
-        _new.album = " / ".join(dict.fromkeys(x["album"] for x in guru.albums))
+        new_ = next((a for a in guru.albums if a.media == "Vinyl"), guru.albums[0])
+        new_.album = " / ".join(dict.fromkeys(x["album"] for x in guru.albums))
 
-    _new.catalognum = " / ".join(
+    new_.catalognum = " / ".join(
         sorted({x.catalognum for x in guru.albums if x.catalognum})
     )
-    _new.original_name = original_name
-    _new.original_artist = original_artist
-    new = dict(_new)
+    new_.original_name = original_name
+    new_.original_artist = original_artist
+    new = dict(new_)
 
     results_filepath = base_filepath.resolve()
     if base and results_filepath.parent != RESULTS_DIR:

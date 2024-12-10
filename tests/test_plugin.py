@@ -1,6 +1,7 @@
 """Tests for any logic found in the main plugin module."""
 
 import json
+from pathlib import Path
 
 import pytest
 from beets.library import Item
@@ -38,7 +39,7 @@ def test_parse_label_url_in_comments(comments, expected_url):
 
 
 @pytest.mark.parametrize(
-    ("mb_albumid", "comments", "album", "expected_url"),
+    "mb_albumid, comments, album, expected_url",
     [
         _p(ALBUM_URL, "", "a", ALBUM_URL, id="found in mb_albumid"),
         _p("random_url", "", "a", "", id="invalid url"),
@@ -79,18 +80,16 @@ def test_handle_non_bandcamp_url(method):
 
 
 @pytest.mark.parametrize(
-    ["release", "preferred_media", "expected_media"],
+    "release, preferred_media",
     [
-        ("album", "Vinyl", "Vinyl"),
-        ("album", "CD", "Digital Media"),
-        ("album", "", "Digital Media"),
-        (None, None, None),
+        ("album", "Vinyl"),
+        ("album", "CD"),
+        ("album", ""),
+        (None, None),
     ],
 )
-def test_album_for_id(plugin, album_for_media, preferred_media, expected_media):
-    """Check that when given an album id, the plugin returns a _single_ album in the
-    preferred media format.
-    """
+def test_album_for_id(plugin, album_for_media, preferred_media):
+    """For an album id, the plugin returns a _single_ album in the preferred format."""
     expected_album = album_for_media
     if expected_album:
         album_id = expected_album.album_id
@@ -134,8 +133,7 @@ def bandcamp_item():
 
 
 def test_coverart(monkeypatch, bandcamp_item, beets_config):
-    with open("tests/json/album.json", encoding="utf-8") as f:
-        text = "".join(f.read().splitlines())
+    text = Path("tests/json/album.json").read_text(encoding="utf-8")
 
     img_url = json.loads(text)["image"]
 
@@ -159,7 +157,7 @@ def test_no_coverart_empty_response(monkeypatch, bandcamp_item, beets_config):
 
 @pytest.mark.parametrize(
     "html",
-    (
+    [
         "empty",
         json.dumps({"@id": "", "image": "someurl"}),  # no tracks
         json.dumps({"@id": "", "track": [], "image": "someurl"}),  # no label
@@ -168,7 +166,7 @@ def test_no_coverart_empty_response(monkeypatch, bandcamp_item, beets_config):
             "track": [],
             "publisher": {"name": "Label"},
         }),  # missing image
-    ),
+    ],
 )
 def test_no_coverart_bad_html(monkeypatch, html, bandcamp_item, beets_config):
     monkeypatch.setattr(BandcampAlbumArt, "_get", lambda *args: html)

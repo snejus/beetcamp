@@ -66,17 +66,17 @@ class MediaInfo(NamedTuple):
     description: str
 
     @classmethod
-    def from_format(cls, _format: JSONDict) -> MediaInfo:
-        release_format = _format.get("musicReleaseFormat")
+    def from_format(cls, format_: JSONDict) -> MediaInfo:
+        release_format = format_.get("musicReleaseFormat")
 
         return cls(
-            _format["@id"],
+            format_["@id"],
             FORMAT_TO_MEDIA[release_format or "DigitalFormat"],
-            "" if release_format == "DigitalFormat" else _format["name"],
+            "" if release_format == "DigitalFormat" else format_["name"],
             (
                 ""
                 if release_format == "DigitalFormat"
-                else _format.get("description") or ""
+                else format_.get("description") or ""
             ),
         )
 
@@ -163,18 +163,18 @@ class Helpers:
 
         # fmt: off
         return [
-            (re.compile(rf"(([\[(])|(^| ))\*?({'|'.join(rm_strings)})(?(2)[])]|([- ]|$))", re.I), ""),  # noqa
-            (re.compile(r" -([^\s-])"), r" - \1"),                                          # hi -bye                   -> hi - bye  # noqa
-            (re.compile(r"([^\s-])- "), r"\1 - "),                                          # hi- bye                   -> hi - bye  # noqa
-            (re.compile(r"  +"), " "),                                                      # hi  bye                   -> hi bye  # noqa
-            (re.compile(r"(- )?\( *"), "("),                                                # hi - ( bye)               -> hi (bye)  # noqa
-            (re.compile(r" \)+|(\)+$)"), ")"),                                              # hi (bye ))                -> hi (bye)  # noqa
-            (re.compile(r"- Reworked"), "(Reworked)"),                                      # bye - Reworked            -> bye (Reworked)  # noqa
-            (re.compile(rf"(\([^)]+mix)$", re.I), r"\1)"),                                  # bye - (Some Mix           -> bye - (Some Mix)  # noqa
-            (re.compile(r'(^|- )[“"]([^”"]+)[”"]( \(|$)'), r"\1\2\3"),                      # "bye" -> bye; hi - "bye"  -> hi - bye  # noqa
-            (re.compile(r"\((the )?(remixes)\)", re.I), r"\2"),                             # Album (Remixes)           -> Album Remixes  # noqa
-            (re.compile(r"^(\[[^]-]+\]) - (([^-]|-\w)+ - ([^-]|-\w)+)$"), r"\2 \1"),        # [Remixer] - hi - bye      -> hi - bye [Remixer]  # noqa
-            (re.compile(r"examine-.+CD\d+_([^_-]+)[_-](.*)"), split_artist_title),          # See https://examine-archive.bandcamp.com/album/va-examine-archive-international-sampler-xmn01  # noqa
+            (re.compile(rf"(([\[(])|(^| ))\*?({'|'.join(rm_strings)})(?(2)[])]|([- ]|$))", re.I), ""),  # noqa: E501
+            (re.compile(r" -([^\s-])"), r" - \1"),                                          # hi -bye                   -> hi - bye  # noqa: E501
+            (re.compile(r"([^\s-])- "), r"\1 - "),                                          # hi- bye                   -> hi - bye  # noqa: E501
+            (re.compile(r"  +"), " "),                                                      # hi  bye                   -> hi bye  # noqa: E501
+            (re.compile(r"(- )?\( *"), "("),                                                # hi - ( bye)               -> hi (bye)  # noqa: E501
+            (re.compile(r" \)+|(\)+$)"), ")"),                                              # hi (bye ))                -> hi (bye)  # noqa: E501
+            (re.compile(r"- Reworked"), "(Reworked)"),                                      # bye - Reworked            -> bye (Reworked)  # noqa: E501
+            (re.compile(r"(\([^)]+mix)$", re.I), r"\1)"),                                  # bye - (Some Mix           -> bye - (Some Mix)  # noqa: E501
+            (re.compile(r'(^|- )[“"]([^”"]+)[”"]( \(|$)'), r"\1\2\3"),                      # "bye" -> bye; hi - "bye"  -> hi - bye  # noqa: E501
+            (re.compile(r"\((the )?(remixes)\)", re.I), r"\2"),                             # Album (Remixes)           -> Album Remixes  # noqa: E501
+            (re.compile(r"^(\[[^]-]+\]) - (([^-]|-\w)+ - ([^-]|-\w)+)$"), r"\2 \1"),        # [Remixer] - hi - bye      -> hi - bye [Remixer]  # noqa: E501
+            (re.compile(r"examine-.+CD\d+_([^_-]+)[_-](.*)"), split_artist_title),          # See https://examine-archive.bandcamp.com/album/va-examine-archive-international-sampler-xmn01  # noqa: E501
             (re.compile(r'"([^"]+)" by (.+)$'), r"\2 - \1"),                                # "bye" by hi               -> hi - bye  # noqa: E501
         ]
         # fmt: on
@@ -270,9 +270,9 @@ class Helpers:
         # expand badly delimited keywords
         for kw in chain.from_iterable(map(cls.KEYWORD_SPLIT.split, keywords)):
             # remove full stops and hashes and ensure the expected form of 'and'
-            _kw = kw.strip("#").replace("&", "and").replace(".", "")
-            if not is_label_name(_kw) and (is_included(_kw) or valid_for_mode(_kw)):
-                unique_genres[_kw] = None
+            kw_ = kw.strip("#").replace("&", "and").replace(".", "")
+            if not is_label_name(kw_) and (is_included(kw_) or valid_for_mode(kw_)):
+                unique_genres[kw_] = None
 
         def within_another_genre(genre: str) -> bool:
             """Check if this genre is part of another genre.

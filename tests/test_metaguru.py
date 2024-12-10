@@ -13,7 +13,7 @@ _p = pytest.param
 
 
 @pytest.mark.parametrize(
-    ("descr", "disctitle", "creds", "expected"),
+    "descr, disctitle, creds, expected",
     [
         _p("", "", "", None, id="empty"),
         _p("hello", "", "", "hello", id="only main desc"),
@@ -32,7 +32,7 @@ def test_comments(descr, disctitle, creds, expected, json_meta, vinyl_format):
 
 
 @pytest.mark.parametrize(
-    ("name", "expected"),
+    "name, expected",
     [
         ("Berlin, Germany", "DE"),
         ("Oslo, Norway", "NO"),
@@ -58,7 +58,7 @@ def test_parse_country(beets_config, name, expected, json_meta):
 
 
 @pytest.mark.parametrize(
-    ("date", "expected"),
+    "date, expected",
     [("08 Dec 2020 00:00:00 GMT", date(2020, 12, 8)), (None, None)],
 )
 def test_handles_missing_publish_date(beets_config, date, expected, json_meta):
@@ -76,6 +76,8 @@ def test_digi_only_option(json_track, json_meta, beets_config):
     guru = Metaguru(json_meta, beets_config)
     media_to_album = {a.media: a for a in guru.albums}
 
-    assert len(media_to_album["Digital Media"].tracks) == 2
+    assert len(media_to_album["Digital Media"].tracks) == len(
+        json_meta["track"]["itemListElement"]
+    )
     assert len(media_to_album["Vinyl"].tracks) == 1
     assert "Digital" not in media_to_album["Vinyl"].tracks[0].title

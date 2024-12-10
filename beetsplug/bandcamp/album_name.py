@@ -19,6 +19,8 @@ JSONDict = dict[str, Any]
 
 @dataclass
 class AlbumName:
+    SPLIT_RELEASE_ARTIST_COUNT = 2
+
     _series = r"(?i:\b(part|volume|pt|vol)\b\.?)"
     SERIES = cached_patternprop(rf"{_series}[ ]?[A-Z\d.-]+\b")
     SERIES_FMT = cached_patternprop(rf"^(.+){_series} *0*")
@@ -275,7 +277,9 @@ class AlbumName:
 
         album = self.check_eplp(self.standardize_series(album))
 
-        if "split ep" in album.lower() or (not album and len(artists) == 2):
+        if "split ep" in album.lower() or (
+            not album and len(artists) == self.SPLIT_RELEASE_ARTIST_COUNT
+        ):
             album = " / ".join(artists)
 
         return album or catalognum or original_album
