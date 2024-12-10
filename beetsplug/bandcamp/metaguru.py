@@ -352,7 +352,10 @@ class Metaguru(Helpers):
 
         word_pat = re.compile(rf"(?<!-)\b{word}(\b|\.)", re.I)
         in_catnum = re.compile(rf"{word}\d", re.I)
-        release_ref = re.compile(rf"\b(this[\w\s]*?|the) {word}\b", re.I)
+        release_ref = re.compile(
+            rf"\b((this|with|present|deliver|new)[\w\s,'-]*?|the|track|full|first) {word}\b",
+            re.I,
+        )
         album_name = self.album_name.lower()
 
         media_word_pat = re.compile(rf"(vinyl |x|[0-5]){word}\b", re.I)
