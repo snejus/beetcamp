@@ -206,13 +206,14 @@ class Metaguru(Helpers):
 
         If the field is not found, return None.
         """
-        dt = self.meta.get("datePublished") or self.meta.get("dateModified")
-        if not dt:
-            return None
+        if dt := self.meta.get("datePublished") or self.meta.get("dateModified"):
+            return (
+                datetime.strptime(dt[:11], "%d %b %Y")
+                .replace(tzinfo=timezone.utc)
+                .date()
+            )
 
-        return (
-            datetime.strptime(dt[:11], "%d %b %Y").replace(tzinfo=timezone.utc).date()
-        )
+        return None
 
     @cached_property
     def albumstatus(self) -> str:
@@ -264,9 +265,7 @@ class Metaguru(Helpers):
     def unique_artists(self) -> list[str]:
         """Return all unique artists in the release ignoring differences in case."""
         artists = self.split_artists(self._tracks.artists)
-        if len(set(map(str.lower, artists))) == 1:
-            return artists[:1]
-        return artists
+        return artists[:1] if len(set(map(str.lower, artists))) == 1 else artists
 
     @cached_property
     def track_count(self) -> int:
@@ -296,10 +295,7 @@ class Metaguru(Helpers):
 
         aartist = self.preliminary_albumartist
         if aartist and (set(self.split_artists(aartist)) <= set(self.unique_artists)):
-            if "remix" in aartist:
-                return self.remove_ft(aartist)
-            return aartist
-
+            return self.remove_ft(aartist) if "remix" in aartist else aartist
         if len(self.tracks.original_artists) == 1:
             return self.tracks.original_artists[0]
 
@@ -414,10 +410,7 @@ class Metaguru(Helpers):
             return "ep"
         if self.is_single_album:
             return "single"
-        if self.is_comp:
-            return "compilation"
-
-        return "album"
+        return "compilation" if self.is_comp else "album"
 
     @cached_property
     def albumtypes(self) -> list[str]:
@@ -439,7 +432,7 @@ class Metaguru(Helpers):
             if word in self.original_album.lower():
                 albumtypes.add(word.replace("rmx", "remix").replace("edits", "remix"))
 
-        if sum(1 for t in self._tracks if t.remix and t.remix.valid) >= max(
+        if sum(bool(t.remix and t.remix.valid) for t in self._tracks) >= max(
             self.track_count - 1, 1
         ):
             albumtypes.add("remix")
@@ -522,8 +515,7 @@ class Metaguru(Helpers):
             "artists",
         ]
         common_data.update(self.get_fields(fields))
-        reldate = self.release_date
-        if reldate:
+        if reldate := self.release_date:
             common_data.update(self.get_fields(["year", "month", "day"], reldate))
 
         return common_data
