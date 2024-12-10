@@ -5,6 +5,7 @@ from __future__ import annotations
 from collections import Counter
 from dataclasses import dataclass
 from functools import cached_property
+from os.path import commonprefix
 from typing import TYPE_CHECKING, Any
 
 from .names import Names
@@ -57,7 +58,7 @@ class Tracks:
 
         obj = cls(list(map(Track.make, tracks)), names)
         obj.handle_wild_track_alt()
-        obj.fix_remix_artists()
+        obj.fix_title_split()
         return obj
 
     @property
@@ -142,7 +143,7 @@ class Tracks:
             if any(sa not in collaborators for sa in a.lower().split(" & "))
         ]
 
-    def fix_remix_artists(self) -> None:
+    def fix_title_split(self) -> None:
         if 1 <= len(tracks := self.tracks_without_artist) < len(self) / 2:
             for t in (t for t in tracks if t.remix):
                 # reset the artist if it got removed because it's in the remix text
@@ -150,6 +151,22 @@ class Tracks:
                     t.artist = " - ".join(t.name_split[:-1])
                 else:
                     t.artist = t.json_artist
+
+        # identify a track where artist was incorrectly parsed from the title
+        # while a llegitimate artist was available in the JSON data.
+        not_json_artist_tracks = [
+            t
+            for t in self.tracks
+            if t.artist
+            and "," not in t.json_artist
+            and not commonprefix([t.json_artist, t.artist])
+            and not commonprefix([t.json_artist, t.remix.remixer if t.remix else ""])
+            and t.json_artist.lower() not in t.name.lower()
+        ]
+        if len(not_json_artist_tracks) == 1 and len(self) > 2:
+            for t in not_json_artist_tracks:
+                t.title = f"{t.artist} - {t.title}"
+                t.artist = t.json_artist
 
     def handle_wild_track_alt(self) -> None:
         """Handle tracks that have incorrectly parsed `track_alt` field.
