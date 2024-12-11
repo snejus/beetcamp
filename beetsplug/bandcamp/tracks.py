@@ -31,14 +31,17 @@ class Tracks:
         "I": 5,
         "J": 5,
     }
-    tracks: list[Track]
+    tracklist: list[Track]
     names: Names
 
     def __iter__(self) -> Iterator[Track]:
-        return iter(self.tracks)
+        return iter(self.tracklist)
 
     def __len__(self) -> int:
-        return len(self.tracks)
+        return len(self.tracklist)
+
+    def __getitem__(self, idx: int) -> Track:
+        return self.tracklist[idx]
 
     @classmethod
     def from_names(cls, names: Names) -> Tracks:
@@ -63,20 +66,20 @@ class Tracks:
 
     @property
     def tracks_without_artist(self) -> list[Track]:
-        return [t for t in self.tracks if not t.artist]
+        return [t for t in self if not t.artist]
 
     @cached_property
     def first(self) -> Track:
-        return self.tracks[0]
+        return self[0]
 
     @cached_property
     def raw_names(self) -> list[str]:
-        return [j.name for j in self.tracks]
+        return [j.name for j in self]
 
     @property
     def original_artists(self) -> list[str]:
         """Return all unique unsplit (original) main track artists."""
-        return list(dict.fromkeys(j.artist for j in self.tracks))
+        return list(dict.fromkeys(j.artist for j in self))
 
     @property
     def artists(self) -> list[str]:
@@ -84,7 +87,7 @@ class Tracks:
 
         "Artist1 x Artist2" -> ["Artist1", "Artist2"]
         """
-        return list(dict.fromkeys(a for t in self.tracks for a in t.artists))
+        return list(dict.fromkeys(a for t in self for a in t.artists))
 
     @cached_property
     def lead_artists(self) -> list[str]:
@@ -102,7 +105,7 @@ class Tracks:
         [A & B] -> [A & B]
         [A, B & C] -> [A, B & C]
         """
-        lead_artists = list(dict.fromkeys(t.lead_artist for t in self.tracks))
+        lead_artists = list(dict.fromkeys(t.lead_artist for t in self))
         unique_artists = set(self.artists)
         if not unique_artists:
             return []
@@ -123,10 +126,10 @@ class Tracks:
         artists = set(self.artists)
         remixers = {
             r
-            for t in self.tracks
+            for t in self
             if t.remix and (r := t.remix.artist) and all(a not in r for a in artists)
         }
-        feat = {j.ft for j in self.tracks if j.ft}
+        feat = {j.ft for j in self if j.ft}
         return remixers | feat
 
     @cached_property
@@ -156,7 +159,7 @@ class Tracks:
         # while a llegitimate artist was available in the JSON data.
         not_json_artist_tracks = [
             t
-            for t in self.tracks
+            for t in self
             if t.artist
             and "," not in t.json_artist
             and not commonprefix([t.json_artist, t.artist])
@@ -177,12 +180,12 @@ class Tracks:
 
         Clear the `track_alt` value after assignment.
         """
-        unique_track_alts = {t.track_alt for t in self.tracks if t.track_alt}
+        unique_track_alts = {t.track_alt for t in self if t.track_alt}
         if len(unique_track_alts) == 1 and len(self) > 1:
-            track_alt_tracks = [t for t in self.tracks if t.track_alt]
+            track_alt_tracks = [t for t in self if t.track_alt]
 
             same_track_alt_on_all = len(track_alt_tracks) == len(self)
-            parsed_any_artists = any(t for t in self.tracks if t.artist)
+            parsed_any_artists = any(t for t in self if t.artist)
 
             may_set_artist = parsed_any_artists or same_track_alt_on_all
             unique_track_alt = unique_track_alts.pop()
@@ -251,9 +254,9 @@ class Tracks:
         self, media: str, comments: str, include_digi: bool
     ) -> list[dict[str, Any]]:
         if not include_digi and media != "Digital Media":
-            tracks_ = [t for t in self.tracks if not t.digi_only]
+            tracks_ = [t for t in self if not t.digi_only]
         else:
-            tracks_ = self.tracks
+            tracks_ = list(self)
 
         medium_total = {"medium_total": len(tracks_)}
         tracks = [t.info | medium_total for t in tracks_]

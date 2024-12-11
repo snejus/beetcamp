@@ -43,7 +43,7 @@ VA_ARTIST_COUNT = 4  # this number of artists is replaced with VA name
 
 
 class Metaguru(Helpers):
-    META = cached_patternprop(r'.*"@id".*')
+    META_PAT = cached_patternprop(r'.*"@id".*')
     LABEL_IN_DESC = cached_patternprop(r"(?<=Label:) *\b[^/,\n]+")
     ARTIST_IN_DESC = cached_patternprop(r"Artists?: *(\b[^\n]+)")
     REMIX_IN_ARTIST = cached_patternprop(r"[(,+]+.+?re?mi?x", re.I)
@@ -88,11 +88,11 @@ class Metaguru(Helpers):
         for char in cls.HTML_REMOVE_CHARS:
             html = html.replace(char, "")
         try:
-            meta = cls.META.search(html).group()  # type: ignore[union-attr]
+            meta = cls.META_PAT.search(html).group()  # type: ignore[union-attr]
         except AttributeError as exc:
             raise AttributeError("Could not find release metadata JSON") from exc
-        else:
-            return cls(json.loads(meta), config)
+
+        return cls(json.loads(meta), config)
 
     @cached_property
     def excluded_fields(self) -> set[str]:
