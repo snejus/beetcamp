@@ -208,8 +208,8 @@ class Track:
             h, m, s = map(int, self.NUMBER_PAT.findall(self.json_item["duration"]))
         except KeyError:
             return None
-        else:
-            return h * 3600 + m * 60 + s
+
+        return h * 3600 + m * 60 + s
 
     @cached_property
     def lyrics(self) -> str:
@@ -217,8 +217,8 @@ class Track:
             text: str = self.json_item["recordingOf"]["lyrics"]["text"]
         except KeyError:
             return ""
-        else:
-            return text.replace("\r", "")
+
+        return text.replace("\r", "")
 
     @cached_property
     def name_split(self) -> list[str]:

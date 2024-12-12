@@ -4,7 +4,7 @@ from beetsplug.bandcamp.metaguru import Metaguru
 
 
 @pytest.mark.parametrize(
-    "album, disctitle, description, label, expected",
+    "release_name, vinyl_disctitle, release_desc, label, expected",
     [
         ("Tracker-229 [PRH-002]", "", "", "", "PRH-002"),
         ("[PRH-002] Tracker-229", "", "", "", "PRH-002"),
@@ -77,20 +77,10 @@ from beetsplug.bandcamp.metaguru import Metaguru
         ("AE-MJ-001.1", "", "", "", "AE-MJ-001.1"),
     ],
 )
-def test_parse_catalognum(
-    json_meta,
-    vinyl_format,
-    album,
-    disctitle,
-    description,
-    label,
-    expected,
-    beets_config,
-):
-    json_meta["name"] = album
-    json_meta["publisher"]["name"] = label or "Label"
-    json_meta["description"] = description
-    json_meta["albumRelease"] = [{**vinyl_format, "name": disctitle}]
+def test_parse_catalognum(json_meta, vinyl_format, label, expected, beets_config):
+    if label:
+        json_meta["publisher"]["name"] = label
+    json_meta["albumRelease"] = [vinyl_format]
 
     guru = Metaguru(json_meta, beets_config)
 

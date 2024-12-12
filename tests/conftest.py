@@ -111,12 +111,22 @@ def digital_format() -> JSONDict:
 
 
 @pytest.fixture
-def vinyl_format() -> JSONDict:
+def vinyl_desc() -> str:
+    return "Vinyl description"
+
+
+@pytest.fixture
+def vinyl_disctitle() -> str:
+    return "Vinyl disctitle"
+
+
+@pytest.fixture
+def vinyl_format(vinyl_desc: str, vinyl_disctitle: str) -> JSONDict:
     return {
         "@id": "https://bandcamp.com/album/hello",
         "musicReleaseFormat": "VinylFormat",
-        "description": "Vinyl description",
-        "name": "Disctitle",
+        "description": vinyl_desc,
+        "name": vinyl_disctitle,
         "additionalProperty": [
             {"name": "some_id", "value": "some_value"},
             {"name": "item_type", "value": "p"},
@@ -157,20 +167,34 @@ def json_track(track_name: str, track_artist: str | None) -> JSONDict:
 
 
 @pytest.fixture
+def release_desc() -> str:
+    return "Description"
+
+
+@pytest.fixture
+def release_name() -> str:
+    return "Album"
+
+
+@pytest.fixture
 def json_meta(
-    digital_format: JSONDict, vinyl_format: JSONDict, json_track: JSONDict
+    release_desc: str,
+    release_name: str,
+    digital_format: JSONDict,
+    vinyl_format: JSONDict,
+    json_track: JSONDict,
 ) -> JSONDict:
     return {
         "@id": "album_id",
-        "name": "Album",
-        "description": "Description",
+        "name": release_name,
+        "description": release_desc,
         "publisher": {
             "@id": "label_url",
             "name": "Label",
             "genre": "bandcamp.com/tag/folk",
         },
         "byArtist": {"name": "Albumartist"},
-        "albumRelease": [digital_format, vinyl_format],
+        "albumRelease": [vinyl_format, digital_format],
         "track": {"itemListElement": [json_track]},
         "keywords": ["London", "house"],
     }
