@@ -45,6 +45,7 @@ if TYPE_CHECKING:
     from _pytest.fixtures import FixtureRequest
     from beets.autotag.hooks import AttrDict
     from rich.panel import Panel
+    from rich.table import Table
 
 pytestmark = pytest.mark.lib
 
@@ -147,7 +148,7 @@ class Field:
 
     @cached_property
     def changed(self) -> bool:
-        return self.new != self.old
+        return bool(self.new != self.old)
 
     @cached_property
     def diff(self) -> FieldDiff:
@@ -387,9 +388,23 @@ def base(base_filepath: Path) -> JSONDict:
     return data
 
 
+def prepare_release(release: JSONDict) -> JSONDict:
+    get_values = itemgetter(*TRACK_FIELDS)
+
+    def get_tracks(data: JSONDict) -> list[tuple[str, ...]]:
+        return [tuple(get_values(t)) for t in data.get("tracks", [])]
+
+    if "/album/" in release["data_url"]:
+        release.update(
+            albumartist=release.pop("artist", ""), tracks=get_tracks(release)
+        )
+
+    return release
+
+
 @pytest.fixture
 def old(base: JSONDict) -> JSONDict:
-    return {k: v for k, v in base.items() if k not in IGNORE_FIELDS}
+    return prepare_release({k: v for k, v in base.items() if k not in IGNORE_FIELDS})
 
 
 def write_results(data: JSONDict, name: str) -> Path:
@@ -403,28 +418,28 @@ def write_results(data: JSONDict, name: str) -> Path:
 
 
 @pytest.fixture
-def new(
-    base: JSONDict,
-    base_filepath: Path,
-    guru: Metaguru,
-    original_name: str,
-    original_artist: str,
-    target_filepath: Path,
-) -> JSONDict:
+def new(guru: Metaguru, original_name: str, original_artist: str) -> JSONDict:
     new_: AttrDict[Any]
-    if "_track_" in target_filepath.name:
+    if "/track/" in guru.meta["@id"]:
         new_ = guru.singleton
     else:
         new_ = next((a for a in guru.albums if a.media == "Vinyl"), guru.albums[0])
         new_.album = " / ".join(dict.fromkeys(x["album"] for x in guru.albums))
 
-    new_.catalognum = " / ".join(
-        sorted({x.catalognum for x in guru.albums if x.catalognum})
-    )
-    new_.original_name = original_name
-    new_.original_artist = original_artist
-    new = dict(new_)
+    return {
+        **new_,
+        "original_name": original_name,
+        "original_artist": original_artist,
+        "catalognum": " / ".join(
+            sorted({x.catalognum for x in guru.albums if x.catalognum})
+        ),
+    }
 
+
+@pytest.fixture
+def result(
+    base: JSONDict, base_filepath: Path, target_filepath: Path, new: JSONDict
+) -> JSONDict:
     results_filepath = base_filepath.resolve()
     if base and results_filepath.parent != RESULTS_DIR:
         results_filepath = write_results(base, base_filepath.stem)
@@ -448,33 +463,27 @@ def new(
         symlink_path = os.path.relpath(results_filepath, target_filepath.parent)
         target_filepath.symlink_to(symlink_path)
 
-    return {k: v for k, v in new.items() if k not in IGNORE_FIELDS}
+    return prepare_release({k: v for k, v in new.items() if k not in IGNORE_FIELDS})
 
 
 @pytest.fixture
-def desc(old: JSONDict, new: JSONDict, guru: Metaguru) -> str:
-    get_values = itemgetter(*TRACK_FIELDS)
-
-    def get_tracks(data: JSONDict) -> list[tuple[str, ...]]:
-        return [tuple(get_values(t)) for t in data.get("tracks", [])]
-
-    if "/album/" in new["data_url"]:
-        if "artist" in old and "tracks" in old:
-            old.update(albumartist=old.pop("artist", ""), tracks=get_tracks(old))
-        new.update(albumartist=new.pop("artist", ""), tracks=get_tracks(new))
-        artist, title = new.get("albumartist", ""), new.get("album", "")
+def desc(result: JSONDict, guru: Metaguru) -> str:
+    if "/album/" in result["data_url"]:
+        artist, name = result["albumartist"], result["album"]
     else:
-        artist, title = new["artist"], new["title"]
+        artist, name = result["artist"], result["title"]
 
     return (
         f"{get_diff(guru.original_albumartist, artist)} - "
-        f"{get_diff(guru.original_album, title)}"
+        f"{get_diff(guru.original_album, name)}"
     )
 
 
 @pytest.fixture
-def entity_id(new: JSONDict) -> str:
-    return str(new["album_id"] if "/album/" in new["data_url"] else new["track_id"])
+def entity_id(result: JSONDict) -> str:
+    return str(
+        result["album_id"] if "/album/" in result["data_url"] else result["track_id"]
+    )
 
 
 @pytest.fixture
@@ -496,24 +505,22 @@ def check_field(
 
 
 @pytest.fixture
-def difference(
+def diff_table(
     check_field: Callable[[NewTable, Field], None],
     old: JSONDict,
-    new: JSONDict,
+    result: JSONDict,
     cache: pytest.Cache,
-    desc: str,
     entity_id: str,
-) -> bool:
-    if not old:  # new test case, no need to report diffs
-        return False
-
+) -> Table:
     table = new_table(padding=0, expand=False, collapse_padding=True)
-    compare_fields = (new.keys() | old.keys()) - DO_NOT_COMPARE
+    if not old:  # new test case, no need to report diffs
+        return table
+
+    compare_fields = (result.keys() | old.keys()) - DO_NOT_COMPARE
     compare_field = partial(check_field, table)
 
-    fail = False
     for fname in sorted(compare_fields):
-        old_val, new_val = old.get(fname), new.get(fname)
+        old_val, new_val = old.get(fname), result.get(fname)
         if old_val is None and new_val is None:
             continue
 
@@ -523,28 +530,21 @@ def difference(
             continue
 
         compare_field(field)
-        if field.changed:
-            backup = field.new or ""
-            fail = True
-        else:
-            backup = None
-
+        backup = field.new or "" if field.changed else None
         cache.set(cache_key, backup)
 
-    if fail:
+    return table
+
+
+def test_file(diff_table: Table, desc: str, entity_id: str, result: JSONDict) -> None:
+    if diff_table.row_count:
         console.print("\n")
         console.print(
             border_panel(
-                table,
+                diff_table,
                 title=desc,
                 expand=True,
-                subtitle=wrap(f"{entity_id} - {new['media']}", "dim"),
+                subtitle=wrap(f"{entity_id} - {result['media']}", "dim"),
             )
         )
-
-    return fail
-
-
-def test_file(difference: bool) -> None:
-    if difference:
         pytest.fail(pytrace=False)

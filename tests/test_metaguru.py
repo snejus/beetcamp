@@ -13,7 +13,7 @@ _p = pytest.param
 
 
 @pytest.mark.parametrize(
-    "descr, disctitle, creds, expected",
+    "release_desc, vinyl_desc, creds, expected",
     [
         _p("", "", "", None, id="empty"),
         _p("hello", "", "", "hello", id="only main desc"),
@@ -24,9 +24,8 @@ _p = pytest.param
         _p("Hello hi", "hello,hi", "", "Hello hi", id="no dupes normalized"),
     ],
 )
-def test_comments(descr, disctitle, creds, expected, json_meta, vinyl_format):
-    vinyl_format["description"] = disctitle
-    json_meta.update(description=descr, albumRelease=[vinyl_format], creditText=creds)
+def test_comments(creds, expected, json_meta):
+    json_meta.update(creditText=creds)
     config = {"comments_separator": "\n"}
     assert Metaguru(json_meta, config).comments == expected
 
