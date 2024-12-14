@@ -1,4 +1,4 @@
-## Unreleased
+## [0.21.0] 2024-12-14
 
 ### Removed
 
@@ -1313,3 +1313,4 @@ Thanks @arogl for reporting each of the above!
 [0.19.2]: https://github.com/snejus/beetcamp/releases/tag/0.19.2
 [0.19.3]: https://github.com/snejus/beetcamp/releases/tag/0.19.3
 [0.20.0]: https://github.com/snejus/beetcamp/releases/tag/0.20.0
+[0.21.0]: https://github.com/snejus/beetcamp/releases/tag/0.21.0
