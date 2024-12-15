@@ -1,23 +1,23 @@
 [tool.poetry]
-name = "beetcamp"
-version = "0.21.0"
-description = "Bandcamp autotagger source for beets (http://beets.io)."
+name = "beets-soundcloud"
+version = "0.1.0"
+description = "Soundcloud autotagger source for beets (http://beets.io)."
 authors = ["Šarūnas Nejus <snejus@pm.me>"]
 readme = "README.md"
 license = "GPL-2.0"
 homepage = "https://github.com/snejus/beetcamp"
 repository = "https://github.com/snejus/beetcamp"
 
-packages = [{ include = "beetsplug" }]
+packages = [{ include = "beetsplug", to = "soundcloud" }]
 include = ["LICENSE", "README.md"]
 
 keywords = ["music", "bandcamp", "beets", "metadata"]
 classifiers = [
-  "Environment :: Console",
-  "Intended Audience :: End Users/Desktop",
-  "Operating System :: OS Independent",
-  "Topic :: Multimedia :: Sound/Audio",
-  "Topic :: Text Processing :: General",
+    "Environment :: Console",
+    "Intended Audience :: End Users/Desktop",
+    "Operating System :: OS Independent",
+    "Topic :: Multimedia :: Sound/Audio",
+    "Topic :: Text Processing :: General",
 ]
 
 [tool.poetry.urls]

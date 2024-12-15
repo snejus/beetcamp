@@ -7,7 +7,7 @@ import pytest
 from beets.library import Item
 from beets.plugins import log
 
-from beetsplug.bandcamp import DEFAULT_CONFIG, BandcampAlbumArt, BandcampPlugin
+from beetsplug.bandcamp import DEFAULT_CONFIG, BandcampAlbumArt, SoundcloudPlugin
 
 LABEL_URL = "https://label.bandcamp.com"
 ALBUM_URL = f"{LABEL_URL}/album/release"
@@ -35,7 +35,7 @@ def check_album(actual, expected):
     ],
 )
 def test_parse_label_url_in_comments(comments, expected_url):
-    assert BandcampPlugin.parse_label_url(comments) == expected_url
+    assert SoundcloudPlugin.parse_label_url(comments) == expected_url
 
 
 @pytest.mark.parametrize(
@@ -62,13 +62,13 @@ def test_parse_label_url_in_comments(comments, expected_url):
 def test_find_url(mb_albumid, comments, album, expected_url):
     """URLs in `mb_albumid` and `comments` fields must be found."""
     item = Item(mb_albumid=mb_albumid, comments=comments)
-    assert BandcampPlugin()._find_url_in_item(item, album, "album") == expected_url
+    assert SoundcloudPlugin()._find_url_in_item(item, album, "album") == expected_url
 
 
 @pytest.fixture
 def plugin(monkeypatch, bandcamp_html):
-    monkeypatch.setattr(BandcampPlugin, "_get", lambda *args: bandcamp_html)
-    pl = BandcampPlugin()
+    monkeypatch.setattr(SoundcloudPlugin, "_get", lambda *args: bandcamp_html)
+    pl = SoundcloudPlugin()
     pl.config.set(DEFAULT_CONFIG)
     return pl
 
@@ -76,7 +76,7 @@ def plugin(monkeypatch, bandcamp_html):
 @pytest.mark.parametrize("method", ["album_for_id", "track_for_id"])
 def test_handle_non_bandcamp_url(method):
     """The plugin should not break if a non-bandcamp URL is presented."""
-    assert getattr(BandcampPlugin(), method)("https://www.some-random-url") is None
+    assert getattr(SoundcloudPlugin(), method)("https://www.some-random-url") is None
 
 
 @pytest.mark.parametrize(
@@ -124,7 +124,7 @@ def test_singleton_candidates(plugin, expected_release):
 
 
 def test_bandcamp_plugin_name():
-    assert BandcampPlugin().data_source == "bandcamp"
+    assert SoundcloudPlugin().data_source == "bandcamp"
 
 
 @pytest.fixture
