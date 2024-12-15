@@ -133,11 +133,10 @@ class BandcampAlbumArt(BandcampRequestsHandler, fetchart.RemoteArtSource):
             yield self._candidate(url=image)
 
 
-class BandcampPlugin(BandcampRequestsHandler, MetadataSourcePlugin):
+class SoundcloudPlugin(BandcampRequestsHandler, MetadataSourcePlugin):
     MAX_COMMENT_LENGTH = 4047
     ALBUM_SLUG_IN_TRACK = cached_patternprop(r'(?<=<a id="buyAlbumLink" href=")[^"]+')
     LABEL_URL_IN_COMMENT = cached_patternprop(r"Visit (https:[\w/.-]+\.[a-z]+)")
-    data_source = "bandcamp"
     beets_config: IncludeLazyConfig
 
     def __init__(self) -> None:
@@ -452,7 +451,7 @@ def main() -> None:
         else:
             print(json.dumps(search_results))
     else:
-        pl = BandcampPlugin()
+        pl = SoundcloudPlugin()
         pl._log.setLevel(10)
         url = args.release_url
         if result := pl.get_album_info(args.release_url) or pl.get_track_info(url):
