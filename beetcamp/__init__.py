@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import logging
+import re
 import webbrowser
 from argparse import Action, ArgumentParser
 from functools import partial
@@ -14,6 +15,7 @@ from .helpers import cached_patternprop
 from .http import http_get_text
 from .metaguru import Metaguru
 from .search import search_bandcamp
+from .soundcloud import get_soundcloud_album, get_soundcloud_track
 
 if TYPE_CHECKING:
     from argparse import Namespace
@@ -81,6 +83,11 @@ class GuruMixin:
 
         If track url is given by mistake, find and fetch the album url instead.
         """
+        if "soundcloud" in url:
+            album = self._get_soundcloud_data(url)
+            if album:
+                return [album]
+
         html = self._get(url)
         if html and "/track/" in url and (m := self.ALBUM_SLUG_IN_TRACK.search(html)):
             label_url = url.split(r"/track/")[0]
@@ -88,8 +95,31 @@ class GuruMixin:
 
         return guru.albums if (guru := self.guru(url)) else None
 
+    def _get_soundcloud_data(self, url: str) -> AlbumInfo | TrackInfo | None:
+        if "/sets/" in url:
+            _type = "an album"
+            sc_data_key = "playlist"
+            method = get_soundcloud_album
+        else:
+            _type = "a track"
+            sc_data_key = "sound"
+            method = get_soundcloud_track
+
+        self._info("Fetching data from soundcloud url {} as {}", url, _type)
+        data = re.search(r"\[\{[^<]+[^;<)]", self._get(url))
+        if not data:
+            return None
+
+        jdata = {i["hydratable"]: i["data"] for i in json.loads(data.group())}
+        return method(jdata[sc_data_key], self.config["genre"].flatten())
+
     def get_track_info(self, url: str) -> TrackInfo | None:
         """Return a TrackInfo object for a bandcamp track page."""
+        if "soundcloud" in url:
+            track = self._get_soundcloud_data(url)
+            if track:
+                return track
+
         return guru.singleton if (guru := self.guru(url)) else None
 
 

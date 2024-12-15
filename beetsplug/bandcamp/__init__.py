@@ -225,8 +225,8 @@ class BandcampPlugin(BandcampRequestsHandler, MetadataSourcePlugin):
 
     def album_for_id(self, album_id: str) -> AlbumInfo | None:
         """Fetch an album by its bandcamp ID."""
-        if not self.from_bandcamp(album_id):
-            self._info("Not a bandcamp URL, skipping")
+        if not ("soundcloud" in album_id or self.from_bandcamp(album_id)):
+            self._info("Not a Bandcamp or Soundcloud URL, skipping")
             return None
 
         albums = self.get_album_info(album_id)
@@ -242,11 +242,11 @@ class BandcampPlugin(BandcampRequestsHandler, MetadataSourcePlugin):
 
     def track_for_id(self, track_id: str) -> TrackInfo | None:
         """Fetch a track by its bandcamp ID."""
-        if self.from_bandcamp(track_id):
-            return self.get_track_info(track_id)
+        if not ("soundcloud" in track_id or self.from_bandcamp(track_id)):
+            self._info("Not a Bandcamp or Soundcloud URL, skipping")
+            return None
 
-        self._info("Not a bandcamp URL, skipping")
-        return None
+        return self.get_track_info(track_id)
 
     def _search(self, **kwargs: Any) -> Iterable[JSONDict]:
         """Return a list of track/album URLs of type search_type matching the query."""
