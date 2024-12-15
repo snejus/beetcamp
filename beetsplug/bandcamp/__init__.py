@@ -18,11 +18,13 @@
 
 from __future__ import annotations
 
+import json
 import logging
+import re
 from contextlib import contextmanager
 from functools import partial
 from operator import itemgetter
-from typing import TYPE_CHECKING, Any, Literal
+from typing import TYPE_CHECKING, Any, Iterable, Iterator, Literal, Optional
 
 from beets import IncludeLazyConfig, config, plugins
 
@@ -32,6 +34,7 @@ from .helpers import cached_patternprop
 from .http import HTTPError, http_get_text, urlify
 from .metaguru import Metaguru
 from .search import search_bandcamp
+from .soundcloud import get_soundcloud_album, get_soundcloud_track
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Iterator
@@ -270,8 +273,8 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
 
     def album_for_id(self, album_id: str) -> AlbumInfo | None:
         """Fetch an album by its bandcamp ID."""
-        if not self.from_bandcamp(album_id):
-            self._info("Not a bandcamp URL, skipping")
+        if not ("soundcloud" in album_id or self.from_bandcamp(album_id)):
+            self._info("Not a Bandcamp or Soundcloud URL, skipping")
             return None
 
         albums = self.get_album_info(album_id)
@@ -287,17 +290,22 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
 
     def track_for_id(self, track_id: str) -> TrackInfo | None:
         """Fetch a track by its bandcamp ID."""
-        if self.from_bandcamp(track_id):
-            return self.get_track_info(track_id)
+        if not ("soundcloud" in track_id or self.from_bandcamp(track_id)):
+            self._info("Not a Bandcamp or Soundcloud URL, skipping")
+            return None
 
-        self._info("Not a bandcamp URL, skipping")
-        return None
+        return self.get_track_info(track_id)
 
     def get_album_info(self, url: str) -> list[AlbumInfo] | None:
         """Return an AlbumInfo object for a bandcamp album page.
 
         If track url is given by mistake, find and fetch the album url instead.
         """
+        if "soundcloud" in url:
+            album = self._get_soundcloud_data(url)
+            if album:
+                return [album]
+
         html = self._get(url)
         if html and "/track/" in url and (m := self.ALBUM_SLUG_IN_TRACK.search(html)):
             label_url = url.split(r"/track/")[0]
@@ -306,8 +314,31 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         with self.handle_error(url):
             return self.guru(url).albums
 
+    def _get_soundcloud_data(self, url: str) -> AlbumInfo | TrackInfo | None:
+        if "/sets/" in url:
+            _type = "an album"
+            sc_data_key = "playlist"
+            method = get_soundcloud_album
+        else:
+            _type = "a track"
+            sc_data_key = "sound"
+            method = get_soundcloud_track
+
+        self._info("Fetching data from soundcloud url {} as {}", url, _type)
+        data = re.search(r"\[\{[^<]+[^;<)]", self._get(url))
+        if not data:
+            return None
+
+        jdata = {i["hydratable"]: i["data"] for i in json.loads(data.group())}
+        return method(jdata[sc_data_key], self.config["genre"].flatten())
+
     def get_track_info(self, url: str) -> TrackInfo | None:
         """Return a TrackInfo object for a bandcamp track page."""
+        if "soundcloud" in url:
+            track = self._get_soundcloud_data(url)
+            if track:
+                return track
+
         with self.handle_error(url):
             return self.guru(url).singleton
 
