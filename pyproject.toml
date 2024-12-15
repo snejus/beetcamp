@@ -1,6 +1,6 @@
 [project]
-name = "beetcamp"
-version = "0.24.1"
+name = "beets-soundcloud"
+version = "0.1.0"
 description = "Bandcamp autotagger source for beets (http://beets.io)."
 authors = [{ name = "Šarūnas Nejus", email = "snejus@pm.me" }]
 readme = "README.md"
@@ -42,10 +42,7 @@ changelog = "https://github.com/snejus/beetcamp/blob/master/CHANGELOG.md"
 beetcamp = "beetcamp:main"
 
 [tool.poetry]
-packages = [
-    { include = "beetsplug" },
-    { include = "beetcamp" },
-]
+packages = [{ include = "beetsplug" }]
 
 [tool.poetry.group.dev.dependencies]
 filelock = ">=3.16.1"
