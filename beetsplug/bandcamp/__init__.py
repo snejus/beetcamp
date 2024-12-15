@@ -134,7 +134,7 @@ class BandcampAlbumArt(BandcampRequestsHandler, fetchart.RemoteArtSource):
                     )
 
 
-class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
+class SoundcloudPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
     MAX_COMMENT_LENGTH = 4047
     ALBUM_SLUG_IN_TRACK = cached_patternprop(r'(?<=<a id="buyAlbumLink" href=")[^"]+')
     LABEL_URL_IN_COMMENT = cached_patternprop(r"Visit (https:[\w/.-]+\.[a-z]+)")
@@ -453,7 +453,7 @@ def main() -> None:
         else:
             print(json.dumps(search_results))
     else:
-        pl = BandcampPlugin()
+        pl = SoundcloudPlugin()
         pl._log.setLevel(10)
         url = args.release_url
         if result := pl.get_album_info(args.release_url) or pl.get_track_info(url):

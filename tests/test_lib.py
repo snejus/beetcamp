@@ -35,7 +35,7 @@ from rich_tables.utils import (
 )
 from typing_extensions import TypedDict
 
-from beetsplug.bandcamp import BandcampPlugin
+from beetsplug.bandcamp import SoundcloudPlugin
 from beetsplug.bandcamp.metaguru import Metaguru
 
 if TYPE_CHECKING:
@@ -356,7 +356,7 @@ def target_dir(pytestconfig: Config) -> Path:
 
 @pytest.fixture(scope="module")
 def config() -> JSONDict:
-    return dict(BandcampPlugin().config.flatten())
+    return dict(SoundcloudPlugin().config.flatten())
 
 
 @pytest.fixture(params=sorted(JSONS_DIR.glob("*.json")), ids=str)
