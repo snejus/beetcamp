@@ -400,10 +400,7 @@ def main() -> None:
         search_results = search_bandcamp(**search_vars)
 
         if index:
-            try:
-                url = search_results[index - 1]["url"]
-            except IndexError as e:
-                raise Exception("Specified index could not be found") from e
+            url = search_results[index - 1]["url"]
 
             import webbrowser
 
