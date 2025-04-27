@@ -87,6 +87,12 @@ def get_diff(*args: str) -> str:
 
 
 class FieldDiff(NamedTuple):
+    """Represents a difference between field values.
+
+    Handles both simple values and collections, providing string representation
+    of differences with appropriate formatting.
+    """
+
     field: str
     old: Any
     new: Any
@@ -116,6 +122,11 @@ class FieldDiff(NamedTuple):
 
 
 class FieldDiffDecoder(json.JSONDecoder):
+    """Custom JSON decoder that converts serialized field diff data back to FieldDiff objects.
+
+    Used when loading saved test results to reconstruct diff information.
+    """
+
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, object_pairs_hook=self.object_pairs_hook, **kwargs)
 
@@ -132,6 +143,12 @@ class FieldDiffDecoder(json.JSONDecoder):
 
 @dataclass
 class Field:
+    """Represents a field with its old, new and cached values.
+
+    Tracks changes between test runs and determines if a field has been fixed
+    or has newly failed.
+    """
+
     field: str
     old: Any
     new: Any
@@ -300,6 +317,10 @@ def _report(
 
 
 def get_field_changes(results: Results, include_fields: set[str]) -> Panel:
+    """Generate a report panel showing field changes across all test results.
+
+    Organizes changes by field name and groups identical changes with counts.
+    """
     diffs = [d for _, diff in results for d in diff.expand() if d.old != d.new]
     if include_fields:
         diffs = [d for d in diffs if d.field in include_fields]
@@ -389,6 +410,11 @@ def base(base_filepath: Path) -> JSONDict:
 
 
 def prepare_release(release: JSONDict) -> JSONDict:
+    """Normalize release data for consistent comparison.
+
+    Handles album-specific transformations and extracts track information
+    in a consistent format.
+    """
     get_values = itemgetter(*TRACK_FIELDS)
 
     def get_tracks(data: JSONDict) -> list[tuple[str, ...]]:
@@ -408,6 +434,11 @@ def old(base: JSONDict) -> JSONDict:
 
 
 def write_results(data: JSONDict, name: str) -> Path:
+    """Write test results to a file with content-based naming.
+
+    Creates a deterministic filename based on content hash to avoid
+    duplicating identical results.
+    """
     contents = json.dumps(data, indent=2, sort_keys=True).encode()
     id_ = hashlib.md5(contents).hexdigest()
     results_filepath = RESULTS_DIR / f"{name}-{id_}.json"
