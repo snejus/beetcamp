@@ -307,8 +307,8 @@ def _report(
                     )
                 )
 
-        if field_changes := get_field_changes(summary["failed"], include_fields):
-            columns.append(field_changes)
+        if failed := summary["failed"]:
+            columns.append(get_field_changes(failed, include_fields))
 
         console.print("\n")
         if columns:
@@ -420,7 +420,7 @@ def prepare_release(release: JSONDict) -> JSONDict:
     def get_tracks(data: JSONDict) -> list[tuple[str, ...]]:
         return [tuple(get_values(t)) for t in data.get("tracks", [])]
 
-    if "/album/" in release["data_url"]:
+    if "/album/" in release.get("data_url", ""):
         release.update(
             albumartist=release.pop("artist", ""), tracks=get_tracks(release)
         )
@@ -441,6 +441,7 @@ def write_results(data: JSONDict, name: str) -> Path:
     """
     contents = json.dumps(data, indent=2, sort_keys=True).encode()
     id_ = hashlib.md5(contents).hexdigest()
+    name = name[: 255 - len(id_) - 6]
     results_filepath = RESULTS_DIR / f"{name}-{id_}.json"
     if not results_filepath.exists():
         results_filepath.write_bytes(contents)
