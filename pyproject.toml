@@ -1,14 +1,12 @@
-[tool.poetry]
+[project]
 name = "beetcamp"
 version = "0.21.0"
 description = "Bandcamp autotagger source for beets (http://beets.io)."
-authors = ["Šarūnas Nejus <snejus@pm.me>"]
+authors = [{ name = "Šarūnas Nejus", email = "snejus@pm.me" }]
 readme = "README.md"
 license = "GPL-2.0"
-homepage = "https://github.com/snejus/beetcamp"
-repository = "https://github.com/snejus/beetcamp"
+requires-python = ">=3.9, <4"
 
-packages = [{ include = "beetsplug" }]
 include = ["LICENSE", "README.md"]
 
 keywords = ["music", "bandcamp", "beets", "metadata"]
@@ -19,20 +17,26 @@ classifiers = [
   "Topic :: Multimedia :: Sound/Audio",
   "Topic :: Text Processing :: General",
 ]
+dependencies = [
+  "beets[fetchart] >= 1.5",
+  "pycountry >= 20.7.3",
+  "httpx >= 0.27.0",
+  "packaging >= 24.0",
+]
 
-[tool.poetry.urls]
-Changelog = "https://github.com/snejus/beetcamp/blob/master/CHANGELOG.md"
+[project.urls]
+homepage = "https://github.com/snejus/beetcamp"
+repository = "https://github.com/snejus/beetcamp"
+changelog = "https://github.com/snejus/beetcamp/blob/master/CHANGELOG.md"
 "Bug Tracker" = "https://github.com/snejus/beetcamp/issues"
 
-[tool.poetry.dependencies]
-python = ">=3.9, <4"
+[project.scripts]
+beetcamp = "beetsplug.bandcamp:main"
 
-beets = { version = ">=1.5", extras = ["fetchart"] }
-pycountry = ">=20.7.3"
-httpx = ">=0.27.0"
-packaging = ">=24.0"
+[tool.poetry]
+packages = [{ include = "beetsplug" }]
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 coveralls = { version = ">=4.0.1", python = ">=3.8,<3.13" }
 filelock = ">=3.16.1"
 flake8 = ">=3.8.4"
@@ -47,9 +51,6 @@ pytest-cov = ">=2.10.1"
 pytest-randomly = ">=3.10"
 pytest-xdist = ">=3.5.0"
 rich-tables = "*"
-
-[tool.poetry.scripts]
-beetcamp = "beetsplug.bandcamp:main"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
