@@ -169,7 +169,8 @@ class AlbumName:
         return cls.remove_pattern(
             name,
             rf"""
-            (?<!\w[ ])          # cannot be preceded by a simple word
+            (?<!\w\ )           # cannot be preceded by a simple word
+            (?<!vs\.\ )         # cannot be preceded by vs.
             \b{re.escape(label)}\b
             (?!:\ Vol)          # cannot be followed by ': Vol'
             (?!.[&#A-z])        # cannot be followed by a word
@@ -184,6 +185,8 @@ class AlbumName:
             rf"""
             (?<!\ [x&,]\ )                      # keep B in 'A x B', 'A & B', 'A, B'
             (?<!\ (of|vs)\ )                    # keep B in 'A of B', 'A vs B'
+            (?<!\ vs\.\ )                       # keep B in 'A vs. B'
+            (?<!\ presents\ )                   # keep B in 'A presents B'
             (((compiled\ |selected\ )?by)\ )?   # remove these prefixes if present
             {artist}                            # match the word we want to remove
             (\ x\ [^-]+)?                       # remove other artist ' x C' if present
