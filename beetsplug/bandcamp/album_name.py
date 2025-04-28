@@ -29,7 +29,7 @@ class AlbumName:
             (?<=remixes\ )\([^()]+\)$
           | \((?:inc|\+)[^()]*mix(?:es)?\)
           | (?:incl\.|with\ remixes)[^()+]+
-          | \W*(?:\+|w/)[\w\s/]*remix(?:ed)?$
+          | \W*(?:\+|w/)[\w\s/]*remix$
           | \(tracks\ from[^)]+\)
         """,
         re.IGNORECASE | re.VERBOSE,

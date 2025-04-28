@@ -4,6 +4,7 @@
 
 - `album`:
   - Keep artist in album name when it is preceded by **vs.** or **presents**.
+  - Keep title in album name when it contains **remix** and is preceded by **+**.
 
 - `title`:
   - Improve handling of parentheses: keep space characters in unicode-art title, such as
