@@ -41,7 +41,7 @@ jobs:
         run: poetry run flake8 . --output-file flake.log --exit-zero
 
       - name: Lint mypy
-        run: poetry run mypy > mypy.log || true
+        run: poetry run mypy beetsplug/bandcamp > mypy.log || true
 
       - name: Lint pylint
         run: poetry run pylint --output pylint.log --exit-zero $(git ls-files '*.py')
