@@ -23,12 +23,12 @@ from git import Repo
 from rich import box
 from rich.console import Group
 from rich.markup import escape
+from rich_tables.diff import make_difftext
 from rich_tables.utils import (
     NewTable,
     border_panel,
     list_table,
     make_console,
-    make_difftext,
     new_table,
     simple_panel,
     wrap,
