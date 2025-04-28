@@ -14,55 +14,58 @@ zmodload zsh/mapfile
 autoload -Uz zmv
 
 TESTS_DIR=lib_tests
+SOURCE=(./beetsplug/*/^(http|__init__).py)
 
-[[ -d .git/rebase-merge ]] || [[ $(git branch --show-current) == dev ]] || exit
+([[ -d .git/rebase-merge ]] && [[ $mapfile[.git/rebase-merge/head-name] == */dev* ]]) || [[ $(git branch --show-current) == dev ]] || exit
 
 commit=$(git show --no-patch --format='%h %s')
 after=${${=commit}[1]}
 message=${commit#$after }
-if git diff --quiet HEAD~1..HEAD ./beetsplug; then
-  print "$after: Source code has not changed, bye: $message"
+print -Pn "%B$message%b: "
+if git diff --quiet HEAD~1..HEAD $SOURCE; then
+  print "$after: Source code has not changed, bye"
   exit
 fi
 
-if [[ -d .git/rebase-merge ]]; then
-  results=(${(f@)${mapfile[.git/rebase-merge/done]%$'\n'}})
-  current_commit=(${=results[-1]})
-  action=$current_commit[1]
-  rebase_head=${current_commit[2]:0:7}
+if [[ ! -d .git/rebase-merge ]]; then
+  print "Testing new commit"
+else
+  tasks=(${(f@)${mapfile[.git/rebase-merge/done]%$'\n'}})
+  current_task=(${=tasks[-1]})
+  action=$current_task[1]
+  rebase_head=${current_task[2]:0:8}
 
   if [[ $action =~ (fixup|squash) ]]; then
-    print "Skipping commit rewrite: $message"
+    print "Skipping commit rewrite"
     exit
   fi
   if [[ -d $TESTS_DIR/$rebase_head ]]; then
-    if [[ ! -s .git/rebase-merge/git-rebase-todo ]] && ( (( ${#${(M)${results}:#*(edit|fixup|squash)*}} )) || (( ! ${#${(M)${results}:#*reword*}} )) ); then
-      print "Current (latest) commit, testing against REBASE_HEAD $rebase_head to synchronise results: $message"
+    if [[ ! -s .git/rebase-merge/git-rebase-todo ]] && (( ${#${(M)${tasks}:#*(edit|fixup|squash)*}} || ! ${#${(M)${tasks}:#*reword*}} )); then
+      print "Current (latest) commit, testing against REBASE_HEAD $rebase_head to synchronise results"
       before=$rebase_head
     else
       zmv $TESTS_DIR/'(*)'$rebase_head $TESTS_DIR/'${1}'$after
-      if git diff --quiet $rebase_head..$after ./beetsplug; then
-        print "No source code changes in comparison to $rebase_head: $message"
+      if git diff --quiet $rebase_head..$after $SOURCE; then
+        print "No source code changes in comparison to $rebase_head"
         exit
       else
-        print "Testing previous against new commit: $message"
+        print "Testing updated commit $after against the last commit"
       fi
     fi
   else
-    print "Results from base commit $rebase_head do not exist, testing against last commit $before: $message"
+    print "Results from base commit $rebase_head do not exist, testing against last commit: $before"
   fi
-else
-  print "Testing previous against new commit: $message"
 fi
 
 (( $#before )) || {
   folders=(lib_tests/^[a-z]##(/:t))
-  pat="^(${(j:|:)folders})"
-  before=($(git log main~3..HEAD~ --format=%h ./beetsplug | grep -E $pat -m1))
+  before=$(git log main~3..HEAD~ --format=%h $SOURCE | grep -E "^(${(j:|:)folders})" -m1)
+  : ${before:=main}
 }
 
-git diff --quiet ./beetsplug
+git diff --quiet $SOURCE
 dirty_worktree=$?
 (( dirty_worktree )) && git stash
 ./test_lib $before $after
+(( $#rebase_head )) && [[ -d $TESTS_DIR/$rebase_head ]] && rm -r $TESTS_DIR/*$rebase_head
 (( dirty_worktree )) && git stash pop --quiet
