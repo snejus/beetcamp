@@ -167,8 +167,10 @@ class Helpers:
             (re.compile(r" -([^\s-])"), r" - \1"),                                          # hi -bye                   -> hi - bye  # noqa: E501
             (re.compile(r"([^\s-])- "), r"\1 - "),                                          # hi- bye                   -> hi - bye  # noqa: E501
             (re.compile(r"  +"), " "),                                                      # hi  bye                   -> hi bye  # noqa: E501
-            (re.compile(r"(- )?\( *"), "("),                                                # hi - ( bye)               -> hi (bye)  # noqa: E501
-            (re.compile(r" \)+|(\)+$)"), ")"),                                              # hi (bye ))                -> hi (bye)  # noqa: E501
+            (re.compile(r"- \("), r"("),                                                    # hi - (bye)                -> hi (bye)  # noqa: E501
+            (re.compile(r"(^[^(]*\([^(]*\))\)"), r"\1"),                                    # hi (bye))                 -> (bye)  # noqa: E501
+            (re.compile(r"\( +(?=\w)"), "("),                                               # ( bye)                    -> (bye)  # noqa: E501
+            (re.compile(r"(?<=\w) +\)$"), ")"),                                             # (bye )                    -> (bye)  # noqa: E501
             (re.compile(r"- Reworked"), "(Reworked)"),                                      # bye - Reworked            -> bye (Reworked)  # noqa: E501
             (re.compile(r"(\([^)]+mix)$", re.I), r"\1)"),                                  # bye - (Some Mix           -> bye - (Some Mix)  # noqa: E501
             (re.compile(r'(^|- )[“"]([^”"]+)[”"]( \(|$)'), r"\1\2\3"),                      # "bye" -> bye; hi - "bye"  -> hi - bye  # noqa: E501
