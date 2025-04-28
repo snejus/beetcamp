@@ -1,3 +1,11 @@
+## Unreleased
+
+### Fixed
+
+- `title`:
+  - Improve handling of parentheses: keep space characters in unicode-art title, such as
+  ٩(˘◡˘ ).
+
 ## [0.21.0] 2024-12-14
 
 ### Removed
