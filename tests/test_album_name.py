@@ -72,6 +72,8 @@ from beetsplug.bandcamp.album_name import AlbumName
         ("Album [CAT123] Incl. Remix", "Album"),
         ("Album (Incl. some sort of Remixes)", "Album"),
         ("Album | FREE DOWNLOAD", "Album"),
+        ("Album A vs. Artist", "Album A vs. Artist"),
+        ("Album presents Artist", "Album presents Artist"),
     ],
 )
 def test_clean_name(name, expected):

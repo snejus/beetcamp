@@ -2,6 +2,9 @@
 
 ### Fixed
 
+- `album`:
+  - Keep artist in album name when it is preceded by **vs.** or **presents**.
+
 - `title`:
   - Improve handling of parentheses: keep space characters in unicode-art title, such as
   ٩(˘◡˘ ).
