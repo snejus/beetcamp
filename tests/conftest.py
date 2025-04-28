@@ -10,7 +10,8 @@ from typing import TYPE_CHECKING, Any
 import pytest
 from beets.autotag.hooks import AlbumInfo, TrackInfo
 from git import Repo
-from rich_tables.utils import make_console, pretty_diff
+from rich_tables.diff import pretty_diff
+from rich_tables.utils import make_console
 
 from beetsplug.bandcamp import DEFAULT_CONFIG
 from beetsplug.bandcamp.helpers import Helpers
