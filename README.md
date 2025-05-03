@@ -5,7 +5,7 @@
 [![image](http://img.shields.io/pypi/v/beetcamp.svg)](https://pypi.python.org/pypi/beetcamp)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=snejus_beetcamp&metric=alert_status)](https://sonarcloud.io/dashboard?id=snejus_beetcamp)
 [![Coverage Status](https://coveralls.io/repos/github/snejus/beetcamp/badge.svg?branch=main)](https://coveralls.io/github/snejus/beetcamp?branch=main)
-[ ![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fsnejus%2Fbeetcamp&count_bg=%23842424&title_bg=%23846060&icon=postwoman.svg&icon_color=%23CF4D4D&title=hits&edge_flat=true)](https://hits.seeyoufarm.com)
+[![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fsnejus%2Fbeetcamp&count_bg=%23842424&title_bg=%23846060&icon=postwoman.svg&icon_color=%23CF4D4D&title=hits&edge_flat=true)](https://hits.seeyoufarm.com)
 
 Bandcamp autotagger plugin for [beets]. It mostly focuses on
 
@@ -33,7 +33,8 @@ Thanks to [unrblt] for [beets-bandcamp] providing the idea and initial implement
 pipx install beets
 ```
 
-2. Inject `beetcamp` and other dependencies that you need. The `--include-apps` flag is required to make sure that `beetcamp` is made available in your command line.
+2. Inject `beetcamp` and other dependencies that you need. The `--include-apps` flag is
+   required to make sure that `beetcamp` is made available in your command line.
 
 ```bash
 pipx inject --include-apps beets beetcamp [python-mpd2 ...]
@@ -51,7 +52,8 @@ pip install beetcamp
 
 # CLI
 
-The plugin exposes some of its functionality through a command-line application `beetcamp`:
+The plugin exposes some of its functionality through a command-line application
+`beetcamp`:
 
 ```xml
 usage: beetcamp [-h] [-a] [-l] [-t] [-o INDEX] [-p PAGE] (release_url | query)
@@ -78,7 +80,8 @@ optional arguments:
 - Use `beetcamp <bandcamp-release-url>` to return release metadata in JSON format.
 - Use `beetcamp [-alt] <query>` to search albums, labels and tracks on Bandcamp and return
   results in JSON.
-- Search results are indexed - add `-o <index>` in order to open the chosen URL in the browser.
+- Search results are indexed - add `-o <index>` in order to open the chosen URL in the
+  browser.
 
 You can see how the data looks below (the output is prettified with [rich-tables]).
 
@@ -205,16 +208,17 @@ You cannot exclude `album`, `album_id`, `artist_id`, `media` and `data_url` albu
     always_include: []
   ```
 
-**genre.capitalize**: **Classical, Techno** instead of default **classical, techno**.
-For consistency, this option also applies to the `style` field.
+**genre.capitalize**: **Classical, Techno** instead of default **classical, techno**. For
+consistency, this option also applies to the `style` field.
 
-**genre.maximum** caps the maximum number of included genres. This may be of
-value in those cases where artists/labels begin the list with the most relevant keywords,
-however be aware it is rarely the case.
+**genre.maximum** caps the maximum number of included genres. This may be of value in
+those cases where artists/labels begin the list with the most relevant keywords, however
+be aware it is rarely the case.
 
-**genre.mode** accepts one of the following options: **classical** (less genres) or **progressive** or
-**psychedelic** (more genres). Each later one is more flexible regarding what is a valid
-genre and what is not. See below (we use the list of [musicbrainz genres] for reference).
+**genre.mode** accepts one of the following options: **classical** (less genres) or
+**progressive** or **psychedelic** (more genres). Each later one is more flexible
+regarding what is a valid genre and what is not. See below (we use the list of
+[musicbrainz genres] for reference).
 
 **genre.always_include**: genre patterns that override the mode and always match
 successfully. For example, if you want to bypass checks for every keyword that ends with
@@ -241,16 +245,17 @@ We can place all keywords into the following buckets:
 
 - **classical** mode strictly follows the musicbrainz list of genres, therefore it covers
   **type 1** only
-- **progressive** mode, in addition to the above, takes into account each of the words that
-  make up the keyword and will be fine as long as each of those words maps to some sort of
-  genre from the musicbrainz list. It covers **types 1 and 2**.
+- **progressive** mode, in addition to the above, takes into account each of the words
+  that make up the keyword and will be fine as long as each of those words maps to some
+  sort of genre from the musicbrainz list. It covers **types 1 and 2**.
 - **psychedelic** (or **noise**) mode, in addition to the above, treats the keyword as a
-  valid genre as long as **the last word** in it maps to some genre - covering **types 1 to 3**.
-  This one should include the hottest genre naming trends but is also liable to covering the
-  latest `<some-label>-<genre>` or `<some-city>-<some-very-generic-genre>` trends which may
-  not be ideal. It should though be the best option for those who enjoy detailed, fine-grained
-  stats.
-- **type 4** is ignored in each case (can be overridden and included through the `genre.include` option).
+  valid genre as long as **the last word** in it maps to some genre - covering **types 1
+  to 3**. This one should include the hottest genre naming trends but is also liable to
+  covering the latest `<some-label>-<genre>` or `<some-city>-<some-very-generic-genre>`
+  trends which may not be ideal. It should though be the best option for those who enjoy
+  detailed, fine-grained stats.
+- **type 4** is ignored in each case (can be overridden and included through the
+  `genre.include` option).
 
 See below for some examples and a comparison between the modes.
 
