@@ -7,7 +7,7 @@
   - Keep title in album name when it contains **remix** and is preceded by **+**.
 
 - `title`:
-  - Improve handling of parentheses: keep space characters in unicode-art title, such as
+  - Improve handling of parentheses: keep space characters in unicode-art titles, such as
   ٩(˘◡˘ ).
 
 ## [0.21.0] 2024-12-14
