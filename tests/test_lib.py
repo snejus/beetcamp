@@ -491,9 +491,8 @@ def result(
     ):
         target_filepath.unlink()
 
-    if not target_filepath.exists():
-        symlink_path = os.path.relpath(results_filepath, target_filepath.parent)
-        target_filepath.symlink_to(symlink_path)
+    for path in (p for p in (base_filepath, target_filepath) if not p.exists()):
+        path.symlink_to(os.path.relpath(results_filepath, path.parent))
 
     return prepare_release({k: v for k, v in new.items() if k not in IGNORE_FIELDS})
 
