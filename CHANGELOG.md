@@ -9,6 +9,7 @@
 - `title`:
   - Improve handling of parentheses: keep space characters in unicode-art titles, such as
   ٩(˘◡˘ ).
+  - Handle track named **- - -** (track titled **-** by artist **-** :grin:)
 
 ## [0.21.0] 2024-12-14
 

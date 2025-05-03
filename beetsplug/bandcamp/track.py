@@ -105,6 +105,7 @@ class Track:
         re.M | re.VERBOSE,
     )
     NUMBER_PAT = cached_patternprop(r"\d+")
+    ARTIST_DELIM_PREFIX = cached_patternprop(r"^(and|x|\W+)+\b")
 
     json_item: JSONDict = field(default_factory=dict, repr=False)
     track_id: str = ""
@@ -245,14 +246,15 @@ class Track:
             return f"{self.title_without_remix} {self.remix.text}"
         return self.title_without_remix
 
-    @staticmethod
-    def clean_duplicate_artists(artist: str, remix_text: str) -> str:
+    @classmethod
+    def clean_duplicate_artists(cls, artist: str, remix_text: str) -> str:
         """Remove the artist from the artist field if it's already in the remix text."""
         for subartist in Helpers.split_artists(artist, force=True):
             if subartist.lower() in remix_text:
                 artist = re.sub(
-                    rf"(and|x|\W*)+\b{re.escape(subartist)}", "", artist, flags=re.I
+                    rf"(and|x|\W+)*\b{re.escape(subartist)}", "", artist, flags=re.I
                 )
+                artist = cls.ARTIST_DELIM_PREFIX.sub("", artist)
         return artist
 
     @cached_property
@@ -269,7 +271,7 @@ class Track:
 
         artist = " - ".join(self.name_split[:-1])
         initial_artist = artist
-        artist = Remix.PATTERN.sub("", artist.strip(", -"))
+        artist = Remix.PATTERN.sub("", artist.strip(", "))
         if artist and self.remix and self.remix.artist:
             artist = self.clean_duplicate_artists(artist, self.remix.text.lower())
 
@@ -277,7 +279,7 @@ class Track:
         if not artist and not self.index:
             artist = initial_artist
 
-        return ", ".join(map(str.strip, artist.strip(", -").split(",")))
+        return ", ".join(map(str.strip, artist.strip(", ").split(",")))
 
     @property
     def artists(self) -> list[str]:
