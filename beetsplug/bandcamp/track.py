@@ -269,7 +269,7 @@ class Track:
 
         artist = " - ".join(self.name_split[:-1])
         initial_artist = artist
-        artist = Remix.PATTERN.sub("", artist.strip(", -"))
+        artist = Remix.PATTERN.sub("", artist.strip(", "))
         if artist and self.remix and self.remix.artist:
             artist = self.clean_duplicate_artists(artist, self.remix.text.lower())
 
@@ -277,7 +277,7 @@ class Track:
         if not artist and not self.index:
             artist = initial_artist
 
-        return ", ".join(map(str.strip, artist.strip(", -").split(",")))
+        return ", ".join(map(str.strip, artist.strip(", ").split(",")))
 
     @property
     def artists(self) -> list[str]:
