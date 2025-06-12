@@ -111,7 +111,7 @@ class Catalognum:
     anywhere = cached_patternprop(rf"({MATCH}(?:\ [-/]\ {MATCH})?)", re.VERBOSE)
     in_album_pat = cached_patternprop(
         r"""
-          (^\d*[A-Z$]+\d+)              # ^ABC123, ^A$C123
+          (^\d*[A-Z$]{3,}\d+)           # ^ABC123, ^A$C123
           (?:
               :\s+                      # ': '
             | \s+[|-]\s+                # ' | ', ' - '
