@@ -108,7 +108,7 @@ class BandcampRequestsHandler:
 
 
 class BandcampAlbumArt(BandcampRequestsHandler, fetchart.RemoteArtSource):
-    NAME = "Bandcamp"
+    NAME = ID = "Bandcamp"
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
@@ -125,15 +125,14 @@ class BandcampAlbumArt(BandcampRequestsHandler, fetchart.RemoteArtSource):
         else:
             with self.handle_error(url):
                 if image := self.guru(url).image:
-                    yield self._candidate(
-                        url=image, match=fetchart.Candidate.MATCH_EXACT
-                    )
+                    yield self._candidate(url=image)
 
 
 class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
     MAX_COMMENT_LENGTH = 4047
     ALBUM_SLUG_IN_TRACK = cached_patternprop(r'(?<=<a id="buyAlbumLink" href=")[^"]+')
     LABEL_URL_IN_COMMENT = cached_patternprop(r"Visit (https:[\w/.-]+\.[a-z]+)")
+    data_source = "bandcamp"
     beets_config: IncludeLazyConfig
 
     def __init__(self) -> None:
@@ -167,17 +166,16 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
                 item.comments = truncated
                 item.store()
 
-    @property
-    def data_source(self) -> str:
-        return "bandcamp"
-
     def loaded(self) -> None:
         """Add our own artsource to the fetchart plugin."""
         for plugin in plugins.find_plugins():
             if isinstance(plugin, fetchart.FetchArtPlugin):
-                fetchart.ART_SOURCES[self.data_source] = BandcampAlbumArt
-                fetchart.SOURCE_NAMES[BandcampAlbumArt] = self.data_source
-                fetchart.SOURCES_ALL.append(self.data_source)
+                if isinstance(fetchart.ART_SOURCES, set):
+                    fetchart.ART_SOURCES.add(BandcampAlbumArt)
+                else:
+                    fetchart.ART_SOURCES[self.data_source] = BandcampAlbumArt
+                    fetchart.SOURCE_NAMES[BandcampAlbumArt] = self.data_source
+                    fetchart.SOURCES_ALL.append(self.data_source)
                 bandcamp_fetchart = BandcampAlbumArt(self._log, self.config)
                 plugin.sources = [bandcamp_fetchart, *plugin.sources]
                 break
