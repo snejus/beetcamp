@@ -42,6 +42,7 @@ def test_remove_label(json_meta, expected_titles):
         ("Album | CAT001", "", "CAT001"),
         ("Album [CAT001]", "CAT001", None),
         ("Album [Very weird cat1]", "", "Very weird cat1"),
+        ("FS222 - Album", "", None),  # invalid - cat needs to start with 3 letters
     ],
 )
 def test_album_catalognum(original_name, albumartist, expected_catalognum):
