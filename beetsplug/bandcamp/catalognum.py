@@ -31,6 +31,7 @@ class Catalognum:
         \b
         (?!["'%,-])         # cannot be followed by these characters
         (?!\ [el]p)         # may not be part of an album name
+        (?!\ EVER)
       )
     )
     """
@@ -122,11 +123,11 @@ class Catalognum:
         | \s[|-]\s([A-Z]{2,}\d+$)       # ' - ABC123$' or ' | ABC123$'
           # or
         | [([]                          # just about anything within parens or brackets
-          (?!Part|VA\b|LP\b)            # does not start with 'Part', 'VA', 'LP'
+          (?!(?i:part|va|lp|sample)\b)  # does not start with 'Part', 'VA', 'LP', 'Sample'
           ([^])]*[A-Z][^])]*\d+)        # at least one upper letter, ends with a digit
           [])]                          # closing bracket or parens
           (?!.*\[)                      # no bracket in the rest of the string
-        """,
+        """,  # noqa: E501
         re.VERBOSE,
     )
 
