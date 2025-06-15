@@ -34,10 +34,11 @@ class AlbumName:
         """,
         re.IGNORECASE | re.VERBOSE,
     )
-    CLEAN_EPLP = cached_patternprop(r"(?:[([]|Double ){0,2}(\b[EL]P\b)\S?", re.I)
-    EPLP_ALBUM = cached_patternprop(
-        r"\b(?!VA|0\d|-)([^\s:]+\b|[&, ])+ [EL]P\b( [\w#][^ ]+$)?"
+    CLEAN_EPLP = cached_patternprop(
+        r"(?:[([]|Double ){0,2}(\b[EL]P\b)((,.*)?[])])?", re.I
     )
+    ALBUM_SEP = cached_patternprop(r" [-:l|] |: |(?<=\] )")
+    EPLP_ALBUM = cached_patternprop(r"\b.+\b[EL]P\b([ #\w]+$)?")
     EPLP_ALBUM_LINE = cached_patternprop(
         r"\b(?=[A-Z])(((?!Vinyl|VA|-)[^:\s]+ )+)[EL]P$", re.M
     )
@@ -75,13 +76,17 @@ class AlbumName:
         """Try to guess album name from the original title.
 
         Return the first match from below, defaulting to None:
-        1. If 'EP' or 'LP' is in the original name, album name is what precedes it.
-        2. If quotes are used in the title, they probably contain the album name.
+        1. If quotes are used in the title, they probably contain the album name.
+        2. If 'EP' or 'LP' is in the original name, album name is what precedes it.
         """
         if m := self.QUOTED_ALBUM.search(self.original):
             return m.expand(r"\2\3")
 
-        return m.group() if (m := self.EPLP_ALBUM.search(self.original)) else None
+        for part in self.ALBUM_SEP.split(self.original):
+            if m := self.EPLP_ALBUM.search(part):
+                return m.group()
+
+        return None
 
     @cached_property
     def album_names(self) -> list[str]:

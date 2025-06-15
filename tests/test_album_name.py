@@ -68,6 +68,9 @@ from beetsplug.bandcamp.album_name import AlbumName
         ("Album [LP]", "Album LP"),
         ("Album (LP)", "Album LP"),
         ("Album (EP) (Free Download)", "Album EP"),
+        ("Album' EP", "Album' EP"),
+        ("A good EP Album", "A good EP Album"),
+        ("Album (LP, 2019)", "Album LP"),
         # Remixes
         ("Album [CAT123] Incl. Remix", "Album"),
         ("Album (Incl. some sort of Remixes)", "Album"),

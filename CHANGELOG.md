@@ -5,6 +5,9 @@
 - `album`:
   - Keep artist in album name when it is preceded by **vs.** or **presents**.
   - Keep title in album name when it contains **remix** and is preceded by **+**.
+  - Improve parsing of album names that end with **EP** or **LP**:
+    - Parse apostrophes correctly ([#77](https://github.com/snejus/beetcamp/issues/77))
+    - Parse **EP** and **LP** in parentheses.
 
 - `catalognum`:
   - Require at least 3 letters in prefix when it is present in the release name. This
