@@ -12,6 +12,7 @@
 - `catalognum`:
   - Require at least 3 letters in prefix when it is present in the release name. This
     fixes a few false positives where artists' names were assumed to be catalogue numbers.
+  - Fix a few false positives involving hyphenated words in lowercase.
 
 - `title`:
   - Improve handling of parentheses: keep space characters in unicode-art titles, such as
