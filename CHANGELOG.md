@@ -1,5 +1,7 @@
 ## Unreleased
 
+## [0.22.0] 2025-06-16
+
 ### Fixed
 
 - `album`:
@@ -1377,3 +1379,4 @@ Thanks @arogl for reporting each of the above!
 [0.19.3]: https://github.com/snejus/beetcamp/releases/tag/0.19.3
 [0.20.0]: https://github.com/snejus/beetcamp/releases/tag/0.20.0
 [0.21.0]: https://github.com/snejus/beetcamp/releases/tag/0.21.0
+[0.22.0]: https://github.com/snejus/beetcamp/releases/tag/0.22.0
