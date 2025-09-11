@@ -519,6 +519,11 @@ class Metaguru(Helpers):
         common_data.update(self.get_fields(fields))
         if reldate := self.release_date:
             common_data.update(self.get_fields(["year", "month", "day"], reldate))
+            # Set original date fields to match release date for Bandcamp releases
+            # This prevents the 'originalreleasetime' tag from being set to '0000'
+            common_data["original_year"] = reldate.year
+            common_data["original_month"] = reldate.month
+            common_data["original_day"] = reldate.day
 
         return common_data
 
@@ -569,6 +574,11 @@ class Metaguru(Helpers):
         for key, val in self.get_fields(["va"]).items():
             setattr(album_info, key, val)
         album_info.album_id = self.media.album_id
+        
+        # Remove excluded fields from the album info
+        for field in set(album_info.keys()) & self.excluded_fields:
+            album_info.pop(field)
+        
         return self.check_list_fields(album_info)
 
     @cached_property
