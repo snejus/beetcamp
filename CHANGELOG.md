@@ -5,6 +5,12 @@
 - (#79) Set `original_year`, `original_month` and `original_day` fields for albums and
   singletons.
 
+### Fixed
+
+- `catalognum`:
+  - Fix false positives that matched within parentheses in album names, like **(Remaster
+    2020)** or **(Vol. 2)**.
+
 ## [0.22.0] 2025-06-16
 
 ### Fixed

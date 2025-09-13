@@ -202,7 +202,7 @@ class AlbumName:
 
     @classmethod
     def remove_catalognum(cls, name: str, catalognum: str) -> str:
-        return cls.remove_pattern(name, rf"{re.escape(catalognum)}(?!\ deluxe)")
+        return cls.remove_pattern(name, rf"/*{re.escape(catalognum)}(?!\ deluxe)")
 
     @classmethod
     def clean(
