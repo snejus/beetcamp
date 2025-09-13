@@ -127,10 +127,12 @@ class Metaguru(Helpers):
 
     @cached_property
     def only_media_comments(self) -> str:
-        return "\n".join([
-            self.disctitles,
-            *[m.description for m in self.media_formats],
-        ])
+        return "\n".join(
+            [
+                self.disctitles,
+                *[m.description for m in self.media_formats],
+            ]
+        )
 
     @cached_property
     def all_media_comments(self) -> str:
@@ -494,12 +496,8 @@ class Metaguru(Helpers):
             "media": self.media.name,
         }
 
-    def get_fields(self, fields: Iterable[str], src: object = None) -> JSONDict:
+    def get_fields(self, fields: list[str], src: object = None) -> JSONDict:
         """Return a mapping between unexcluded fields and their values."""
-        fields = list(set(fields) - self.excluded_fields)
-        if len(fields) == 1:
-            field = fields.pop()
-            return {field: getattr(self, field)}
         return dict(zip(fields, iter(op.attrgetter(*fields)(src or self))))
 
     @property
@@ -519,8 +517,14 @@ class Metaguru(Helpers):
         common_data.update(self.get_fields(fields))
         if reldate := self.release_date:
             common_data.update(self.get_fields(["year", "month", "day"], reldate))
+            common_data["original_year"] = reldate.year
+            common_data["original_month"] = reldate.month
+            common_data["original_day"] = reldate.day
 
         return common_data
+
+    def _exclude_extra_fields(self, data: JSONDict) -> JSONDict:
+        return {k: v for k, v in data.items() if k not in self.excluded_fields}
 
     def _trackinfo(self, data: dict[str, Any], **kwargs: Any) -> TrackInfo:
         data.update(**self._common, **kwargs)
@@ -530,10 +534,8 @@ class Metaguru(Helpers):
             data.pop("catalognum", None)
         if not data["lyrics"]:
             data.pop("lyrics", None)
-        for field in set(data.keys()) & self.excluded_fields:
-            data.pop(field)
 
-        return TrackInfo(**data)
+        return TrackInfo(**self._exclude_extra_fields(data))
 
     @cached_property
     def singleton(self) -> TrackInfo:
@@ -557,19 +559,17 @@ class Metaguru(Helpers):
             bool(self.config.get("include_digital_only_tracks")),
         )
         track_infos = [self._trackinfo(t, disctitle=self.disctitle) for t in tracks]
-        album_info = AlbumInfo(
+        data = {
             **self._common,
             **self._common_album,
-            artist=self.albumartist,
-            album_id=self.album_id,
-            mediums=self.get_mediums(track_infos),
-            albumstatus=self.albumstatus,
-            tracks=track_infos,
-        )
-        for key, val in self.get_fields(["va"]).items():
-            setattr(album_info, key, val)
-        album_info.album_id = self.media.album_id
-        return self.check_list_fields(album_info)
+            "artist": self.albumartist,
+            "mediums": self.get_mediums(track_infos),
+            "albumstatus": self.albumstatus,
+            "va": self.va,
+            "tracks": track_infos,
+            "album_id": self.media.album_id,
+        }
+        return self.check_list_fields(AlbumInfo(**self._exclude_extra_fields(data)))
 
     @cached_property
     def albums(self) -> list[AlbumInfo]:

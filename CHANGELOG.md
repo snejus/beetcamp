@@ -1,5 +1,10 @@
 ## Unreleased
 
+### Added
+
+- (#79) Set `original_year`, `original_month` and `original_day` fields for albums and
+  singletons.
+
 ## [0.22.0] 2025-06-16
 
 ### Fixed

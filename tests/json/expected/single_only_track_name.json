@@ -1,15 +1,21 @@
 {
   "album": null,
   "albumtype": "single",
-  "albumtypes": ["single"],
+  "albumtypes": [
+    "single"
+  ],
   "arranger": null,
   "artist": "GUTKEIN",
   "artist_credit": null,
   "artist_id": "https://gutkeinforu.bandcamp.com",
   "artist_sort": null,
-  "artists": ["GUTKEIN"],
+  "artists": [
+    "GUTKEIN"
+  ],
   "artists_credit": [],
-  "artists_ids": ["https://gutkeinforu.bandcamp.com"],
+  "artists_ids": [
+    "https://gutkeinforu.bandcamp.com"
+  ],
   "artists_sort": [],
   "barcode": null,
   "bpm": null,
@@ -34,8 +40,11 @@
   "medium_index": null,
   "medium_total": null,
   "month": 1,
-  "release_track_id": null,
+  "original_day": 10,
+  "original_month": 1,
+  "original_year": 2021,
   "release_group_title": null,
+  "release_track_id": null,
   "style": "electronic",
   "title": "OENERA",
   "track_alt": null,
