@@ -20,7 +20,7 @@ from __future__ import annotations
 
 import logging
 from contextlib import contextmanager
-from functools import partial
+from functools import cache, partial
 from operator import itemgetter
 from typing import TYPE_CHECKING, Any, Literal
 
@@ -92,19 +92,16 @@ class BandcampRequestsHandler:
             self._info("{}", e)
             return ""
 
-    def guru(self, url: str) -> Metaguru:
-        return Metaguru.from_html(self._get(url), config=self.config.flatten())
-
-    @contextmanager
-    def handle_error(self, url: str) -> Iterator[Any]:
-        """Return Metaguru for the given URL."""
+    def guru(self, url: str) -> Metaguru | None:
         try:
-            yield
+            return Metaguru.from_html(self._get(url), config=self.config.flatten())
         except (KeyError, ValueError, AttributeError, IndexError) as e:
             self._info("Failed obtaining {}: {}", url, e)
         except Exception:  # pylint: disable=broad-except
             i_url = "https://github.com/snejus/beetcamp/issues/new"
             self._exc("Unexpected error obtaining {}, please report at {}", url, i_url)
+
+        return None
 
 
 class BandcampAlbumArt(BandcampRequestsHandler, fetchart.RemoteArtSource):
@@ -122,10 +119,8 @@ class BandcampAlbumArt(BandcampRequestsHandler, fetchart.RemoteArtSource):
         url = album.mb_albumid
         if not self.from_bandcamp(url):
             self._info("Not fetching art for a non-bandcamp album URL")
-        else:
-            with self.handle_error(url):
-                if image := self.guru(url).image:
-                    yield self._candidate(url=image)
+        elif (guru := self.guru(url)) and (image := guru.image):
+            yield self._candidate(url=image)
 
 
 class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
@@ -301,13 +296,11 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
             label_url = url.split(r"/track/")[0]
             url = f"{label_url}{m[0]}"
 
-        with self.handle_error(url):
-            return self.guru(url).albums
+        return guru.albums if (guru := self.guru(url)) else None
 
     def get_track_info(self, url: str) -> TrackInfo | None:
         """Return a TrackInfo object for a bandcamp track page."""
-        with self.handle_error(url):
-            return self.guru(url).singleton
+        return guru.singleton if (guru := self.guru(url)) else None
 
     def _search(self, data: JSONDict) -> Iterable[JSONDict]:
         """Return a list of track/album URLs of type search_type matching the query."""
