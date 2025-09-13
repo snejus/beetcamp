@@ -214,14 +214,15 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
     ) -> Iterable[AlbumInfo]:
         """Return a sequence of album candidates matching given artist and album."""
         item = items[0]
-        label = ""
-        if items and album == item.album and artist == item.albumartist:
-            label = item.label
-            if (url := self._find_url_in_item(item, album, "album")) and (
-                initial_guess := self.get_album_info(url)
-            ):
-                yield from initial_guess
-                return
+        if (
+            items
+            and album == item.album
+            and artist == item.albumartist
+            and (url := self._find_url_in_item(item, album, "album"))
+            and (initial_guess := self.get_album_info(url))
+        ):
+            yield from initial_guess
+            return
 
         if "various" in artist.lower():
             artist = ""
@@ -236,7 +237,7 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         search = {
             "query": " - ".join(filter(None, [artist, name])),
             "artist": artist,
-            "label": label,
+            "label": item.label,
             "search_type": search_type,
         }
 
@@ -248,16 +249,22 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         self, item: Item, artist: str, title: str
     ) -> Iterable[TrackInfo]:
         """Return a sequence of singleton candidates matching given artist and title."""
-        label = ""
-        if item and title == item.title and artist == item.artist:
-            label = item.label
-            if (url := self._find_url_in_item(item, title, "track")) and (
-                initial_guess := self.get_track_info(url)
-            ):
-                yield initial_guess
-                return
+        if (
+            item
+            and title == item.title
+            and artist == item.artist
+            and (url := self._find_url_in_item(item, title, "track"))
+            and (initial_guess := self.get_track_info(url))
+        ):
+            yield initial_guess
+            return
 
-        search = {"query": title, "artist": artist, "label": label, "search_type": "t"}
+        search = {
+            "query": title,
+            "artist": artist,
+            "label": item.label,
+            "search_type": "t",
+        }
         results = map(itemgetter("url"), self._search(search))
         yield from filter(None, map(self.get_track_info, results))
 
