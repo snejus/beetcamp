@@ -222,6 +222,25 @@ class Tracks:
                 t.title = f"{t.artist} {t.title}"
                 t.artist = ""
 
+        # Handle case where parsed "artists" from track titles are actually 
+        # part of track/album titles (like "Satie: Complete Piano Works") rather 
+        # than legitimate artist names. This fixes issues like the carrie z case
+        # where tracks like "Satie: Complete Piano Works - Track Title" were 
+        # incorrectly parsed as artist="Satie: Complete Piano Works".
+        tracks_with_parsed_artists = [
+            t for t in self if t.artist and not t.json_artist
+        ]
+        if (
+            len(tracks_with_parsed_artists) >= len(self) / 2  # Most tracks affected
+            and albumartist  # We have a valid albumartist
+            and all(albumartist.lower() not in t.artist.lower() for t in tracks_with_parsed_artists)  # Album artist not in any track artist
+            and len({t.artist for t in tracks_with_parsed_artists}) <= 3  # Not too many different "artists" 
+            and any(":" in t.artist for t in tracks_with_parsed_artists)  # Contains colons (indicative of album/series titles)
+        ):
+            for t in tracks_with_parsed_artists:
+                t.title = f"{t.artist} - {t.title}"
+                t.artist = ""
+
         if not self.tracks_without_artist:
             return
 
