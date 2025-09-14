@@ -6,8 +6,6 @@ from html import unescape
 import beets
 import httpx
 
-HTTPError = httpx.HTTPError
-
 USER_AGENT = f"beets/{beets.__version__} +https://beets.io/"
 
 _client = httpx.Client(headers={"User-Agent": USER_AGENT})

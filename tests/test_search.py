@@ -1,8 +1,11 @@
 """Tests for searching functionality."""
 
+from typing import Any
+
 import pytest
 
-from beetsplug.bandcamp.search import get_matches, parse_and_sort_results
+from beetsplug.bandcamp.http import urlify
+from beetsplug.bandcamp.search import get_matches, search_bandcamp
 
 # simplified version of the search result HTML block
 HTML_ITEM = """
@@ -25,63 +28,62 @@ search_item_type="a">
 
 
 def make_html_item(data):
-    return HTML_ITEM.format(**data, date="26 November 2021")
+    return HTML_ITEM.format(**data, date="2021 November 26")
 
 
 @pytest.fixture
-def search_data():
+def result_data():
     return {
         "name": "Release",
         "url": "https://label.bandcamp.com/album/release",
         "artist": "Artist",
         "label": "label",
         "type": "album",
-    }.copy()
-
-
-def test_search_logic(search_data):
-    """Given a single matching release, the similarity should be 1."""
-    expected_data = {**search_data, "date": "2021 November 26"}
-    results = parse_and_sort_results(make_html_item(search_data), **expected_data)
-    assert results == [{**expected_data, "similarity": 1.0, "index": 1}]
-
-
-def test_search_logic_alternate_domain_name(search_data):
-    # test same dataset, but with alternate domain name, such as mydomain.com
-    """Given a single matching release, the similarity should be 1."""
-    search_data["url"] = "https://mydomain.com/album/release"
-    expected_data = {**search_data, "date": "2021 November 26", "label": "mydomain"}
-    results = parse_and_sort_results(make_html_item(search_data), **expected_data)
-    assert results == [{**expected_data, "similarity": 1.0, "index": 1}]
-
-
-def test_search_prioritises_best_matches(search_data):
-    """Search results are sorted by similarity."""
-    expected_result = {
-        **search_data,
-        "name": "Specific Release",
-        "url": "https://label.bandcamp.com/album/specific-release",
-        "index": 1,
-        "similarity": 0.955,
-    }
-    other_result = {
-        **search_data,
-        "name": "Release",
-        "url": "https://label.bandcamp.com/album/release",
-        "index": 2,
-        "similarity": 0.925,
     }
 
-    expected_results = [
-        {**expected_result, "date": "2021 November 26"},
-        {**other_result, "date": "2021 November 26"},
-    ]
 
-    html = make_html_item(other_result) + "\n" + make_html_item(expected_result)
-    results = parse_and_sort_results(
-        html, **{**search_data, "name": "Specific Release"}
+@pytest.fixture
+def make_html_with_results(result_data):
+    def make(
+        names: list[str], similarities: list[float]
+    ) -> tuple[str, list[dict[str, Any]]]:
+        results = [
+            {
+                **result_data,
+                "name": n,
+                "url": f"https://label.bandcamp.com/album/{urlify(n)}",
+            }
+            for n in names
+        ]
+        html = "\n".join(map(make_html_item, results))
+        expected_results = [
+            {**r, "date": "26 November 2021", "index": idx, "similarity": s}
+            for idx, (r, s) in enumerate(zip(results, similarities), 1)
+        ]
+        return html, expected_results
+
+    return make
+
+
+def test_search_logic(make_html_with_results):
+    """Given a single matching release, the similarity should be 1."""
+    html, expected_results = make_html_with_results(["Release"], [1.0])
+    assert (
+        search_bandcamp(artist="Artist", name="Release", get=lambda *_: html)
+        == expected_results
     )
-    assert results == expected_results
+
+
+def test_search_prioritises_best_matches(make_html_with_results):
+    """Search results are sorted by similarity."""
+    html, expected_results = make_html_with_results(
+        ["Specific Release", "Specific Release With Long Name", "Release"],
+        [1.0, 0.919, 0.812],
+    )
+    assert (
+        search_bandcamp(artist="Artist", name="Specific Release", get=lambda *_: html)
+        == expected_results
+    )
 
 
 # fmt: off
@@ -97,7 +99,7 @@ def test_search_prioritises_best_matches(search_data):
         ("https://bandcamp.bandcamp.com/track/warm-2", "bandcamp"),
     ],
 )
-def test_search_matches(search_data, test_url, expected_label):
-    result = get_matches(make_html_item({**search_data, "url": test_url}))
+def test_search_matches(result_data, test_url, expected_label):
+    result = get_matches(make_html_item({**result_data, "url": test_url}))
     assert result["url"] == test_url
     assert result["label"] == expected_label

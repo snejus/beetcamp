@@ -23,12 +23,13 @@ from functools import partial
 from operator import itemgetter
 from typing import TYPE_CHECKING, Any, Literal
 
+import httpx
 from beets import IncludeLazyConfig, config, plugins
 
 from beetsplug import fetchart  # type: ignore[attr-defined]
 
 from .helpers import NEW_METADATA_PLUGIN_CLASS, cached_patternprop
-from .http import HTTPError, http_get_text, urlify
+from .http import http_get_text, urlify
 from .metaguru import Metaguru
 from .search import search_bandcamp
 
@@ -92,7 +93,7 @@ class BandcampRequestsHandler:
         """Return text contents of the url response."""
         try:
             return http_get_text(url)
-        except HTTPError as e:
+        except httpx.HTTPError as e:
             self._info("{}", e)
             return ""
 
@@ -214,7 +215,13 @@ class BandcampPlugin(BandcampRequestsHandler, MetadataSourcePlugin):
         return ""
 
     def candidates(
-        self, items: Sequence[Item], artist: str, album: str, *_: Any, **__: Any
+        self,
+        items: Sequence[Item],
+        artist: str,
+        album: str,
+        va_likely: bool,
+        *_: Any,
+        **__: Any,
     ) -> Iterable[AlbumInfo]:
         """Return a sequence of album candidates matching given artist and album."""
         item = items[0]
@@ -228,24 +235,19 @@ class BandcampPlugin(BandcampRequestsHandler, MetadataSourcePlugin):
             yield from initial_guess
             return
 
-        if "various" in artist.lower():
-            artist = ""
-
-        if album:
+        if (va_likely or "various" in artist.lower()) and (
+            # user is not searching for anything specific (default search)
+            item.album == album and item.artist == artist
+        ):
+            name, artist = item.title, item.artist
+            search_type = "t"
+        else:
             name = album
             search_type = "a"
-        else:
-            name = item.title
-            search_type = ""
 
-        search = {
-            "query": " - ".join(filter(None, [artist, name])),
-            "artist": artist,
-            "label": item.label,
-            "search_type": search_type,
-        }
+        search = {"artist": artist, "name": name, "search_type": search_type}
 
-        for url in map(itemgetter("url"), self._search(search)):
+        for url in map(itemgetter("url"), self._search(**search)):
             if albums := self.get_album_info(url):
                 yield from albums
 
@@ -263,13 +265,8 @@ class BandcampPlugin(BandcampRequestsHandler, MetadataSourcePlugin):
             yield initial_guess
             return
 
-        search = {
-            "query": title,
-            "artist": artist,
-            "label": item.label,
-            "search_type": "t",
-        }
-        results = map(itemgetter("url"), self._search(search))
+        search = {"artist": artist, "name": title, "search_type": "t"}
+        results = map(itemgetter("url"), self._search(**search))
         yield from filter(None, map(self.get_track_info, results))
 
     def album_for_id(self, album_id: str) -> AlbumInfo | None:
@@ -313,11 +310,10 @@ class BandcampPlugin(BandcampRequestsHandler, MetadataSourcePlugin):
         """Return a TrackInfo object for a bandcamp track page."""
         return guru.singleton if (guru := self.guru(url)) else None
 
-    def _search(self, data: JSONDict) -> Iterable[JSONDict]:
+    def _search(self, **kwargs: Any) -> Iterable[JSONDict]:
         """Return a list of track/album URLs of type search_type matching the query."""
-        msg = "Searching releases of type '{}' for query '{}' using '{}'"
-        self._info(msg, data["search_type"], data["query"], str(data))
-        results = search_bandcamp(**data, get=self._get)
+        self._info("Searching releases for {} - {}", kwargs["artist"], kwargs["name"])
+        results = search_bandcamp(**kwargs, get=self._get)
         return results[: self.config["search_max"].as_number()]
 
 
