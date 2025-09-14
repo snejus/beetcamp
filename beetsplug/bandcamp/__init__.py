@@ -19,8 +19,7 @@
 from __future__ import annotations
 
 import logging
-from contextlib import contextmanager
-from functools import cache, partial
+from functools import partial
 from operator import itemgetter
 from typing import TYPE_CHECKING, Any, Literal
 
@@ -28,16 +27,21 @@ from beets import IncludeLazyConfig, config, plugins
 
 from beetsplug import fetchart  # type: ignore[attr-defined]
 
-from .helpers import cached_patternprop
+from .helpers import NEW_METADATA_PLUGIN_CLASS, cached_patternprop
 from .http import HTTPError, http_get_text, urlify
 from .metaguru import Metaguru
 from .search import search_bandcamp
 
 if TYPE_CHECKING:
-    from collections.abc import Iterable, Iterator
+    from collections.abc import Iterable, Sequence
 
     from beets.autotag.hooks import AlbumInfo, TrackInfo
     from beets.library import Album, Item, Library
+
+if not NEW_METADATA_PLUGIN_CLASS:
+    from beets.plugins import BeetsPlugin as MetadataSourcePlugin
+else:
+    from beets.metadata_plugins import MetadataSourcePlugin
 
 JSONDict = dict[str, Any]
 CandidateType = Literal["album", "track"]
@@ -123,7 +127,7 @@ class BandcampAlbumArt(BandcampRequestsHandler, fetchart.RemoteArtSource):
             yield self._candidate(url=image)
 
 
-class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
+class BandcampPlugin(BandcampRequestsHandler, MetadataSourcePlugin):
     MAX_COMMENT_LENGTH = 4047
     ALBUM_SLUG_IN_TRACK = cached_patternprop(r'(?<=<a id="buyAlbumLink" href=")[^"]+')
     LABEL_URL_IN_COMMENT = cached_patternprop(r"Visit (https:[\w/.-]+\.[a-z]+)")
@@ -210,7 +214,7 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         return ""
 
     def candidates(
-        self, items: list[Item], artist: str, album: str, *_: Any, **__: Any
+        self, items: Sequence[Item], artist: str, album: str, *_: Any, **__: Any
     ) -> Iterable[AlbumInfo]:
         """Return a sequence of album candidates matching given artist and album."""
         item = items[0]
