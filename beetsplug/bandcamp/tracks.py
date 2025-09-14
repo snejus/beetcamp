@@ -196,6 +196,59 @@ class Tracks:
                     t.title = t.json_item["name"]
                 t.track_alt = None
 
+    def _should_fix_album_title_artists(self, tracks_with_parsed_artists,
+                                        albumartist: str) -> bool:
+        """Check if parsed artists are actually album/series titles."""
+        return (
+            len(tracks_with_parsed_artists) >= len(self) / 2
+            and albumartist  # We have a valid albumartist
+            and all(
+                albumartist.lower() not in t.artist.lower()
+                for t in tracks_with_parsed_artists
+            )
+            and len({t.artist for t in tracks_with_parsed_artists}) <= 3
+            and any(":" in t.artist for t in tracks_with_parsed_artists)
+        )
+
+    def _fix_album_title_artists(self, tracks_with_parsed_artists) -> None:
+        """Move parsed album/series titles back to track titles."""
+        for t in tracks_with_parsed_artists:
+            t.title = f"{t.artist} - {t.title}"
+            t.artist = ""
+
+    def _fix_the_artist(self) -> None:
+        """Fix tracks where artist is 'the' by moving it to title."""
+        for t in (t for t in self if t.artist):
+            # the artist cannot be 'the', so it's most likely a part of the title
+            if t.artist.lower() == "the":
+                t.title = f"{t.artist} {t.title}"
+                t.artist = ""
+
+    def _fix_problematic_artists(self, albumartist: str) -> None:
+        """Fix tracks with problematic parsed artists."""
+        if 1 <= len(self) - len(self.tracks_without_artist) < 4:
+            aartist = albumartist.lower()
+            for t in (
+                t
+                for t in self
+                if (artist := t.artist.lower())
+                and not t.json_artist
+                and artist not in aartist
+                and aartist not in f"{artist}{t.ft_artist.lower()}{t.title.lower()}"
+            ):
+                t.title = f"{t.artist} - {t.title}"
+                t.artist = ""
+
+    def _split_remaining_titles(self) -> None:
+        """Split remaining track titles by dash to extract artists."""
+        if 1 <= len(tracks := self.tracks_without_artist) < len(self) / 2:
+            for t in tracks:
+                if (
+                    len(split := t.title.split("-", 1)) > 1
+                    or len(split := Names.SEPARATOR_PAT.split(t.title, 1)) > 1
+                ):
+                    t.artist, t.title = map(str.strip, split)
+
     def fix_track_artists(self, albumartist: str) -> None:
         """Adjust track artists in the context of the entire album.
 
@@ -216,54 +269,25 @@ class Tracks:
 
         Otherwise, use the albumartist as the default.
         """
-        for t in (t for t in self if t.artist):
-            # the artist cannot be 'the', so it's most likely a part of the title
-            if t.artist.lower() == "the":
-                t.title = f"{t.artist} {t.title}"
-                t.artist = ""
+        self._fix_the_artist()
 
-        # Handle case where parsed "artists" from track titles are actually 
-        # part of track/album titles (like "Satie: Complete Piano Works") rather 
+        # Handle case where parsed "artists" from track titles are actually
+        # part of track/album titles (like "Satie: Complete Piano Works") rather
         # than legitimate artist names. This fixes issues like the carrie z case
-        # where tracks like "Satie: Complete Piano Works - Track Title" were 
+        # where tracks like "Satie: Complete Piano Works - Track Title" were
         # incorrectly parsed as artist="Satie: Complete Piano Works".
         tracks_with_parsed_artists = [
             t for t in self if t.artist and not t.json_artist
         ]
-        if (
-            len(tracks_with_parsed_artists) >= len(self) / 2  # Most tracks affected
-            and albumartist  # We have a valid albumartist
-            and all(albumartist.lower() not in t.artist.lower() for t in tracks_with_parsed_artists)  # Album artist not in any track artist
-            and len({t.artist for t in tracks_with_parsed_artists}) <= 3  # Not too many different "artists" 
-            and any(":" in t.artist for t in tracks_with_parsed_artists)  # Contains colons (indicative of album/series titles)
-        ):
-            for t in tracks_with_parsed_artists:
-                t.title = f"{t.artist} - {t.title}"
-                t.artist = ""
+        if self._should_fix_album_title_artists(tracks_with_parsed_artists,
+                                                albumartist):
+            self._fix_album_title_artists(tracks_with_parsed_artists)
 
         if not self.tracks_without_artist:
             return
 
-        if 1 <= len(self) - len(self.tracks_without_artist) < 4:
-            aartist = albumartist.lower()
-            for t in (
-                t
-                for t in self
-                if (artist := t.artist.lower())
-                and not t.json_artist
-                and artist not in aartist
-                and aartist not in f"{artist}{t.ft_artist.lower()}{t.title.lower()}"
-            ):
-                t.title = f"{t.artist} - {t.title}"
-                t.artist = ""
-
-        if 1 <= len(tracks := self.tracks_without_artist) < len(self) / 2:
-            for t in tracks:
-                if (
-                    len(split := t.title.split("-", 1)) > 1
-                    or len(split := Names.SEPARATOR_PAT.split(t.title, 1)) > 1
-                ):
-                    t.artist, t.title = map(str.strip, split)
+        self._fix_problematic_artists(albumartist)
+        self._split_remaining_titles()
 
         for t in self.tracks_without_artist:
             # default to the albumartist

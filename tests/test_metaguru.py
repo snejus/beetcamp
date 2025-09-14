@@ -84,12 +84,14 @@ def test_digi_only_option(json_track, json_meta, beets_config):
 
 def test_artist_parsing_with_dash_separators_in_titles(beets_config):
     """Test that track titles with ' - ' separators don't override JSON album artist.
-    
+
     This reproduces the issue where:
-    - Track titles like "Satie: Complete Piano Works - Track Title" were parsed as artist + title
-    - Multiple different "artists" from track titles created a combined albumartist
+    - Track titles like "Satie: Complete Piano Works - Track Title" were parsed
+      as artist + title
+    - Multiple different "artists" from track titles created a combined
+      albumartist
     - The correct albumartist "carrie z" from JSON metadata was ignored
-    
+
     See: https://github.com/snejus/beetcamp/issues/47
     """
     # Mock data based on the carrie z issue
@@ -109,14 +111,15 @@ def test_artist_parsing_with_dash_separators_in_titles(beets_config):
                 {
                     "item": {
                         "@id": "https://carriez.bandcamp.com/track/prelude",
-                        "name": "Satie: Complete Piano Works - Prélude en tapisserie (1906)",
+                        "name": "Satie: Complete Piano Works - Prélude en "
+                               "tapisserie (1906)",
                         "position": 1
                     },
                     "byArtist": {"name": ""}
                 },
                 {
                     "item": {
-                        "@id": "https://carriez.bandcamp.com/track/psaumes", 
+                        "@id": "https://carriez.bandcamp.com/track/psaumes",
                         "name": "Psaumes (1895) - 1. Losing Grip",
                         "position": 2
                     },
@@ -125,7 +128,7 @@ def test_artist_parsing_with_dash_separators_in_titles(beets_config):
                 {
                     "item": {
                         "@id": "https://carriez.bandcamp.com/track/another",
-                        "name": "Satie: Complete Piano Works - Another Track", 
+                        "name": "Satie: Complete Piano Works - Another Track",
                         "position": 3
                     },
                     "byArtist": {"name": ""}
@@ -149,24 +152,27 @@ def test_artist_parsing_with_dash_separators_in_titles(beets_config):
             ]
         }
     }
-    
+
     guru = Metaguru(mock_data, beets_config)
-    
+
     # Test that the albumartist is correctly set to the JSON artist
     assert guru.albumartist == "carrie z"
-    
+
     # Test that all tracks have the correct artist
     for i, track in enumerate(guru.tracks, 1):
-        assert track.artist == "carrie z", f"Track {i} artist should be 'carrie z', got '{track.artist}'"
-    
+        assert track.artist == "carrie z", \
+            f"Track {i} artist should be 'carrie z', got '{track.artist}'"
+
     # Test that track titles contain the previously parsed "artist" parts
     expected_titles = [
         "Satie: Complete Piano Works - Prélude en tapisserie (1906)",
-        "Psaumes (1895) - 1. Losing Grip", 
+        "Psaumes (1895) - 1. Losing Grip",
         "Satie: Complete Piano Works - Another Track",
         "Psaumes (1895) - 2. Another One",
         "Satie: Complete Piano Works - Final Track"
     ]
-    
-    for i, (track, expected_title) in enumerate(zip(guru.tracks, expected_titles), 1):
-        assert track.title == expected_title, f"Track {i} title should be '{expected_title}', got '{track.title}'"
+
+    for i, (track, expected_title) in enumerate(zip(guru.tracks,
+                                                    expected_titles), 1):
+        assert track.title == expected_title, \
+            f"Track {i} title should be '{expected_title}', got '{track.title}'"
