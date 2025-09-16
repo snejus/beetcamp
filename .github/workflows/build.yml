@@ -65,7 +65,7 @@ jobs:
             -Dsonar.python.pylint.reportPaths=pylint.log
             -Dsonar.python.ruff.reportPaths=
             -Dsonar.python.mypy.reportPaths=mypy.log
-            -Dsonar.python.version=3.8
+            -Dsonar.python.version=3.9
             -Dsonar.python.xunit.reportPath=.reports/test-report.xml
             -Dsonar.sources=beetsplug/bandcamp
             -Dsonar.tests=tests
