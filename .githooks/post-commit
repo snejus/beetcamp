@@ -66,6 +66,6 @@ fi
 git diff --quiet $SOURCE
 dirty_worktree=$?
 (( dirty_worktree )) && git stash
-./test_lib $before $after
+./test-lib $before $after
 (( $#rebase_head )) && [[ -d $TESTS_DIR/$rebase_head ]] && rm -r $TESTS_DIR/*$rebase_head
 (( dirty_worktree )) && git stash pop --quiet
