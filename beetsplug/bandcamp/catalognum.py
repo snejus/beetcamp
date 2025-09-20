@@ -157,7 +157,11 @@ class Catalognum:
 
         This includes the label name without any punctuation and suffixes.
         """
-        variations = {self.label, self.label_suffix.sub("", self.label)}
+        variations = {
+            self.label,
+            *self.label.split(" fka "),
+            self.label_suffix.sub("", self.label),
+        }
         variations |= {self.punctuation.sub("", v) for v in variations}
 
         return variations
