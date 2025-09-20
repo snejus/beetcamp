@@ -1,11 +1,11 @@
 ## Unreleased
 
-## [0.23.0] 2025-09-20
-
 ### Added
 
 - `cover_art_url`: Add `cover_art_url` field to albums and singletons which is used by
   `beets>=2.4.0` for artwork resolution.
+
+## [0.23.0] 2025-09-20
 
 ### Added
 
