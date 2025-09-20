@@ -28,17 +28,18 @@ if git diff --quiet HEAD~1..HEAD $SOURCE; then
 fi
 
 if [[ ! -d .git/rebase-merge ]]; then
-  print "Testing new commit"
+  if [[ $message == fixup* ]]; then
+    print "Skipping fixup commit"
+    exit
+  else
+    print "Testing new commit"
+  fi
 else
   tasks=(${(f@)${mapfile[.git/rebase-merge/done]%$'\n'}})
   current_task=(${=tasks[-1]})
   action=$current_task[1]
   rebase_head=${current_task[2]:0:8}
 
-  if [[ $action =~ (fixup|squash) ]]; then
-    print "Skipping commit rewrite"
-    exit
-  fi
   if [[ -d $TESTS_DIR/$rebase_head ]]; then
     if [[ ! -s .git/rebase-merge/git-rebase-todo ]] && (( ${#${(M)${tasks}:#*(edit|fixup|squash)*}} || ! ${#${(M)${tasks}:#*reword*}} )); then
       print "Current (latest) commit, testing against REBASE_HEAD $rebase_head to synchronise results"
