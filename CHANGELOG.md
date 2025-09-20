@@ -1,5 +1,7 @@
 ## Unreleased
 
+## [0.23.0] 2025-09-20
+
 ### Added
 
 - (#79) Set `original_year`, `original_month` and `original_day` fields for albums and
@@ -1391,3 +1393,4 @@ Thanks @arogl for reporting each of the above!
 [0.20.0]: https://github.com/snejus/beetcamp/releases/tag/0.20.0
 [0.21.0]: https://github.com/snejus/beetcamp/releases/tag/0.21.0
 [0.22.0]: https://github.com/snejus/beetcamp/releases/tag/0.22.0
+[0.23.0]: https://github.com/snejus/beetcamp/releases/tag/0.23.0
