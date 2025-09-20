@@ -49,7 +49,7 @@ pytestmark = pytest.mark.lib
 JSONDict = dict[str, Any]
 
 LIB_TESTS_DIR = Path("lib_tests")
-RESULTS_DIR = LIB_TESTS_DIR / "results"
+RESULTS_DIR = (LIB_TESTS_DIR / "results").absolute()
 JSONS_DIR = Path("jsons")
 
 IGNORE_FIELDS = {
@@ -484,6 +484,12 @@ def new(guru: Metaguru, original_name: str, original_artist: str) -> JSONDict:
 def result(
     base: JSONDict, base_filepath: Path, target_filepath: Path, new: JSONDict
 ) -> JSONDict:
+    """Manage test result files and create symlinks for base and target paths.
+
+    Handles the creation and symlinking of result files to ensure test fixtures
+    have access to the expected data files. If the base data differs from new,
+    writes new results and updates symlinks accordingly.
+    """
     results_filepath = base_filepath.resolve()
     if base and results_filepath.parent != RESULTS_DIR:
         results_filepath = write_results(base, base_filepath.stem)
@@ -495,11 +501,7 @@ def result(
         results_filepath = write_results(new, target_filepath.stem)
 
     if (target_filepath.is_symlink() and not target_filepath.exists()) or (
-        target_filepath.exists()
-        and (
-            target_filepath != results_filepath
-            or not target_filepath.samefile(results_filepath)
-        )
+        target_filepath.exists() and (target_filepath.resolve() != results_filepath)
     ):
         target_filepath.unlink()
 
