@@ -4,6 +4,11 @@
 
 ### Added
 
+- `cover_art_url`: Add `cover_art_url` field to albums and singletons which is used by
+  `beets>=2.4.0` for artwork resolution.
+
+### Added
+
 - (#79) Set `original_year`, `original_month` and `original_day` fields for albums and
   singletons.
 

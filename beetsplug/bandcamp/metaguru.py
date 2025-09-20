@@ -195,7 +195,7 @@ class Metaguru(Helpers):
         return aartist
 
     @cached_property
-    def image(self) -> str:
+    def cover_art_url(self) -> str:
         image = self.meta.get("image") or ""
         if isinstance(image, list) and isinstance(image[0], str):
             return image[0]
@@ -513,6 +513,7 @@ class Metaguru(Helpers):
             "label",
             "style",
             "artists",
+            "cover_art_url",
         ]
         common_data.update(self.get_fields(fields))
         if reldate := self.release_date:
