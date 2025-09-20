@@ -322,7 +322,7 @@ class Metaguru(Helpers):
 
         return ", ".join(sorted(self.tracks.lead_artists))
 
-    @cached_property
+    @property
     def album_name(self) -> str:
         artists = []
         if self.original_albumartist != self.label:

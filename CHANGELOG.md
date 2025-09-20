@@ -1,5 +1,15 @@
 ## Unreleased
 
+### Fixed
+
+- `catalognum`:
+  - Handle _formerly known as_ label names, where the former label name is part of the
+    catalogue number.
+
+- `album`:
+  - Handle edge case when parsed catalogue number does not have a space, say **ABC123**
+    but it appears in the album name with a space, **ABC 123**.
+
 ### Added
 
 - `cover_art_url`: Add `cover_art_url` field to albums and singletons which is used by
