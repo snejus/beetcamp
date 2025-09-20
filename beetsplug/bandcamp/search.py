@@ -102,8 +102,11 @@ def search_bandcamp(
     **kwargs: Any,
 ) -> list[JSONDict]:
     """Return a list with item JSONs of type search_type matching the query."""
+    query = query or " - ".join(
+        filter(None, [kwargs.get("artist"), kwargs.get("name")])
+    )
+    kwargs.setdefault("name", query)
     url = SEARCH_URL.format(page, quote_plus(query))
     if search_type:
         url += f"&item_type={search_type}"
-    kwargs["name"] = query
     return parse_and_sort_results(get(url), **kwargs)

@@ -16,7 +16,10 @@ if TYPE_CHECKING:
 @dataclass
 class Catalognum:
     CONSTRAINT_TEMPLATE = r"""
-    (?<![]/@.-])            # cannot be preceded by these characters
+    (?:
+      (?<![]/@.-])          # cannot be preceded by these characters
+      | (?<=//)             # or preceded by at least two slashes
+    )
     (?i:
       (?<!by\ )
       (?:
@@ -24,9 +27,9 @@ class Catalognum:
         (?!(?i:vol|[el]p))  # exclude anything starting with 'vol', 'ep', 'lp'
         (?-i:{})
                             # cannot end with any of the following words
-        (?<!\bva\d)         # VA1
-        (?<!\bva\d\d)       # VA01
-        (?<!\bva\d\d\d)     # VA001
+        (?<!\ va\d)         # VA1
+        (?<!\ va\d\d)       # VA01
+        (?<!\ va\d\d\d)     # VA001
         (?<!\b20\d\d)       # a year
         \b
         (?!["'%,-])         # cannot be followed by these characters
@@ -112,7 +115,7 @@ class Catalognum:
     anywhere = cached_patternprop(rf"({MATCH}(?:\ [-/]\ {MATCH})?)", re.VERBOSE)
     in_album_pat = cached_patternprop(
         r"""
-          (^\d*[A-Z$]{3,}\d+)           # ^ABC123, ^A$C123
+          (^\d*[A-Z$]{{3,}}\d+)         # ^ABC123, ^A$C123
           (?:
               :\s+                      # ': '
             | \s+[|-]\s+                # ' | ', ' - '
@@ -120,14 +123,21 @@ class Catalognum:
             | \s+-                      # ' -'
           )
           # or
-        | \s[|-]\s([A-Z]{2,}\d+$)       # ' - ABC123$' or ' | ABC123$'
+        | \s[|-]\s([A-Z]{{2,}}\d+$)     # ' - ABC123$' or ' | ABC123$'
           # or
         | [([]                          # just about anything within parens or brackets
-          (?!(?i:part|va|lp|sample)\b)  # does not start with 'Part', 'VA', 'LP', 'Sample'
-          ([^])]*[A-Z][^])]*\d+)        # at least one upper letter, ends with a digit
+            {}
           [])]                          # closing bracket or parens
           (?!.*\[)                      # no bracket in the rest of the string
-        """,  # noqa: E501
+        """.format(
+            CONSTRAINT_TEMPLATE.format(
+                r"""
+                (?!(?i:part|va|sample))
+                # at least one upper letter, ends with a digit
+                ([^])]*[A-Z][^])]*[0-9]+)
+                """
+            )
+        ),
         re.VERBOSE,
     )
 
@@ -187,13 +197,15 @@ class Catalognum:
         This is defined as a cached property so that the search is performed once for
         a certain release.
         """
-        return self.find([
-            (self.anywhere, self.album),
-            (self.label_pattern, self.album),
-            (self.start_end, self.release_description),
-            (self.anywhere, self.release_description),
-            (self.label_pattern, self.release_description),
-        ])
+        return self.find(
+            [
+                (self.anywhere, self.album),
+                (self.label_pattern, self.album),
+                (self.start_end, self.release_description),
+                (self.anywhere, self.release_description),
+                (self.label_pattern, self.release_description),
+            ]
+        )
 
     def search(self, pat: Pattern[str], string: str) -> str | None:
         """Search text with the given pattern and return matching catalogue number.
@@ -222,11 +234,13 @@ class Catalognum:
 
     def get(self, media_description: str) -> str | None:
         return (
-            self.find([
-                (self.header, media_description),
-                (self.header, self.release_description),
-                (self.anywhere, media_description),
-                (self.label_pattern, media_description),
-            ])
+            self.find(
+                [
+                    (self.header, media_description),
+                    (self.header, self.release_description),
+                    (self.anywhere, media_description),
+                    (self.label_pattern, media_description),
+                ]
+            )
             or self.in_album_or_release_description
         )

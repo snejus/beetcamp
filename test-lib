@@ -15,9 +15,12 @@ TEST_FILES_DIR=jsons
 before=${1:?Previous revision required as 1st arg}
 after=${2:?Current/target revision required as 2nd arg}
 
+local -a no_test
+zparseopts -D -E -no-test=no_test
+
 print >&2 "Base: $before, target: $after"
 
-poe test-files --no-summary -n4 --base $before --target $after
+(( $#no_test )) || poe test-files --no-summary -n4 --base $before --target $after
 
 jq 'if .original_artist == .artist then .artist else "\(.original_artist) -> \(.artist)" end' -r $TESTS_DIR/$after/*.json(^-@) >$TESTS_DIR/artist-$after
 

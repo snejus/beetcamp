@@ -19,25 +19,30 @@
 from __future__ import annotations
 
 import logging
-from contextlib import contextmanager
 from functools import partial
 from operator import itemgetter
 from typing import TYPE_CHECKING, Any, Literal
 
+import httpx
 from beets import IncludeLazyConfig, config, plugins
 
 from beetsplug import fetchart  # type: ignore[attr-defined]
 
-from .helpers import cached_patternprop
-from .http import HTTPError, http_get_text, urlify
+from .helpers import NEW_METADATA_PLUGIN_CLASS, cached_patternprop
+from .http import http_get_text, urlify
 from .metaguru import Metaguru
 from .search import search_bandcamp
 
 if TYPE_CHECKING:
-    from collections.abc import Iterable, Iterator
+    from collections.abc import Iterable, Sequence
 
     from beets.autotag.hooks import AlbumInfo, TrackInfo
     from beets.library import Album, Item, Library
+
+if not NEW_METADATA_PLUGIN_CLASS:
+    from beets.plugins import BeetsPlugin as MetadataSourcePlugin
+else:
+    from beets.metadata_plugins import MetadataSourcePlugin
 
 JSONDict = dict[str, Any]
 CandidateType = Literal["album", "track"]
@@ -88,23 +93,20 @@ class BandcampRequestsHandler:
         """Return text contents of the url response."""
         try:
             return http_get_text(url)
-        except HTTPError as e:
+        except httpx.HTTPError as e:
             self._info("{}", e)
             return ""
 
-    def guru(self, url: str) -> Metaguru:
-        return Metaguru.from_html(self._get(url), config=self.config.flatten())
-
-    @contextmanager
-    def handle_error(self, url: str) -> Iterator[Any]:
-        """Return Metaguru for the given URL."""
+    def guru(self, url: str) -> Metaguru | None:
         try:
-            yield
+            return Metaguru.from_html(self._get(url), config=self.config.flatten())
         except (KeyError, ValueError, AttributeError, IndexError) as e:
             self._info("Failed obtaining {}: {}", url, e)
         except Exception:  # pylint: disable=broad-except
             i_url = "https://github.com/snejus/beetcamp/issues/new"
             self._exc("Unexpected error obtaining {}, please report at {}", url, i_url)
+
+        return None
 
 
 class BandcampAlbumArt(BandcampRequestsHandler, fetchart.RemoteArtSource):
@@ -122,13 +124,11 @@ class BandcampAlbumArt(BandcampRequestsHandler, fetchart.RemoteArtSource):
         url = album.mb_albumid
         if not self.from_bandcamp(url):
             self._info("Not fetching art for a non-bandcamp album URL")
-        else:
-            with self.handle_error(url):
-                if image := self.guru(url).image:
-                    yield self._candidate(url=image)
+        elif (guru := self.guru(url)) and (image := guru.image):
+            yield self._candidate(url=image)
 
 
-class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
+class BandcampPlugin(BandcampRequestsHandler, MetadataSourcePlugin):
     MAX_COMMENT_LENGTH = 4047
     ALBUM_SLUG_IN_TRACK = cached_patternprop(r'(?<=<a id="buyAlbumLink" href=")[^"]+')
     LABEL_URL_IN_COMMENT = cached_patternprop(r"Visit (https:[\w/.-]+\.[a-z]+)")
@@ -215,37 +215,39 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         return ""
 
     def candidates(
-        self, items: list[Item], artist: str, album: str, *_: Any, **__: Any
+        self,
+        items: Sequence[Item],
+        artist: str,
+        album: str,
+        va_likely: bool,
+        *_: Any,
+        **__: Any,
     ) -> Iterable[AlbumInfo]:
         """Return a sequence of album candidates matching given artist and album."""
         item = items[0]
-        label = ""
-        if items and album == item.album and artist == item.albumartist:
-            label = item.label
-            if (url := self._find_url_in_item(item, album, "album")) and (
-                initial_guess := self.get_album_info(url)
-            ):
-                yield from initial_guess
-                return
+        if (
+            items
+            and album == item.album
+            and artist == item.albumartist
+            and (url := self._find_url_in_item(item, album, "album"))
+            and (initial_guess := self.get_album_info(url))
+        ):
+            yield from initial_guess
+            return
 
-        if "various" in artist.lower():
-            artist = ""
-
-        if album:
+        if (va_likely or "various" in artist.lower()) and (
+            # user is not searching for anything specific (default search)
+            item.album == album and item.artist == artist
+        ):
+            name, artist = item.title, item.artist
+            search_type = "t"
+        else:
             name = album
             search_type = "a"
-        else:
-            name = item.title
-            search_type = ""
 
-        search = {
-            "query": " - ".join(filter(None, [artist, name])),
-            "artist": artist,
-            "label": label,
-            "search_type": search_type,
-        }
+        search = {"artist": artist, "name": name, "search_type": search_type}
 
-        for url in map(itemgetter("url"), self._search(search)):
+        for url in map(itemgetter("url"), self._search(**search)):
             if albums := self.get_album_info(url):
                 yield from albums
 
@@ -253,17 +255,18 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
         self, item: Item, artist: str, title: str
     ) -> Iterable[TrackInfo]:
         """Return a sequence of singleton candidates matching given artist and title."""
-        label = ""
-        if item and title == item.title and artist == item.artist:
-            label = item.label
-            if (url := self._find_url_in_item(item, title, "track")) and (
-                initial_guess := self.get_track_info(url)
-            ):
-                yield initial_guess
-                return
+        if (
+            item
+            and title == item.title
+            and artist == item.artist
+            and (url := self._find_url_in_item(item, title, "track"))
+            and (initial_guess := self.get_track_info(url))
+        ):
+            yield initial_guess
+            return
 
-        search = {"query": title, "artist": artist, "label": label, "search_type": "t"}
-        results = map(itemgetter("url"), self._search(search))
+        search = {"artist": artist, "name": title, "search_type": "t"}
+        results = map(itemgetter("url"), self._search(**search))
         yield from filter(None, map(self.get_track_info, results))
 
     def album_for_id(self, album_id: str) -> AlbumInfo | None:
@@ -301,19 +304,16 @@ class BandcampPlugin(BandcampRequestsHandler, plugins.BeetsPlugin):
             label_url = url.split(r"/track/")[0]
             url = f"{label_url}{m[0]}"
 
-        with self.handle_error(url):
-            return self.guru(url).albums
+        return guru.albums if (guru := self.guru(url)) else None
 
     def get_track_info(self, url: str) -> TrackInfo | None:
         """Return a TrackInfo object for a bandcamp track page."""
-        with self.handle_error(url):
-            return self.guru(url).singleton
+        return guru.singleton if (guru := self.guru(url)) else None
 
-    def _search(self, data: JSONDict) -> Iterable[JSONDict]:
+    def _search(self, **kwargs: Any) -> Iterable[JSONDict]:
         """Return a list of track/album URLs of type search_type matching the query."""
-        msg = "Searching releases of type '{}' for query '{}' using '{}'"
-        self._info(msg, data["search_type"], data["query"], str(data))
-        results = search_bandcamp(**data, get=self._get)
+        self._info("Searching releases for {} - {}", kwargs["artist"], kwargs["name"])
+        results = search_bandcamp(**kwargs, get=self._get)
         return results[: self.config["search_max"].as_number()]
 
 

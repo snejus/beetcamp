@@ -282,39 +282,47 @@ select `enter Id` and paste the URL that you have.
 
 ## Supported metadata
 
-|          field | singleton | album track | album |                                        note                                         |
-| -------------: | :-------: | :---------: | :---: | :---------------------------------------------------------------------------------: |
-|        `album` |           |             |   ✔   |                                                                                     |
-|     `album_id` |           |             |   ✔   |                                release Bandcamp URL                                 |
-|  `albumartist` |           |             |   ✔   |                                                                                     |
-|  `albumstatus` |           |             |   ✔   |                                                                                     |
-|    `albumtype` |    \*✔    |             |   ✔   |                                                                                     |
-|   `albumtypes` |    \*✔    |             |  \*✔  |                                                                                     |
-|       `artist` |     ✔     |      ✔      |   ✔   |                                                                                     |
-|    `artist_id` |     ✔     |             |   ✔   |                           label / publisher Bandcamp URL                            |
-|   `catalognum` |    \*✔    |             |   ✔   |                                                                                     |
-|     `comments` |    \*✔    |             |  \*✔  |                     release and media descriptions, and credits                     |
-|      `country` |    \*✔    |             |   ✔   |                                                                                     |
-|          `day` |    \*✔    |             |   ✔   |                                                                                     |
-|    `disctitle` |    \*✔    |      ✔      |       |                                                                                     |
-|        `genre` |    \*✔    |             |  \*✔  |    comma-delimited list of **release keywords** which match [musicbrainz genres]    |
-|        `index` |           |      ✔      |       |                                                                                     |
-|        `label` |    \*✔    |             |   ✔   |                                                                                     |
-|       `length` |     ✔     |      ✔      |       |                                                                                     |
-|       `lyrics` |    \*✔    |     \*✔     |       |                                                                                     |
-|        `media` |    \*✔    |      ✔      |   ✔   |                                                                                     |
-|       `medium` |           |      ✔      |       | likely to be inaccurate, since it depends on information in the release description |
-|      `mediums` |           |             |   ✔   |                                                                                     |
-| `medium_index` |           |      ✔      |       |                              for now, same as `index`                               |
-| `medium_total` |           |      ✔      |       |                        total number of tracks in the release                        |
-|        `month` |    \*✔    |             |   ✔   |                                                                                     |
-|        `style` |    \*✔    |             |  \*✔  |                                 Bandcamp genre tag                                  |
-|        `title` |     ✔     |      ✔      |       |                                                                                     |
-|    `track_alt` |     ✔     |      ✔      |       |                                                                                     |
-|     `track_id` |           |      ✔      |       |                                      track URL                                      |
-|           `va` |           |             |   ✔   |                                                                                     |
-|         `year` |    \*✔    |             |   ✔   |                                                                                     |
+|            field | singleton | album track | album |                                        note                                         |
+| ---------------: | :-------: | :---------: | :---: | :---------------------------------------------------------------------------------: |
+|          `album` |           |             |   ✔   |                                                                                     |
+|       `album_id` |           |             |   ✔   |                                release Bandcamp URL                                 |
+|    `albumartist` |           |             |   ✔   |                                                                                     |
+|    `albumstatus` |           |             |   ✔   |                                                                                     |
+|      `albumtype` |     ✔     |             |   ✔   |                                                                                     |
+|     `albumtypes` |    \*✔    |             |  \*✔  |                                                                                     |
+|         `artist` |     ✔     |      ✔      |   ✔   |                                                                                     |
+|      `artist_id` |     ✔     |             |   ✔   |                           label / publisher Bandcamp URL                            |
+|        `artists` |    \^✔    |     \^✔     |  \^✔  |                                                                                     |
+| `artists_credit` |    \^✔    |     \^✔     |  \^✔  |                                                                                     |
+|    `artists_ids` |    \^✔    |     \^✔     |  \^✔  |                                                                                     |
+|   `artists_sort` |    \^✔    |     \^✔     |  \^✔  |                                                                                     |
+|     `catalognum` |     ✔     |             |   ✔   |                                                                                     |
+|       `comments` |     ✔     |             |   ✔   |                     release and media descriptions, and credits                     |
+|        `country` |     ✔     |             |   ✔   |                                                                                     |
+|            `day` |     ✔     |             |   ✔   |                                                                                     |
+|      `disctitle` |     ✔     |      ✔      |       |                                                                                     |
+|          `genre` |     ✔     |             |   ✔   |    comma-delimited list of **release keywords** which match [musicbrainz genres]    |
+|          `index` |           |      ✔      |       |                                                                                     |
+|          `label` |     ✔     |             |   ✔   |                                                                                     |
+|         `length` |     ✔     |      ✔      |       |                                                                                     |
+|         `lyrics` |     ✔     |      ✔      |       |                                                                                     |
+|          `media` |     ✔     |      ✔      |   ✔   |                                                                                     |
+|         `medium` |           |      ✔      |       | likely to be inaccurate, since it depends on information in the release description |
+|        `mediums` |           |             |   ✔   |                                                                                     |
+|   `medium_index` |           |      ✔      |       |                              for now, same as `index`                               |
+|   `medium_total` |           |      ✔      |       |                        total number of tracks in the release                        |
+|  `original_year` |     ✔     |             |   ✔   |                                                                                     |
+| `original_month` |     ✔     |             |   ✔   |                                                                                     |
+|   `original_day` |     ✔     |             |   ✔   |                                                                                     |
+|          `month` |     ✔     |             |   ✔   |                                                                                     |
+|          `style` |     ✔     |             |   ✔   |                                 Bandcamp genre tag                                  |
+|          `title` |     ✔     |      ✔      |       |                                                                                     |
+|      `track_alt` |     ✔     |      ✔      |       |                                                                                     |
+|       `track_id` |           |      ✔      |       |                                      track URL                                      |
+|             `va` |           |             |   ✔   |                                                                                     |
+|           `year` |     ✔     |             |   ✔   |                                                                                     |
 
-**\*** Available with `beets` versions `1.5` or higher.
+**\*** Requires `beets>=1.6`
+**\^** Requires `beets>=2`
 
 [musicbrainz genres]: https://beta.musicbrainz.org/genres
