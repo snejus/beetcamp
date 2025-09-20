@@ -9,9 +9,8 @@ import hashlib
 import json
 import os
 from collections import Counter
-from contextlib import suppress
 from dataclasses import dataclass
-from functools import cached_property, partial
+from functools import cached_property
 from itertools import groupby, zip_longest
 from operator import itemgetter
 from pathlib import Path
@@ -19,7 +18,6 @@ from typing import TYPE_CHECKING, Any, NamedTuple
 
 import pytest
 from filelock import FileLock
-from git import Repo
 from rich import box
 from rich.console import Group
 from rich.markup import escape
@@ -39,13 +37,12 @@ from beetsplug.bandcamp import BandcampPlugin
 from beetsplug.bandcamp.metaguru import Metaguru
 
 if TYPE_CHECKING:
-    from collections.abc import Callable, Iterator
+    from collections.abc import Iterator
 
     from _pytest.config import Config
     from _pytest.fixtures import FixtureRequest
     from beets.autotag.hooks import AttrDict
     from rich.panel import Panel
-    from rich.table import Table
 
 pytestmark = pytest.mark.lib
 
@@ -110,7 +107,7 @@ class FieldDiff(NamedTuple):
 
     def expand(self) -> Iterator[FieldDiff]:
         if self.field == "tracks":
-            for old_track, new_track in zip_longest(self.old, self.new, fillvalue=[]):  # type: ignore[var-annotated]  # noqa: E501
+            for old_track, new_track in zip_longest(self.old, self.new, fillvalue=[]):  # type: ignore[var-annotated]
                 yield FieldDiff("album_track", old_track, new_track)
         elif self.field == "album_track":
             for field, (old, new) in zip_longest(
@@ -196,6 +193,23 @@ class Summary(TypedDict):
     fixed: Results
 
 
+@pytest.fixture(scope="session")
+def base_commit(pytestconfig: Config) -> str:
+    base_commit: str = pytestconfig.getoption("base")
+    return base_commit
+
+
+@pytest.fixture(scope="session")
+def retesting(base_commit: str, pytestconfig: Config) -> bool:
+    return bool(base_commit == pytestconfig.cache.get("previous_base", ""))
+
+
+@pytest.fixture(scope="session", autouse=True)
+def cache_base_commit(pytestconfig: Config, base_commit: str):
+    yield
+    pytestconfig.cache.set("previous_base", base_commit)
+
+
 @pytest.fixture(scope="session", autouse=True)
 def _ensure_results_dir() -> None:
     RESULTS_DIR.mkdir(exist_ok=True)
@@ -254,7 +268,7 @@ def include_fields(pytestconfig: Config) -> set[str]:
 
 @pytest.fixture(scope="session", autouse=True)
 def _report(
-    pytestconfig: Config, include_fields: set[str], summary_file: Path
+    include_fields: set[str], summary_file: Path, retesting: bool
 ) -> Iterator[None]:
     yield
 
@@ -273,9 +287,8 @@ def _report(
             return
 
         sections = [("Failed", summary["failed"], "red")]
-        with suppress(TypeError):
-            if Repo(pytestconfig.rootpath).active_branch.name == "dev":
-                sections.append(("Fixed", summary["fixed"], "green"))
+        if retesting and summary["fixed"]:
+            sections.append(("Fixed", summary["fixed"], "green"))
 
         columns = []
         for name, all_changes, color in sections:
@@ -340,9 +353,8 @@ def get_field_changes(results: Results, include_fields: set[str]) -> Panel:
 
 
 @pytest.fixture(scope="module")
-def base_dir(pytestconfig: Config) -> Path:
-    base: str = pytestconfig.getoption("base")
-    return LIB_TESTS_DIR / base
+def base_dir(base_commit: str) -> Path:
+    return LIB_TESTS_DIR / base_commit
 
 
 @pytest.fixture(scope="module")
@@ -517,57 +529,68 @@ def entity_id(result: JSONDict) -> str:
     )
 
 
-@pytest.fixture
-def check_field(
-    failed: Results,
-    fixed: Results,
-    entity_id: str,
-) -> Callable[[NewTable, Field], None]:
-    def do(table: NewTable, field: Field) -> None:
-        if field.fixed and field.new != field.cached:
-            fixed.extend((entity_id, d) for d in field.fixed_diff.expand())
-        else:
+@dataclass
+class AlbumChange:
+    entity_id: str
+    old: JSONDict
+    new: JSONDict
+    cache: pytest.Cache
+
+    @cached_property
+    def fields(self) -> list[Field]:
+        compare_fields = (self.old.keys() | self.new.keys()) - DO_NOT_COMPARE
+        return list(map(self.get_field, sorted(compare_fields)))
+
+    def get_field(self, name: str) -> Field:
+        return Field.make(
+            name,
+            self.old.get(name),
+            self.new.get(name),
+            self.cache.get(f"{self.entity_id}_{name}", None),
+        )
+
+    # @snoop
+    def compare_field(
+        self, field: Field, table: NewTable, failed: Results, fixed: Results
+    ) -> None:
+        if field.fixed:
+            fixed.extend((self.entity_id, d) for d in field.fixed_diff.expand())
+            self.cache.set(f"{self.entity_id}_{field.field}", None)
+        elif field.failed:
+            self.cache.set(f"{self.entity_id}_{field.field}", field.old)
             diffs = list(field.diff.expand())
             table.add_rows([(d.field, str(d)) for d in diffs])
             if field.failed:
-                failed.extend((entity_id, d) for d in diffs)
+                failed.extend((self.entity_id, d) for d in diffs)
 
-    return do
+    def compare(self, *args) -> None:
+        if any(f.changed or f.fixed for f in self.fields):
+            for f in self.fields:
+                self.compare_field(f, *args)
 
 
 @pytest.fixture
 def diff_table(
-    check_field: Callable[[NewTable, Field], None],
+    failed: Results,
+    fixed: Results,
     old: JSONDict,
     result: JSONDict,
     cache: pytest.Cache,
     entity_id: str,
-) -> Table:
+) -> NewTable:
     table = new_table(padding=0, expand=False, collapse_padding=True)
     if not old:  # new test case, no need to report diffs
         return table
 
-    compare_fields = (result.keys() | old.keys()) - DO_NOT_COMPARE
-    compare_field = partial(check_field, table)
-
-    for fname in sorted(compare_fields):
-        old_val, new_val = old.get(fname), result.get(fname)
-        if old_val is None and new_val is None:
-            continue
-
-        cache_key = f"{entity_id}_{fname}"
-        field = Field.make(fname, old_val, new_val, cache.get(cache_key, None))
-        if not field.changed and not field.fixed:
-            continue
-
-        compare_field(field)
-        backup = field.new or "" if field.changed else None
-        cache.set(cache_key, backup)
+    album_change = AlbumChange(entity_id, old, result, cache)
+    album_change.compare(table, failed, fixed)
 
     return table
 
 
-def test_file(diff_table: Table, desc: str, entity_id: str, result: JSONDict) -> None:
+def test_file(
+    diff_table: NewTable, desc: str, entity_id: str, result: JSONDict
+) -> None:
     if diff_table.row_count:
         console.print("\n")
         console.print(
