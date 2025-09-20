@@ -46,7 +46,7 @@ class Metaguru(Helpers):
     META_PAT = cached_patternprop(r'.*"@id".*')
     LABEL_IN_DESC = cached_patternprop(r"(?<=Label:) *\b[^/,\n]+")
     ARTIST_IN_DESC = cached_patternprop(r"Artists?: *(\b[^\n]+)")
-    REMIX_IN_ARTIST = cached_patternprop(r"[(,+]+.+?re?mi?x", re.I)
+    REMIX_IN_ARTIST = cached_patternprop(r"(?:[(,+]|w/)+.*?re?mi?x", re.I)
     NOT_ALPHANUMERIC = cached_patternprop(r"\W")
     HTML_REMOVE_CHARS = ["\u200b", "\u200d", "\u200e", "\u200f", "\u00a0"]
 

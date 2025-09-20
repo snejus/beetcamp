@@ -10,6 +10,9 @@
   - Handle edge case when parsed catalogue number does not have a space, say **ABC123**
     but it appears in the album name with a space, **ABC 123**.
 
+- `albumartist`:
+  - Remove remixer lists like **(Remixes by ...** or **w/ ... remixes**
+
 ### Added
 
 - `cover_art_url`: Add `cover_art_url` field to albums and singletons which is used by
