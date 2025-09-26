@@ -33,7 +33,7 @@ from rich_tables.utils import (
 )
 from typing_extensions import TypedDict
 
-from beetsplug.bandcamp import BandcampPlugin
+from beetsplug.bandcamp import DEFAULT_CONFIG, BandcampPlugin
 from beetsplug.bandcamp.metaguru import Metaguru
 
 if TYPE_CHECKING:
@@ -369,7 +369,7 @@ def target_dir(pytestconfig: Config) -> Path:
 
 @pytest.fixture(scope="module")
 def config() -> JSONDict:
-    return dict(BandcampPlugin().config.flatten())
+    return DEFAULT_CONFIG
 
 
 @pytest.fixture(params=sorted(JSONS_DIR.glob("*.json")), ids=str)
@@ -392,6 +392,7 @@ def _fmt_old(s: str, times: int) -> str:
 def guru(config: JSONDict, test_filepath: Path) -> Metaguru:
     test_data = test_filepath.read_text()
 
+    config["genre"]["mode"] = "psychedelic"
     return Metaguru.from_html(test_data.replace("\n", ""), config)
 
 
