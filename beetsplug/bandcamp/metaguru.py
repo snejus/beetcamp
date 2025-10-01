@@ -435,7 +435,7 @@ class Metaguru(Helpers):
         # Normalize special type names
         type_mapping = {"rmx": "remix", "edits": "remix"}
         original_lower = self.original_album.lower()
-        
+
         for word in ["remix", "rmx", "edits", "live", "soundtrack"]:
             if word in original_lower:
                 albumtypes.add(type_mapping.get(word, word))
@@ -449,10 +449,10 @@ class Metaguru(Helpers):
     @cached_property
     def albumtypes(self) -> list[str]:
         albumtypes = {self.albumtype}
-        
+
         if self.is_comp:
             self._add_compilation_types(albumtypes)
-            
+
         self._add_format_types(albumtypes)
 
         if self.albumtype == "single" and self.track_count > 1:

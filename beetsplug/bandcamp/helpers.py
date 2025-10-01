@@ -3,9 +3,8 @@
 from __future__ import annotations
 
 import re
-from functools import cache, partial
+from functools import cache
 from itertools import chain
-from operator import contains
 from re import Match, Pattern
 from typing import TYPE_CHECKING, Any, Generic, NamedTuple, TypeVar
 
@@ -291,17 +290,25 @@ class Helpers:
         for kw in chain.from_iterable(map(cls.KEYWORD_SPLIT.split, keywords)):
             # remove full stops and hashes and ensure the expected form of 'and'
             kw_ = kw.strip("#").replace("&", "and").replace(".", "")
-            
+
             # Skip if it's a label name (unless it's also a valid genre)
             if kw_.replace(" ", "") == label_name and not valid_mb_genre(kw_):
                 continue
-                
+
             # Include if matches always_include pattern or valid for mode
-            is_included = bool(always_include_pat.pattern and always_include_pat.search(kw_))
-            if is_included or cls._validate_genre_for_mode(kw_, config["mode"], valid_mb_genre):
+            is_included = bool(
+                always_include_pat.pattern and always_include_pat.search(kw_)
+            )
+            if is_included or cls._validate_genre_for_mode(
+                kw_, config["mode"], valid_mb_genre
+            ):
                 unique_genres[kw_] = None
 
-        return (g for g in unique_genres if not cls._is_genre_within_another(g, unique_genres))
+        return (
+            g
+            for g in unique_genres
+            if not cls._is_genre_within_another(g, unique_genres)
+        )
 
     @staticmethod
     def unpack_props(obj: JSONDict) -> JSONDict:

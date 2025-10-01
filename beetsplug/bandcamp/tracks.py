@@ -205,7 +205,7 @@ class Tracks:
 
     def _should_move_artist_to_title(self, t: Track, albumartist: str) -> bool:
         """Check if track artist should be moved back to title.
-        
+
         Returns True if:
         (1) Artist was not set in the JSON metadata
         (2) This string is not part of the albumartist
@@ -221,7 +221,7 @@ class Tracks:
 
     def _fix_misidentified_artists(self, albumartist: str) -> None:
         """Move incorrectly identified artists back to title.
-        
+
         If there are 1-3 tracks with artists set (and most without),
         those artists were likely extracted from ' - ' in titles.
         """
