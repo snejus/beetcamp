@@ -196,6 +196,52 @@ class Tracks:
                     t.title = t.json_item["name"]
                 t.track_alt = None
 
+    def _fix_the_artist(self) -> None:
+        """Fix tracks where artist is 'the' - prepend to title."""
+        for t in (t for t in self if t.artist):
+            if t.artist.lower() == "the":
+                t.title = f"{t.artist} {t.title}"
+                t.artist = ""
+
+    def _should_move_artist_to_title(self, t: Track, albumartist: str) -> bool:
+        """Check if track artist should be moved back to title.
+        
+        Returns True if:
+        (1) Artist was not set in the JSON metadata
+        (2) This string is not part of the albumartist
+        (3) Albumartist is not found anywhere in the title
+        """
+        artist = t.artist.lower()
+        aartist = albumartist.lower()
+        return (
+            not t.json_artist
+            and artist not in aartist
+            and aartist not in f"{artist}{t.ft_artist.lower()}{t.title.lower()}"
+        )
+
+    def _fix_misidentified_artists(self, albumartist: str) -> None:
+        """Move incorrectly identified artists back to title.
+        
+        If there are 1-3 tracks with artists set (and most without),
+        those artists were likely extracted from ' - ' in titles.
+        """
+        if not (1 <= len(self) - len(self.tracks_without_artist) < 4):
+            return
+
+        for t in (t for t in self if t.artist):
+            if self._should_move_artist_to_title(t, albumartist):
+                t.title = f"{t.artist} - {t.title}"
+                t.artist = ""
+
+    def _try_split_title_to_artist(self, tracks: list[Track]) -> None:
+        """Try to split title into artist and title for tracks missing artists."""
+        for t in tracks:
+            if (
+                len(split := t.title.split("-", 1)) > 1
+                or len(split := Names.SEPARATOR_PAT.split(t.title, 1)) > 1
+            ):
+                t.artist, t.title = map(str.strip, split)
+
     def fix_track_artists(self, albumartist: str) -> None:
         """Adjust track artists in the context of the entire album.
 
@@ -216,38 +262,20 @@ class Tracks:
 
         Otherwise, use the albumartist as the default.
         """
-        for t in (t for t in self if t.artist):
-            # the artist cannot be 'the', so it's most likely a part of the title
-            if t.artist.lower() == "the":
-                t.title = f"{t.artist} {t.title}"
-                t.artist = ""
+        self._fix_the_artist()
 
         if not self.tracks_without_artist:
             return
 
-        if 1 <= len(self) - len(self.tracks_without_artist) < 4:
-            aartist = albumartist.lower()
-            for t in (
-                t
-                for t in self
-                if (artist := t.artist.lower())
-                and not t.json_artist
-                and artist not in aartist
-                and aartist not in f"{artist}{t.ft_artist.lower()}{t.title.lower()}"
-            ):
-                t.title = f"{t.artist} - {t.title}"
-                t.artist = ""
+        self._fix_misidentified_artists(albumartist)
 
-        if 1 <= len(tracks := self.tracks_without_artist) < len(self) / 2:
-            for t in tracks:
-                if (
-                    len(split := t.title.split("-", 1)) > 1
-                    or len(split := Names.SEPARATOR_PAT.split(t.title, 1)) > 1
-                ):
-                    t.artist, t.title = map(str.strip, split)
+        # Try to split titles for remaining tracks without artists
+        tracks = self.tracks_without_artist
+        if 1 <= len(tracks) < len(self) / 2:
+            self._try_split_title_to_artist(tracks)
 
+        # Default remaining tracks to albumartist
         for t in self.tracks_without_artist:
-            # default to the albumartist
             t.artist = albumartist
 
     def for_media(
