@@ -3,9 +3,8 @@
 from __future__ import annotations
 
 import re
-from functools import cache, partial
+from functools import cache
 from itertools import chain
-from operator import contains
 from re import Match, Pattern
 from typing import TYPE_CHECKING, Any, Generic, NamedTuple, TypeVar
 
@@ -224,6 +223,39 @@ class Helpers:
                 name = pat.sub(repl, name).strip()
         return name
 
+    @staticmethod
+    def _is_valid_mb_genre(keyword: str) -> bool:
+        """Check if keyword is a valid MusicBrainz genre."""
+        return keyword in GENRES
+
+    @classmethod
+    def _validate_genre_for_mode(
+        cls, keyword: str, mode: str, valid_mb_genre: Callable[[str], bool]
+    ) -> bool:
+        """Check if keyword is valid according to the configured mode."""
+        if mode == "classical":
+            return valid_mb_genre(keyword)
+
+        words = cls.KEYWORD_SUBSPLIT.split(keyword)
+        if mode == "progressive":
+            return valid_mb_genre(keyword) or all(map(valid_mb_genre, words))
+
+        return valid_mb_genre(keyword) or valid_mb_genre(words[-1])
+
+    @staticmethod
+    def _is_genre_within_another(genre: str, all_genres: dict[str, None]) -> bool:
+        """Check if this genre is part of another genre.
+
+        Remove spaces and dashes from the rest of genres and check if any of them
+        contain the given genre.
+
+        This is so that 'dark folk' is kept while 'darkfolk' is removed, and not
+        the other way around.
+        """
+        others = ordset(g for g in all_genres if g not in genre)
+        others |= ordset(x.replace(" ", "").replace("-", "") for x in others)
+        return any(genre in x for x in others)
+
     @classmethod
     def get_genre(
         cls, keywords: Iterable[str], config: JSONDict, label: str
@@ -249,48 +281,34 @@ class Helpers:
 
              "garage house" is preferred over "house".
         """
-        valid_mb_genre = partial(contains, GENRES)
+        valid_mb_genre = cls._is_valid_mb_genre
         label_name = label.lower().replace(" ", "")
         always_include_pat = re.compile("|".join(config["always_include"]))
-
-        def is_label_name(kw: str) -> bool:
-            return kw.replace(" ", "") == label_name and not valid_mb_genre(kw)
-
-        def is_included(kw: str) -> bool:
-            return bool(always_include_pat.pattern and always_include_pat.search(kw))
-
-        def valid_for_mode(kw: str) -> bool:
-            if config["mode"] == "classical":
-                return valid_mb_genre(kw)
-
-            words = cls.KEYWORD_SUBSPLIT.split(kw)
-            if config["mode"] == "progressive":
-                return valid_mb_genre(kw) or all(map(valid_mb_genre, words))
-
-            return valid_mb_genre(kw) or valid_mb_genre(words[-1])
 
         unique_genres: dict[str, None] = ordset([])
         # expand badly delimited keywords
         for kw in chain.from_iterable(map(cls.KEYWORD_SPLIT.split, keywords)):
             # remove full stops and hashes and ensure the expected form of 'and'
             kw_ = kw.strip("#").replace("&", "and").replace(".", "")
-            if not is_label_name(kw_) and (is_included(kw_) or valid_for_mode(kw_)):
+
+            # Skip if it's a label name (unless it's also a valid genre)
+            if kw_.replace(" ", "") == label_name and not valid_mb_genre(kw_):
+                continue
+
+            # Include if matches always_include pattern or valid for mode
+            is_included = bool(
+                always_include_pat.pattern and always_include_pat.search(kw_)
+            )
+            if is_included or cls._validate_genre_for_mode(
+                kw_, config["mode"], valid_mb_genre
+            ):
                 unique_genres[kw_] = None
 
-        def within_another_genre(genre: str) -> bool:
-            """Check if this genre is part of another genre.
-
-            Remove spaces and dashes from the rest of genres and check if any of them
-            contain the given genre.
-
-            This is so that 'dark folk' is kept while 'darkfolk' is removed, and not
-            the other way around.
-            """
-            others = ordset(g for g in unique_genres if g not in genre)
-            others |= ordset(x.replace(" ", "").replace("-", "") for x in others)
-            return any(genre in x for x in others)
-
-        return (g for g in unique_genres if not within_another_genre(g))
+        return (
+            g
+            for g in unique_genres
+            if not cls._is_genre_within_another(g, unique_genres)
+        )
 
     @staticmethod
     def unpack_props(obj: JSONDict) -> JSONDict:

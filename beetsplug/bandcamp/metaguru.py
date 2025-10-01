@@ -416,30 +416,49 @@ class Metaguru(Helpers):
             return "single"
         return "compilation" if self.is_comp else "album"
 
-    @cached_property
-    def albumtypes(self) -> list[str]:
-        albumtypes = {self.albumtype}
-        if self.is_comp:
-            if self.albumtype == "ep":
-                albumtypes.add("compilation")
-            else:
-                albumtypes.add("album")
+    def _add_compilation_types(self, albumtypes: set[str]) -> None:
+        """Add compilation-related albumtypes."""
+        if self.albumtype == "ep":
+            albumtypes.add("compilation")
+        else:
+            albumtypes.add("album")
+
+    def _add_format_types(self, albumtypes: set[str]) -> None:
+        """Add format-specific albumtypes (LP, single)."""
         if not self.is_singleton and self.is_lp:
             albumtypes.add("lp")
         if self.is_single_album:
             albumtypes.add("single")
 
+    def _add_special_types(self, albumtypes: set[str]) -> None:
+        """Add special albumtypes like remix, live, soundtrack."""
+        # Normalize special type names
+        type_mapping = {"rmx": "remix", "edits": "remix"}
+        original_lower = self.original_album.lower()
+
+        for word in ["remix", "rmx", "edits", "live", "soundtrack"]:
+            if word in original_lower:
+                albumtypes.add(type_mapping.get(word, word))
+
+        # Check if most tracks are remixes
+        remix_threshold = max(self.track_count - 1, 1)
+        remix_count = sum(bool(t.remix and t.remix.valid) for t in self._tracks)
+        if remix_count >= remix_threshold:
+            albumtypes.add("remix")
+
+    @cached_property
+    def albumtypes(self) -> list[str]:
+        albumtypes = {self.albumtype}
+
+        if self.is_comp:
+            self._add_compilation_types(albumtypes)
+
+        self._add_format_types(albumtypes)
+
         if self.albumtype == "single" and self.track_count > 1:
             albumtypes.add("album")
 
-        for word in ["remix", "rmx", "edits", "live", "soundtrack"]:
-            if word in self.original_album.lower():
-                albumtypes.add(word.replace("rmx", "remix").replace("edits", "remix"))
-
-        if sum(bool(t.remix and t.remix.valid) for t in self._tracks) >= max(
-            self.track_count - 1, 1
-        ):
-            albumtypes.add("remix")
+        self._add_special_types(albumtypes)
 
         return sorted(albumtypes)
 
