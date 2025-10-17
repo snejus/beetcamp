@@ -24,6 +24,24 @@ dependencies = [
   "packaging >= 24.0",
 ]
 
+[dependency-groups]
+dev = [
+    "coveralls (>=4.0.1,<5.0.0) ; python_version >= \"3.8\" and python_version < \"3.13\"",
+    "filelock (>=3.16.1)",
+    "flake8 (>=3.8.4)",
+    "flake8-bugbear (>=22.7.1)",
+    "flake8-comprehensions (>=3.10.0)",
+    "flake8-eradicate (>=1.3.0)",
+    "gitpython (>=3.1.43)",
+    "mypy (>=0.790)",
+    "pylint (>=2.7.4)",
+    "pytest (>=6.2)",
+    "pytest-cov (>=2.10.1)",
+    "pytest-randomly (>=3.10)",
+    "pytest-xdist (>=3.5.0)",
+    "rich-tables",
+]
+
 [project.urls]
 homepage = "https://github.com/snejus/beetcamp"
 repository = "https://github.com/snejus/beetcamp"
@@ -36,21 +54,8 @@ beetcamp = "beetsplug.bandcamp:main"
 [tool.poetry]
 packages = [{ include = "beetsplug" }]
 
-[tool.poetry.group.dev.dependencies]
-coveralls = { version = ">=4.0.1", python = ">=3.8,<3.13" }
-filelock = ">=3.16.1"
-flake8 = ">=3.8.4"
-flake8-bugbear = ">=22.7.1"
-flake8-comprehensions = ">=3.10.0"
-flake8-eradicate = ">=1.3.0"
-gitpython = ">=3.1.43"
-mypy = ">=0.790"
-pylint = ">=2.7.4"
-pytest = ">=6.2"
-pytest-cov = ">=2.10.1"
-pytest-randomly = ">=3.10"
-pytest-xdist = ">=3.5.0"
-rich-tables = "*"
+[tool.poetry.group.dev]
+optional = true
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
