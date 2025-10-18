@@ -13,7 +13,7 @@ def test_get_html():
     should_contain = "UTE004 by Mikkel Rev, released 17 July 2020"
 
     plugin = BandcampPlugin()
-    html = plugin._get(url)
+    html = plugin.requests_handler._get(url)
 
     assert html
     assert should_contain in html
@@ -24,6 +24,6 @@ def test_return_none_for_gibberish():
     url = "https://ute-rec.bandcamp.com/somegibberish2113231"
 
     plugin = BandcampPlugin()
-    html = plugin._get(url)
+    html = plugin.requests_handler._get(url)
 
     assert not html

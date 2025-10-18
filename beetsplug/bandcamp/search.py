@@ -1,16 +1,26 @@
 """Module with bandcamp search functionality."""
 
+from __future__ import annotations
+
+import difflib
 import re
-from collections.abc import Callable
-from difflib import SequenceMatcher
 from operator import itemgetter
-from typing import Any
+from typing import TYPE_CHECKING
 from urllib.parse import quote_plus
 
-from .http import http_get_text
+from beetsplug.bandcamp.http import http_get_text
 
-JSONDict = dict[str, Any]
-SEARCH_URL = "https://bandcamp.com/search?page={}&q={}"
+if TYPE_CHECKING:
+    from collections.abc import Callable
+    from typing import Any, Literal
+
+    from typing_extensions import LiteralString, TypeAlias
+
+    JSONDict = dict[str, Any]
+
+    SearchType: TypeAlias = Literal["a", "t"]
+
+SEARCH_URL: LiteralString = "https://bandcamp.com/search?page={}&q={}"
 
 
 def _f(field: str) -> str:
@@ -21,7 +31,7 @@ def _f(field: str) -> str:
     return rf"(?P<{field}>[^\s<][^\n]+)"
 
 
-RELEASE_PATTERNS = [
+RELEASE_PATTERNS: list[re.Pattern[str]] = [
     re.compile(r"itemtype..\n\s+" + _f("type")),
     re.compile(r"search_item_type=[^>]+>\n\s+" + _f("name")),
     re.compile(r"\n\s+genre: " + _f("genre")),
@@ -53,17 +63,23 @@ def get_similarity(query: str, result: str) -> float:
     2/3 of the weight is how much of the query is found in the result,
     and 1/3 is a penalty for the non-matching part.
     """
+    a: str
+    b: str
     a, b = to_ascii(query), to_ascii(result)
     if not a or not b:
         return 0
-    m = SequenceMatcher(a=a, b=b).find_longest_match(0, len(a), 0, len(b))
+    m: difflib.Match = difflib.SequenceMatcher(a=a, b=b).find_longest_match(
+        0, len(a), 0, len(b)
+    )
     return ((m.size / len(a)) * 2 + m.size / len(b)) / 3
 
 
 def get_matches(text: str) -> JSONDict:
     """Reduce matches from all patterns into a single dictionary."""
     result: JSONDict = {}
+    pat: re.Pattern[str]
     for pat in RELEASE_PATTERNS:
+        m: re.Match[str] | None
         if m := pat.search(text):
             result = {**m.groupdict(), **result}
     if "type" in result:
@@ -83,9 +99,10 @@ def parse_and_sort_results(html: str, **kwargs: str) -> list[JSONDict]:
     this has 'label', 'artist' and 'name' ('title' or 'album') fields.
     """
     results: list[JSONDict] = []
+    block: str
     for block in html.split("searchresult data-search")[1:]:
-        res = get_matches(block)
-        similarities = [
+        res: JSONDict = get_matches(block)
+        similarities: list[float] = [
             get_similarity(query, res.get(field, "")) for field, query in kwargs.items()
         ]
         res["similarity"] = round(sum(similarities) / len(similarities), 3)
@@ -95,18 +112,21 @@ def parse_and_sort_results(html: str, **kwargs: str) -> list[JSONDict]:
 
 
 def search_bandcamp(
-    query: str = "",
-    search_type: str = "",
-    page: int = 1,
-    get: Callable[[str], str] = http_get_text,
-    **kwargs: Any,
+    query: str | None = None,
+    search_type: SearchType | None = None,
+    page: int | None = None,
+    get: Callable[[str], str] | None = None,
+    **kwargs: str,
 ) -> list[JSONDict]:
     """Return a list with item JSONs of type search_type matching the query."""
-    query = query or " - ".join(
-        filter(None, [kwargs.get("artist"), kwargs.get("name")])
-    )
-    kwargs.setdefault("name", query)
-    url = SEARCH_URL.format(page, quote_plus(query))
+    if page is None:
+        page = 1
+    if get is None:
+        get = http_get_text
+    if not query:
+        query = " - ".join(filter(None, [kwargs.get("artist"), kwargs.get("name")]))
+    _ = kwargs.setdefault("name", query)
+    url: str = SEARCH_URL.format(page, quote_plus(string=query))
     if search_type:
         url += f"&item_type={search_type}"
     return parse_and_sort_results(get(url), **kwargs)
