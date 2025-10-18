@@ -304,7 +304,7 @@ class BandcampPlugin(MetadataSourcePlugin):
             return
 
         name: str
-        search_type: str
+        search_type: SearchType
         if (va_likely or "various" in artist.lower()) and (
             # user is not searching for anything specific (default search)
             item.album == album and item.artist == artist

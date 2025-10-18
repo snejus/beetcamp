@@ -100,7 +100,7 @@ def plugin(monkeypatch: pytest.MonkeyPatch, bandcamp_html: str) -> BandcampPlugi
 
 
 @pytest.mark.parametrize(argnames="method", argvalues=["album_for_id", "track_for_id"])
-def test_handle_non_bandcamp_url(method: str):
+def test_handle_non_bandcamp_url(method: str) -> None:
     """The plugin should not break if a non-bandcamp URL is presented."""
     assert getattr(BandcampPlugin(), method)("https://www.some-random-url") is None
 
@@ -189,7 +189,7 @@ def test_coverart(
         assert candidate.url == img_url
 
 
-def test_no_coverart_non_bandcamp_url(beets_config: ConfigView):
+def test_no_coverart_non_bandcamp_url(beets_config: ConfigView) -> None:
     album: Album = Album(mb_albumid="123-abc-12323")
     with pytest.raises(StopIteration):
         _ = next(
