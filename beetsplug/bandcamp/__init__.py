@@ -124,8 +124,8 @@ class BandcampAlbumArt(BandcampRequestsHandler, fetchart.RemoteArtSource):
         url = album.mb_albumid
         if not self.from_bandcamp(url):
             self._info("Not fetching art for a non-bandcamp album URL")
-        elif (guru := self.guru(url)) and (image := guru.image):
-            yield self._candidate(url=image)
+        elif (guru := self.guru(url)) and (url := guru.cover_art_url):
+            yield self._candidate(url=url)
 
 
 class BandcampPlugin(BandcampRequestsHandler, MetadataSourcePlugin):
