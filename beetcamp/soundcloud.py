@@ -229,7 +229,7 @@ class SCMedia(SCEntity):
         return {
             "artist": self.artist,
             "artist_id": self.user.urn,
-            "artwork_url": (self.artwork_url or "").replace("-large", "-t500x500"),
+            "cover_art_url": (self.artwork_url or "").replace("-large", "-t500x500"),
             "comments": self.description if self.description else None,
             "country": self.user.country,
             "data_source": self.DATA_SOURCE,
