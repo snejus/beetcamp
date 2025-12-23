@@ -13,6 +13,10 @@
 - `albumartist`:
   - Remove remixer lists like **(Remixes by ...** or **w/ ... remixes**
 
+- `artist`:
+  - In compilations where no artists are found, try splitting titles with a dash `-`
+    without surrounding spaces.
+
 ### Added
 
 - `cover_art_url`: Add `cover_art_url` field to albums and singletons which is used by

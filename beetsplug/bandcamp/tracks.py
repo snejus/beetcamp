@@ -8,6 +8,7 @@ from functools import cached_property
 from os.path import commonprefix
 from typing import TYPE_CHECKING, Any
 
+from .helpers import cached_patternprop
 from .names import Names
 from .track import Track
 
@@ -19,6 +20,7 @@ if TYPE_CHECKING:
 
 @dataclass
 class Tracks:
+    DASH_INSIDE_PARENS = cached_patternprop(r"\([^)]+-[^)]+\)")
     DISC_BY_LETTER = {
         "A": 1,
         "B": 1,
@@ -238,9 +240,11 @@ class Tracks:
                 t.title = f"{t.artist} - {t.title}"
                 t.artist = ""
 
-        if 1 <= len(tracks := self.tracks_without_artist) < len(self) / 2:
+        if (1 <= len(tracks := self.tracks_without_artist) < len(self) / 2) or (
+            albumartist == "Various Artists" and len(tracks) == len(self)
+        ):
             for t in tracks:
-                if (
+                if not self.DASH_INSIDE_PARENS.search(t.title) and (
                     len(split := t.title.split("-", 1)) > 1
                     or len(split := Names.SEPARATOR_PAT.split(t.title, 1)) > 1
                 ):
