@@ -67,6 +67,7 @@ IGNORE_FIELDS = {
     "times_bought",
     "original_artist",
     "original_name",
+    "original_title",
     "artists_credit",
     "artists_ids",
     "artists_sort",
@@ -395,16 +396,6 @@ def guru(config: JSONDict, test_filepath: Path) -> Metaguru:
 
 
 @pytest.fixture
-def original_name(guru: Metaguru) -> str:
-    return str(guru.meta["name"])
-
-
-@pytest.fixture
-def original_artist(guru: Metaguru) -> str:
-    return str(guru.meta["byArtist"]["name"])
-
-
-@pytest.fixture
 def base_filepath(base_dir: Path, test_filepath: Path) -> Path:
     return base_dir / test_filepath.name
 
@@ -462,18 +453,25 @@ def write_results(data: JSONDict, name: str) -> Path:
 
 
 @pytest.fixture
-def new(guru: Metaguru, original_name: str, original_artist: str) -> JSONDict:
+def new(guru: Metaguru) -> JSONDict:
+    original_titles = [
+        " - ".join(filter(None, (t.get("byArtist", {}).get("name"), t["name"])))
+        for t in guru._names.json_tracks
+    ]
     new_: AttrDict[Any]
     if "/track/" in guru.meta["@id"]:
         new_ = guru.singleton
+        new_.original_title = original_titles[0]
     else:
         new_ = next((a for a in guru.albums if a.media == "Vinyl"), guru.albums[0])
         new_.album = " / ".join(dict.fromkeys(x["album"] for x in guru.albums))
+        for tit, track in zip(original_titles, new_.tracks):
+            track.update(original_title=tit)
 
     return {
         **new_,
-        "original_name": original_name,
-        "original_artist": original_artist,
+        "original_name": guru.meta["name"],
+        "original_artist": guru.meta["byArtist"]["name"],
         "catalognum": " / ".join(
             sorted({x.catalognum for x in guru.albums if x.catalognum})
         ),
