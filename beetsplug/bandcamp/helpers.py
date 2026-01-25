@@ -140,7 +140,6 @@ class Helpers:
             r"[ |-]*free download(?! \w)",
             r"[([][^])]*free\b(?!.*mix)[^])]*[])]",
             r"[([][^])]*preview[])]",
-            r"(\W|\W )bonus( \w+)*",
             "Various -",
             "split w",
             r"CD ?\d+",

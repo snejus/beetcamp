@@ -17,6 +17,9 @@
   - In compilations where no artists are found, try splitting titles with a dash `-`
     without surrounding spaces.
 
+- cleanup:
+  - Fix a couple of edge cases cleaning up digital-only artefacts.
+
 ### Added
 
 - `cover_art_url`: Add `cover_art_url` field to albums and singletons which is used by
