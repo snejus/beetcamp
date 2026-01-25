@@ -19,6 +19,7 @@
 
 - cleanup:
   - Fix a couple of edge cases cleaning up digital-only artefacts.
+  - Remove **PREMIERE** from the start of album and track names.
 
 ### Added
 

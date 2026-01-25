@@ -146,6 +146,7 @@ class Helpers:
             "Name Your Price:",
             "just out!",
             "- album",
+            r"^\[?premiere(\]| :)",
         ]
 
         camelcase = re.compile(r"(?<=[a-z])(?=[A-Z])")
