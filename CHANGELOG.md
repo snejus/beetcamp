@@ -9,6 +9,7 @@
 - `album`:
   - Handle edge case when parsed catalogue number does not have a space, say **ABC123**
     but it appears in the album name with a space, **ABC 123**.
+  - Fix several edge cases when artist was wrongly removed from the album name.
 
 - `albumartist`:
   - Remove remixer lists like **(Remixes by ...** or **w/ ... remixes**

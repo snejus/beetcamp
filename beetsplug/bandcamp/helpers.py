@@ -141,7 +141,6 @@ class Helpers:
             r"[([][^])]*free\b(?!.*mix)[^])]*[])]",
             r"[([][^])]*preview[])]",
             "Various -",
-            "split w",
             r"CD ?\d+",
             "Name Your Price:",
             "just out!",
