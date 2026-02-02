@@ -11,17 +11,17 @@ include = ["LICENSE", "README.md"]
 
 keywords = ["music", "bandcamp", "beets", "metadata"]
 classifiers = [
-  "Environment :: Console",
-  "Intended Audience :: End Users/Desktop",
-  "Operating System :: OS Independent",
-  "Topic :: Multimedia :: Sound/Audio",
-  "Topic :: Text Processing :: General",
+    "Environment :: Console",
+    "Intended Audience :: End Users/Desktop",
+    "Operating System :: OS Independent",
+    "Topic :: Multimedia :: Sound/Audio",
+    "Topic :: Text Processing :: General",
 ]
 dependencies = [
-  "beets[fetchart] >= 1.5",
-  "pycountry >= 20.7.3",
-  "httpx >= 0.27.0",
-  "packaging >= 24.0",
+    "beets[fetchart] >= 1.5",
+    "pycountry >= 20.7.3",
+    "httpx >= 0.27.0",
+    "packaging >= 24.0",
 ]
 
 [project.urls]
@@ -39,18 +39,14 @@ packages = [{ include = "beetsplug" }]
 [tool.poetry.group.dev.dependencies]
 coveralls = { version = ">=4.0.1", python = ">=3.8,<3.13" }
 filelock = ">=3.16.1"
-flake8 = ">=3.8.4"
-flake8-bugbear = ">=22.7.1"
-flake8-comprehensions = ">=3.10.0"
-flake8-eradicate = ">=1.3.0"
 gitpython = ">=3.1.43"
 mypy = ">=0.790"
-pylint = ">=2.7.4"
 pytest = ">=6.2"
 pytest-cov = ">=2.10.1"
 pytest-randomly = ">=3.10"
 pytest-xdist = ">=3.5.0"
 rich-tables = "*"
+ruff = ">=0.14.14"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -59,3 +55,59 @@ build-backend = "poetry.core.masonry.api"
 [tool.poe.tasks.test-files]
 help = "Run tests on local release data files"
 cmd = "pytest -k file -p no:randomly --no-cov -s"
+
+[tool.ruff]
+line-length = 88
+target-version = "py39"
+namespace-packages = ["beetsplug"]
+
+[tool.ruff.lint]
+future-annotations = true
+select = [
+    "ARG", # flake8-unused-arguments
+    "B", # flake8-bugbear
+    "C4", # flake8-comprehensions
+    "E", # pycodestyle errors
+    "ERA", # flake8-eradicate
+    "F", # pyflakes
+    "G", # flake8-logging-format
+    "I", # isort
+    "ISC", # flake8-implicit-str-concat
+    "N", # pep8-naming
+    "PL", # pylint
+    "PT", # flake8-pytest-style
+    "RUF", # ruff
+    "S", # flake8-bandit (security)
+    "TCH", # flake8-type-checking
+    "UP", # pyupgrade
+    "W", # pycodestyle warnings
+]
+
+ignore = [
+    "PLR0913", # too-many-arguments
+]
+
+fixable = ["ALL"]
+unfixable = []
+
+[tool.ruff.lint.flake8-pytest-style]
+fixture-parentheses = false
+mark-parentheses = false
+parametrize-names-type = "csv"
+
+[tool.ruff.lint.flake8-unused-arguments]
+ignore-variadic-names = true
+
+[tool.ruff.lint.isort]
+known-local-folder = ["beetcamp"]
+split-on-trailing-comma = false
+
+[tool.ruff.lint.mccabe]
+max-complexity = 7
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101"] # Allow assert in tests
+
+[tool.ruff.lint.pep8-naming]
+classmethod-decorators = ["cached_classproperty"]
+extend-ignore-names = ["cached_classproperty"]

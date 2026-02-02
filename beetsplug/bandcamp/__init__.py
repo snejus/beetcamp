@@ -102,7 +102,7 @@ class BandcampRequestsHandler:
             return Metaguru.from_html(self._get(url), config=self.config.flatten())
         except (KeyError, ValueError, AttributeError, IndexError) as e:
             self._info("Failed obtaining {}: {}", url, e)
-        except Exception:  # pylint: disable=broad-except
+        except Exception:
             i_url = "https://github.com/snejus/beetcamp/issues/new"
             self._exc("Unexpected error obtaining {}, please report at {}", url, i_url)
 
@@ -251,9 +251,7 @@ class BandcampPlugin(BandcampRequestsHandler, MetadataSourcePlugin):
             if albums := self.get_album_info(url):
                 yield from albums
 
-    def item_candidates(
-        self, item: Item, artist: str, title: str
-    ) -> Iterable[TrackInfo]:
+    def item_candidates(self, item: Item, artist: str, title: str) -> Iterable[TrackInfo]:
         """Return a sequence of singleton candidates matching given artist and title."""
         if (
             item
