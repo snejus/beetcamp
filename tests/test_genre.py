@@ -2,7 +2,7 @@
 
 import pytest
 
-from beetsplug.bandcamp.metaguru import Metaguru
+from beetcamp.metaguru import Metaguru
 
 pytestmark = pytest.mark.parsing
 

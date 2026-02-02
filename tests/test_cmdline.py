@@ -4,7 +4,7 @@ import sys
 
 import pytest
 
-from beetsplug.bandcamp import get_args
+from beetcamp import get_args
 
 
 @pytest.mark.parametrize(

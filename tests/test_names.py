@@ -1,6 +1,6 @@
 import pytest
 
-from beetsplug.bandcamp.names import Names
+from beetcamp.names import Names
 
 _p = pytest.param
 

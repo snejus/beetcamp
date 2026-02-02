@@ -1,6 +1,6 @@
 import pytest
 
-from beetsplug.bandcamp.http import urlify
+from beetcamp.http import urlify
 
 
 @pytest.mark.parametrize(

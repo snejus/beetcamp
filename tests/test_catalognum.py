@@ -1,6 +1,6 @@
 import pytest
 
-from beetsplug.bandcamp.metaguru import Metaguru
+from beetcamp.metaguru import Metaguru
 
 
 @pytest.mark.parametrize(

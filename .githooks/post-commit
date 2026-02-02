@@ -14,7 +14,8 @@ zmodload zsh/mapfile
 autoload -Uz zmv
 
 TESTS_DIR=lib_tests
-SOURCE=(./beetsplug/*/^(http|__init__).py)
+SOURCE=(./beetcamp/**/^__init__.py)
+
 
 # Only run on the 'dev' branch (or during a rebase targeting 'dev').
 ([[ -d .git/rebase-merge ]] && [[ $mapfile[.git/rebase-merge/head-name] == */dev* ]]) || [[ $(git branch --show-current) == dev ]] || exit

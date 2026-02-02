@@ -3,7 +3,7 @@
 import pytest
 from beets.autotag.hooks import TrackInfo
 
-from beetsplug.bandcamp.metaguru import Metaguru
+from beetcamp.metaguru import Metaguru
 
 pytestmark = pytest.mark.jsons
 

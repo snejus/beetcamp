@@ -31,10 +31,13 @@ changelog = "https://github.com/snejus/beetcamp/blob/master/CHANGELOG.md"
 "Bug Tracker" = "https://github.com/snejus/beetcamp/issues"
 
 [project.scripts]
-beetcamp = "beetsplug.bandcamp:main"
+beetcamp = "beetcamp:main"
 
 [tool.poetry]
-packages = [{ include = "beetsplug" }]
+packages = [
+    { include = "beetsplug" },
+    { include = "beetcamp" },
+]
 
 [tool.poetry.group.dev.dependencies]
 coveralls = { version = ">=4.0.1", python = ">=3.8,<3.13" }

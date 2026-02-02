@@ -42,7 +42,7 @@ jobs:
         run: poetry run ruff check --exit-zero --output-format=json --output-file=.reports/ruff.json .
 
       - name: Lint mypy
-        run: poetry run mypy beetsplug/bandcamp > .reports/mypy.log || true
+        run: poetry run mypy beetsplug beetcamp > .reports/mypy.log || true
 
       - name: Set project version
         run: echo PROJECT_VERSION="$(git describe --tags | sed 's/-[^-]*$//')" >> $GITHUB_ENV
@@ -63,7 +63,7 @@ jobs:
             -Dsonar.python.mypy.reportPaths=.reports/mypy.log
             -Dsonar.python.version=3.9
             -Dsonar.python.xunit.reportPath=.reports/test-report.xml
-            -Dsonar.sources=beetsplug/bandcamp
+            -Dsonar.sources=beetsplug/bandcamp,beetcamp
             -Dsonar.tests=tests
             -Dsonar.test.inclusions=tests/*
         env:

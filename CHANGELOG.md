@@ -30,6 +30,8 @@
 
 - `cover_art_url`: Add `cover_art_url` field to albums and singletons which is used by
   `beets>=2.4.0` for artwork resolution.
+- Create `beetcamp` module for the core functionality to speed up the tool when it is used
+  as CLI.
 
 ### Updated
 

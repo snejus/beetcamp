@@ -2,7 +2,7 @@
 
 import pytest
 
-from beetsplug.bandcamp.helpers import Helpers, MediaInfo
+from beetcamp.helpers import Helpers, MediaInfo
 
 pytestmark = pytest.mark.parsing
 

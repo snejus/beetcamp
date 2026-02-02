@@ -33,8 +33,9 @@ from rich_tables.utils import (
 )
 from typing_extensions import TypedDict
 
-from beetsplug.bandcamp import DEFAULT_CONFIG, BandcampPlugin
-from beetsplug.bandcamp.metaguru import Metaguru
+from beetsplug.bandcamp import DEFAULT_CONFIG
+
+from beetcamp.metaguru import Metaguru
 
 if TYPE_CHECKING:
     from collections.abc import Iterator

@@ -14,7 +14,8 @@ from rich_tables.diff import pretty_diff
 from rich_tables.utils import make_console
 
 from beetsplug.bandcamp import DEFAULT_CONFIG
-from beetsplug.bandcamp.helpers import Helpers
+
+from beetcamp.helpers import Helpers
 
 if TYPE_CHECKING:
     from _pytest.config import Config
