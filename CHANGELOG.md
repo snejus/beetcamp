@@ -2,6 +2,8 @@
 
 ### Fixed
 
+- Fix truncating comments that contain unicode characters.
+
 - `catalognum`:
   - Handle _formerly known as_ label names, where the former label name is part of the
     catalogue number.

@@ -161,7 +161,7 @@ class BandcampPlugin(BandcampRequestsHandler, MetadataSourcePlugin):
             self._info("Truncating comments for items in album {}", album)
             album.comments = comments
             album.store()
-            truncated = f"{comments[: self.MAX_COMMENT_LENGTH - 3].decode()}..."
+            truncated = f"{comments[: self.MAX_COMMENT_LENGTH - 3].decode('utf-8', errors='ignore')}..."  # noqa: E501
             for item in items:
                 item.comments = truncated
                 item.store()
