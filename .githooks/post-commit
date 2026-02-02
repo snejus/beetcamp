@@ -30,6 +30,7 @@ if git diff --quiet HEAD~1..HEAD $SOURCE; then
   exit
 fi
 
+tasks=()
 if [[ ! -d .git/rebase-merge ]]; then
   # During normal development, ignore 'fixup!' commits to avoid redundant runs.
   if [[ $message == fixup* ]]; then
@@ -42,11 +43,22 @@ else
   # During an interactive rebase, discover which commit is currently being
   # replayed so results can be compared/renamed appropriately.
   tasks=(${(f@)${mapfile[.git/rebase-merge/done]%$'\n'}})
-  current_task=(${=tasks[-1]})
-  action=$current_task[1] # e.g. 'pick', 'reword', 'edit', 'fixup', 'squash'.
-  rebase_head=${current_task[2]:0:8} # Original commit hash being replayed.
 
-  if [[ -d $TESTS_DIR/$rebase_head ]]; then
+  action=${tasks[-1]%% *} # e.g. 'pick', 'reword', 'edit', 'fixup', 'squash'.
+  [[ $action == (fixup|squash) ]] && print "Fixup/squash: anchoring baseline to $rebase_head"
+  # The most recent non-fixup/squash task (including the current one)
+  # (fixup/squash tasks don't have their own results in the history, they modify previous ones).
+  current_task=(${=${(M)tasks:#^(fixup |squash )*}[-1]})
+
+  rebase_head=${current_task[2]:0:7} # Original commit hash being replayed.
+  test_folder=( $TESTS_DIR/${^rebase_head}*(/) ) # Existing results for that commit.
+
+  if [[ ${mapfile[.git/rebase-merge/git-rebase-todo]} == (fixup|squash)* ]]; then
+    print "Commit $rebase_head is being rewritten, skipping"
+    exit
+  fi
+
+  if (( $#test_folder )); then
     # If we're effectively at the end of the rebase (no remaining todo), run a
     # "sync" comparison against the original commit being rewritten to keep
     # results aligned to the new hash.
@@ -54,9 +66,9 @@ else
       print "Current (latest) commit, testing against REBASE_HEAD $rebase_head to synchronise results"
       before=$rebase_head
     else
-      # Rename existing results folders to use the new hash so history stays
+      # Copy existing results folders to use the new hash so history stays
       # consistent even as commits are rewritten.
-      zmv $TESTS_DIR/'(*)'$rebase_head $TESTS_DIR/'${1}'$after
+      [[ $rebase_head == $after ]] || zmv -v $TESTS_DIR/'(*)'$rebase_head $TESTS_DIR/'${1}'$after
 
       # If the rewritten commit didn't actually change relevant sources relative
       # to its original version, skip further work.
@@ -93,10 +105,6 @@ dirty_worktree=$?
 
 # Run the regression harness comparing 'before' -> 'after'.
 ./test-lib $before $after
-
-# After rewriting commits during rebase, clean up any stale folders that still
-# reference the pre-rewrite hash.
-(( $#rebase_head )) && [[ -d $TESTS_DIR/$rebase_head ]] && rm -r $TESTS_DIR/*$rebase_head
 
 # Restore the user's working tree (if it was stashed above).
 (( dirty_worktree )) && git stash pop --quiet
