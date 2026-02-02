@@ -8,10 +8,14 @@ from collections import Counter
 from dataclasses import dataclass, field
 from functools import cached_property, reduce
 from os.path import commonprefix
+from typing import TYPE_CHECKING
 
 from .catalognum import Catalognum
-from .helpers import Helpers, JSONDict, cached_patternprop
+from .helpers import Helpers, cached_patternprop
 from .track import Remix
+
+if TYPE_CHECKING:
+    from .helpers import JSONDict
 
 
 @dataclass
@@ -170,7 +174,7 @@ class Names:
     def remove_label(self, names: list[str]) -> list[str]:
         """Remove label name from the end of track names.
 
-        See https://gutterfunkuk.bandcamp.com/album/gutterfunk-all-subject-to-vibes-various-artists-lp  # noqa: E501
+        See https://gutterfunkuk.bandcamp.com/album/gutterfunk-all-subject-to-vibes-various-artists-lp
         """
         remove_label = re.compile(rf"([:-]+ |\[){re.escape(self.label)}(\]|$)", re.I)
         return [remove_label.sub(" ", n).strip() for n in names]

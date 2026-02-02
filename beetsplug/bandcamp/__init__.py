@@ -220,7 +220,9 @@ class BandcampPlugin(BandcampRequestsHandler, MetadataSourcePlugin):
             if albums := self.get_album_info(url):
                 yield from albums
 
-    def item_candidates(self, item: Item, artist: str, title: str) -> Iterable[TrackInfo]:
+    def item_candidates(
+        self, item: Item, artist: str, title: str
+    ) -> Iterable[TrackInfo]:
         """Return a sequence of singleton candidates matching given artist and title."""
         if (
             item

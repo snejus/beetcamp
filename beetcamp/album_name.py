@@ -5,7 +5,6 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 from functools import cached_property
-from re import Match
 from typing import TYPE_CHECKING, Any
 
 from .helpers import Helpers, cached_patternprop
@@ -13,6 +12,7 @@ from .track import Remix, Track
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
+    from re import Match
 
 JSONDict = dict[str, Any]
 

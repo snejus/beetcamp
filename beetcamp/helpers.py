@@ -6,12 +6,10 @@ import re
 from functools import cache, partial
 from itertools import chain
 from operator import contains
-from re import Match, Pattern
-from typing import TYPE_CHECKING, Any, Generic, NamedTuple, TypeVar
+from typing import TYPE_CHECKING, Any, Generic, NamedTuple, TypeAlias, TypeVar
 
 from beets import __version__ as beets_version
 from packaging.version import Version
-from typing_extensions import TypeAlias
 
 from .genres_lookup import GENRES
 
@@ -19,6 +17,7 @@ ordset = dict.fromkeys
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterable
+    from re import Match, Pattern
 
 BEETS_VERSION = Version(beets_version)
 ALBUMTYPES_LIST_SUPPORT = BEETS_VERSION >= Version("1.6.0")

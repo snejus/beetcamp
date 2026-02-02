@@ -6,9 +6,9 @@ import itertools as it
 import json
 import operator as op
 import re
-from datetime import date, datetime, timezone
+from datetime import datetime, timezone
 from functools import cached_property, partial
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, ClassVar
 from unicodedata import normalize
 
 from beets import config as beets_config
@@ -23,6 +23,7 @@ from .tracks import Tracks
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
+    from datetime import date
 
 
 JSONDict = dict[str, Any]
@@ -48,7 +49,13 @@ class Metaguru(Helpers):
     ARTIST_IN_DESC = cached_patternprop(r"Artists?: *(\b[^\n]+)")
     REMIX_IN_ARTIST = cached_patternprop(r"(?:[(,+]|w/)+.*?re?mi?x", re.I)
     NOT_ALPHANUMERIC = cached_patternprop(r"\W")
-    HTML_REMOVE_CHARS = ["\u200b", "\u200d", "\u200e", "\u200f", "\u00a0"]
+    HTML_REMOVE_CHARS: ClassVar[list[str]] = [
+        "\u200b",
+        "\u200d",
+        "\u200e",
+        "\u200f",
+        "\u00a0",
+    ]
 
     _singleton = False
     va_name = VA

@@ -4,13 +4,13 @@ import re
 from dataclasses import dataclass
 from functools import cached_property
 from itertools import starmap
-from re import Pattern
 from typing import TYPE_CHECKING
 
 from .helpers import cached_patternprop
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
+    from re import Pattern
 
 
 @dataclass

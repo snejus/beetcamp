@@ -5,10 +5,13 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field
 from functools import cached_property
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from .catalognum import Catalognum
-from .helpers import Helpers, JSONDict, cached_patternprop
+from .helpers import Helpers, cached_patternprop
+
+if TYPE_CHECKING:
+    from .helpers import JSONDict
 
 digiwords = r"""
     # must contain at least one of

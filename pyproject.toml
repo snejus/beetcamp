@@ -87,6 +87,7 @@ select = [
 ]
 
 ignore = [
+    "B905", # Implicit `strict=False` is fine in zip calls
     "PLR0913", # too-many-arguments
 ]
 

@@ -1,13 +1,16 @@
 """Module with bandcamp search functionality."""
+from __future__ import annotations
 
 import re
-from collections.abc import Callable
 from difflib import SequenceMatcher
 from operator import itemgetter
-from typing import Any
+from typing import TYPE_CHECKING, Any
 from urllib.parse import quote_plus
 
 from .http import http_get_text
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 JSONDict = dict[str, Any]
 SEARCH_URL = "https://bandcamp.com/search?page={}&q={}"

@@ -23,7 +23,6 @@ from rich.console import Group
 from rich.markup import escape
 from rich_tables.diff import make_difftext
 from rich_tables.utils import (
-    NewTable,
     border_panel,
     list_table,
     make_console,
@@ -44,6 +43,7 @@ if TYPE_CHECKING:
     from _pytest.fixtures import FixtureRequest
     from beets.autotag.hooks import AttrDict
     from rich.panel import Panel
+    from rich_tables.utils import NewTable
 
 pytestmark = pytest.mark.lib
 
@@ -121,9 +121,13 @@ class FieldDiff(NamedTuple):
 
 
 class FieldDiffDecoder(json.JSONDecoder):
-    """Custom JSON decoder that converts serialized field diff data back to FieldDiff objects.
+    """Decode persisted field-diff JSON into in-memory `FieldDiff` structures.
 
-    Used when loading saved test results to reconstruct diff information.
+    This decoder exists so saved test results can be loaded back into rich Python
+    objects rather than leaving diffs as raw JSON-compatible tuples. It uses an
+    `object_pairs_hook` to post-process specific keys (currently `'failed'` and
+    `'fixed'`) into lists of `(identifier, FieldDiff)` pairs, while keeping all
+    other keys unchanged.
     """
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
@@ -282,7 +286,7 @@ def _report(
         summary: Summary = json.loads(summary_file.read_text(), cls=FieldDiffDecoder)
 
         if summary["worker_count"] == int(
-            os.environ.get("PYTEST_XDIST_WORKER_COUNT", 1)
+            os.environ.get("PYTEST_XDIST_WORKER_COUNT", "1")
         ):
             summary_file.unlink()
         else:
@@ -445,7 +449,7 @@ def write_results(data: JSONDict, name: str) -> Path:
     duplicating identical results.
     """
     contents = json.dumps(data, indent=2, sort_keys=True).encode()
-    id_ = hashlib.md5(contents).hexdigest()
+    id_ = hashlib.md5(contents).hexdigest()  # noqa: S324
     name = name[: 255 - len(id_) - 6]
     results_filepath = RESULTS_DIR / f"{name}-{id_}.json"
     if not results_filepath.exists():
@@ -603,4 +607,4 @@ def test_file(
                 subtitle=wrap(f"{entity_id} - {result['media']}", "dim"),
             )
         )
-        pytest.fail(pytrace=False)
+        pytest.fail(pytrace=False)  # noqa: PT016
