@@ -3,6 +3,7 @@
 ### Fixed
 
 - Fix truncating comments that contain unicode characters.
+- (#83) Fix `beets` installation in CI.
 
 - `catalognum`:
   - Handle _formerly known as_ label names, where the former label name is part of the

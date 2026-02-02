@@ -26,6 +26,7 @@ jobs:
       - name: Install dependencies
         run: |
           poetry install
+          pip install beets==${{ matrix.beets }}
 
       - name: Pytest
         run: poetry run pytest -k 'not need_connection' --ignore-glob='*test_lib*'
