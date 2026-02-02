@@ -23,6 +23,7 @@
 - cleanup:
   - Fix a couple of edge cases cleaning up digital-only artefacts.
   - Remove **PREMIERE** from the start of album and track names.
+  - Find catalogue numbers with a shared prefix in track titles and remove them.
 
 ### Added
 

@@ -108,6 +108,17 @@ class Names:
 
         return names
 
+    @staticmethod
+    def remove_catalognum_with_common_prefix(names: list[str]) -> list[str]:
+        matches = list(filter(None, map(Catalognum.in_album_pat.search, names)))
+        if len(matches) == len(names) and commonprefix(
+            [next(filter(None, m.groups())) for m in matches]
+        ):
+            cats = [m[0] for m in matches]
+            names = [n.replace(c, "").strip("|- ") for n, c in zip(names, cats)]
+
+        return names
+
     @classmethod
     def remove_number_prefix(cls, names: list[str]) -> list[str]:
         """Remove track number prefix from the track names.
@@ -235,6 +246,7 @@ class Names:
             titles = self.remove_album_catalognum(titles)
             self.catalognum_in_titles, titles = self.eject_common_catalognum(titles)
             titles = self.remove_number_prefix(titles)
+            titles = self.remove_catalognum_with_common_prefix(titles)
 
         titles = self.normalize_delimiter(titles)
         titles = self.remove_label(titles)
