@@ -47,7 +47,6 @@ packages = [
 ]
 
 [tool.poetry.group.dev.dependencies]
-coveralls = { version = ">=4.0.1", python = ">=3.8,<3.13" }
 filelock = ">=3.16.1"
 gitpython = ">=3.1.43"
 mypy = ">=0.790"

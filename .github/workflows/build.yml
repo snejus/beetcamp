@@ -32,11 +32,11 @@ jobs:
         run: poetry run pytest -k 'not need_connection' --ignore-glob='*test_lib*'
 
       - name: Upload coverage data to coveralls.io
-        run: poetry run coveralls --service=github
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          COVERALLS_FLAG_NAME: python${{ matrix.python }}_beets${{ matrix.beets }}
-          COVERALLS_PARALLEL: true
+        uses: coverallsapp/github-action@v2
+        with:
+          file: .reports/coverage.xml
+          parallel: true
+          flag-name: python${{ matrix.python }}_beets${{ matrix.beets }}
 
       - name: Lint ruff
         run: poetry run ruff check --exit-zero --output-format=json --output-file=.reports/ruff.json .
@@ -70,16 +70,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-  coveralls:
-    if: ${{ always() }}
-    name: Indicate completion to coveralls.io
+  finish:
     needs: test
+    if: ${{ always() }}
     runs-on: ubuntu-latest
-    container: python:3-slim
     steps:
-      - name: Finished
-        run: |
-          pip3 install --upgrade coveralls
-          coveralls --service=github --finish
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Coveralls Finished
+      uses: coverallsapp/github-action@v2
+      with:
+        parallel-finished: true
