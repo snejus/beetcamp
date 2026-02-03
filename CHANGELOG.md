@@ -1,5 +1,9 @@
 ## Unreleased
 
+### Removed
+
+- Drop support for Python 3.9 (EOL since October 2025).
+
 ### Fixed
 
 - Fix truncating comments that contain unicode characters.
