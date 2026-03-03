@@ -5,7 +5,6 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 from functools import cached_property
-from re import Match
 from typing import TYPE_CHECKING, Any
 
 from .helpers import Helpers, cached_patternprop
@@ -13,6 +12,7 @@ from .track import Remix, Track
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
+    from re import Match
 
 JSONDict = dict[str, Any]
 
@@ -188,12 +188,12 @@ class AlbumName:
         return cls.remove_pattern(
             name,
             rf"""
-            (?<!\ [x&,]\ )                      # keep B in 'A x B', 'A & B', 'A, B'
-            (?<!\ (of|vs)\ )                    # keep B in 'A of B', 'A vs B'
-            (?<!\ vs\.\ )                       # keep B in 'A vs. B'
-            (?<!\ presents\ )                   # keep B in 'A presents B'
-            (((compiled\ |selected\ )?by)\ )?   # remove these prefixes if present
-            {artist}                            # match the word we want to remove
+            (?<!\ [&,]\ )                       # keep B in 'A & B', 'A, B'
+            ((compiled|selected)\ )?            # remove these prefixes if present
+            (
+                     (?<![\w.]\ ){artist}       # cannot be preceded by a word
+              | ((by|split\ w)\ ){artist}       # unless preceded by 'by ' or 'split w '
+            )
             (\ x\ [^-]+)?                       # remove other artist ' x C' if present
             (?![':,.\w])                        # cannot be followed by these characters
             (?!\ [a-wyz&])                      # cannot be followed by ' &' ' ep'
@@ -202,7 +202,11 @@ class AlbumName:
 
     @classmethod
     def remove_catalognum(cls, name: str, catalognum: str) -> str:
-        return cls.remove_pattern(name, rf"/*{re.escape(catalognum)}(?!\ deluxe)")
+        catalognum = re.escape(catalognum)
+        with_space = re.sub(r"(?<=[A-Z])(?=\d)", " ", catalognum)
+        return cls.remove_pattern(
+            name, rf"/*(?i:{'|'.join({catalognum, with_space})})(?!\ deluxe)"
+        )
 
     @classmethod
     def clean(

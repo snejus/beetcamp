@@ -4,7 +4,7 @@ from operator import attrgetter
 
 import pytest
 
-from beetsplug.bandcamp.track import Track
+from beetcamp.track import Track
 
 pytestmark = pytest.mark.parsing
 

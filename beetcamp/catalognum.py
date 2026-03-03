@@ -4,13 +4,13 @@ import re
 from dataclasses import dataclass
 from functools import cached_property
 from itertools import starmap
-from re import Pattern
 from typing import TYPE_CHECKING
 
 from .helpers import cached_patternprop
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
+    from re import Pattern
 
 
 @dataclass
@@ -157,7 +157,11 @@ class Catalognum:
 
         This includes the label name without any punctuation and suffixes.
         """
-        variations = {self.label, self.label_suffix.sub("", self.label)}
+        variations = {
+            self.label,
+            *self.label.split(" fka "),
+            self.label_suffix.sub("", self.label),
+        }
         variations |= {self.punctuation.sub("", v) for v in variations}
 
         return variations

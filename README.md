@@ -142,6 +142,17 @@ Add a source to the
 [FetchArt](http://beets.readthedocs.org/en/latest/plugins/fetchart.html) plug-in to
 download album art for Bandcamp albums (requires `FetchArt` plug-in enabled).
 
+> [!TIP]
+> The plugin returns `cover_art_url` field, thus if you are using `beets` version `2.4.0`
+> or above, configure `cover_art_url` source in your `fetchart` configuration instead:
+>
+> ```yaml
+> fetchart:
+>   sources:
+>     - cover_art_url
+>     ... your other sources
+> ```
+
 ---
 
 #### `comments_separator`
@@ -299,6 +310,7 @@ select `enter Id` and paste the URL that you have.
 |     `catalognum` |     ✔     |             |   ✔   |                                                                                     |
 |       `comments` |     ✔     |             |   ✔   |                     release and media descriptions, and credits                     |
 |        `country` |     ✔     |             |   ✔   |                                                                                     |
+|  `cover_art_url` |     ✔     |             |   ✔   |                                                                                     |
 |            `day` |     ✔     |             |   ✔   |                                                                                     |
 |      `disctitle` |     ✔     |      ✔      |       |                                                                                     |
 |          `genre` |     ✔     |             |   ✔   |    comma-delimited list of **release keywords** which match [musicbrainz genres]    |

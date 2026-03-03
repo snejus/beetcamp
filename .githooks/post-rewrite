@@ -1,0 +1,15 @@
+#!/bin/zsh
+# Rename files that had the oldvious commit name to the new one
+
+set -x
+TESTS_DIR=lib_tests
+
+while read -r old new; do
+  before=${old:0:7}
+  after=${new:0:7}
+
+  [[ -e $TESTS_DIR/$before ]] || exit
+
+  echo "Renaming squash/fixup commit $before to final commit $after"
+  zmv $TESTS_DIR/'(*)'$before $TESTS_DIR/'${1}'$after
+done

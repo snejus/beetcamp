@@ -1,4 +1,45 @@
-## Unreleased
+## [0.24.0] 2026-03-03
+
+### Removed
+
+- Drop support for Python 3.9 (EOL since October 2025).
+
+### Fixed
+
+- Fix truncating comments that contain unicode characters.
+- (#83) Fix `beets` installation in CI.
+
+- `catalognum`:
+  - Handle _formerly known as_ label names, where the former label name is part of the
+    catalogue number.
+
+- `album`:
+  - Handle edge case when parsed catalogue number does not have a space, say **ABC123**
+    but it appears in the album name with a space, **ABC 123**.
+  - Fix several edge cases when artist was wrongly removed from the album name.
+
+- `albumartist`:
+  - Remove remixer lists like **(Remixes by ...** or **w/ ... remixes**
+
+- `artist`:
+  - In compilations where no artists are found, try splitting titles with a dash `-`
+    without surrounding spaces.
+
+- cleanup:
+  - Fix a couple of edge cases cleaning up digital-only artefacts.
+  - Remove **PREMIERE** from the start of album and track names.
+  - Find catalogue numbers with a shared prefix in track titles and remove them.
+
+### Added
+
+- `cover_art_url`: Add `cover_art_url` field to albums and singletons which is used by
+  `beets>=2.4.0` for artwork resolution.
+- Create `beetcamp` module for the core functionality to speed up the tool when it is used
+  as CLI.
+
+### Updated
+
+- `genre`: Update musicbrainz genre list
 
 ## [0.23.0] 2025-09-20
 
@@ -1394,3 +1435,4 @@ Thanks @arogl for reporting each of the above!
 [0.21.0]: https://github.com/snejus/beetcamp/releases/tag/0.21.0
 [0.22.0]: https://github.com/snejus/beetcamp/releases/tag/0.22.0
 [0.23.0]: https://github.com/snejus/beetcamp/releases/tag/0.23.0
+[0.24.0]: https://github.com/snejus/beetcamp/releases/tag/0.24.0

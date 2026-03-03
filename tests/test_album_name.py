@@ -1,6 +1,6 @@
 import pytest
 
-from beetsplug.bandcamp.album_name import AlbumName
+from beetcamp.album_name import AlbumName
 
 
 @pytest.mark.parametrize(

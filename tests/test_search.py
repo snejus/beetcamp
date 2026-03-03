@@ -4,8 +4,8 @@ from typing import Any
 
 import pytest
 
-from beetsplug.bandcamp.http import urlify
-from beetsplug.bandcamp.search import get_matches, search_bandcamp
+from beetcamp.http import urlify
+from beetcamp.search import get_matches, search_bandcamp
 
 # simplified version of the search result HTML block
 HTML_ITEM = """

@@ -124,7 +124,7 @@ def test_singleton_candidates(plugin, expected_release):
 
 
 def test_bandcamp_plugin_name():
-    assert BandcampPlugin().data_source == "bandcamp"
+    assert BandcampPlugin().data_source == "Bandcamp"
 
 
 @pytest.fixture
@@ -161,11 +161,13 @@ def test_no_coverart_empty_response(monkeypatch, bandcamp_item, beets_config):
         "empty",
         json.dumps({"@id": "", "image": "someurl"}),  # no tracks
         json.dumps({"@id": "", "track": [], "image": "someurl"}),  # no label
-        json.dumps({
-            "@id": "",
-            "track": [],
-            "publisher": {"name": "Label"},
-        }),  # missing image
+        json.dumps(
+            {
+                "@id": "",
+                "track": [],
+                "publisher": {"name": "Label"},
+            }
+        ),  # missing image
     ],
 )
 def test_no_coverart_bad_html(monkeypatch, html, bandcamp_item, beets_config):

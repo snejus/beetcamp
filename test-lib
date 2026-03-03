@@ -28,7 +28,7 @@ jq '(.album // .title) as $name | if .original_name == $name then $name else "\(
 
 jq '.catalognum // ""' -r $TESTS_DIR/$after/*.json(^-@) >$TESTS_DIR/catalognum-$after
 
-jq '(.tracks // [.])[] | if .track_alt then "\(.track_alt). " else "" end + "\(.artist) - \(.title)"' -r $TESTS_DIR/$after/*.json(^-@) -r >$TESTS_DIR/tracks-$after
+jq '(.tracks // [.])[] | "\(.original_title) -> \(.artist) - \(.title) -> \(.track_alt // "") | \(.artist) | \(.title)"' -r $TESTS_DIR/$after/*.json(^-@) -r >$TESTS_DIR/tracks-$after
 
 for type in album artist catalognum tracks; do
   git diff --unified=0 --no-index --color-words $TESTS_DIR/$type-$before $TESTS_DIR/$type-$after | grep -v '@@ -'

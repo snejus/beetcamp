@@ -5,18 +5,21 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field
 from functools import cached_property
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from .catalognum import Catalognum
-from .helpers import Helpers, JSONDict, cached_patternprop
+from .helpers import Helpers, cached_patternprop
+
+if TYPE_CHECKING:
+    from .helpers import JSONDict
 
 digiwords = r"""
     # must contain at least one of
     ([ -]?  # delimiter
-        (bandcamp|digi(tal)?|exclusive|bonus|bns|unreleased)
+        (bandcamp|digi(tal)?|exclusive|bonus²?|bns|unreleased)
     )+
     # and may be followed by
-    (\W(track|only|tune))*
+    (\W(tr?ack|only|tune|bootleg))*
     """
 
 
@@ -80,11 +83,11 @@ class Track:
         rf"""
     (\s|[^][()\w])*  # space or anything that is not a parens or an alphabetical char
     (
-          (^{digiwords}[.:\d\s]+\s)     # begins with 'Bonus.', 'Bonus 1.' or 'Bonus :'
-     | [\[(]{digiwords}[\])]\W*         # delimited by brackets, '[Bonus]', '(Bonus) -'
-     |   [*]{digiwords}[*]?             # delimited by asterisks, '*Bonus', '*Bonus*'
-     |      {digiwords}[ ]-             # followed by ' -', 'Bonus -'
-     |  ([ ]{digiwords}$)               # might not be delimited at the end, '... Bonus'
+             (^{digiwords}[.:\d\s]+\s)  # begins with 'Bonus.', 'Bonus 1.' or 'Bonus :'
+     | [\[(]\s*{digiwords}\s*[\])]\W*   # delimited by brackets, '[Bonus]', '(Bonus) -'
+     |      [*]{digiwords}[*]?          # delimited by asterisks, '*Bonus', '*Bonus*'
+     |         {digiwords}[ ]-          # followed by ' -', 'Bonus -'
+     |     ([ ]{digiwords}$)            # might not be delimited at the end, '... Bonus'
     )
     \s*  # all succeeding space
         """,

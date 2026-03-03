@@ -23,7 +23,6 @@ from rich.console import Group
 from rich.markup import escape
 from rich_tables.diff import make_difftext
 from rich_tables.utils import (
-    NewTable,
     border_panel,
     list_table,
     make_console,
@@ -33,8 +32,9 @@ from rich_tables.utils import (
 )
 from typing_extensions import TypedDict
 
-from beetsplug.bandcamp import BandcampPlugin
-from beetsplug.bandcamp.metaguru import Metaguru
+from beetsplug.bandcamp import DEFAULT_CONFIG
+
+from beetcamp.metaguru import Metaguru
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
@@ -43,6 +43,7 @@ if TYPE_CHECKING:
     from _pytest.fixtures import FixtureRequest
     from beets.autotag.hooks import AttrDict
     from rich.panel import Panel
+    from rich_tables.utils import NewTable
 
 pytestmark = pytest.mark.lib
 
@@ -67,6 +68,7 @@ IGNORE_FIELDS = {
     "times_bought",
     "original_artist",
     "original_name",
+    "original_title",
     "artists_credit",
     "artists_ids",
     "artists_sort",
@@ -119,9 +121,13 @@ class FieldDiff(NamedTuple):
 
 
 class FieldDiffDecoder(json.JSONDecoder):
-    """Custom JSON decoder that converts serialized field diff data back to FieldDiff objects.
+    """Decode persisted field-diff JSON into in-memory `FieldDiff` structures.
 
-    Used when loading saved test results to reconstruct diff information.
+    This decoder exists so saved test results can be loaded back into rich Python
+    objects rather than leaving diffs as raw JSON-compatible tuples. It uses an
+    `object_pairs_hook` to post-process specific keys (currently `'failed'` and
+    `'fixed'`) into lists of `(identifier, FieldDiff)` pairs, while keeping all
+    other keys unchanged.
     """
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
@@ -280,7 +286,7 @@ def _report(
         summary: Summary = json.loads(summary_file.read_text(), cls=FieldDiffDecoder)
 
         if summary["worker_count"] == int(
-            os.environ.get("PYTEST_XDIST_WORKER_COUNT", 1)
+            os.environ.get("PYTEST_XDIST_WORKER_COUNT", "1")
         ):
             summary_file.unlink()
         else:
@@ -368,7 +374,7 @@ def target_dir(pytestconfig: Config) -> Path:
 
 @pytest.fixture(scope="module")
 def config() -> JSONDict:
-    return dict(BandcampPlugin().config.flatten())
+    return DEFAULT_CONFIG
 
 
 @pytest.fixture(params=sorted(JSONS_DIR.glob("*.json")), ids=str)
@@ -391,17 +397,8 @@ def _fmt_old(s: str, times: int) -> str:
 def guru(config: JSONDict, test_filepath: Path) -> Metaguru:
     test_data = test_filepath.read_text()
 
+    config["genre"]["mode"] = "psychedelic"
     return Metaguru.from_html(test_data.replace("\n", ""), config)
-
-
-@pytest.fixture
-def original_name(guru: Metaguru) -> str:
-    return str(guru.meta["name"])
-
-
-@pytest.fixture
-def original_artist(guru: Metaguru) -> str:
-    return str(guru.meta["byArtist"]["name"])
 
 
 @pytest.fixture
@@ -452,7 +449,7 @@ def write_results(data: JSONDict, name: str) -> Path:
     duplicating identical results.
     """
     contents = json.dumps(data, indent=2, sort_keys=True).encode()
-    id_ = hashlib.md5(contents).hexdigest()
+    id_ = hashlib.md5(contents).hexdigest()  # noqa: S324
     name = name[: 255 - len(id_) - 6]
     results_filepath = RESULTS_DIR / f"{name}-{id_}.json"
     if not results_filepath.exists():
@@ -462,18 +459,25 @@ def write_results(data: JSONDict, name: str) -> Path:
 
 
 @pytest.fixture
-def new(guru: Metaguru, original_name: str, original_artist: str) -> JSONDict:
+def new(guru: Metaguru) -> JSONDict:
+    original_titles = [
+        " - ".join(filter(None, (t.get("byArtist", {}).get("name"), t["name"])))
+        for t in guru._names.json_tracks
+    ]
     new_: AttrDict[Any]
     if "/track/" in guru.meta["@id"]:
         new_ = guru.singleton
+        new_.original_title = original_titles[0]
     else:
         new_ = next((a for a in guru.albums if a.media == "Vinyl"), guru.albums[0])
         new_.album = " / ".join(dict.fromkeys(x["album"] for x in guru.albums))
+        for tit, track in zip(original_titles, new_.tracks):
+            track.update(original_title=tit)
 
     return {
         **new_,
-        "original_name": original_name,
-        "original_artist": original_artist,
+        "original_name": guru.meta["name"],
+        "original_artist": guru.meta["byArtist"]["name"],
         "catalognum": " / ".join(
             sorted({x.catalognum for x in guru.albums if x.catalognum})
         ),
@@ -603,4 +607,4 @@ def test_file(
                 subtitle=wrap(f"{entity_id} - {result['media']}", "dim"),
             )
         )
-        pytest.fail(pytrace=False)
+        pytest.fail(pytrace=False)  # noqa: PT016

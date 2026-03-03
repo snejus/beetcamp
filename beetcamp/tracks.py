@@ -6,8 +6,9 @@ from collections import Counter
 from dataclasses import dataclass
 from functools import cached_property
 from os.path import commonprefix
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, ClassVar
 
+from .helpers import cached_patternprop
 from .names import Names
 from .track import Track
 
@@ -19,7 +20,10 @@ if TYPE_CHECKING:
 
 @dataclass
 class Tracks:
-    DISC_BY_LETTER = {
+    MIN_TRACKS_FOR_TITLE_FIX = 3
+    MAX_TRACKS_WITH_ARTIST_FOR_MIS_SPLIT_FIX = 3
+    DASH_INSIDE_PARENS = cached_patternprop(r"\([^)]+-[^)]+\)")
+    DISC_BY_LETTER: ClassVar[dict[str, int]] = {
         "A": 1,
         "B": 1,
         "C": 2,
@@ -166,7 +170,10 @@ class Tracks:
             and not commonprefix([t.json_artist, t.remix.remixer if t.remix else ""])
             and t.json_artist.lower() not in t.name.lower()
         ]
-        if len(not_json_artist_tracks) == 1 and len(self) > 2:
+        if (
+            len(not_json_artist_tracks) == 1
+            and len(self) >= self.MIN_TRACKS_FOR_TITLE_FIX
+        ):
             for t in not_json_artist_tracks:
                 t.title = f"{t.artist} - {t.title}"
                 t.artist = t.json_artist
@@ -225,7 +232,11 @@ class Tracks:
         if not self.tracks_without_artist:
             return
 
-        if 1 <= len(self) - len(self.tracks_without_artist) < 4:
+        if (
+            1
+            <= len(self) - len(self.tracks_without_artist)
+            <= self.MAX_TRACKS_WITH_ARTIST_FOR_MIS_SPLIT_FIX
+        ):
             aartist = albumartist.lower()
             for t in (
                 t
@@ -238,9 +249,11 @@ class Tracks:
                 t.title = f"{t.artist} - {t.title}"
                 t.artist = ""
 
-        if 1 <= len(tracks := self.tracks_without_artist) < len(self) / 2:
+        if (1 <= len(tracks := self.tracks_without_artist) < len(self) / 2) or (
+            albumartist == "Various Artists" and len(tracks) == len(self)
+        ):
             for t in tracks:
-                if (
+                if not self.DASH_INSIDE_PARENS.search(t.title) and (
                     len(split := t.title.split("-", 1)) > 1
                     or len(split := Names.SEPARATOR_PAT.split(t.title, 1)) > 1
                 ):
