@@ -101,7 +101,7 @@ class BandcampAlbumArt(BandcampRequestsHandler, fetchart.RemoteArtSource):
 class BandcampPlugin(BandcampRequestsHandler, MetadataSourcePlugin):
     MAX_COMMENT_LENGTH = 4047
     LABEL_URL_IN_COMMENT = cached_patternprop(r"Visit (https:[\w/.-]+\.[a-z]+)")
-    data_source = "bandcamp"
+    data_source = "Bandcamp"
     beets_config: IncludeLazyConfig
 
     def __init__(self) -> None:

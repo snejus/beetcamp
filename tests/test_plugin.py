@@ -124,7 +124,7 @@ def test_singleton_candidates(plugin, expected_release):
 
 
 def test_bandcamp_plugin_name():
-    assert BandcampPlugin().data_source == "bandcamp"
+    assert BandcampPlugin().data_source == "Bandcamp"
 
 
 @pytest.fixture
