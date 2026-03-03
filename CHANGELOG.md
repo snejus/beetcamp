@@ -1,4 +1,4 @@
-## Unreleased
+## [0.24.0] 2026-03-03
 
 ### Removed
 
@@ -1435,3 +1435,4 @@ Thanks @arogl for reporting each of the above!
 [0.21.0]: https://github.com/snejus/beetcamp/releases/tag/0.21.0
 [0.22.0]: https://github.com/snejus/beetcamp/releases/tag/0.22.0
 [0.23.0]: https://github.com/snejus/beetcamp/releases/tag/0.23.0
+[0.24.0]: https://github.com/snejus/beetcamp/releases/tag/0.24.0
