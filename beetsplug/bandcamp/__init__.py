@@ -25,7 +25,7 @@ from beets import config, plugins
 
 from beetsplug import fetchart  # type: ignore[attr-defined]
 
-from beetcamp import GuruMixin
+from beetcamp import DEFAULT_CONFIG, GuruMixin
 from beetcamp.helpers import NEW_METADATA_PLUGIN_CLASS, cached_patternprop
 from beetcamp.http import urlify
 from beetcamp.search import search_bandcamp
@@ -44,21 +44,6 @@ else:
 
 JSONDict = dict[str, Any]
 CandidateType = Literal["album", "track"]
-
-DEFAULT_CONFIG = {
-    "include_digital_only_tracks": True,
-    "search_max": 2,
-    "art": False,
-    "exclude_extra_fields": [],
-    "genre": {
-        "capitalize": False,
-        "maximum": 0,
-        "mode": "progressive",
-        "always_include": [],
-    },
-    "comments_separator": "\n---\n",
-    "truncate_comments": False,
-}
 
 
 class BandcampRequestsHandler(GuruMixin):

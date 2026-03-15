@@ -21,6 +21,21 @@ if TYPE_CHECKING:
     from beets import IncludeLazyConfig
     from beets.autotag.hooks import AlbumInfo, TrackInfo
 
+DEFAULT_CONFIG = {
+    "include_digital_only_tracks": True,
+    "search_max": 2,
+    "art": False,
+    "exclude_extra_fields": [],
+    "genre": {
+        "capitalize": False,
+        "maximum": 0,
+        "mode": "progressive",
+        "always_include": [],
+    },
+    "comments_separator": "\n---\n",
+    "truncate_comments": False,
+}
+
 
 class GuruMixin:
     ALBUM_SLUG_IN_TRACK = cached_patternprop(r'(?<=<a id="buyAlbumLink" href=")[^"]+')
@@ -34,6 +49,7 @@ class GuruMixin:
             self._log = logging.getLogger(__name__)
         if not hasattr(self, "config"):
             self.config = config["beetcamp"]
+        self.config.add(DEFAULT_CONFIG)
 
     def _exc(self, msg_template: str, *args: object) -> None:
         self._log.log(logging.WARNING, msg_template, *args, exc_info=True)
