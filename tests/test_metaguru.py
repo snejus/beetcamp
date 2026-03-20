@@ -80,3 +80,50 @@ def test_digi_only_option(json_track, json_meta, beets_config):
     )
     assert len(media_to_album["Vinyl"].tracks) == 1
     assert "Digital" not in media_to_album["Vinyl"].tracks[0].title
+
+
+@pytest.mark.parametrize(
+    "track_names, expected_titles",
+    [
+        (
+            [
+                "Satie: Complete Piano Works - Prélude en tapisserie (1906)",
+                "Psaumes (1895) - 1. Losing Grip",
+                "Psaumes (1895) - 2. Complicated",
+            ],
+            [
+                "Satie: Complete Piano Works - Prélude en tapisserie (1906)",
+                "Psaumes (1895) - Losing Grip",
+                "Psaumes (1895) - Complicated",
+            ],
+        ),
+        (
+            [
+                "Prélude en tapisserie (1906)",
+                "Psaumes (1895) - 1. Losing Grip",
+                "Psaumes (1895) - 2. Complicated",
+            ],
+            [
+                "Prélude en tapisserie (1906)",
+                "Psaumes (1895) - Losing Grip",
+                "Psaumes (1895) - Complicated",
+            ],
+        ),
+    ],
+)
+def test_prefers_root_artist_when_track_artists_look_like_title_fragments(
+    json_meta, beets_config, track_names, expected_titles
+):
+    json_meta["name"] = "Satie: Complete Piano Works - Volume 10"
+    json_meta["byArtist"]["name"] = "carrie z"
+    json_meta["publisher"]["name"] = "carrie z"
+    json_meta["track"]["itemListElement"] = [
+        {"position": idx, "item": {"@id": f"track{idx}", "name": name}}
+        for idx, name in enumerate(track_names, start=1)
+    ]
+
+    guru = Metaguru(json_meta, beets_config)
+
+    assert guru.albumartist == "carrie z"
+    assert [t.artist for t in guru.tracks] == ["carrie z", "carrie z", "carrie z"]
+    assert [t.title for t in guru.tracks] == expected_titles

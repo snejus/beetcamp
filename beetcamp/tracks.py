@@ -22,7 +22,9 @@ if TYPE_CHECKING:
 class Tracks:
     MIN_TRACKS_FOR_TITLE_FIX = 3
     MAX_TRACKS_WITH_ARTIST_FOR_MIS_SPLIT_FIX = 3
+    MAX_TITLE_FRAGMENT_ARTISTS = 2
     DASH_INSIDE_PARENS = cached_patternprop(r"\([^)]+-[^)]+\)")
+    TITLE_LIKE_ARTIST = cached_patternprop(r":|\(\d{4}\)")
     DISC_BY_LETTER: ClassVar[dict[str, int]] = {
         "A": 1,
         "B": 1,
@@ -229,6 +231,8 @@ class Tracks:
                 t.title = f"{t.artist} {t.title}"
                 t.artist = ""
 
+        self._reset_title_fragment_artists(albumartist)
+
         if not self.tracks_without_artist:
             return
 
@@ -262,6 +266,53 @@ class Tracks:
         for t in self.tracks_without_artist:
             # default to the albumartist
             t.artist = albumartist
+
+    def _reset_title_fragment_artists(self, albumartist: str) -> None:
+        """Replace parsed artists that are more likely to be title fragments.
+
+        Notably, handle this release: https://carriez.bandcamp.com/album/satie-complete-piano-works-volume-10
+        """
+        # Nothing to reset against if there's no album artist
+        if not albumartist:
+            return
+
+        # Collect artists that were explicitly provided in the JSON metadata
+        explicit_artists = {t.json_artist.lower() for t in self if t.json_artist}
+        # If tracks have explicit artists that differ from the album artist,
+        # the parsed artists are likely real — not title fragments
+        if explicit_artists and explicit_artists != {albumartist.lower()}:
+            return
+
+        # Only consider tracks where the artist was parsed (not from JSON metadata)
+        tracks_with_parsed_artist = [t for t in self if t.artist and not t.json_artist]
+        unique_artists = {t.lead_artist.lower() for t in tracks_with_parsed_artist}
+        if (
+            # No parsed artists to evaluate
+            not unique_artists
+            # Too many to be title fragments
+            or len(unique_artists) > self.MAX_TITLE_FRAGMENT_ARTISTS
+            # Parsed artist matches album artist - not a fragment
+            or albumartist.lower() in unique_artists
+            # None look like title fragments
+            or not any(self.TITLE_LIKE_ARTIST.search(a) for a in unique_artists)
+        ):
+            return
+
+        album = self.names.original_album.lower()
+        if not (
+            # Some tracks have no artist at all - reset makes sense
+            self.tracks_without_artist
+            # Parsed artist looks like album name prefix
+            or any(album.startswith(a) for a in unique_artists)
+        ):
+            return
+
+        # Merge the wrongly-parsed artist back into the title and restore the album
+        # artist
+        for t in tracks_with_parsed_artist:
+            # Prepend the fragment back to the title
+            t.title = f"{t.artist} - {t.title}"
+            t.artist = albumartist  # Restore the correct album artist
 
     def for_media(
         self, media: str, comments: str, include_digi: bool

@@ -3,6 +3,7 @@
 ### Fixed
 
 - Fix an issue with `beetcamp` CLI where the default config was missing.
+- (#47) Fix album artist in releases with classical works.
 
 ## [0.24.0] 2026-03-03
 

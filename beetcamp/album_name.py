@@ -247,7 +247,10 @@ class AlbumName:
             album = album.replace(remix.full, "").strip()
 
         if len(split := Track.DELIM_NOT_INSIDE_PARENS.split(album)) > 1:
-            return split[0]
+            left, right = map(str.strip, split[:2])
+            if ":" in left and self.SERIES.search(right):
+                return None
+            return left
 
         return None
 
