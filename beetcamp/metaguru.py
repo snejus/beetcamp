@@ -549,12 +549,18 @@ class Metaguru(Helpers):
     def singleton(self) -> TrackInfo:
         self._singleton = True
         self.media = self.media_formats[0]
-        track = self._trackinfo(self.tracks.first.info, medium=None)
-        track.update(self._common_album)
+        track_data = self.tracks.first.info
+        catalognum = track_data["catalognum"] or self.catalognum
+        data = {
+            **track_data,
+            **self._common_album,
+            "medium": None,
+            "track_id": self.album_id,
+            "title": track_data["title"] or catalognum,
+        }
+        track = self._trackinfo(data)
         track.album = None
-        track.track_id = track.data_url
-        if not track.title:
-            track.title = self.catalognum
+        track.catalognum = catalognum
         return self.check_list_fields(track)
 
     def get_media_album(self, media: MediaInfo) -> AlbumInfo:
