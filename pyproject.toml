@@ -1,6 +1,6 @@
 [project]
 name = "beetcamp"
-version = "0.24.0"
+version = "0.24.1"
 description = "Bandcamp autotagger source for beets (http://beets.io)."
 authors = [{ name = "Šarūnas Nejus", email = "snejus@pm.me" }]
 readme = "README.md"

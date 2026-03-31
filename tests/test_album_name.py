@@ -139,3 +139,14 @@ def test_standardize_series(original, in_desc, expected):
         from_track_titles=None,
     )
     assert album_name.standardize_series(album_name.name) == expected
+
+
+@pytest.mark.parametrize(
+    "original, expected",
+    [
+        ("Satie: Complete Piano Works - Volume 10", None),
+    ],
+)
+def test_find_artist(original, expected):
+    album_name = AlbumName(original=original, description="", from_track_titles=None)
+    assert album_name.find_artist(catalognum="") == expected

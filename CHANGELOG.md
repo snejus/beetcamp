@@ -1,3 +1,14 @@
+## Unreleased
+
+## [0.24.1] 2026-03-31
+
+### Fixed
+
+- Fix an issue with `beetcamp` CLI where the default config was missing.
+- (#47) Fix album artist in releases with classical works.
+- (#91) Update beets to 2.8.0 and populate new `genres` list field conditionally, and fix
+  related test failures.
+
 ## [0.24.0] 2026-03-03
 
 ### Removed
@@ -1436,3 +1447,4 @@ Thanks @arogl for reporting each of the above!
 [0.22.0]: https://github.com/snejus/beetcamp/releases/tag/0.22.0
 [0.23.0]: https://github.com/snejus/beetcamp/releases/tag/0.23.0
 [0.24.0]: https://github.com/snejus/beetcamp/releases/tag/0.24.0
+[0.24.1]: https://github.com/snejus/beetcamp/releases/tag/0.24.1

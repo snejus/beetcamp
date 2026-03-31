@@ -1,7 +1,6 @@
 #!/bin/zsh
 # Rename files that had the oldvious commit name to the new one
 
-set -x
 TESTS_DIR=lib_tests
 
 while read -r old new; do

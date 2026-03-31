@@ -35,6 +35,9 @@
     "discogs_artistid": null,
     "discogs_labelid": null,
     "genre": "techno",
+    "genres": [
+      "techno"
+    ],
     "label": "PURE HATE",
     "language": null,
     "media": "Digital Media",
@@ -72,6 +75,7 @@
         "data_url": "https://purehate000.bandcamp.com/album/aluphobia-x-astatine-problem-child-ep",
         "disctitle": null,
         "genre": null,
+        "genres": null,
         "index": 1,
         "initial_key": null,
         "length": 312,
@@ -111,6 +115,7 @@
         "data_url": "https://purehate000.bandcamp.com/album/aluphobia-x-astatine-problem-child-ep",
         "disctitle": null,
         "genre": null,
+        "genres": null,
         "index": 2,
         "initial_key": null,
         "length": 395,
@@ -150,6 +155,7 @@
         "data_url": "https://purehate000.bandcamp.com/album/aluphobia-x-astatine-problem-child-ep",
         "disctitle": null,
         "genre": null,
+        "genres": null,
         "index": 3,
         "initial_key": null,
         "length": 391,
