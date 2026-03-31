@@ -4,6 +4,8 @@
 
 - Fix an issue with `beetcamp` CLI where the default config was missing.
 - (#47) Fix album artist in releases with classical works.
+- (#91) Update beets to 2.8.0 and populate new `genres` list field conditionally, and fix
+  related test failures.
 
 ## [0.24.0] 2026-03-03
 

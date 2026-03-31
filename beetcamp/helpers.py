@@ -23,6 +23,7 @@ BEETS_VERSION = Version(beets_version)
 ALBUMTYPES_LIST_SUPPORT = BEETS_VERSION >= Version("1.6.0")
 ARTIST_LIST_FIELDS_SUPPORT = BEETS_VERSION >= Version("2.0.0")
 NEW_METADATA_PLUGIN_CLASS = BEETS_VERSION >= Version("2.4.0")
+GENRES_LIST_FIELD = BEETS_VERSION >= Version("2.7.0")
 
 JSONDict = dict[str, Any]
 DIGI_MEDIA = "Digital Media"
@@ -271,7 +272,7 @@ class Helpers:
         # expand badly delimited keywords
         for kw in chain.from_iterable(map(cls.KEYWORD_SPLIT.split, keywords)):
             # remove full stops and hashes and ensure the expected form of 'and'
-            kw_ = kw.strip("#").replace("&", "and").replace(".", "")
+            kw_ = kw.strip("#").replace("&", "and").replace(".", "").strip()
             if not is_label_name(kw_) and (is_included(kw_) or valid_for_mode(kw_)):
                 unique_genres[kw_] = None
 
@@ -348,6 +349,9 @@ class Helpers:
             fields = ["artists", "artists_ids", "artists_credit", "artists_sort"]
             for f in fields:
                 data.pop(f)
+
+        if not GENRES_LIST_FIELD and (genres := data.pop("genres")):
+            data["genre"] = ", ".join(genres)
 
         if "tracks" in data:
             data["tracks"] = [Helpers.check_list_fields(t) for t in data["tracks"]]

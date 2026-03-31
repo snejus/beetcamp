@@ -16,24 +16,24 @@ def test_style(json_meta, beets_config):
     [
         ([], None),
         (["crazy music"], None),
-        (["ambient. techno. industrial"], "ambient, industrial, techno"),
-        (["Drum & Bass"], "drum and bass"),
-        (["Techno."], "techno"),
-        (["E.B.M"], "ebm"),
-        (["#House #Techno #Trance"], "house, techno, trance"),
-        (["90's House"], "90's house"),
-        (["hardcore"], "hardcore"),
-        (["hardtrance", "hard trance"], "hard trance"),
-        (["hard trance", "trance"], "hard trance"),
-        (["hard trance", "hardtrance"], "hard trance"),
-        (["alt-country"], "alt-country"),
+        (["ambient. techno. industrial"], ["ambient", "industrial", "techno"]),
+        (["Drum & Bass"], ["drum and bass"]),
+        (["Techno."], ["techno"]),
+        (["E.B.M"], ["ebm"]),
+        (["#House #Techno #Trance"], ["house", "techno", "trance"]),
+        (["90's House"], ["90's house"]),
+        (["hardcore"], ["hardcore"]),
+        (["hardtrance", "hard trance"], ["hard trance"]),
+        (["hard trance", "trance"], ["hard trance"]),
+        (["hard trance", "hardtrance"], ["hard trance"]),
+        (["alt-country"], ["alt-country"]),
     ],
 )
 def test_genre_variations(keywords, expected, json_meta, beets_config):
     beets_config["genre"]["mode"] = "psychedelic"
     beets_config["genre"]["always_include"] = ["^hard", "core$"]
     json_meta.update(keywords=keywords)
-    assert Metaguru(json_meta, beets_config).genre == expected
+    assert Metaguru(json_meta, beets_config).genres == expected
 
 
 TEST_KEYWORDS = {
@@ -89,9 +89,9 @@ def test_genre(keywords, mode, mode_result, beets_config):
 @pytest.mark.parametrize(
     "capitalize, maximum, expected",
     [
-        (True, 0, "Folk, Grime, House, Trance"),
-        (True, 3, "Folk, Grime, House"),
-        (False, 2, "folk, house"),
+        (True, 0, ["Folk", "Grime", "House", "Trance"]),
+        (True, 3, ["Folk", "Grime", "House"]),
+        (False, 2, ["folk", "house"]),
     ],
 )
 def test_genre_options(capitalize, maximum, expected, json_meta, beets_config):
@@ -101,14 +101,14 @@ def test_genre_options(capitalize, maximum, expected, json_meta, beets_config):
     guru = Metaguru(json_meta, beets_config)
 
     assert guru.style == ("Dubstep" if capitalize else "dubstep")
-    assert guru.genre == expected
+    assert guru.genres == expected
 
 
 @pytest.mark.parametrize(
     "keywords, label, expected",
     [
-        (["house", "classical"], "Classical", "classical, house"),
-        (["house", "hard tunenetwork"], "Hard Tune Network", "house"),
+        (["house", "classical"], "Classical", ["classical", "house"]),
+        (["house", "hard tunenetwork"], "Hard Tune Network", ["house"]),
     ],
 )
 def test_label_excluded_from_genre(keywords, label, expected, json_meta, beets_config):
@@ -116,4 +116,4 @@ def test_label_excluded_from_genre(keywords, label, expected, json_meta, beets_c
     beets_config["genre"]["always_include"] = ["^hard"]
     json_meta["publisher"]["name"] = label
     json_meta.update(keywords=keywords)
-    assert Metaguru(json_meta, beets_config).genre == expected
+    assert Metaguru(json_meta, beets_config).genres == expected

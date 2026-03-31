@@ -467,7 +467,7 @@ class Metaguru(Helpers):
         return style
 
     @cached_property
-    def genre(self) -> str | None:
+    def genres(self) -> list[str] | None:
         kws: Iterable[str] = map(str.lower, self.meta.get("keywords", []))
         if self.style:
             exclude_style = partial(op.ne, self.style.lower())
@@ -480,7 +480,7 @@ class Metaguru(Helpers):
         if genre_cfg["maximum"]:
             genres = it.islice(genres, genre_cfg["maximum"])
 
-        return ", ".join(sorted(genres)).strip() or None
+        return sorted(genres) or None
 
     @cached_property
     def artists(self) -> list[str]:
@@ -516,7 +516,7 @@ class Metaguru(Helpers):
             "catalognum",
             "comments",
             "country",
-            "genre",
+            "genres",
             "label",
             "style",
             "artists",
