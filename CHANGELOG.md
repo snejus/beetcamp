@@ -1,5 +1,7 @@
 ## Unreleased
 
+## [0.24.1] 2026-03-31
+
 ### Fixed
 
 - Fix an issue with `beetcamp` CLI where the default config was missing.
@@ -1445,3 +1447,4 @@ Thanks @arogl for reporting each of the above!
 [0.22.0]: https://github.com/snejus/beetcamp/releases/tag/0.22.0
 [0.23.0]: https://github.com/snejus/beetcamp/releases/tag/0.23.0
 [0.24.0]: https://github.com/snejus/beetcamp/releases/tag/0.24.0
+[0.24.1]: https://github.com/snejus/beetcamp/releases/tag/0.24.1
