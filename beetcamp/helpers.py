@@ -24,6 +24,8 @@ ALBUMTYPES_LIST_SUPPORT = BEETS_VERSION >= Version("1.6.0")
 ARTIST_LIST_FIELDS_SUPPORT = BEETS_VERSION >= Version("2.0.0")
 NEW_METADATA_PLUGIN_CLASS = BEETS_VERSION >= Version("2.4.0")
 GENRES_LIST_FIELD = BEETS_VERSION >= Version("2.7.0")
+ARTIST_CREDIT_LIST_FIELDS = BEETS_VERSION >= Version("2.9.0")
+ARTIST_CREDIT_LEGACY_FIELDS = {"arranger", "composer", "lyricist", "remixer"}
 
 JSONDict = dict[str, Any]
 DIGI_MEDIA = "Digital Media"
@@ -350,8 +352,16 @@ class Helpers:
             for f in fields:
                 data.pop(f)
 
-        if not GENRES_LIST_FIELD and (genres := data.pop("genres")):
-            data["genre"] = ", ".join(genres)
+        if not GENRES_LIST_FIELD:
+            data["genre"] = ", ".join(data.pop("genres", []) or []) or None
+        elif not ARTIST_CREDIT_LIST_FIELDS:
+            # legacy genre field was null between 2.7.0 and 2.9.0
+            data["genre"] = None
+
+        if not ARTIST_CREDIT_LIST_FIELDS:
+            for field in ARTIST_CREDIT_LEGACY_FIELDS:
+                data[field] = ", ".join(data.pop(f"{field}s", []) or []) or None
+                data[f"{field}s_ids"] = []
 
         if "tracks" in data:
             data["tracks"] = [Helpers.check_list_fields(t) for t in data["tracks"]]
