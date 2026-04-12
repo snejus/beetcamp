@@ -1,5 +1,11 @@
 ## Unreleased
 
+## [0.24.2] 2026-04-12
+
+### Fixed
+
+- (#94) Update beets to 2.9.0 and fix tests to handle new artist credit list fields.
+
 ## [0.24.1] 2026-03-31
 
 ### Fixed
@@ -1448,3 +1454,4 @@ Thanks @arogl for reporting each of the above!
 [0.23.0]: https://github.com/snejus/beetcamp/releases/tag/0.23.0
 [0.24.0]: https://github.com/snejus/beetcamp/releases/tag/0.24.0
 [0.24.1]: https://github.com/snejus/beetcamp/releases/tag/0.24.1
+[0.24.2]: https://github.com/snejus/beetcamp/releases/tag/0.24.1
