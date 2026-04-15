@@ -145,6 +145,8 @@ def test_standardize_series(original, in_desc, expected):
     "original, expected",
     [
         ("Satie: Complete Piano Works - Volume 10", None),
+        ("Neon White OST 2 - The Burn That Cures", None),
+        ('Spencer Parker - "Remember"', "Spencer Parker"),
     ],
 )
 def test_find_artist(original, expected):
