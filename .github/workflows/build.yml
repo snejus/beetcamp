@@ -48,7 +48,7 @@ jobs:
         run: echo PROJECT_VERSION="$(git describe --tags | sed 's/-[^-]*$//')" >> $GITHUB_ENV
 
       - name: SonarCloud Scan
-        if: ${{ matrix.beets == '1.5.0' && matrix.python == '3.9' }}
+        if: ${{ matrix.beets == '2.9.0' && matrix.python == '3.10' }}
         uses: SonarSource/sonarqube-scan-action@v5
         with:
           args: >
@@ -61,7 +61,7 @@ jobs:
             -Dsonar.python.coverage.reportPaths=.reports/coverage.xml
             -Dsonar.python.ruff.reportPaths=.reports/ruff.json
             -Dsonar.python.mypy.reportPaths=.reports/mypy.log
-            -Dsonar.python.version=3.9
+            -Dsonar.python.version=3.10
             -Dsonar.python.xunit.reportPath=.reports/test-report.xml
             -Dsonar.sources=beetsplug/bandcamp,beetcamp
             -Dsonar.tests=tests
