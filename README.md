@@ -97,7 +97,7 @@ You can see how the data looks below (the output is prettified with [rich-tables
 bandcamp:
   include_digital_only_tracks: true
   search_max: 2
-  art: yes
+  art: no
   comments_separator: "\n---\n"
   truncate_comments: no
   exclude_extra_fields: []
