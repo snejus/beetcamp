@@ -75,6 +75,7 @@ from beetcamp.metaguru import Metaguru
         ("", "", "CA12 ok", "", "CA12"),
         ("", "", "this CA12 not", "", ""),
         ("AE-MJ-001.1", "", "", "", "AE-MJ-001.1"),
+        ("What Is Love (Funk Tribu Edit 2K23)", "", "", "Funk Tribu", ""),
     ],
 )
 def test_parse_catalognum(json_meta, vinyl_format, label, expected, beets_config):
