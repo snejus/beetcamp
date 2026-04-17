@@ -1,5 +1,15 @@
 ## Unreleased
 
+## [0.24.3] 2026-04-17
+
+### Fixed
+
+- `album`:
+  - (#93) Do not assume that the first part of the album such as **Neon White OST 1 - The
+    Wicked Heart** is an artist if it contains a reference to a sound track.
+  - Do not parse remix name as a catalognum in track titles such as **What Is Love (Funk
+    Tribu Edit 2K23)**
+
 ## [0.24.2] 2026-04-12
 
 ### Fixed
@@ -1454,4 +1464,5 @@ Thanks @arogl for reporting each of the above!
 [0.23.0]: https://github.com/snejus/beetcamp/releases/tag/0.23.0
 [0.24.0]: https://github.com/snejus/beetcamp/releases/tag/0.24.0
 [0.24.1]: https://github.com/snejus/beetcamp/releases/tag/0.24.1
-[0.24.2]: https://github.com/snejus/beetcamp/releases/tag/0.24.1
+[0.24.2]: https://github.com/snejus/beetcamp/releases/tag/0.24.2
+[0.24.3]: https://github.com/snejus/beetcamp/releases/tag/0.24.3

@@ -127,3 +127,20 @@ def test_prefers_root_artist_when_track_artists_look_like_title_fragments(
     assert guru.albumartist == "carrie z"
     assert [t.artist for t in guru.tracks] == ["carrie z", "carrie z", "carrie z"]
     assert [t.title for t in guru.tracks] == expected_titles
+
+
+def test_preliminary_albumartist_ignores_soundtrack_title_prefix(json_meta, beets_config):
+    json_meta["name"] = "Neon White OST 2 - The Burn That Cures"
+    json_meta["byArtist"]["name"] = "Machine Girl"
+    json_meta["publisher"]["name"] = "Machine Girl"
+    json_meta["track"]["itemListElement"] = [
+        {"position": idx, "item": {"@id": f"track{idx}", "name": name}}
+        for idx, name in enumerate(
+            ["Sermon", "Peace of Mind", "Heavenly Delight"],
+            start=1,
+        )
+    ]
+
+    guru = Metaguru(json_meta, beets_config)
+
+    assert guru.preliminary_albumartist == "Machine Girl"

@@ -50,6 +50,9 @@ class AlbumName:
         re.IGNORECASE,
     )
     COMPILATION_IN_TITLE = cached_patternprop(r"compilation|best of|anniversary", re.I)
+    SOUNDTRACK_IN_TITLE = cached_patternprop(
+        r"\b(?:o\.?s\.?t\.?|original soundtrack|soundtrack|score)\b", re.I
+    )
     YEAR_RANGE = cached_patternprop(r"20[12]\d - 20[12]\d")
 
     original: str
@@ -249,6 +252,8 @@ class AlbumName:
         if len(split := Track.DELIM_NOT_INSIDE_PARENS.split(album)) > 1:
             left, right = map(str.strip, split[:2])
             if ":" in left and self.SERIES.search(right):
+                return None
+            if self.SOUNDTRACK_IN_TITLE.search(left):
                 return None
             return left
 

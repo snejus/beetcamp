@@ -183,7 +183,7 @@ class Metaguru(Helpers):
 
         This property calculates the lead artist based on the original album artist,
         label, and track track collaborators. Since this property gets required before
-        track artists are available, it uses the pinciple of elimination to find the
+        track artists are available, it uses the principle of elimination to find the
         albumartist candidate.
         """
         aartist = self.original_albumartist

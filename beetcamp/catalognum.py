@@ -133,6 +133,7 @@ class Catalognum:
             CONSTRAINT_TEMPLATE.format(
                 r"""
                 (?!(?i:part|va|sample))
+                (?![^])]*\b(?i:edit|remix|remaster)\b)
                 # at least one upper letter, ends with a digit
                 ([^])]*[A-Z][^])]*[0-9]+)
                 """
