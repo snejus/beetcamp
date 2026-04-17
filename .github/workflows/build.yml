@@ -9,7 +9,7 @@ jobs:
         python: ["3.10", "3.11", "3.12", "3.13", "3.14"]
         beets: ["1.5.0", "1.6.0", "2.0.0", "2.4.0", "2.9.0"]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           # Disabling shallow clone is recommended for improving relevancy of reporting
           fetch-depth: 0
@@ -18,7 +18,7 @@ jobs:
         run: pipx install poetry
 
       - name: Set up Python ${{ matrix.python }}
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python }}
           cache: poetry
@@ -49,7 +49,7 @@ jobs:
 
       - name: SonarCloud Scan
         if: ${{ matrix.beets == '2.9.0' && matrix.python == '3.10' }}
-        uses: SonarSource/sonarqube-scan-action@v5
+        uses: SonarSource/sonarqube-scan-action@v7
         with:
           args: >
             -Dsonar.branch.name=${{ github.ref_name }}
