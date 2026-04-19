@@ -1,5 +1,9 @@
 ## Unreleased
 
+### Fixed
+
+- Preserve zero-width characters in the data.
+
 ## [0.24.3] 2026-04-17
 
 ### Fixed

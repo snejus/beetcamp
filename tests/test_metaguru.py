@@ -1,5 +1,6 @@
 """Module the Metaguru class functionality."""
 
+import json
 from copy import deepcopy
 from datetime import date
 
@@ -144,3 +145,16 @@ def test_preliminary_albumartist_ignores_soundtrack_title_prefix(json_meta, beet
     guru = Metaguru(json_meta, beets_config)
 
     assert guru.preliminary_albumartist == "Machine Girl"
+
+
+def test_from_html_preserves_zero_width_chars_in_names(json_meta, beets_config):
+    zwc_name = "\u200e\u200e \u200e\u200b\u200e"
+    json_meta["name"] = zwc_name
+    json_meta["byArtist"]["name"] = zwc_name
+    track = json_meta["track"]["itemListElement"][0]["item"]
+    track["name"] = zwc_name
+    html = json.dumps(json_meta)
+
+    guru = Metaguru.from_html(html, beets_config)
+
+    assert guru.tracks.first.title == zwc_name
