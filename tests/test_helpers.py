@@ -38,6 +38,30 @@ def test_bundles_get_excluded(bundle_format, digital_format):
 
 
 @pytest.mark.parametrize(
+    "name, expected",
+    [
+        ("Album (limited edition)", "Album"),
+        ("Album [Vinyl]", "Album"),
+        ("Album  [Vinyl]", "Album"),
+        ("Album (FREE)", "Album"),
+        ("Album (FREE DL)", "Album"),
+        ("Album (Single)", "Album"),
+        ("Album", "Album"),
+        ("[Album]", "[Album]"),
+        ("(Free Download) Album", "Album"),
+        ("Free Download Series - Album", "Free Download Series"),
+        ("Free Download Series - Some Album", "Free Download Series - Some Album"),
+        ("O)))Bow 1", "O)))Bow 1"),
+        ("Album Vinylx2+cd", "Album"),
+        ("Album | FREE DOWNLOAD", "Album"),
+        ("Artist - Title [Presented by Other]", "Artist - Title"),
+    ],
+)
+def test_clean_name(name, expected):
+    assert Helpers.clean_name(name) == expected
+
+
+@pytest.mark.parametrize(
     "artists, expected",
     [
         (["Art", "Art"], ["Art"]),

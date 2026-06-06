@@ -31,7 +31,6 @@ pytestmark = pytest.mark.parsing
             "Some tune (Someone's Remix)",
             ("", "", "", "Some tune (Someone's Remix)", "Some tune"),
         ),
-        ("19.85 - Colapso (FREE)", ("", "19.85", "", "Colapso", "Colapso")),
         (
             "Lacchesi - UNREALNUMBERS - MK4 (Lacchesi Remix)",
             ("", "UNREALNUMBERS", "", "MK4 (Lacchesi Remix)", "MK4"),
@@ -58,7 +57,6 @@ pytestmark = pytest.mark.parsing
             "Mr. Free - The 4th Room",
             ("", "Mr. Free", "", "The 4th Room", "The 4th Room"),
         ),
-        ("O)))Bow 1", ("", "", "", "O)))Bow 1", "O)))Bow 1")),
         ("H.E.L.L.O.", ("", "", "", "H.E.L.L.O.", "H.E.L.L.O.")),
         ("Erik Burka - Pigeon [MNRM003]", ("", "Erik Burka", "", "Pigeon", "Pigeon")),
         ("Artist - Title [ONE001]", ("", "Artist", "", "Title", "Title")),
@@ -84,7 +82,6 @@ pytestmark = pytest.mark.parsing
         ("A. Title", ("A", "", "", "Title", "Title")),
         ("BB. Title", ("BB", "", "", "Title", "Title")),
         ("Artist - ;) (Original Mix)", ("", "Artist", "", ";) (Original Mix)", ";)")),
-        ("Artist - Title [Presented by Other]", ("", "Artist", "", "Title", "Title")),
         ('"Title" by Artist', ("", "Artist", "", "Title", "Title")),
         (
             "(DJ) NICK JERSEY - 202memo - - -",
