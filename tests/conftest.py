@@ -39,9 +39,10 @@ def pytest_addoption(parser: Parser) -> None:
     names = [n for n in all_names if n != "dev"]
     names_set = set(names)
 
+    max_len = max(map(len, names))
     base_name = ""
-    for commit in Repo(".").iter_commits(paths=["./beetsplug"]):
-        short_commit = str(commit)[:8]
+    for commit in Repo(".").iter_commits(paths=["./beetcamp"]):
+        short_commit = str(commit)[:max_len]
         if short_commit in names_set:
             base_name = short_commit
             break
