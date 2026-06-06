@@ -31,6 +31,10 @@ def make_html_item(data):
     return HTML_ITEM.format(**data, date="2021 November 26")
 
 
+def failing_api(*_args, **_kwargs):
+    raise ValueError
+
+
 @pytest.fixture
 def result_data():
     return {
@@ -69,7 +73,12 @@ def test_search_logic(make_html_with_results):
     """Given a single matching release, the similarity should be 1."""
     html, expected_results = make_html_with_results(["Release"], [1.0])
     assert (
-        search_bandcamp(artist="Artist", name="Release", get=lambda *_: html)
+        search_bandcamp(
+            artist="Artist",
+            name="Release",
+            get=lambda *_: html,
+            post=failing_api,
+        )
         == expected_results
     )
 
@@ -81,9 +90,55 @@ def test_search_prioritises_best_matches(make_html_with_results):
         [1.0, 0.919, 0.812],
     )
     assert (
-        search_bandcamp(artist="Artist", name="Specific Release", get=lambda *_: html)
+        search_bandcamp(
+            artist="Artist",
+            name="Specific Release",
+            get=lambda *_: html,
+            post=failing_api,
+        )
         == expected_results
     )
+
+
+def test_search_uses_json_api_results():
+    api = {
+        "auto": {
+            "results": [
+                {
+                    "type": "a",
+                    "name": "Black Sands",
+                    "band_name": "Bonobo",
+                    "item_url_root": "https://bonobomusic.bandcamp.com",
+                    "item_url_path": "https://bonobomusic.bandcamp.com/album/black-sands",
+                },
+                {
+                    "type": "b",
+                    "name": "Bonobo",
+                    "item_url_root": "https://bonobomusic.bandcamp.com",
+                    "item_url_path": None,
+                },
+            ]
+        }
+    }
+    assert search_bandcamp(query="bonobo", post=lambda *_: api) == [
+        {
+            "index": 1,
+            "type": "label",
+            "name": "Bonobo",
+            "url": "https://bonobomusic.bandcamp.com",
+            "label": "bonobomusic",
+            "similarity": 1.0,
+        },
+        {
+            "index": 2,
+            "type": "album",
+            "name": "Black Sands",
+            "url": "https://bonobomusic.bandcamp.com/album/black-sands",
+            "label": "bonobomusic",
+            "artist": "Bonobo",
+            "similarity": 0.141,
+        },
+    ]
 
 
 # fmt: off

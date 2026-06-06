@@ -1,16 +1,19 @@
 """Module with bandcamp search functionality."""
+
 from __future__ import annotations
 
 import re
 from difflib import SequenceMatcher
 from operator import itemgetter
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 from urllib.parse import quote_plus
 
 from .http import http_get_text
+from .json_search import SearchResult, search_json
 
 if TYPE_CHECKING:
     from collections.abc import Callable
+
 
 JSONDict = dict[str, Any]
 SEARCH_URL = "https://bandcamp.com/search?page={}&q={}"
@@ -63,7 +66,7 @@ def get_similarity(query: str, result: str) -> float:
     return ((m.size / len(a)) * 2 + m.size / len(b)) / 3
 
 
-def get_matches(text: str) -> JSONDict:
+def get_matches(text: str) -> SearchResult:
     """Reduce matches from all patterns into a single dictionary."""
     result: JSONDict = {}
     for pat in RELEASE_PATTERNS:
@@ -73,10 +76,10 @@ def get_matches(text: str) -> JSONDict:
         result["type"] = result["type"].lower()
     if "date" in result:
         result["date"] = " ".join(reversed(result["date"].split()))
-    return result
+    return result  # type: ignore[return-value]
 
 
-def parse_and_sort_results(html: str, **kwargs: str) -> list[JSONDict]:
+def parse_html_results(html: str) -> list[SearchResult]:
     """Extract search results from `html` and sort them by similarity to kwargs.
 
     Bandcamp search may be unpredictable, therefore search results get sorted
@@ -85,16 +88,30 @@ def parse_and_sort_results(html: str, **kwargs: str) -> list[JSONDict]:
     `kwargs` contains field and value pairs we compare the results with. Usually,
     this has 'label', 'artist' and 'name' ('title' or 'album') fields.
     """
-    results: list[JSONDict] = []
-    for block in html.split("searchresult data-search")[1:]:
-        res = get_matches(block)
+    return list(map(get_matches, html.split("searchresult data-search")[1:]))
+
+
+class IndexedSearchResult(SearchResult):
+    index: int
+    similarity: float
+
+
+def sort_results(
+    results: list[SearchResult], **kwargs: str
+) -> list[IndexedSearchResult]:
+    """Sort search results by similarity to query fields."""
+    for result in cast("list[IndexedSearchResult]", results):
+        comp = kwargs.copy()
+        if result["type"] in {"track", "album"} and (query := kwargs.get("name")):
+            comp.setdefault("artist", query)
+
         similarities = [
-            get_similarity(query, res.get(field, "")) for field, query in kwargs.items()
+            get_similarity(query, result.get(field) or "")  # type: ignore[arg-type]
+            for field, query in comp.items()
         ]
-        res["similarity"] = round(sum(similarities) / len(similarities), 3)
-        results.append(res)
+        result["similarity"] = round(sum(similarities) / len(similarities), 3)
     results = sorted(results, key=itemgetter("similarity"), reverse=True)
-    return [{"index": i + 1, **r} for i, r in enumerate(results)]
+    return [{"index": i + 1, **r} for i, r in enumerate(results)]  # type: ignore[typeddict-item]
 
 
 def search_bandcamp(
@@ -103,13 +120,19 @@ def search_bandcamp(
     page: int = 1,
     get: Callable[[str], str] = http_get_text,
     **kwargs: Any,
-) -> list[JSONDict]:
+) -> list[IndexedSearchResult]:
     """Return a list with item JSONs of type search_type matching the query."""
     query = query or " - ".join(
         filter(None, [kwargs.get("artist"), kwargs.get("name")])
     )
     kwargs.setdefault("name", query)
-    url = SEARCH_URL.format(page, quote_plus(query))
-    if search_type:
-        url += f"&item_type={search_type}"
-    return parse_and_sort_results(get(url), **kwargs)
+    if page == 1:
+        results = search_json(query, search_type)
+    else:
+        url = SEARCH_URL.format(page, quote_plus(query))
+        if search_type:
+            url += f"&item_type={search_type}"
+
+        results = parse_html_results(get(url))
+
+    return sort_results(results, **kwargs)
