@@ -3,6 +3,7 @@
 ### Fixed
 
 - Preserve zero-width characters in the data.
+- Clean up name-your-price markers more reliably.
 
 ## [0.24.3] 2026-04-17
 

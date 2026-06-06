@@ -144,7 +144,7 @@ class Helpers:
             r"[([][^])]*preview[])]",
             "Various -",
             r"CD ?\d+",
-            "Name Your Price:",
+            r"(?:(free)?\W*name your price:?)",
             "just out!",
             "- album",
             r"^\[?premiere(\]| :)",
