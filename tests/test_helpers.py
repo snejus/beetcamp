@@ -56,6 +56,8 @@ def test_bundles_get_excluded(bundle_format, digital_format):
         ("Album | FREE DOWNLOAD", "Album"),
         ("[Free + Name your Price] Album", "Album"),
         ("Artist - Title [Presented by Other]", "Artist - Title"),
+        ("Awesome Records 001 - Album", "Album"),
+        ("Cool Singles 12 | Track", "Track"),
     ],
 )
 def test_clean_name(name, expected):
