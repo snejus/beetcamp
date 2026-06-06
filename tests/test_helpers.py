@@ -54,6 +54,7 @@ def test_bundles_get_excluded(bundle_format, digital_format):
         ("O)))Bow 1", "O)))Bow 1"),
         ("Album Vinylx2+cd", "Album"),
         ("Album | FREE DOWNLOAD", "Album"),
+        ("[Free + Name your Price] Album", "Album"),
         ("Artist - Title [Presented by Other]", "Artist - Title"),
     ],
 )
