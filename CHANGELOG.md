@@ -3,7 +3,11 @@
 ### Fixed
 
 - Preserve zero-width characters in the data.
-- Clean up name-your-price markers more reliably.
+
+- cleanup:
+  - Clean up name-your-price markers more reliably.
+  - Fix some cases where artist was wrongly parsed as **Bass Addict Records 37 - Artist**
+    in tracks like **Bass Addict Records 37 - Artist - Title**.
 
 ## [0.24.3] 2026-04-17
 
