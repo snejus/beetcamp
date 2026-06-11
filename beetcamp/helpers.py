@@ -115,9 +115,12 @@ class Helpers:
         ((?P<br>[([{])|\b)              # bracket or word boundary
         (?P<ft>
             (ft|feat|featuring|(?<=\()with|w/(?![ ]you))[. ]+ # any ft variation
-            (?P<ft_artist>.+?)
-            (?<!mix)                    # does not end with "mix"
-            (\b|['"])                   # ends with a word boundary or quote
+            (?P<ft_artist>
+                .+?
+                (?<!mix)                # does not end with "mix"
+                (?:\b|['"])             # ends with a word boundary or quote
+                [.!?]*                  # or punctuation before an artist/title dash
+            )
         )
         (?(br)                          # if started with a bracket
               [])}]                     # must end with a closing bracket
