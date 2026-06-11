@@ -66,6 +66,16 @@ pytestmark = pytest.mark.parsing
             ("", "Artist", "feat. Other", "Title", "Title"),
         ),
         (
+            "The Orb ft. X CLUB. - Little Fluffy Clouds 9000",
+            (
+                "",
+                "The Orb",
+                "ft. X CLUB.",
+                "Little Fluffy Clouds 9000",
+                "Little Fluffy Clouds 9000",
+            ),
+        ),
+        (
             "Artist (some remix) - Title",
             ("", "Artist", "", "Title (some remix)", "Title"),
         ),

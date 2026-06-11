@@ -4,6 +4,10 @@
 
 - Preserve zero-width characters in the data.
 
+- `artist`:
+  - Fix featuring artist parsing, allowing these artists to end with characters like
+  `.!?`.
+
 - cleanup:
   - Clean up name-your-price markers more reliably.
   - Fix some cases where artist was wrongly parsed as **Bass Addict Records 37 - Artist**
