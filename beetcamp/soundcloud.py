@@ -166,7 +166,7 @@ class BasicUser(SCEntity):
 
 class User(BasicUser):
     comments_count: int  # 0
-    created_at: datetime  # "2017-08-21T06:37:47Z"
+    created_at: datetime | None  # "2017-08-21T06:37:47Z"
     creator_subscriptions: list[
         JSONDict
     ]  # [{"product": {"id": "creator-pro-unlimited"}}]
