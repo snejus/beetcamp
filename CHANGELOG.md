@@ -4,9 +4,13 @@
 
 - Preserve zero-width characters in the data.
 
+- `albumtype`:
+  - Parse **EP** albumtype from the description when **EP** is preceded by word
+    **split**.
+
 - `artist`:
   - Fix featuring artist parsing, allowing these artists to end with characters like
-  `.!?`.
+    `.!?`.
 
 - cleanup:
   - Clean up name-your-price markers more reliably.

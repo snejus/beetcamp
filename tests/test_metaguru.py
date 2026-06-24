@@ -83,6 +83,18 @@ def test_digi_only_option(json_track, json_meta, beets_config):
     assert "Digital" not in media_to_album["Vinyl"].tracks[0].title
 
 
+def test_albumtype_detects_split_ep_from_media_description(
+    json_track, json_meta, beets_config
+):
+    second_track = deepcopy(json_track)
+    second_track["item"]["name"] = "Other Artist - Other Title"
+    second_track["position"] = 2
+    json_meta["albumRelease"][0]["description"] = "this is a split EP"
+    json_meta["track"]["itemListElement"].append(second_track)
+
+    assert Metaguru(json_meta, beets_config).albumtype == "ep"
+
+
 @pytest.mark.parametrize(
     "track_names, expected_titles",
     [
