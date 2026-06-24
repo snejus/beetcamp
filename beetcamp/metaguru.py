@@ -348,8 +348,10 @@ class Metaguru(Helpers):
 
         word_pat = re.compile(rf"(?<!-)\b{word}(\b|\.)", re.I)
         in_catnum = re.compile(rf"{word}\d", re.I)
+        generic_pre = "this|with|present|deliver|new"
+        preceding_pre = "a split|split|the|track|full|first"
         release_ref = re.compile(
-            rf"\b((this|with|present|deliver|new)[\w\s,'-]*?|the|track|full|first) {word}\b",  # noqa: E501
+            rf"\b((?:{generic_pre})[\w\s,'-]*?|{preceding_pre}) {word}\b",
             re.I,
         )
         album_name = self.album_name.lower()
