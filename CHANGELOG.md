@@ -2,7 +2,7 @@
 
 ### Fixed
 
-- Preserve zero-width characters in the data.
+- Only remove `\u200b` zero-width char from HTML, keep the rest.
 
 - `albumtype`:
   - Parse **EP** albumtype from the description when **EP** is preceded by word
