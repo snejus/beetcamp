@@ -142,7 +142,9 @@ def test_prefers_root_artist_when_track_artists_look_like_title_fragments(
     assert [t.title for t in guru.tracks] == expected_titles
 
 
-def test_preliminary_albumartist_ignores_soundtrack_title_prefix(json_meta, beets_config):
+def test_preliminary_albumartist_ignores_soundtrack_title_prefix(
+    json_meta, beets_config
+):
     json_meta["name"] = "Neon White OST 2 - The Burn That Cures"
     json_meta["byArtist"]["name"] = "Machine Girl"
     json_meta["publisher"]["name"] = "Machine Girl"
