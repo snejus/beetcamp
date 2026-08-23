@@ -8,7 +8,7 @@ import operator as op
 import re
 from datetime import datetime, timezone
 from functools import cached_property, partial
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, ClassVar
 from unicodedata import normalize
 
 from beets import config as beets_config
@@ -49,6 +49,8 @@ class Metaguru(Helpers):
     ARTIST_IN_DESC = cached_patternprop(r"Artists?: *(\b[^\n]+)")
     REMIX_IN_ARTIST = cached_patternprop(r"(?:[(,+]|w/)+.*?re?mi?x", re.I)
     NOT_ALPHANUMERIC = cached_patternprop(r"\W")
+    HTML_REMOVE_CHARS: ClassVar[list[str]] = ["\u200b"]
+
     _singleton = False
     va_name = VA
     media = MediaInfo("", "", "", "")
@@ -84,6 +86,8 @@ class Metaguru(Helpers):
 
     @classmethod
     def from_html(cls, html: str, config: JSONDict | None = None) -> Metaguru:
+        for char in cls.HTML_REMOVE_CHARS:
+            html = html.replace(char, "")
         try:
             meta = cls.META_PAT.search(html).group()  # type: ignore[union-attr]
         except AttributeError as exc:
