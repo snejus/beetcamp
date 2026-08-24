@@ -93,6 +93,7 @@ class Track:
         """,
         re.I | re.VERBOSE,
     )
+    DATE_PAT = cached_patternprop(r"^(19|20)\d{2} - (19|20)?\d{2}")
     DELIM_NOT_INSIDE_PARENS = cached_patternprop(
         r"(?<!-)(?<!^live)(?<!sample\ pack) - (?!-|[^([]+\w[])])", re.I
     )
@@ -227,15 +228,28 @@ class Track:
     @cached_property
     def name_split(self) -> list[str]:
         name = self.name
+
+        # If the visible track name already starts with the structured artist,
+        # strip that redundant prefix and keep only the actual title portion.
         if (a := self.json_artist) and name.lower().startswith(
             artist_start := f"{a.lower()} - "
         ):
             return [name[len(artist_start) :]]
 
+        # Keep date-like titles intact so they are not mistaken for split names.
+        if self.DATE_PAT.match(name):
+            return [name]
+
+        # Split on the standard delimiter, but ignore delimiters inside
+        # parenthetical text so grouped title details stay together.
         split = self.DELIM_NOT_INSIDE_PARENS.split(name.strip())
+
+        # If artist metadata exists but the name itself is not explicitly split,
+        # prepend the artist to preserve a consistent artist/title shape.
         if self.json_artist and " - " not in name:
             return [self.json_artist.strip(), *split]
 
+        # Otherwise, return the natural delimiter-based split.
         return split
 
     @cached_property

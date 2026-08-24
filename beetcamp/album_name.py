@@ -53,7 +53,6 @@ class AlbumName:
     SOUNDTRACK_IN_TITLE = cached_patternprop(
         r"\b(?:o\.?s\.?t\.?|original soundtrack|soundtrack|score)\b", re.I
     )
-    YEAR_RANGE = cached_patternprop(r"20[12]\d - 20[12]\d")
 
     original: str
     description: str
@@ -241,8 +240,14 @@ class AlbumName:
         return name.strip(" /")
 
     def find_artist(self, catalognum: str) -> str | None:
+        """Infer an artist from album titles that use a split artist/release format.
+
+        Returns the leading title segment when the name appears to separate artist
+        and release information, while ignoring patterns that are better treated as
+        year ranges, series labels, soundtrack titles, or remix annotations.
+        """
         album = self.original
-        if self.YEAR_RANGE.match(album):
+        if Track.DATE_PAT.match(album):
             return None
 
         album = self.clean(album, catalognum=catalognum)

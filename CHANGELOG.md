@@ -11,6 +11,8 @@
 - `artist`:
   - Fix featuring artist parsing, allowing these artists to end with characters like
     `.!?`.
+  - Avoid treating year ranges starting in 1900s or ending with abbreviated years as
+    artists.
 
 - cleanup:
   - Clean up name-your-price markers more reliably.
