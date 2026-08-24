@@ -152,6 +152,7 @@ class Helpers:
             "- album",
             r"^\[?premiere(\]| :)",
             r"(?i:[a-z ]+(records|singles) \d{,3} \W+)",
+            "pre.?release",
         ]
 
         camelcase = re.compile(r"(?<=[a-z])(?=[A-Z])")

@@ -4,6 +4,9 @@
 
 - Only remove `\u200b` zero-width char from HTML, keep the rest.
 
+- `album`:
+  - Remove **Pre-release** variations from album and track names.
+
 - `albumtype`:
   - Parse **EP** albumtype from the description when **EP** is preceded by word
     **split**.
