@@ -33,7 +33,13 @@ pytestmark = pytest.mark.parsing
         ),
         (
             "Lacchesi - UNREALNUMBERS - MK4 (Lacchesi Remix)",
-            ("", "UNREALNUMBERS", "", "MK4 (Lacchesi Remix)", "MK4"),
+            (
+                "",
+                "Lacchesi",
+                "",
+                "UNREALNUMBERS - MK4 (Lacchesi Remix)",
+                "UNREALNUMBERS - MK4",
+            ),
         ),
         (
             "UNREALNUMBERS -Karaburan",
@@ -86,7 +92,7 @@ pytestmark = pytest.mark.parsing
         ),
         ("Artist - Title - -", ("", "Artist", "", "Title - -", "Title - -")),
         ("A8 - Artist - Title", ("A8", "Artist", "", "Title", "Title")),
-        ("A40 - Artist - Title", ("", "A40 - Artist", "", "Title", "Title")),
+        ("A40 - Artist - Title", ("", "A40", "", "Artist - Title", "Artist - Title")),
         ("A8_Title", ("A8", "", "", "Title", "Title")),
         ("A Title", ("", "", "", "A Title", "A Title")),
         ("A. Title", ("A", "", "", "Title", "Title")),
@@ -125,7 +131,7 @@ def test_parse_track_name(expected, json_track):
     [
         ("Artist - Title", None, "Artist", "Title"),
         ("Artist - Title", "Artist", "Artist", "Title"),
-        ("Artist - Title - Something", None, "Artist - Title", "Something"),
+        ("Artist - Title - Something", None, "Artist", "Title - Something"),
         ("Artist - Title - Something", "Artist", "Artist", "Title - Something"),
     ],
 )

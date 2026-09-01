@@ -95,7 +95,7 @@ class Track:
     )
     DATE_PAT = cached_patternprop(r"^(19|20)\d{2} - (19|20)?\d{2}")
     DELIM_NOT_INSIDE_PARENS = cached_patternprop(
-        r"(?<!-)(?<!^live)(?<!sample\ pack) - (?!-|[^([]+\w[])])", re.I
+        r"(?<!-)(?<!^live)(?<!sample\ pack) - (?!-|[^([]+\w[])]|\d+ bpm)", re.I
     )
     TRACK_ALT_PAT = cached_patternprop(
         r"""
@@ -242,7 +242,7 @@ class Track:
 
         # Split on the standard delimiter, but ignore delimiters inside
         # parenthetical text so grouped title details stay together.
-        split = self.DELIM_NOT_INSIDE_PARENS.split(name.strip())
+        split = self.DELIM_NOT_INSIDE_PARENS.split(name.strip(), maxsplit=1)
 
         # If artist metadata exists but the name itself is not explicitly split,
         # prepend the artist to preserve a consistent artist/title shape.

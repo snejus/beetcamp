@@ -16,6 +16,8 @@
     `.!?`.
   - Avoid treating year ranges starting in 1900s or ending with abbreviated years as
     artists.
+  - When parsing names for `artist` and `title`, split on the **first** found delimiter
+    (` - `) instead of last.
 
 - cleanup:
   - Clean up name-your-price markers more reliably.
