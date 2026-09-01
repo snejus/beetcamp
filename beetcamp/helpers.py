@@ -134,6 +134,7 @@ class Helpers:
     @cache
     def get_replacements() -> list[Replacement]:
         rm_strings = [
+            r'\[\d+" Exclusive\]',
             "limited edition",
             r"^EP -",
             r"\((digital )?album\)",

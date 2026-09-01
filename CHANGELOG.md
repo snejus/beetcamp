@@ -18,6 +18,8 @@
     artists.
   - When parsing names for `artist` and `title`, split on the **first** found delimiter
     (` - `) instead of last.
+- `title`:
+  - Remove **[7" Exclusive]** and **[12" Exclusive]** from titles.
 
 - cleanup:
   - Clean up name-your-price markers more reliably.
