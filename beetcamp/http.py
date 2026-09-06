@@ -2,6 +2,7 @@ import atexit
 import re
 from functools import cache, partial
 from html import unescape
+from typing import Any
 
 import beets
 import httpx
@@ -29,6 +30,18 @@ def http_get_text(url: str) -> str:
     response.raise_for_status()
 
     return unescape(response.text)
+
+
+def http_post_json(url: str, payload: dict[str, Any]) -> dict[str, Any]:
+    """Return the JSON response to a POST request.
+
+    Deliberately not cached, unlike `http_get_text`: dict payloads are unhashable,
+    and search results should not be pinned for the lifetime of the process.
+    """
+    response = _client.post(url, json=payload, follow_redirects=True)
+    response.raise_for_status()
+
+    return response.json()
 
 
 def urlify(pretty_string: str) -> str:
