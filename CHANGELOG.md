@@ -1,5 +1,7 @@
 ## Unreleased
 
+## [0.25.0] 2026-09-11
+
 ### Fixed
 
 - Only remove `\u200b` zero-width char from HTML, keep the rest.
