@@ -10,7 +10,6 @@ from typing import TYPE_CHECKING, Any
 import pytest
 from beets.autotag.hooks import AlbumInfo, TrackInfo
 from git import Repo
-from rich_tables.diff import pretty_diff
 from rich_tables.utils import make_console
 
 from beetsplug.bandcamp import DEFAULT_CONFIG
@@ -26,7 +25,6 @@ if TYPE_CHECKING:
 
 
 JSONDict = dict[str, Any]
-console = make_console()
 
 
 def pytest_addoption(parser: Parser) -> None:
@@ -76,22 +74,9 @@ def pytest_terminal_summary(
     terminalreporter.write(f"--- Compared {target} against {base} ---\n")
 
 
-def pytest_assertrepr_compare(op: str, left: Any, right: Any):  # noqa: ARG001
-    """Pretty print the difference between dict objects."""
-    actual, expected = left, right
-
-    if isinstance(actual, (list, dict)) and isinstance(expected, (list, dict)):
-        with console.capture() as cap:
-            console.print(pretty_diff(expected, actual))
-
-        return ["\n", *cap.get().splitlines()]
-
-    return None
-
-
 @pytest.fixture(scope="session", name="console")
 def fixture_console() -> Console:
-    return console
+    return make_console()
 
 
 @pytest.fixture

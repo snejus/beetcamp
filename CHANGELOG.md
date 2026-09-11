@@ -26,6 +26,14 @@
   - Fix some cases where artist was wrongly parsed as **Bass Addict Records 37 - Artist**
     in tracks like **Bass Addict Records 37 - Artist - Title**.
 
+- (#99) Restore CLI search results by using Bandcamp's JSON API.
+
+### Removed
+
+- CLI search: `-p` / `--page` option is deprecated and has no effect: the new JSON-based
+  search returns **all** available results.
+- `date` and `tracks` fields are unavailable because Bandcamp's JSON API does not provide them.
+
 ## [0.24.3] 2026-04-17
 
 ### Fixed

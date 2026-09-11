@@ -37,6 +37,8 @@ if TYPE_CHECKING:
     from beets.autotag.hooks import AlbumInfo, TrackInfo
     from beets.library import Album, Item, Library
 
+    from beetcamp.search import IndexedSearchResult
+
 if not NEW_METADATA_PLUGIN_CLASS:
     from beets.plugins import BeetsPlugin as MetadataSourcePlugin
 else:
@@ -248,8 +250,10 @@ class BandcampPlugin(BandcampRequestsHandler, MetadataSourcePlugin):
         self._info("Not a bandcamp URL, skipping")
         return None
 
-    def _search(self, **kwargs: Any) -> Iterable[JSONDict]:
+    def _search(
+        self, artist: str, name: str, search_type: Literal["a", "t"]
+    ) -> Iterable[IndexedSearchResult]:
         """Return a list of track/album URLs of type search_type matching the query."""
-        self._info("Searching releases for {} - {}", kwargs["artist"], kwargs["name"])
-        results = search_bandcamp(**kwargs, get=self._get)
-        return results[: self.config["search_max"].as_number()]
+        self._info("Searching releases for {} - {}", artist, name)
+        results = search_bandcamp(search_type, artist=artist, name=name)
+        return results[: self.config["search_max"].get(int)]

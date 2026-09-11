@@ -74,7 +74,7 @@ optional arguments:
   -t, --track  Search tracks
   -o INDEX, --open INDEX
                         Open search result indexed by INDEX in the browser
-  -p PAGE, --page PAGE  The results page to show, 1 by default
+  -p PAGE, --page PAGE  Deprecated; accepted for compatibility but has no effect
 ```
 
 - Use `beetcamp <bandcamp-release-url>` to return release metadata in JSON format.
@@ -82,6 +82,8 @@ optional arguments:
   results in JSON.
 - Search results are indexed - add `-o <index>` in order to open the chosen URL in the
   browser.
+- `-p` / `--page` is deprecated and ignored because searches now return all available
+  results.
 
 You can see how the data looks below (the output is prettified with [rich-tables]).
 

@@ -2,6 +2,7 @@ import atexit
 import re
 from functools import cache, partial
 from html import unescape
+from typing import Any
 
 import beets
 import httpx
@@ -29,6 +30,13 @@ def http_get_text(url: str) -> str:
     response.raise_for_status()
 
     return unescape(response.text)
+
+
+def http_post_json(url: str, **kwargs: Any) -> Any:
+    """Return decoded json response from a POST request."""
+    response = _client.post(url, **kwargs, follow_redirects=True)
+    response.raise_for_status()
+    return response.json()
 
 
 def urlify(pretty_string: str) -> str:
