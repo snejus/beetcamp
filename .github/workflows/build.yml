@@ -14,8 +14,8 @@ jobs:
           # Disabling shallow clone is recommended for improving relevancy of reporting
           fetch-depth: 0
 
-      - name: Install poetry
-        run: pipx install poetry
+      - name: Install tools
+        run: pipx install poetry poethepoet
 
       - name: Set up Python ${{ matrix.python }}
         uses: actions/setup-python@v6
@@ -29,7 +29,7 @@ jobs:
           pip install beets==${{ matrix.beets }}
 
       - name: Pytest
-        run: poetry run pytest -k 'not need_connection' --ignore-glob='*test_lib*'
+        run: poe test-with-coverage -k 'not need_connection' --ignore-glob='*test_lib*'
 
       - name: Upload coverage data to coveralls.io
         uses: coverallsapp/github-action@v2
@@ -75,7 +75,7 @@ jobs:
     if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
-    - name: Coveralls Finished
-      uses: coverallsapp/github-action@v2
-      with:
-        parallel-finished: true
+      - name: Coveralls Finished
+        uses: coverallsapp/github-action@v2
+        with:
+          parallel-finished: true
