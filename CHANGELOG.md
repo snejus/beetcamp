@@ -1,5 +1,39 @@
 ## Unreleased
 
+### Fixed
+
+- Only remove `\u200b` zero-width char from HTML, keep the rest.
+
+- `album`:
+  - Remove **Pre-release** variations from album and track names.
+
+- `albumtype`:
+  - Parse **EP** albumtype from the description when **EP** is preceded by word
+    **split**.
+
+- `artist`:
+  - Fix featuring artist parsing, allowing these artists to end with characters like
+    `.!?`.
+  - Avoid treating year ranges starting in 1900s or ending with abbreviated years as
+    artists.
+  - When parsing names for `artist` and `title`, split on the **first** found delimiter
+    (` - `) instead of last.
+- `title`:
+  - Remove **[7" Exclusive]** and **[12" Exclusive]** from titles.
+
+- cleanup:
+  - Clean up name-your-price markers more reliably.
+  - Fix some cases where artist was wrongly parsed as **Bass Addict Records 37 - Artist**
+    in tracks like **Bass Addict Records 37 - Artist - Title**.
+
+- (#99) Restore CLI search results by using Bandcamp's JSON API.
+
+### Removed
+
+- CLI search: `-p` / `--page` option is deprecated and has no effect: the new JSON-based
+  search returns **all** available results.
+- `date` and `tracks` fields are unavailable because Bandcamp's JSON API does not provide them.
+
 ## [0.24.3] 2026-04-17
 
 ### Fixed

@@ -115,9 +115,12 @@ class Helpers:
         ((?P<br>[([{])|\b)              # bracket or word boundary
         (?P<ft>
             (ft|feat|featuring|(?<=\()with|w/(?![ ]you))[. ]+ # any ft variation
-            (?P<ft_artist>.+?)
-            (?<!mix)                    # does not end with "mix"
-            (\b|['"])                   # ends with a word boundary or quote
+            (?P<ft_artist>
+                .+?
+                (?<!mix)                # does not end with "mix"
+                (?:\b|['"])             # ends with a word boundary or quote
+                [.!?]*                  # or punctuation before an artist/title dash
+            )
         )
         (?(br)                          # if started with a bracket
               [])}]                     # must end with a closing bracket
@@ -131,6 +134,7 @@ class Helpers:
     @cache
     def get_replacements() -> list[Replacement]:
         rm_strings = [
+            r'\[\d+" Exclusive\]',
             "limited edition",
             r"^EP -",
             r"\((digital )?album\)",
@@ -144,10 +148,12 @@ class Helpers:
             r"[([][^])]*preview[])]",
             "Various -",
             r"CD ?\d+",
-            "Name Your Price:",
+            r"(?:(free)?\W*name your price:?)",
             "just out!",
             "- album",
             r"^\[?premiere(\]| :)",
+            r"(?i:[a-z ]+(records|singles) \d{,3} \W+)",
+            "pre.?release",
         ]
 
         camelcase = re.compile(r"(?<=[a-z])(?=[A-Z])")

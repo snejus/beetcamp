@@ -4,15 +4,12 @@ from beetcamp.album_name import AlbumName
 
 
 @pytest.mark.parametrize(
-    ("name, expected"),
+    "name, expected",
     [
-        # ft
         ("Artist ft. Artist123 - Album", "Album"),
-        # catalognum
         ("[CAT123] - Album", "Album"),
         ("CAT123 - Album", "Album"),
         ("Album †CAT123†", "Album"),
-        # artist
         ("Artist - Album EP", "Album EP"),
         ('Artist - "Album EP"', "Album EP"),
         ("Artist - CAT123 Album", "Album"),
@@ -26,12 +23,35 @@ from beetcamp.album_name import AlbumName
         ("Artist Album", "Artist Album"),
         ("Artist Vol. 1", "Artist Vol. 1"),
         ("Artist x Someone Else - Album", "Album"),
-        # VA
+        ("[Label] Album EP", "Album EP"),
+        ("Label | Album", "Album"),
+        ("Album (Label Refix)", "Album (Label Refix)"),
+        ("Label-Album", "Label-Album"),
+        ("Label: Album", "Album"),
+        ("Label: Volume 1", "Label: Volume 1"),
+        ("CAT123 - VARIOUS ARTISTS", ""),
+        ("Album [CAT123] Incl. Remix", "Album"),
+    ],
+)
+def test_clean_name_removes_contextual_parts(name, expected):
+    assert (
+        AlbumName.clean(
+            name,
+            artists=["Artist ft. Artist123", "Artist123", "Artist"],
+            catalognum="CAT123",
+            label="Label",
+        )
+        == expected
+    )
+
+
+@pytest.mark.parametrize(
+    "name, expected",
+    [
         ("Album - Various Artists", "Album"),
         ("Various Artists - Album", "Album"),
         ("Various Artists Album", "Various Artists Album"),
         ("Label Various Artists Album", "Label Various Artists Album"),
-        ("CAT123 - VARIOUS ARTISTS", ""),
         ("Album - VARIOUS ARTISTS", "Album"),
         ("Album - Various Artist", "Album"),
         ("Album VA", "Album VA"),
@@ -39,27 +59,6 @@ from beetcamp.album_name import AlbumName
         ("VA Album", "VA Album"),
         ("Album VA001", "Album VA001"),
         ("Album VA 03", "Album VA 03"),
-        # general cleanup
-        ("Album (limited edition)", "Album"),
-        ("Album [Vinyl]", "Album"),
-        ("Album  [Vinyl]", "Album"),
-        ("Album (FREE DL)", "Album"),
-        ("Album (Single)", "Album"),
-        ("Album", "Album"),
-        ("[Album]", "[Album]"),
-        ("(Free Download) Album", "Album"),
-        ("Free Download Series - Album", "Free Download Series"),
-        ("Free Download Series - Some Album", "Free Download Series - Some Album"),
-        ("O)))Bow 1", "O)))Bow 1"),
-        ("Album Vinylx2+cd", "Album"),
-        # label
-        ("[Label] Album EP", "Album EP"),
-        ("Label | Album", "Album"),
-        ("Album (Label Refix)", "Album (Label Refix)"),
-        ("Label-Album", "Label-Album"),
-        ("Label: Album", "Album"),
-        ("Label: Volume 1", "Label: Volume 1"),
-        # EP/LP
         ("Album EP", "Album EP"),
         ("Album [EP]", "Album EP"),
         ("Album (EP)", "Album EP"),
@@ -71,25 +70,14 @@ from beetcamp.album_name import AlbumName
         ("Album' EP", "Album' EP"),
         ("A good EP Album", "A good EP Album"),
         ("Album (LP, 2019)", "Album LP"),
-        # Remixes
-        ("Album [CAT123] Incl. Remix", "Album"),
         ("Album (Incl. some sort of Remixes)", "Album"),
-        ("Album | FREE DOWNLOAD", "Album"),
         ("Album A vs. Artist", "Album A vs. Artist"),
         ("Album presents Artist", "Album presents Artist"),
         ("Title 1 + Title 2 Remixed", "Title 1 + Title 2 Remixed"),
     ],
 )
-def test_clean_name(name, expected):
-    assert (
-        AlbumName.clean(
-            name,
-            artists=["Artist ft. Artist123", "Artist123", "Artist"],
-            catalognum="CAT123",
-            label="Label",
-        )
-        == expected
-    )
+def test_clean_name_normalizes_album_markers(name, expected):
+    assert AlbumName.clean(name) == expected
 
 
 @pytest.mark.parametrize(

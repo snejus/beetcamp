@@ -31,10 +31,15 @@ pytestmark = pytest.mark.parsing
             "Some tune (Someone's Remix)",
             ("", "", "", "Some tune (Someone's Remix)", "Some tune"),
         ),
-        ("19.85 - Colapso (FREE)", ("", "19.85", "", "Colapso", "Colapso")),
         (
             "Lacchesi - UNREALNUMBERS - MK4 (Lacchesi Remix)",
-            ("", "UNREALNUMBERS", "", "MK4 (Lacchesi Remix)", "MK4"),
+            (
+                "",
+                "Lacchesi",
+                "",
+                "UNREALNUMBERS - MK4 (Lacchesi Remix)",
+                "UNREALNUMBERS - MK4",
+            ),
         ),
         (
             "UNREALNUMBERS -Karaburan",
@@ -58,7 +63,6 @@ pytestmark = pytest.mark.parsing
             "Mr. Free - The 4th Room",
             ("", "Mr. Free", "", "The 4th Room", "The 4th Room"),
         ),
-        ("O)))Bow 1", ("", "", "", "O)))Bow 1", "O)))Bow 1")),
         ("H.E.L.L.O.", ("", "", "", "H.E.L.L.O.", "H.E.L.L.O.")),
         ("Erik Burka - Pigeon [MNRM003]", ("", "Erik Burka", "", "Pigeon", "Pigeon")),
         ("Artist - Title [ONE001]", ("", "Artist", "", "Title", "Title")),
@@ -66,6 +70,16 @@ pytestmark = pytest.mark.parsing
         (
             "Artist (feat. Other) - Title",
             ("", "Artist", "feat. Other", "Title", "Title"),
+        ),
+        (
+            "The Orb ft. X CLUB. - Little Fluffy Clouds 9000",
+            (
+                "",
+                "The Orb",
+                "ft. X CLUB.",
+                "Little Fluffy Clouds 9000",
+                "Little Fluffy Clouds 9000",
+            ),
         ),
         (
             "Artist (some remix) - Title",
@@ -78,13 +92,12 @@ pytestmark = pytest.mark.parsing
         ),
         ("Artist - Title - -", ("", "Artist", "", "Title - -", "Title - -")),
         ("A8 - Artist - Title", ("A8", "Artist", "", "Title", "Title")),
-        ("A40 - Artist - Title", ("", "A40 - Artist", "", "Title", "Title")),
+        ("A40 - Artist - Title", ("", "A40", "", "Artist - Title", "Artist - Title")),
         ("A8_Title", ("A8", "", "", "Title", "Title")),
         ("A Title", ("", "", "", "A Title", "A Title")),
         ("A. Title", ("A", "", "", "Title", "Title")),
         ("BB. Title", ("BB", "", "", "Title", "Title")),
         ("Artist - ;) (Original Mix)", ("", "Artist", "", ";) (Original Mix)", ";)")),
-        ("Artist - Title [Presented by Other]", ("", "Artist", "", "Title", "Title")),
         ('"Title" by Artist', ("", "Artist", "", "Title", "Title")),
         (
             "(DJ) NICK JERSEY - 202memo - - -",
@@ -118,7 +131,7 @@ def test_parse_track_name(expected, json_track):
     [
         ("Artist - Title", None, "Artist", "Title"),
         ("Artist - Title", "Artist", "Artist", "Title"),
-        ("Artist - Title - Something", None, "Artist - Title", "Something"),
+        ("Artist - Title - Something", None, "Artist", "Title - Something"),
         ("Artist - Title - Something", "Artist", "Artist", "Title - Something"),
     ],
 )

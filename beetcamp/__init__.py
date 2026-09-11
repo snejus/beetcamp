@@ -5,7 +5,7 @@ import logging
 import webbrowser
 from argparse import Action, ArgumentParser
 from functools import partial
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Literal, Protocol
 
 import httpx
 from beets import config
@@ -93,7 +93,15 @@ class GuruMixin:
         return guru.singleton if (guru := self.guru(url)) else None
 
 
-def get_args() -> Namespace:
+class SearchVars(Protocol):
+    query: str
+    search_type: Literal["a", "b", "t"] | None
+    page: int
+    index: int | None
+    release_url: str | None
+
+
+def get_args() -> SearchVars:
     parser = ArgumentParser(
         description="""Get bandcamp release metadata from the given <release-url>
 or perform bandcamp search with <query>. Anything that does not start with https://
@@ -131,9 +139,7 @@ By default, all types are searched.
         "query", action=UrlOrQueryAction, default="", nargs="?", help="Search query"
     )
 
-    store_const = partial(
-        parser.add_argument, dest="search_type", action="store_const", default=""
-    )
+    store_const = partial(parser.add_argument, dest="search_type", action="store_const")
     store_const("-a", "--album", const="a", help="Search albums")
     store_const("-l", "--label", const="b", help="Search labels and artists")
     store_const("-t", "--track", const="t", help="Search tracks")
@@ -152,7 +158,7 @@ By default, all types are searched.
         dest="page",
         type=int,
         default=1,
-        help="The results page to show, 1 by default",
+        help="Deprecated; accepted for compatibility but has no effect",
     )
 
     return parser.parse_args()
@@ -161,22 +167,19 @@ By default, all types are searched.
 def main() -> None:
     args = get_args()
 
-    search_vars = vars(args)
-    index = search_vars.pop("index", None)
-    if search_vars.get("query"):
-        search_results = search_bandcamp(**search_vars)
+    if query := args.query:
+        search_results = search_bandcamp(args.search_type, query=query)
 
-        if index:
+        if index := args.index:
             url = search_results[index - 1]["url"]
 
             print(f"Opening search result number {index}: {url}")
             webbrowser.open(url)
         else:
             print(json.dumps(search_results))
-    else:
-        url = args.release_url
+    elif _url := args.release_url:
         pl = GuruMixin()
-        if result := pl.get_album_info(url) or pl.get_track_info(url):
+        if result := pl.get_album_info(_url) or pl.get_track_info(_url):
             print(json.dumps(result))
         else:
             raise AssertionError("Failed to find a release under the given url")

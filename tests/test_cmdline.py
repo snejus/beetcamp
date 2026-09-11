@@ -10,8 +10,8 @@ from beetcamp import get_args
 @pytest.mark.parametrize(
     "cmdline, args",
     [
-        (["https://bandcamp.com"], {"query": "", "release_url": "https://bandcamp.com", "search_type": "", "index": None, "page": 1}),  # noqa: E501
-        (["hello"], {"query": "hello", "search_type": "", "index": None, "page": 1}),
+        (["https://bandcamp.com"], {"query": "", "release_url": "https://bandcamp.com", "search_type": None, "index": None, "page": 1}),  # noqa: E501
+        (["hello"], {"query": "hello", "search_type": None, "index": None, "page": 1}),
         (["hello", "-a"], {"query": "hello", "search_type": "a", "index": None, "page": 1}),  # noqa: E501
         (["hello", "-t"], {"query": "hello", "search_type": "t", "index": None, "page": 1}),  # noqa: E501
         (["hello", "-l"], {"query": "hello", "search_type": "b", "index": None, "page": 1}),  # noqa: E501

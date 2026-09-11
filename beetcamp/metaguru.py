@@ -49,13 +49,7 @@ class Metaguru(Helpers):
     ARTIST_IN_DESC = cached_patternprop(r"Artists?: *(\b[^\n]+)")
     REMIX_IN_ARTIST = cached_patternprop(r"(?:[(,+]|w/)+.*?re?mi?x", re.I)
     NOT_ALPHANUMERIC = cached_patternprop(r"\W")
-    HTML_REMOVE_CHARS: ClassVar[list[str]] = [
-        "\u200b",
-        "\u200d",
-        "\u200e",
-        "\u200f",
-        "\u00a0",
-    ]
+    HTML_REMOVE_CHARS: ClassVar[list[str]] = ["\u200b"]
 
     _singleton = False
     va_name = VA
@@ -358,8 +352,10 @@ class Metaguru(Helpers):
 
         word_pat = re.compile(rf"(?<!-)\b{word}(\b|\.)", re.I)
         in_catnum = re.compile(rf"{word}\d", re.I)
+        generic_pre = "this|with|present|deliver|new"
+        preceding_pre = "a split|split|the|track|full|first"
         release_ref = re.compile(
-            rf"\b((this|with|present|deliver|new)[\w\s,'-]*?|the|track|full|first) {word}\b",  # noqa: E501
+            rf"\b((?:{generic_pre})[\w\s,'-]*?|{preceding_pre}) {word}\b",
             re.I,
         )
         album_name = self.album_name.lower()

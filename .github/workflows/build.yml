@@ -9,16 +9,16 @@ jobs:
         python: ["3.10", "3.11", "3.12", "3.13", "3.14"]
         beets: ["1.5.0", "1.6.0", "2.0.0", "2.4.0", "2.9.0"]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           # Disabling shallow clone is recommended for improving relevancy of reporting
           fetch-depth: 0
 
-      - name: Install poetry
-        run: pipx install poetry
+      - name: Install tools
+        run: pipx install poetry poethepoet
 
       - name: Set up Python ${{ matrix.python }}
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python }}
           cache: poetry
@@ -29,7 +29,7 @@ jobs:
           pip install beets==${{ matrix.beets }}
 
       - name: Pytest
-        run: poetry run pytest -k 'not need_connection' --ignore-glob='*test_lib*'
+        run: poe test-with-coverage -k 'not need_connection' --ignore-glob='*test_lib*'
 
       - name: Upload coverage data to coveralls.io
         uses: coverallsapp/github-action@v2
@@ -48,8 +48,8 @@ jobs:
         run: echo PROJECT_VERSION="$(git describe --tags | sed 's/-[^-]*$//')" >> $GITHUB_ENV
 
       - name: SonarCloud Scan
-        if: ${{ matrix.beets == '1.5.0' && matrix.python == '3.9' }}
-        uses: SonarSource/sonarqube-scan-action@v5
+        if: ${{ matrix.beets == '2.9.0' && matrix.python == '3.10' }}
+        uses: SonarSource/sonarqube-scan-action@v7
         with:
           args: >
             -Dsonar.branch.name=${{ github.ref_name }}
@@ -61,7 +61,7 @@ jobs:
             -Dsonar.python.coverage.reportPaths=.reports/coverage.xml
             -Dsonar.python.ruff.reportPaths=.reports/ruff.json
             -Dsonar.python.mypy.reportPaths=.reports/mypy.log
-            -Dsonar.python.version=3.9
+            -Dsonar.python.version=3.10
             -Dsonar.python.xunit.reportPath=.reports/test-report.xml
             -Dsonar.sources=beetsplug/bandcamp,beetcamp
             -Dsonar.tests=tests
@@ -75,7 +75,7 @@ jobs:
     if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
-    - name: Coveralls Finished
-      uses: coverallsapp/github-action@v2
-      with:
-        parallel-finished: true
+      - name: Coveralls Finished
+        uses: coverallsapp/github-action@v2
+        with:
+          parallel-finished: true

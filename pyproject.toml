@@ -61,9 +61,36 @@ ruff = ">=0.14.14"
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
+[tool.poe.tasks.test]
+help = "Run tests with pytest"
+cmd = "pytest $OPTS"
+env.OPTS.default = "-p no:cov"
+
+[tool.poe.tasks.test-with-coverage]
+help = "Run tests and record coverage"
+ref = "test"
+# record coverage
+# save xml for coverage upload to coveralls
+# save html report for local dev use
+# measure coverage across logical branches
+# show which tests cover specific lines in the code (see the HTML report)
+env.OPTS = """
+--cov=beetsplug.bandcamp
+--cov=beetcamp
+--cov-report=xml:.reports/coverage.xml
+--cov-report=html:.reports/html
+--cov-branch
+--cov-context=test
+"""
+
 [tool.poe.tasks.test-files]
 help = "Run tests on local release data files"
-cmd = "pytest -k file -p no:randomly --no-cov -s"
+ref = "test"
+env.OPTS = """
+-k file
+-p no:randomly
+-s
+"""
 
 [tool.ruff]
 line-length = 88
