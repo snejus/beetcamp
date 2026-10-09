@@ -198,7 +198,7 @@ class AlbumName:
             )
             (\ x\ [^-]+)?                       # remove other artist ' x C' if present
             (?![':,.\w])                        # cannot be followed by these characters
-            (?!\ [a-wyz&])                      # cannot be followed by ' &' ' ep'
+            (?!\ [a-wyz&(])                     # cannot be followed by ' [a-wyz&(]'
             """,
         )
 
@@ -226,11 +226,12 @@ class AlbumName:
         if catalognum:
             name = cls.remove_catalognum(name, catalognum)
 
+        name = Helpers.clean_name(name)
+
         for artist in filter(None, artists or []):
             name = cls.remove_artist(name, artist)
 
         name = cls.remove_va(name)
-        name = Helpers.clean_name(name)
         if label:
             name = cls.remove_label(name, label)
         name = cls.REMIX_IN_TITLE.sub(" ", name).strip("- ")

@@ -150,10 +150,11 @@ class Helpers:
             r"CD ?\d+",
             r"(?:(free)?\W*name your price:?)",
             "just out!",
-            "- album",
+            "- album$",
             r"^\[?premiere(\]| :)",
             r"(?i:[a-z ]+(records|singles) \d{,3} \W+)",
             "pre.?release",
+            r"\(incl.*?mix(?:es)?\)",
         ]
 
         camelcase = re.compile(r"(?<=[a-z])(?=[A-Z])")
