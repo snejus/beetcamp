@@ -122,6 +122,7 @@ select = [
 ignore = [
     "B905", # Implicit `strict=False` is fine in zip calls
     "PLR0913", # too-many-arguments
+    "RUF071", # Do not replace os.path.commonprefix withos.path.commonpath, as the former is more permissive and allows for more flexible path comparisons
 ]
 
 fixable = ["ALL"]
