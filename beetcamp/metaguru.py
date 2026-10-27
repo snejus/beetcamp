@@ -253,7 +253,7 @@ class Metaguru(Helpers):
             name = normalize("NFKD", loc).encode("ascii", "ignore").decode()
             return (
                 COUNTRY_OVERRIDES.get(name)
-                or getattr(countries.get(name=name, default=object), "alpha_2", None)
+                or getattr(countries.get(name=name), "alpha_2", None)
                 or subdivisions.lookup(name).country_code
             )
         except (ValueError, LookupError):

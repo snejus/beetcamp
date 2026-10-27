@@ -1,14 +1,13 @@
 from __future__ import annotations
 
 import json
-import logging
 import webbrowser
 from argparse import Action, ArgumentParser
 from functools import partial
 from typing import TYPE_CHECKING, Any, Literal, Protocol
 
 import httpx
-from beets import config
+from beets import config, logging
 
 from .helpers import cached_patternprop
 from .http import http_get_text
@@ -18,8 +17,8 @@ from .search import search_bandcamp
 if TYPE_CHECKING:
     from argparse import Namespace
 
-    from beets import IncludeLazyConfig
     from beets.autotag.hooks import AlbumInfo, TrackInfo
+    from confuse import Subview
 
 DEFAULT_CONFIG = {
     "include_digital_only_tracks": True,
@@ -40,10 +39,10 @@ DEFAULT_CONFIG = {
 class GuruMixin:
     ALBUM_SLUG_IN_TRACK = cached_patternprop(r'(?<=<a id="buyAlbumLink" href=")[^"]+')
 
-    _log: logging.Logger
-    config: IncludeLazyConfig
+    _log: logging.BeetsLogger
+    config: Subview
 
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
         if not hasattr(self, "_log"):
             self._log = logging.getLogger(__name__)
@@ -83,7 +82,7 @@ class GuruMixin:
         """
         html = self._get(url)
         if html and "/track/" in url and (m := self.ALBUM_SLUG_IN_TRACK.search(html)):
-            label_url = url.split(r"/track/")[0]
+            label_url = url.split(r"/track/", maxsplit=1)[0]
             url = f"{label_url}{m[0]}"
 
         return guru.albums if (guru := self.guru(url)) else None

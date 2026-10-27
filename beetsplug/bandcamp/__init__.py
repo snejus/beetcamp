@@ -221,8 +221,9 @@ class BandcampPlugin(BandcampRequestsHandler, MetadataSourcePlugin):
             yield initial_guess
             return
 
-        search = {"artist": artist, "name": title, "search_type": "t"}
-        results = map(itemgetter("url"), self._search(**search))
+        results = map(
+            itemgetter("url"), self._search(artist=artist, name=title, search_type="t")
+        )
         yield from filter(None, map(self.get_track_info, results))
 
     def album_for_id(self, album_id: str) -> AlbumInfo | None:
