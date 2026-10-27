@@ -1,5 +1,7 @@
 ## Unreleased
 
+## [0.26.0] 2026-10-27
+
 - Drop support for Python 3.10.
 - Drop support for Beets versions below 1.6.
 
