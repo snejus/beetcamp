@@ -73,7 +73,7 @@ class Names:
     @cached_property
     def catalognum_in_album(self) -> str | None:
         if m := self._catalognum_in_album_match:
-            return next(filter(None, m.groups()))
+            return next(filter(None, m.groups(default=None)))
 
         return None
 

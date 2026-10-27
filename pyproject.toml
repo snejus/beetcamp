@@ -1,11 +1,11 @@
 [project]
 name = "beetcamp"
-version = "0.25.0"
+version = "0.26.0"
 description = "Bandcamp autotagger source for beets (http://beets.io)."
 authors = [{ name = "Šarūnas Nejus", email = "snejus@pm.me" }]
 readme = "README.md"
 license = "GPL-2.0"
-requires-python = ">=3.10, <4"
+requires-python = ">=3.11, <4"
 
 include = ["LICENSE", "README.md"]
 
@@ -18,14 +18,13 @@ classifiers = [
     "Topic :: Text Processing :: General",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
 ]
 dependencies = [
-    "beets[fetchart] >= 1.5",
+    "beets[fetchart] >= 1.6",
     "pycountry >= 20.7.3",
     "httpx >= 0.27.0",
     "packaging >= 24.0",
@@ -94,7 +93,7 @@ env.OPTS = """
 
 [tool.ruff]
 line-length = 88
-target-version = "py310"
+target-version = "py311"
 namespace-packages = ["beetsplug"]
 
 [tool.ruff.lint]
@@ -122,6 +121,7 @@ select = [
 ignore = [
     "B905", # Implicit `strict=False` is fine in zip calls
     "PLR0913", # too-many-arguments
+    "RUF071", # Do not replace os.path.commonprefix withos.path.commonpath, as the former is more permissive and allows for more flexible path comparisons
 ]
 
 fixable = ["ALL"]

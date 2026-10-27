@@ -6,6 +6,7 @@ import re
 from functools import cache, partial
 from itertools import chain
 from operator import contains
+from string import capwords
 from typing import TYPE_CHECKING, Any, Generic, NamedTuple, TypeAlias, TypeVar
 
 from beets import __version__ as beets_version
@@ -20,7 +21,6 @@ if TYPE_CHECKING:
     from re import Match, Pattern
 
 BEETS_VERSION = Version(beets_version)
-ALBUMTYPES_LIST_SUPPORT = BEETS_VERSION >= Version("1.6.0")
 ARTIST_LIST_FIELDS_SUPPORT = BEETS_VERSION >= Version("2.0.0")
 NEW_METADATA_PLUGIN_CLASS = BEETS_VERSION >= Version("2.4.0")
 GENRES_LIST_FIELD = BEETS_VERSION >= Version("2.7.0")
@@ -150,10 +150,11 @@ class Helpers:
             r"CD ?\d+",
             r"(?:(free)?\W*name your price:?)",
             "just out!",
-            "- album",
+            "- album$",
             r"^\[?premiere(\]| :)",
             r"(?i:[a-z ]+(records|singles) \d{,3} \W+)",
             "pre.?release",
+            r"\(incl.*?mix(?:es)?\)",
         ]
 
         camelcase = re.compile(r"(?<=[a-z])(?=[A-Z])")
@@ -168,6 +169,12 @@ class Helpers:
             title = camelcase.sub(" ", title)
 
             return f"{artist} - {title}"
+
+        def split_examine_plain_name(m: Match[str]) -> str:
+            parts = m[1].split("-", 1)
+            return " - ".join(
+                capwords(p.replace("_", " ").replace("-", " ").strip()) for p in parts
+            )
 
         # fmt: off
         return [
@@ -185,6 +192,7 @@ class Helpers:
             (re.compile(r"\((the )?(remixes)\)", re.I), r"\2"),                             # Album (Remixes)           -> Album Remixes  # noqa: E501
             (re.compile(r"^(\[[^]-]+\]) - (([^-]|-\w)+ - ([^-]|-\w)+)$"), r"\2 \1"),        # [Remixer] - hi - bye      -> hi - bye [Remixer]  # noqa: E501
             (re.compile(r"examine-.+CD\d+_([^_-]+)[_-](.*)"), split_artist_title),          # See https://examine-archive.bandcamp.com/album/va-examine-archive-international-sampler-xmn01  # noqa: E501
+            (re.compile(r"examine-plain[^(]+\((.*)\)"), split_examine_plain_name),          # See https://examine-archive.bandcamp.com/album/examine-plain-leak  # noqa: E501
             (re.compile(r'"([^"]+)" by (.+)$'), r"\2 - \1"),                                # "bye" by hi               -> hi - bye  # noqa: E501
         ]
         # fmt: on
@@ -350,9 +358,6 @@ class Helpers:
 
     @staticmethod
     def check_list_fields(data: J) -> J:
-        if "albumtypes" in data and not ALBUMTYPES_LIST_SUPPORT:
-            data["albumtypes"] = "; ".join(data["albumtypes"])
-
         if not ARTIST_LIST_FIELDS_SUPPORT:
             fields = ["artists", "artists_ids", "artists_credit", "artists_sort"]
             for f in fields:

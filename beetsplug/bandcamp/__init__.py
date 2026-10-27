@@ -23,7 +23,7 @@ from typing import TYPE_CHECKING, Any, Literal
 
 from beets import config, plugins
 
-from beetsplug import fetchart  # type: ignore[attr-defined]
+from beetsplug import fetchart
 
 from beetcamp import DEFAULT_CONFIG, GuruMixin
 from beetcamp.helpers import NEW_METADATA_PLUGIN_CLASS, cached_patternprop
@@ -31,7 +31,7 @@ from beetcamp.http import urlify
 from beetcamp.search import search_bandcamp
 
 if TYPE_CHECKING:
-    from collections.abc import Iterable, Sequence
+    from collections.abc import Iterable, Iterator, Sequence
 
     from beets import IncludeLazyConfig
     from beets.autotag.hooks import AlbumInfo, TrackInfo
@@ -71,9 +71,14 @@ class BandcampAlbumArt(BandcampRequestsHandler, fetchart.RemoteArtSource):
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
-        self.config = self._config
+        self.config = self._config  # type: ignore[assignment] # BeetsPlugin uses Subview while ArtSource uses ConfigView
 
-    def get(self, album: AlbumInfo, *_: Any) -> Iterable[fetchart.Candidate]:
+    def get(
+        self,
+        album: Album,
+        plugin: fetchart.FetchArtPlugin,  # noqa: ARG002
+        paths: Sequence[bytes] | None,  # noqa: ARG002
+    ) -> Iterator[fetchart.Candidate]:
         """Return the url for the cover from the bandcamp album page.
 
         This only returns cover art urls for bandcamp albums (by id).
@@ -129,7 +134,7 @@ class BandcampPlugin(BandcampRequestsHandler, MetadataSourcePlugin):
                 if isinstance(fetchart.ART_SOURCES, set):
                     fetchart.ART_SOURCES.add(BandcampAlbumArt)
                 else:
-                    fetchart.ART_SOURCES[self.data_source] = BandcampAlbumArt
+                    fetchart.ART_SOURCES[self.data_source] = BandcampAlbumArt  # type: ignore[unreachable]
                     fetchart.SOURCE_NAMES[BandcampAlbumArt] = self.data_source
                     fetchart.SOURCES_ALL.append(self.data_source)
                 bandcamp_fetchart = BandcampAlbumArt(self._log, self.config)
@@ -221,8 +226,9 @@ class BandcampPlugin(BandcampRequestsHandler, MetadataSourcePlugin):
             yield initial_guess
             return
 
-        search = {"artist": artist, "name": title, "search_type": "t"}
-        results = map(itemgetter("url"), self._search(**search))
+        results = map(
+            itemgetter("url"), self._search(artist=artist, name=title, search_type="t")
+        )
         yield from filter(None, map(self.get_track_info, results))
 
     def album_for_id(self, album_id: str) -> AlbumInfo | None:

@@ -6,7 +6,7 @@ import itertools as it
 import json
 import operator as op
 import re
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from functools import cached_property, partial
 from typing import TYPE_CHECKING, Any, ClassVar
 from unicodedata import normalize
@@ -213,7 +213,7 @@ class Metaguru(Helpers):
         if dt := self.meta.get("datePublished") or self.meta.get("dateModified"):
             return (
                 datetime.strptime(dt[:11], "%d %b %Y")
-                .replace(tzinfo=timezone.utc)
+                .replace(tzinfo=UTC)
                 .date()
             )
 
@@ -222,7 +222,7 @@ class Metaguru(Helpers):
     @cached_property
     def albumstatus(self) -> str:
         reldate = self.release_date
-        today = datetime.now(tz=timezone.utc).date()
+        today = datetime.now(tz=UTC).date()
         return "Official" if reldate and reldate <= today else "Promotional"
 
     @property
@@ -253,7 +253,7 @@ class Metaguru(Helpers):
             name = normalize("NFKD", loc).encode("ascii", "ignore").decode()
             return (
                 COUNTRY_OVERRIDES.get(name)
-                or getattr(countries.get(name=name, default=object), "alpha_2", None)
+                or getattr(countries.get(name=name), "alpha_2", None)
                 or subdivisions.lookup(name).country_code
             )
         except (ValueError, LookupError):

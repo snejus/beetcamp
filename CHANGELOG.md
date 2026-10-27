@@ -1,5 +1,10 @@
 ## Unreleased
 
+## [0.26.0] 2026-10-27
+
+- Drop support for Python 3.10.
+- Drop support for Beets versions below 1.6.
+
 ## [0.25.0] 2026-09-11
 
 ### Fixed
@@ -19,7 +24,7 @@
   - Avoid treating year ranges starting in 1900s or ending with abbreviated years as
     artists.
   - When parsing names for `artist` and `title`, split on the **first** found delimiter
-    (` - `) instead of last.
+    (`-`) instead of last.
 - `title`:
   - Remove **[7" Exclusive]** and **[12" Exclusive]** from titles.
 

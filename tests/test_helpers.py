@@ -58,6 +58,14 @@ def test_bundles_get_excluded(bundle_format, digital_format):
         ("Artist - Title [Presented by Other]", "Artist - Title"),
         ("Awesome Records 001 - Album", "Album"),
         ("Cool Singles 12 | Track", "Track"),
+        (
+            "examine-plain-289-2025-11-15(Kropp_uten_Grenser-Økern_Zoo)",
+            "Kropp Uten Grenser - Økern Zoo",
+        ),
+        (
+            "examine-plain-029-2022-04-22(touriszmxtruthspeaker)",
+            "Touriszmxtruthspeaker",
+        ),
     ],
 )
 def test_clean_name(name, expected):
