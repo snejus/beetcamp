@@ -4,9 +4,9 @@ from __future__ import annotations
 
 from difflib import SequenceMatcher
 from operator import itemgetter
-from typing import TYPE_CHECKING, TypedDict, cast
+from typing import TYPE_CHECKING, NotRequired, TypedDict, cast
 
-from typing_extensions import NotRequired, Unpack
+from typing_extensions import Unpack
 
 from .json_search import SearchResult, search_json
 
