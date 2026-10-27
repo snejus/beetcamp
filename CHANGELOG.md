@@ -1,5 +1,7 @@
 ## Unreleased
 
+- Drop support for Python 3.10.
+
 ## [0.25.0] 2026-09-11
 
 ### Fixed
