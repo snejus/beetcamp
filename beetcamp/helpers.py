@@ -21,7 +21,6 @@ if TYPE_CHECKING:
     from re import Match, Pattern
 
 BEETS_VERSION = Version(beets_version)
-ALBUMTYPES_LIST_SUPPORT = BEETS_VERSION >= Version("1.6.0")
 ARTIST_LIST_FIELDS_SUPPORT = BEETS_VERSION >= Version("2.0.0")
 NEW_METADATA_PLUGIN_CLASS = BEETS_VERSION >= Version("2.4.0")
 GENRES_LIST_FIELD = BEETS_VERSION >= Version("2.7.0")
@@ -359,9 +358,6 @@ class Helpers:
 
     @staticmethod
     def check_list_fields(data: J) -> J:
-        if "albumtypes" in data and not ALBUMTYPES_LIST_SUPPORT:
-            data["albumtypes"] = "; ".join(data["albumtypes"])
-
         if not ARTIST_LIST_FIELDS_SUPPORT:
             fields = ["artists", "artists_ids", "artists_credit", "artists_sort"]
             for f in fields:
