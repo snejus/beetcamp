@@ -137,6 +137,5 @@ def search_json(query: str, search_type: SearchTypeCode | None) -> list[SearchRe
         "full_page": True,
     }
     response: BandcampSearchResponse = http_post_json(SEARCH_API_URL, json=payload)
-    Path("response.json").write_text(json.dumps(response, indent=2))
     raw_results = response["auto"]["results"]
     return list(filter(None, map(_api_result_to_release, raw_results)))
