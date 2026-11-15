@@ -1,5 +1,9 @@
 ## Unreleased
 
+### Fixed
+
+- Stop the `json_search` module from writing a `response.json` file in the current working directory.
+
 ## [0.26.0] 2026-10-27
 
 - Drop support for Python 3.10.
